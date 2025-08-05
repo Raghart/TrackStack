@@ -16,7 +16,7 @@ jobs:
           node-version: lts/*
 
       - name: Install frontend dependencies
-        run : npm run ci
+        run : npm ci
         working-directory: ./front
 
       - name: Build Frontend
@@ -24,7 +24,7 @@ jobs:
         working-directory: ./front
 
       - name: Install backend dependencies
-        run : npm run ci
+        run : npm ci
         working-directory: ./back
 
       - name: Build Backend
