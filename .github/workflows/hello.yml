@@ -12,3 +12,5 @@ jobs:
       - name: Say Hello
         run: |
           echo "Hello World!"
+          echo "Current date and time"
+          date
