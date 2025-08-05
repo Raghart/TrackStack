@@ -1,0 +1,25 @@
+export interface TypeSong {
+    track_id:number;
+    name:string;
+    artist:string;
+    album_image_url:string;
+    album_name:string;
+    spotify_preview_url:string;
+    spotify_id:string;
+    tags:string[];
+    genre:string[];
+    year:number;
+    duration_ms:number;
+    danceability:number;
+    energy:number;
+    track_key:number;
+    loudness:number;
+    mode:number;
+    speechiness:number;
+    acousticness:number;
+    instrumentalness:number;
+    liveness:number;
+    valence:number;
+    tempo:number;
+    time_signature:number
+};
