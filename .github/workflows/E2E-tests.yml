@@ -1,12 +1,9 @@
 name: Perform E2E Tests
 
 on:
-  push:
-    branches: [ main, master ]
-
   pull_request:
-    branches: [ main, master ]
-    types: [ opened, synchronize ]
+    branches: 
+      - main
 
 jobs:
   playwright-tests:
