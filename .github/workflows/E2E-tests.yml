@@ -32,7 +32,7 @@ jobs:
         working-directory: ./back
 
       - name: Run Server
-        run: npm run start:prod
+        run: npm run start:prod &
         working-directory: ./back
 
       - name: Run Playwright tests
