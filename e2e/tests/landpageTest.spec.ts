@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe("Landpage", () => {
   test('front page elements are visible', async ({ page }) => {
-    await page.goto('http://localhost:5173/');
+    await page.goto('/');
 
     await expect(page.getByText("TrackStack")).toBeVisible();
     await expect(page.getByText("Artists").first()).toBeVisible();

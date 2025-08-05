@@ -2,14 +2,14 @@ import { expect, test } from "@playwright/test";
 
 test.describe("Genres Page", () => {
     test("Select a song from from the genre: Love", async ({ page }) => {
-        await page.goto("http://localhost:5173/");
+        await page.goto("/");
         await page.getByText("Genres").click();
 
-        await expect(page).toHaveURL("http://localhost:5173/genres");
+        await expect(page).toHaveURL("/genres");
         await expect(page.getByText("Select a Genre")).toBeVisible();
         await page.getByText("Love").click();
 
-        await expect(page).toHaveURL("http://localhost:5173/genres/Love");
+        await expect(page).toHaveURL("/genres/Love");
         await expect(page.getByText("Genre: Love")).toBeVisible();
 
         const songCard = page.getByTestId("Songcard").first();

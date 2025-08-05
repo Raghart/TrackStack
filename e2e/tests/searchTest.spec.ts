@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test.describe("Search", () => {
     test("Search for the songs made by the artist shakira in the search input", async ({ page }) => {
-        await page.goto("http://localhost:5173");
+        await page.goto("/");
         
         const searchInput = page.getByTestId("searchInput");
         await expect(searchInput).toBeVisible();

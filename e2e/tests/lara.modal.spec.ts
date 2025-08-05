@@ -2,7 +2,7 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Recommendation modal", () => {
     test("User prepares recommendation modal with 'Love' and 'Mellow' genres", async ({ page }) => {
-        await page.goto("http://localhost:5173/");
+        await page.goto("/");
         await page.getByTestId("LaraBtn").click();
 
         await expect(page.getByText("Lara Takes Over")).toBeVisible();

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test.describe("Song details path", () => {
   test('users can acess to the full info of a song from the landpage', async ({ page }) => {
-    await page.goto('http://localhost:5173/');
+    await page.goto('/');
 
     await page.getByText("Genres").click();
     await page.getByText("00s").click();
@@ -17,7 +17,7 @@ test.describe("Song details path", () => {
     await expect(songName).toBeVisible();
     await songName.click();
 
-    expect(page.url()).toContain("http://localhost:5173/songs/");
+    expect(page.url()).toContain("/songs/");
     await expect(page.getByText(name).first()).toBeVisible();
     await expect(page.getByText("ALBUM")).toBeVisible();
     await expect(page.getByText("GENRES").first()).toBeVisible();
