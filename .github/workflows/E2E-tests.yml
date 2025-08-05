@@ -9,13 +9,14 @@ on:
     types: [ opened, synchronize ]
 
 jobs:
-  e2e-tests:
+  playwright-tests:
+    timeout-minutes: 60
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "20"
+          node-version: lts/*
 
       - name: Install frontend dependencies
         run : npm run ci
@@ -32,3 +33,18 @@ jobs:
       - name: Build Backend
         run: npm run build
         working-directory: ./back
+
+      - name: Run Server
+        run: npm run start:prod
+        working-directory: ./back
+
+      - name: Run Playwright tests
+        run: npm run test
+        working-directory: ./e2e
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
