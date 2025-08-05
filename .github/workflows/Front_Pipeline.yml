@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  deployment-pipeline:
+  front-deployment-pipeline:
     runs-on: ubuntu-latest
     defaults:
       run:
