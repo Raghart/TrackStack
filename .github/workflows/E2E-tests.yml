@@ -6,8 +6,7 @@ on:
       - main
 
 jobs:
-  playwright-tests:
-    timeout-minutes: 60
+  playwright-setup:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +30,16 @@ jobs:
         run: npm run build
         working-directory: ./back
 
+  playwright-tests:
+    timeout-minutes: 60
+    runs-on: ubuntu-20.04
+    needs: [playwright-setup]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
         working-directory: ./e2e
@@ -51,3 +60,5 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+      
