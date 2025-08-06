@@ -31,6 +31,14 @@ jobs:
         run: npm ci
         working-directory: ./back
 
+      - name: Debug env variables
+        run: |
+          echo "DB_HOST is $DB_HOST"
+          echo "ELASTICSEARCH_NODE is $ELASTICSEARCH_NODE"
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          ELASTICSEARCH_NODE: ${{ secrets.ELASTICSEARCH_NODE }}
+
       - name: Build Backend
         run: npm run build
         working-directory: ./back
