@@ -1,9 +1,13 @@
-name: Backend deployment pipeline
+name: Backend Deployment Pipeline
 
 on:
   push:
     branches:
       - main
+
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
 
 jobs:
   backend-deployment-pipeline:
