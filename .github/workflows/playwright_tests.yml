@@ -1,19 +1,22 @@
-name: Playwright Minimal Tests
+name: Playwright Tests
 
-on: 
+on:
   push:
     branches:
       - main
 
 jobs:
-  playwright-tests:
-    runs-on: ubuntu-20.04
+  e2e-tests:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./e2e
+        
     steps:
-    - uses: actions/checkout@v4
-    
-    - uses: actions/setup-node@v4
-      with:
-        node-version: lts/*
-  
-    - name: Hello World debug
-      run: echo "✅ Workflow se está ejecutando correctamente"
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          
+      - name: Install dependencies
+        run: npm install
