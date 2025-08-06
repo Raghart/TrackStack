@@ -6,13 +6,13 @@ on:
       - main
 
 jobs:
-  e2e-tests:
+  tests:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: "20"
 
       - name: List Root
         run: ls -la
