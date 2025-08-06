@@ -36,3 +36,7 @@ jobs:
 
       - name: Install Playwright Browsers
         run: npm install
+
+      - name: Run Server
+        run: npm run start:prod &
+        working-directory: ./back
