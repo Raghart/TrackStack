@@ -6,7 +6,7 @@ on:
       - main
 
 jobs:
-  hello_world_job:
+  playwright-tests:
     runs-on: ubuntu-20.04
     steps:
     - uses: actions/checkout@v4
@@ -15,6 +15,5 @@ jobs:
       with:
         node-version: lts/*
   
-    - name: Install frontend dependencies
-      run: npm ci
-      working-directory: ./front
+    - name: Hello World debug
+      run: echo "✅ Workflow se está ejecutando correctamente"
