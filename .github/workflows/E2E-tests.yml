@@ -7,7 +7,7 @@ on:
 
 jobs:
   playwright-tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latests
     defaults:
       run:
         working-directory: ./e2e
