@@ -1,31 +1,16 @@
-name: Perform E2E Tests
+name: Hello World!
 
 on:
   push:
-    branches: 
+    branches:
       - main
 
 jobs:
-  e2e-tests:
-    runs-on: ubuntu-20.04
+  hello_world_job:
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-
-      - name: Install frontend dependencies
-        run : npm install
-        working-directory: ./front
-
-      - name: Build Frontend
-        run: npm run build
-        working-directory: ./front
-
-      - name: Install backend dependencies
-        run : npm install
-        working-directory: ./back
-
-      - name: Build Backend
-        run: npm run build
-        working-directory: ./back
+      - name: Say Hello
+        run: |
+          echo "Hello World!"
+          echo "Current date and time:"
+          date
