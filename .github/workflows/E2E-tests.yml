@@ -7,7 +7,6 @@ on:
 
 jobs:
   playwright-tests:
-    timeout-minutes: 60
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -17,7 +16,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/*
+          node-version: "20"
 
       - name: Install Frontend dependencies
         run: npm ci
