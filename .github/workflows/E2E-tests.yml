@@ -34,6 +34,12 @@ jobs:
       - name: Build Backend
         run: npm run build
         working-directory: ./back
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_TYPE: ${{ secrets.DB_TYPE }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          ELASTICSEARCH_NODE: ${{ secrets.ELASTICSEARCH_NODE }}
 
       - name: Install Playwright dependencies
         run: npm ci
