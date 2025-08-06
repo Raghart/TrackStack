@@ -17,6 +17,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "20"
+
+      - name: Install Frontend dependices
+        run: npm ci
+        working-directory: ./front
           
-      - name: Install dependencies
+      - name: Install Playwright dependencies
         run: npm install
