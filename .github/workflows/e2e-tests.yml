@@ -1,22 +1,21 @@
-name: Perform E2E Tests
+name: E2E Tests Minimal
 
 on:
   push:
     branches: 
       - main
-  workflow_dispatch:
 
 jobs:
   e2e-tests:
-    timeout-minutes: 60
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v4
-      
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
 
-      - name: Install frontend dependencies
-        run: npm ci
-        working-directory: ./front
+      - name: List Root
+        run: ls -la
+
+      - name: List front folder
+        run: ls -la ./front
