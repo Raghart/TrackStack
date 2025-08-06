@@ -18,9 +18,21 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install Frontend dependices
+      - name: Install Frontend dependencies
         run: npm ci
         working-directory: ./front
+
+      - name: Build Frontend
+        run: npm run build
+        working-directory: ./front
+
+      - name: Install Backend dependencies
+        run: npm ci
+        working-directory: ./back
+
+      - name: Build Backend
+        run: npm run build
+        working-directory: ./back
           
       - name: Install Playwright dependencies
         run: npm install
