@@ -15,7 +15,7 @@ const SongSearchCard = ({ song, isSongPlaying } : { song: SongResponse, isSongPl
 
             <Card.Body justifyContent="center" alignContent="center" textAlign="center" p={0} pl={1} gap={1}>
                 <LinkOverlay href={`/songs/${song.id}`} lineHeight={1} lineClamp={2} fontWeight="600"
-                    fontFamily="'Barlow Condensed', sans-serif" fontSize={SONGSEARCH_FONTSIZES}>
+                    fontFamily="'Barlow Condensed', sans-serif" fontSize={SONGSEARCH_FONTSIZES} color="white">
                     {song.name}
                 </LinkOverlay>
 

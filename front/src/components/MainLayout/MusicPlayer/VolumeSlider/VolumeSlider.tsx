@@ -18,7 +18,7 @@ const VolumeSlider = ({ audioRef }: { audioRef: React.RefObject<HTMLAudioElement
                         <Slider.Range className="slider-bg" bg="white" transition="background 0.2s ease" />
                     </Slider.Track>
                     <Slider.Thumbs className="hover-volume" borderColor="white" shadow="md" opacity={0} 
-                        boxSize={VOL_THUMB_SIZES} />
+                        boxSize={VOL_THUMB_SIZES} bg="white" />
                 </Slider.Control>
             </Slider.Root>
         </Flex>

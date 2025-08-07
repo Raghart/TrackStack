@@ -15,7 +15,7 @@ const AlbumSearchCard = ({ name, album_cover, artists } : AlbumResponse) => {
             
             <Card.Body p={1} textAlign="center" alignItems="center" justifyContent="center" gap={1}>
                 <Card.Title fontSize={ALB_RESULTS_FONTSIZES} fontFamily="'Barlow Condensed', sans-serif" 
-                    lineHeight={1} lineClamp={2}>
+                    lineHeight={1} lineClamp={2} color="white">
                     <LinkOverlay href={`/albums/${encodeURIComponent(name)}`}>
                         {name}
                     </LinkOverlay>

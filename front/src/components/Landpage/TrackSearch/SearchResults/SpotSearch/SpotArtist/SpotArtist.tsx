@@ -15,9 +15,9 @@ const SpotArtist = ({ name, album_cover }:  ArtistResponse ) => {
             <Card.Body gap={{ base: 1, sm: 2, md: 2, lg: 2 }} justifyContent="center" alignItems="center" 
                 className="artist-zoom" transition="transform 0.3s ease" p={3}>
                 
-                <LinkOverlay href={`/artists/${encodeURIComponent(name)}`} lineHeight={1} fontWeight="600" 
+                <LinkOverlay href={`/artists/${encodeURIComponent(name)}`} lineHeight={1} fontWeight="600"
                     fontSize={SPOTARTIST_FONTSIZES} textAlign="center" fontFamily="'Barlow Condensed', sans-serif"
-                    lineClamp={3}>
+                    lineClamp={3} color="white">
                     {name}
                 </LinkOverlay>
 

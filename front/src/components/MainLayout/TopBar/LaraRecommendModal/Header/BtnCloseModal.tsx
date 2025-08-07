@@ -4,7 +4,7 @@ const BtnCloseModal = () => {
     return(
         <Dialog.CloseTrigger m={{ base: 0, sm: 1, md: 2, lg: 3}} asChild>
             <CloseButton borderRadius="full" _hover={{ bg: "red.500" }} size={{ base: "xs", sm: "sm", md: "sm", 
-                lg: "sm" }} />
+                lg: "sm" }} color="white" />
         </Dialog.CloseTrigger>
     );
 };

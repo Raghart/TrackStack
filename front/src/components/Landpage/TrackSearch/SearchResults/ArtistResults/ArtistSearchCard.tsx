@@ -13,7 +13,7 @@ const ArtistSearchCard = ({ name, album_cover } : ArtistResponse ) => {
 
             <Card.Body alignItems="center" justifyContent="center" textAlign="center" p={1} gap={1}>
                 <Card.Title fontSize={ART_RESULTS_FONTSIZE} lineClamp={2} lineHeight={1} fontWeight="600" 
-                    fontFamily="'Barlow Condensed', sans-serif">
+                    fontFamily="'Barlow Condensed', sans-serif" color="white">
                     <LinkOverlay href={`/artists/${encodeURIComponent(name)}`}>
                         {name}
                     </LinkOverlay>
