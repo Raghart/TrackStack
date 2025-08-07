@@ -1,0 +1,105 @@
+name: FullStack Deployment Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize]
+
+jobs:
+  Frontend-Pipeline:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./front
+        
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          
+      - name: Install dependencies
+        run: npm install
+
+  Backend-Pipeline:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./back
+        
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Check style
+        run: npm run lint
+
+      - name: Run tests
+        run: npm run test
+
+  playwright-tests:
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./e2e
+        
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Install Frontend dependencies
+        run: npm ci
+        working-directory: ./front
+
+      - name: Build Frontend
+        run: npm run build
+        working-directory: ./front
+
+      - name: Install Backend dependencies
+        run: npm ci
+        working-directory: ./back
+
+      - name: Build Backend
+        run: npm run build
+        working-directory: ./back
+
+      - name: Install Playwright dependencies
+        run: npm ci
+
+      - name: Install Playwright Browsers
+        run: npx playwright install --with-deps
+
+      - name: Run Server
+        run: npm run start:prod &
+        working-directory: ./back
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_TYPE: ${{ secrets.DB_TYPE }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          ELASTICSEARCH_NODE: ${{ secrets.ELASTICSEARCH_NODE }}
+
+      - name: Running Playwright tests
+        run: npm run test
+
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report
+          path: playwright-report/
+          retention-days: 30
+        
+      - name: Check style
+        run: npm run lint
