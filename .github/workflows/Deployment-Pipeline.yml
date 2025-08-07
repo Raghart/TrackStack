@@ -103,3 +103,11 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
+
+  Web_Deploy:
+    runs-on: ubuntu-latest
+    needs: [Frontend-Pipeline,Backend-Pipeline,Playwright-E2E-Tests]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Trigger Deployment
+        run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
