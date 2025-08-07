@@ -1,5 +1,3 @@
-#!/bin/bash
-
 echo "Build TrackStack script"
 
 echo "Install Backend dependencies"
