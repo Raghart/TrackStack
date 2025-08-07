@@ -10,7 +10,7 @@ const SegmentBtns = () => {
                     aria-label={option.value} _before={{ display: "none" }} position="relative" w="full"
                     _checked={{ bg: option.bgChecked, boxShadow: option.shadow }} cursor="pointer" maxW={SEGMENT_BTN_W}
                     _hover={{ boxShadow: option.shadow }} transition="box-shadow 0.3s ease, background 0.3s ease" 
-                    fontSize={SEGMENT_FONTSIZE} fontFamily="'Barlow', sans-serif">
+                    fontSize={SEGMENT_FONTSIZE} fontFamily="'Barlow', sans-serif" color="white">
                     <SegmentGroup.ItemText>{option.label}</SegmentGroup.ItemText>
                     <SegmentGroup.ItemHiddenInput />
                 </SegmentGroup.Item>

@@ -18,7 +18,7 @@ const SegmentOptions = () => {
             </Heading>
             
             <SegmentGroup.Root onValueChange={({ value }) => dispatch(setSpeechLevel(value === "Music" ? 0.165 :
-                value === "Mixed" ? 0.495 : 0.83))} defaultValue="Music">
+                value === "Mixed" ? 0.495 : 0.83))} defaultValue="Music" bg="gray.800">
                 <SegmentGroup.Indicator />
                 <SegmentBtns />
             </SegmentGroup.Root>      

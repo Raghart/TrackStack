@@ -35,7 +35,7 @@ const GenreSelector = () => {
                 onInputValueChange={(details) => setSearchValue(details.inputValue)} aria-label="Select a Music Genre"
                 onValueChange={(details) => dispatch(handleValueChange(details, setSelectedGenres, setIsNavigating))} 
                 placeholder={selectedGenres.length > 0 ? "Delete by pressing 'Del'" : "Select a Genre"}
-                onHighlightChange={(details) => setIsNavigating(details.highlightedValue != null)}>
+                onHighlightChange={(details) => setIsNavigating(details.highlightedValue != null)} variant="outline">
                 <Combobox.Control>
                     <Combobox.Input borderRadius="2xl" border="2px solid" borderColor="gray.400" 
                         data-testid="GenreInput" onKeyDown={(e) => dispatch(handleDelLastGenre(e, selectedGenres, 
@@ -47,7 +47,7 @@ const GenreSelector = () => {
                 </Combobox.Control>
 
                 <Combobox.Positioner>
-                    <Combobox.Content maxH="290px">
+                    <Combobox.Content maxH="290px" bg="blackAlpha.900">
                         <Combobox.ItemGroup>
                             {collection.items.slice(0,8).map((genre: GenreListFormat) => (
                                 <Combobox.Item item={genre} key={genre.name} data-testid="genreFilter">

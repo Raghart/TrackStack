@@ -19,7 +19,7 @@ const SpotAlbum = ({ name, artists, album_cover }: AlbumResponse) => {
             
                 <LinkOverlay href={`/albums/${encodeURIComponent(name)}`} textAlign="center" lineHeight={1}
                     fontSize={SPOTALBUM_FONTSIZES} lineClamp={2} fontFamily="'Barlow Condensed', sans-serif"
-                    fontWeight="600">
+                    fontWeight="600" color="white">
                     {name}
                 </LinkOverlay>
                 

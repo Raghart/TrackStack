@@ -17,7 +17,7 @@ const MusicSlider = ({ audioRef, isPlaying }: { audioRef: React.RefObject<HTMLAu
                     <Slider.Track bg="gray.500" h="5px">
                         <Slider.Range className="slider-hover" bg="white" transition="background-color 0.2s ease" />
                     </Slider.Track>
-                    <Slider.Thumbs boxSize={3} shadow="md" opacity={isPlaying ? "1" : "0"} />
+                    <Slider.Thumbs boxSize={3} shadow="md" opacity={isPlaying ? "1" : "0"} bg="white" />
                 </Slider.Control>
             </Slider.Root>
 

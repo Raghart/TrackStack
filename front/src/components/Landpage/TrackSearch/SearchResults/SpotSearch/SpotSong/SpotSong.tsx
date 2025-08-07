@@ -18,7 +18,7 @@ const SpotSong = ({ id, name, artists, album_cover, url_preview } : SongResponse
 
                 <LinkOverlay href={`/songs/${id}`} lineHeight={0.9} textAlign="center" letterSpacing="wide"
                     fontSize={SPOTSONG_FONTSIZES} lineClamp={2} fontFamily="'Barlow Condensed', sans-serif" 
-                    fontWeight="600">
+                    fontWeight="600" color="white">
                     {name}
                 </LinkOverlay>  
 

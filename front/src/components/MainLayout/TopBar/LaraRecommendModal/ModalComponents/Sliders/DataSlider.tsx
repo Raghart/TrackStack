@@ -29,7 +29,7 @@ const DataSlider = ({ params }:{ params: SlidersDataTypes }) => {
                     </Slider.Track>   
 
                     <Slider.Thumb index={0} boxSize={6} border="2px solid" borderColor={IconBorder} 
-                        _hover={{ boxShadow: Shadow }}>
+                        _hover={{ boxShadow: Shadow }} bg="blackAlpha.800">
                             <Slider.DraggingIndicator layerStyle="fill.solid" top={6} rounded="sm" px="1.5">
                                 <Slider.ValueText />
                             </Slider.DraggingIndicator>
