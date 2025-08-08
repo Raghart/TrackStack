@@ -7,7 +7,7 @@ import GenreBarBtns from "./GenreBarBtns";
 import { Bounce } from "react-awesome-reveal";
 
 const GenreBar = () => {
-    const { genres, atStart, atEnd, scrollRef, leftSentinel, rightSentinel } = useGenreBtns();
+    const { genres, atStart, atEnd, scrollRef, handleScroll } = useGenreBtns();
     return(
         <Flex w="full" h="full" borderRadius="2xl" direction="column" mt={2}>
             {genres.length > 0 ? (
@@ -23,8 +23,7 @@ const GenreBar = () => {
                     </Flex>
 
                     <Bounce triggerOnce delay={300} direction="left">
-                        <GenreBarBtns genres={genres} scrollRef={scrollRef} leftSentinel={leftSentinel} 
-                            rightSentinel={rightSentinel} />
+                        <GenreBarBtns genres={genres} handleScroll={handleScroll} scrollRef={scrollRef} />
                     </Bounce>
                 </>
             ) : (
