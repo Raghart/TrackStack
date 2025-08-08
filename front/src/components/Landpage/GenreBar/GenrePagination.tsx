@@ -1,4 +1,4 @@
-import { Box, IconButton, useBreakpointValue } from "@chakra-ui/react";
+import { Box, Flex, IconButton, useBreakpointValue } from "@chakra-ui/react";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
 const GenrePagination = ({ scrollRef, atStart, atEnd } : { scrollRef: React.RefObject<HTMLDivElement | null>,
@@ -12,17 +12,19 @@ const GenrePagination = ({ scrollRef, atStart, atEnd } : { scrollRef: React.RefO
     };
 
     return(
-        <Box>
+        <Flex>
             <IconButton bg="transparent" size="xs" borderRadius="full" onClick={() => scroll("left")}
-                _hover={{ transform: "scale(1.2)", "& .icon-color": { color: "white" } }} disabled={atStart}>
+                aria-label="Scroll left" _hover={{ transform: "scale(1.2)", "& .icon-color": { color: "white" } }} 
+                disabled={atStart}>
                 <Box className="icon-color" as={IoIosArrowBack} color="gray.200" />
             </IconButton>
             
             <IconButton bg="transparent" size="xs" borderRadius="full" onClick={() => scroll("right")} 
-                _hover={{ transform:"scale(1.2)", "& .icon-color": { color: "white" } }} disabled={atEnd}>
+                _hover={{ transform:"scale(1.2)", "& .icon-color": { color: "white" } }} disabled={atEnd}
+                aria-label="Scroll right">
                 <Box className="icon-color" as={IoIosArrowForward} color="gray.200" />
             </IconButton>
-        </Box>
+        </Flex>
     );
 };
 
