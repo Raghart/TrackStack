@@ -6,6 +6,7 @@ export interface SearchInitialState {
     results: MultipleSearchResult | null;
     query: string;
     isLoading: boolean;
+    isMobileSearch: boolean;
 };
 
 export interface MultipleSearchResult {
