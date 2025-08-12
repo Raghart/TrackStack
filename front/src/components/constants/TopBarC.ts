@@ -1,6 +1,6 @@
 import { SwitchLabelType } from "@/types/RecDataTypes";
 
-export const TOPBAR_SIZES = { base:"calc(100% - 155px)", sm:"calc(100% - 205px)", md: "calc(100% - 227px)", 
+export const TOPBAR_SIZES = { base:"calc(100% - 135px)", sm:"calc(100% - 205px)", md: "calc(100% - 227px)", 
     lg: "calc(100% - 245px)"};
 export const COUNT_FONTSIZE = { base: "16px", sm: "20px", md: "2xl", lg: "2xl"};
 export const SONGSTAT_ICON_BOXSIZE = { base: 5, sm: 5, md: 6, lg: 6};
@@ -15,8 +15,8 @@ export const LARA_OPT_SIZES = { base: "300px", sm: "300px", md: "330px", lg: "34
 export const SEGMENT_BTN_W = { base: "70px", sm:"70px", md: "85px", lg: "90px"};
 export const SEGMENT_FONTSIZE = { base: "12px", sm: "12px", md: "13px", lg:"14px"};
 export const SWITCH_BTN_TRANSITION = "box-shadow 0.2s ease-in-out, transform 0.2s ease-in-out";
-export const LEFT_SWITCH_PX = { base: 3, sm: 3, md: 3, lg: 4};
-export const RIGHT_SWITCH_PX = { base: 3, sm: 3, md: 4, lg: 4 };
+export const LEFT_SWITCH_PX = { base: 1, sm: 3, md: 3, lg: 4};
+export const RIGHT_SWITCH_PX = { base: 1, sm: 3, md: 4, lg: 4 };
 export const SLIDER_TAGS_PX_SIZES = { base: 1, sm: 2, md: 3, lg: 3 };
 export const SLIDER_TAGS_GAP_SIZES = { base: 5, sm: 5, md: 7, lg: 7 };
 export const COUNTBOX_SIZES = { base: "75px", sm: "100px", md: "180px", lg: "180px"};
