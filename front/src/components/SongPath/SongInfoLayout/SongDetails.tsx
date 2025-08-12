@@ -18,11 +18,11 @@ const SongDetails = () => {
                 {loading ? <Skeleton w="90%" h="full" /> : <SongInfoLayout {...songData} />}
             </GridItem>
 
-            <GridItem h="full" maxH="33vh" pl={2} pr={{ base: 1, sm: 2, md: 2, lg: 3 }}>
+            <GridItem h="full" maxH="33vh" pl={1} pr={{ base: 0, sm: 2, md: 2, lg: 3 }}>
                 {loading ? <Skeleton w="full" h="full" /> : <AlbumBox album_name={songData.album} />}
             </GridItem>
 
-            <GridItem h="full" maxH="35vh" w="full" pl={2} pr={{ base: 0, sm: 2, md: 2, lg: 3 }}>
+            <GridItem h="full" maxH="35vh" w="full" pl={1} pr={{ base: 0, sm: 2, md: 2, lg: 3 }}>
                 {loading ? <Skeleton w="full" h="full" /> : <GenreBox genres={songData.genres} />}
             </GridItem>
         </Grid>

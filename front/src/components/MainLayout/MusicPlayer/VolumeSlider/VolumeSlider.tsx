@@ -12,7 +12,7 @@ const VolumeSlider = ({ audioRef }: { audioRef: React.RefObject<HTMLAudioElement
 
             <Slider.Root flex="1" w="100%" defaultValue={[1]} min={0} max={1} variant="solid" step={0.01}
                 style={{ cursor: "pointer" }} value={[volume]} onValueChange={handleVolumeChange}
-                _hover={{ "& .slider-bg": { bg: "blue.500" } }}>
+                _hover={{ "& .slider-bg": { bg: "blue.500" } }} hideBelow="sm">
                 <Slider.Control>
                     <Slider.Track bg="gray.400" h="4px">
                         <Slider.Range className="slider-bg" bg="white" transition="background 0.2s ease" />
