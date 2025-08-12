@@ -14,6 +14,11 @@ export async function bootstrap() {
   app.useStaticAssets(publicPath);
 
   app.use((req: Request, res: Response, next: NextFunction) => {
+    res.removeHeader("Permissions-Policy");
+    next();
+  });
+
+  app.use((req: Request, res: Response, next: NextFunction) => {
     const isGetRequest = req.method === 'GET';
     const isAPIRoute =
       req.path.startsWith('/api') || req.path.startsWith('/graphql');
