@@ -11,7 +11,7 @@ const ActiveSongInfo = ({ activeSong } : { activeSong: SongResponse | null }) =>
             {activeSong ? (
                 <>
                     <Image src={activeSong.album_cover} transition="transform 0.2s ease" boxSize="40px" 
-                        borderRadius="full" _hover={{ transform: "scale(1.05)" }} />
+                        borderRadius="full" _hover={{ transform: "scale(1.05)" }} hideBelow="sm" />
                     <VStack gap={0} align="flex-start" maxW="210px">
                         <ActSongTitle {...activeSong} />
                         <ArtistLinks artists={activeSong.artists} size="13px" color="gray.400" fontWeight="600"

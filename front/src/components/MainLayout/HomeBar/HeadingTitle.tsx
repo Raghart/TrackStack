@@ -6,7 +6,8 @@ const HeadingTitle = () => {
     return(
         <Flex align="center" justify="center" gap={2} _hover={{ transform: "scale(1.1)" }} mb={6} userSelect="none" 
             transition="transform 0.2s ease">
-            <Icon as={MdLibraryMusic} color="blue.500" size={{ base: "sm", sm: "md",  md: "md", lg: "lg"}} />
+            <Icon as={MdLibraryMusic} color="blue.500" size={{ base: "sm", sm: "md",  md: "md", lg: "lg"}} 
+            hideBelow="sm" />
             <Heading fontSize={HOMEBAR_TITLE_FONTSIZE} letterSpacing="wide" fontFamily="'Barlow Condensed', sans-serif" 
                 fontWeight="600">
                 TrackStack
