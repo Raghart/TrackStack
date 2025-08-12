@@ -5,6 +5,7 @@ const initialState : SearchInitialState = {
     results: null,
     query: "",
     isLoading: false,
+    isMobileSearch: false,
 };
 
 const searchSlice = createSlice({
@@ -18,6 +19,7 @@ const searchSlice = createSlice({
             state.query = "";
             state.results = null;
             state.isLoading = false;
+            state.isMobileSearch = false;
         },
         setQueryResults(state, action : PayloadAction<MultipleSearchResult>) {
             state.results = action.payload;
@@ -25,10 +27,13 @@ const searchSlice = createSlice({
         },
         setIsLoading(state, action: PayloadAction<boolean>) {
             state.isLoading = action.payload;
-        }
+        },
+        setIsMobileSeach(state, action: PayloadAction<boolean>) {
+            state.isMobileSearch = action.payload;
+        },
     },
 });
 
-export const { setQuery, clearQuery, setQueryResults, setIsLoading } = searchSlice.actions;
+export const { setQuery, clearQuery, setQueryResults, setIsLoading, setIsMobileSeach } = searchSlice.actions;
 
 export default searchSlice.reducer;
