@@ -5,12 +5,13 @@ import HeadingTitle from "./HeadingTitle";
 import NavButtonCard from "./NavButtonCard";
 import { HOMEBAR_SIZES } from "@/components/constants/HomeBarC";
 import { Zoom } from "react-awesome-reveal";
+import { NAV_BAR_HEIGHT } from "@/components/constants/MainLayoutC";
 
 const HomeBar = () => {
     const NavButtons = useNavButtons();
     return(
-        <Box h="full" w="100%" maxW={HOMEBAR_SIZES} bg="blackAlpha.900" borderRadius="3xl" pt={4} border="2px solid" 
-            zIndex={1} borderColor="gray.800" boxShadow="md" position="fixed" maxH="85.5vh">
+        <Box h="full" maxH={NAV_BAR_HEIGHT} w="100%" maxW={HOMEBAR_SIZES} bg="blackAlpha.900" borderRadius="3xl" 
+            pt={4} border="2px solid" zIndex={1} borderColor="gray.800" boxShadow="md" position="fixed">
             <Zoom triggerOnce delay={200} direction="down">
                 <HeadingTitle />
             </Zoom>
