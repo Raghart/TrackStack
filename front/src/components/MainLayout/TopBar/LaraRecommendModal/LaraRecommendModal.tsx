@@ -1,4 +1,4 @@
-import { Dialog, Portal } from "@chakra-ui/react";
+import { Box, Dialog, Portal } from "@chakra-ui/react";
 import { useState } from "react";
 import BtnOpenModal from "./BtnOpenModal.tsx";
 import LaraModalHeader from "./Header/LaraModalHeader.tsx";
@@ -29,7 +29,12 @@ const LaraRecommendModal = () => {
                             <Zoom triggerOnce direction="left">
                                 <SendDataButton setOpen={setOpen} />
                             </Zoom>
-                            <LaraModalHeader />                            
+                            
+                            <Box flex="1" textAlign="center">
+                                <Zoom triggerOnce direction="right" delay={100}>
+                                    <LaraModalHeader />
+                                </Zoom>
+                            </Box>                            
                             <BtnCloseModal />
                         </Dialog.Header>
 
