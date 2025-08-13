@@ -14,7 +14,7 @@ const ArtistResults = ({ artistResults }: { artistResults: ArtistResponse[] }) =
             </Zoom>
 
             <Bounce triggerOnce direction="right">
-                <SimpleGrid columns={{ base: 2, sm: 3, md: 4, lg: 5 }} mt={2} gap={2}>
+                <SimpleGrid columns={{ base: 2, sm: 3, md: 3, lg: 5 }} mt={2} gap={2}>
                     <For each={artistResults}>
                         {(artist: ArtistResponse) => <ArtistSearchCard key={artist.id} {...artist} />}
                     </For>
