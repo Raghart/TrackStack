@@ -5,7 +5,7 @@ import SpotAlbumImg from "./SpotAlbumImg";
 import { AlbumResponse } from "@/types/albumTypes";
 
 const SpotAlbum = ({ name, artists, album_cover }: AlbumResponse) => {
-    const responsiveSize = useBreakpointValue({ base: "17px", sm: "20px", md: "24px", lg: "24px" });
+    const responsiveSize = useBreakpointValue({ base: "15px", sm: "20px", md: "24px", lg: "24px" });
     return(
         <LinkBox as={Card.Root} position="relative" flexDirection="row" overflow="hidden" bg="transparent" p={2}
             border="transparent" _hover={{ bg: "blue.800", "& .hover-card": { transform: "scale(1.1)" } }} mt={2}
@@ -35,5 +35,6 @@ const SpotAlbum = ({ name, artists, album_cover }: AlbumResponse) => {
         </LinkBox>
     );
 };
+
 
 export default SpotAlbum;
