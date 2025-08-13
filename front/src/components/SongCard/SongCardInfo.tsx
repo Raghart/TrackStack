@@ -6,8 +6,8 @@ import { SONGCARD_ART_FONTSIZES, SONGCARD_FONTSIZES } from "../constants/SongCar
 const SongCardInfo = ({ id, name, artists } : { id: number, name: string, artists: string[] }) => {
     const artistFontsizes = useBreakpointValue(SONGCARD_ART_FONTSIZES);
     return(
-        <Flex position="absolute" bottom="0" w="full" py={2} px={1} bg="blackAlpha.800" flexDirection="column" 
-            gap={0.5} textAlign="center">
+        <Flex position="absolute" bottom="0" w="full" px={1} bg="blackAlpha.800" flexDirection="column" 
+            gap={0.5} textAlign="center" py={{ base: 1, sm: 2 }}>
                 
             <Tooltip showArrow content={name} openDelay={500} closeDelay={100}
                 contentProps={{ css: { "--tooltip-bg": "colors.blue.500", "color": "white", fontWeight: "bold" } }}>
