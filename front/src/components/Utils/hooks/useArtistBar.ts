@@ -8,7 +8,7 @@ const useArtistBar = () => {
     const [page, setPage] = useState<number>(1);
     const limit = useBreakpointValue({ base: 3, sm: 5, md: 7, lg: 10 });
     const [seed] = useState<string>(Math.random().toString().slice(2));
-    const { loading, data, refetch } = useQuery(getAllArtists, {
+    const { data, refetch } = useQuery(getAllArtists, {
         skip: !limit,
         variables: { seed, page, limit },
     });
@@ -18,7 +18,7 @@ const useArtistBar = () => {
         if (limit) refetch({ seed, page, limit }); 
     },[page, seed, limit, refetch]);
 
-    return { artists, loading, page, setPage, limit }
+    return { artists, page, setPage, limit }
 };
 
 export default useArtistBar;

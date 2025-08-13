@@ -6,23 +6,19 @@ const useSongState = (audioRef: React.RefObject<HTMLAudioElement>) => {
 
     useEffect(() => {
         if (!audioRef.current || !activeSong) return;
+        const audio = audioRef.current;
         audioRef.current.src = activeSong.url_preview;
 
         if (isPlaying) {
-            audioRef.current.play();
-        }
+            const onCanPlay = () => { audio.play().catch(err => console.warn("Play failed", err.message)); };
+            audio.addEventListener("canplay", onCanPlay, { once: true });
+            return () => { audio.removeEventListener("canplay", onCanPlay); };
+        };
     }, [activeSong, audioRef, isPlaying]);
 
     useEffect(() => {
         if (!audioRef.current) return;
-        
-        if (isPlaying) {
-            audioRef.current.play().catch((err) => {
-                console.warn("Play failed", err.message);
-            });
-        } else {
-            audioRef.current.pause();
-        }
+        if (!isPlaying) { audioRef.current.pause(); };
     },[isPlaying, audioRef]);
 
     return { activeSong, isPlaying };
