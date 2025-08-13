@@ -20,7 +20,7 @@ const ActiveSongInfo = ({ activeSong } : { activeSong: SongResponse | null }) =>
                 </>
             ) : (
                 <>
-                    <SkeletonCircle bg="gray" size="40px" />
+                    <SkeletonCircle bg="gray" size="40px" hideBelow="sm" />
                     <SkeletonText noOfLines={2} w="full" maxW={ACT_SONG_WIDTH} bg="gray" />
                 </>
             )}
