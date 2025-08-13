@@ -1,6 +1,6 @@
 import { SwitchLabelType } from "@/types/RecDataTypes";
 
-export const TOPBAR_SIZES = { base:"calc(100% - 135px)", sm:"calc(100% - 205px)", md: "calc(100% - 227px)", 
+export const TOPBAR_SIZES = { base:"calc(100% - 135px)", sm:"calc(100% - 205px)", md: "calc(100% - 205px)", 
     lg: "calc(100% - 245px)"};
 export const COUNT_FONTSIZE = { base: "16px", sm: "20px", md: "2xl", lg: "2xl"};
 export const SONGSTAT_ICON_BOXSIZE = { base: 5, sm: 5, md: 6, lg: 6};
@@ -9,7 +9,7 @@ export const DATA_BTN_FONTSIZES = { base: "13px", sm: "15px", md: "20px", lg: "2
 export const DATA_BTN_PX = { base: 2, sm: 4, md: 5, lg: 6};
 export const DATA_BTN_TRANS = "background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease-in-out, boxShadow 0.2s ease-in-out"
 export const DATA_BTN_SHADOW = "0 0 12px var(--chakra-colors-blue-500)";
-export const LARA_HEADER_SIZES = { base: "26px", sm: "6xl", md: "65px", lg: "7xl"};
+export const LARA_HEADER_SIZES = { base: "26px", sm: "50px", md: "55px", lg: "7xl"};
 export const SLIDER_SIZES = { base: "230px", sm: "230px", md: "275px", lg:"300px"};
 export const LARA_OPT_SIZES = { base: "300px", sm: "300px", md: "330px", lg: "345px" };
 export const SEGMENT_BTN_W = { base: "70px", sm:"70px", md: "85px", lg: "90px"};

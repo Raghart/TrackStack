@@ -7,7 +7,7 @@ const AlbumBox = ({ album_name }: { album_name: string }) => {
         <Flex as={LinkBox} direction="column"textAlign="center" color="white" border="6px solid" borderRadius="xl" 
             borderColor="orange.600" transition="transform 0.3s ease, box-shadow 0.3s ease" backdropFilter="blur(10px)" 
             _hover={{ transform: "scale(1.05)", boxShadow: ALBUMBOX_SHADOW }} justify="center" h="full" maxH="full"
-            p={ALBUMBOX_PADDING} textShadow="0 1px 3px black">
+            p={ALBUMBOX_PADDING} textShadow="0 1px 3px black" w="full" maxW="full">
 
                 <Zoom triggerOnce direction="left" delay={100}>
                     <Heading color="yellow.400" letterSpacing="wider" fontWeight="700" 

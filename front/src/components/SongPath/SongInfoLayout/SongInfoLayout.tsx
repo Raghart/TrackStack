@@ -9,10 +9,10 @@ import { SONGBOX_SHADOW, SONGBOX_SIZES } from "../../constants/SongDetailsC";
 import { FullSongResponse } from "@/types/songTypes";
 
 const SongInfoLayout = ({ name, artists, year, duration, spotify_id }: FullSongResponse ) => {
-    const responsiveSize = useBreakpointValue({ base: "16px", sm: "24px", md: "3xl", lg: "3xl" });
+    const responsiveSize = useBreakpointValue({ base: "15px", sm: "24px", md: "25px", lg: "3xl" });
     return(
         <Flex align="center" transition="scale 0.3s ease" direction="column"  border="5px solid" justify="center" 
-            borderColor="blue.700" borderRadius="3xl" backdropFilter="blur(10px)" p={4} gap={6} h="full"
+            borderColor="blue.700" borderRadius="3xl" backdropFilter="blur(10px)" p={4} gap={4} h="full"
             _hover={{ boxShadow: SONGBOX_SHADOW, scale: "1.03"}} w="full" maxW={SONGBOX_SIZES}>
             
             <Box textAlign="center">

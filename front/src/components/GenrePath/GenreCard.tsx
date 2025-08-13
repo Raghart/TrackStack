@@ -11,7 +11,7 @@ const GenreCard = ({ name, icon }: GenreListFormat ) => {
 
             <Flex align="center" justify="center" textAlign="center">
                 <Icon className="hover-icon" as={icon} boxSize={GENRECARD_ICON_SIZES} color="teal.500" 
-                    filter="drop-shadow(1px 1px 2px black)" />
+                    filter="drop-shadow(1px 1px 2px black)" hideBelow="sm" />
                 <LinkOverlay href={`/genres/${name}`} color="white" fontWeight="600" textDecoration="none" 
                     fontSize={GENRECARD_FONTSIZES} lineClamp={2} wordBreak="break-word" whiteSpace="normal" 
                     fontFamily="'Barlow', sans-serif">

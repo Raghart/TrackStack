@@ -1,7 +1,7 @@
 export const SONGBOX_SIZES = { base: "120px", sm: "250px", md: "350px", lg: "450px" };
 export const SONGBOX_SHADOW = "0 0 5px var(--chakra-colors-blue-500), 0 0 10px var(--chakra-colors-blue-500), 0 0 15px var(--chakra-colors-blue-500)";
 export const SONGNAME_SHADOW = "0 0 5px var(--chakra-colors-blue-600), 0 0 5px var(--chakra-colors-blue-600)";
-export const SONGNAME_FONTSIZES = { base: "25px", sm: "35px", md: "5xl", lg: "55px" };
+export const SONGNAME_FONTSIZES = { base: "23px", sm: "35px", md: "5xl", lg: "55px" };
 export const YEAR_FONTSIZE = { base: "40px", sm: "5xl", md: "6xl", lg: "6xl" };
 export const DURATION_FONTSIZE = { base: "23px", sm: "33px", md: "4xl", lg: "5xl" };
 export const SPOTIFY_URL_FONTSIZE = { base: "19px", sm: "23px", md: "28px", lg: "4xl" };
@@ -10,7 +10,7 @@ export const SPOTIFY_LINK_SHADOW = "0 0 3px var(--chakra-colors-teal-600), 0 0 3
 export const ALBUMBOX_SHADOW = "0 0 5px var(--chakra-colors-orange-500), 0 0 10px var(--chakra-colors-orange-500), 0 0 15px var(--chakra-colors-orange-500)";
 export const ALBUMBOX_PADDING = { base: 1, sm: 1, md: 2, lg: 3 };
 export const ALBUMBOX_TITLE_FONTSIZE = { base: "22px", sm: "2xl", md: "2xl", lg: "3xl" };
-export const ALBUMBOX_FONTSIZE = { base: "17px", sm: "28px", md: "45px", lg: "45px" };
+export const ALBUMBOX_FONTSIZE = { base: "17px", sm: "28px", md: "40px", lg: "45px" };
 export const ALBUMBOX_LINECLAMPS = { base: 5, sm: 4, md: 3, lg: 3 };
 export const GENREBOX_PADDING = { base: 2, sm: 3, md: 4, lg: 4 };
 export const GENREBOX_SHADOW = "0 0 5px var(--chakra-colors-green-500), 0 0 10px var(--chakra-colors-green-500)";

@@ -2,7 +2,7 @@ import { Heading, Highlight } from "@chakra-ui/react";
 
 const LaraHeader = () => {
     return(
-        <Heading fontSize={{ base: "4xl", sm: "6xl", md: "7xl", lg: "7xl" }} fontWeight="bold" pt={2} 
+        <Heading fontSize={{ base: "4xl", sm: "5xl", md: "6xl", lg: "7xl" }} fontWeight="bold" pt={2} 
             userSelect="none" letterSpacing="wider" lineHeight={1} textAlign="center" fontStyle="italic"
             fontFamily="'Barlow Condensed', sans-serif">
             <Highlight query="Lara's" styles={{ bgGradient: "to-br", bgClip: "text", gradientFrom: "blue.500", 
