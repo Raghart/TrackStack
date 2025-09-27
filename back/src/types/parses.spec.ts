@@ -126,7 +126,7 @@ describe('parses return the data with the expected type', () => {
     });
 
     it('parseAlbumSong returns a typeGuarded array of songs if arg is an array of songs of the album', () => {
-      albumSongs.forEach((song) => expect(parseAlbumSong(song)).toBe(song));
+      expect(parseAlbumSong(albumSongs)).toBe(albumSongs);
     });
   });
 
