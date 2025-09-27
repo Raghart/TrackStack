@@ -6,7 +6,10 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { albumResSongs } from '../../test/data/albumsModule/AlbumData';
+import {
+  albumResSongs,
+  albumSongs,
+} from '../../test/data/albumsModule/AlbumData';
 
 describe('AlbumsResolver', () => {
   let resolver: AlbumsResolver;
@@ -19,6 +22,7 @@ describe('AlbumsResolver', () => {
         {
           provide: AlbumsService,
           useValue: {
+            fetchDBAlbumSongs: jest.fn().mockResolvedValue(albumSongs),
             getAllAlbumSongs: jest.fn().mockResolvedValue(albumResSongs),
           },
         },
@@ -35,7 +39,7 @@ describe('AlbumsResolver', () => {
 
   it('getAllAlbumSongs gets the expected results from the albums service', async () => {
     const results = await resolver.getAllAlbumSongs('testingAlbum');
-    expect(service.getAllAlbumSongs).toHaveBeenCalledWith('testingAlbum');
+    expect(service.fetchDBAlbumSongs).toHaveBeenCalledWith('testingAlbum');
     expect(results.length).toBe(5);
   });
 });
@@ -51,6 +55,7 @@ describe('AlbumsResolver Error handling', () => {
         {
           provide: AlbumsService,
           useValue: {
+            fetchDBAlbumSongs: jest.fn(),
             getAllAlbumSongs: jest.fn(),
           },
         },
@@ -62,7 +67,7 @@ describe('AlbumsResolver Error handling', () => {
   });
 
   it('getAllAlbumSongs throws NotFoundException when no songs are found for X album', async () => {
-    (service.getAllAlbumSongs as jest.Mock).mockRejectedValue(
+    (service.fetchDBAlbumSongs as jest.Mock).mockRejectedValue(
       new NotFoundException("Album: noAlbum couldn't be found!"),
     );
     await expect(resolver.getAllAlbumSongs('noAlbum')).rejects.toThrow(
@@ -71,11 +76,11 @@ describe('AlbumsResolver Error handling', () => {
     await expect(resolver.getAllAlbumSongs('noAlbum')).rejects.toThrow(
       "Album: noAlbum couldn't be found!",
     );
-    expect(service.getAllAlbumSongs).toHaveBeenCalledWith('noAlbum');
+    expect(service.fetchDBAlbumSongs).toHaveBeenCalledWith('noAlbum');
   });
 
   it('getAllAlbumSongs throws NotFoundException when no songs are found for X album', async () => {
-    (service.getAllAlbumSongs as jest.Mock).mockRejectedValue(
+    (service.fetchDBAlbumSongs as jest.Mock).mockRejectedValue(
       new InternalServerErrorException(
         new Error('Database Error: SequelizeTimeoutError: Connection refused'),
       ),
@@ -86,6 +91,6 @@ describe('AlbumsResolver Error handling', () => {
     await expect(resolver.getAllAlbumSongs('Duck')).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Connection refused',
     );
-    expect(service.getAllAlbumSongs).toHaveBeenCalledWith('Duck');
+    expect(service.fetchDBAlbumSongs).toHaveBeenCalledWith('Duck');
   });
 });

@@ -121,7 +121,7 @@ describe('Verify value Types', () => {
     });
 
     it('isAlbumSong returns true when it has the correct props', () => {
-      expect(isAlbumSong(albumSongs[0])).toBe(true);
+      expect(isAlbumSong(albumSongs)).toBe(true);
     });
   });
 

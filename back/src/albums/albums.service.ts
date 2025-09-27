@@ -40,36 +40,13 @@ export class AlbumsService {
     return parseAlbumSong(rawData.get({ plain: true }));
   }
 
-  async getAllAlbumSongs(album: string): Promise<SongResponse[]> {
-    const rawData = await safeQuery(() =>
-      this.albumModel.findOne({
-        where: { name: { [Op.iLike]: `${album}` } },
-        include: [
-          {
-            model: SongsModel,
-            attributes: ['id', 'name', 'url_preview'],
-            include: [
-              {
-                model: ArtistsModel,
-                attributes: ['name'],
-                through: { attributes: [] },
-              },
-            ],
-          },
-        ],
-      }),
-    );
-
-    if (!rawData)
-      throw new NotFoundException(`Album: ${album} couldn't be found!`);
-    const data = parseAlbumSong(rawData.get({ plain: true }));
-
-    return data.songs.map((song) => ({
+  getAllAlbumSongs(albumSongs: AlbumWithSongs): SongResponse[] {
+    return albumSongs.songs.map((song) => ({
       id: song.id,
       name: song.name,
       artists: parseStringArray(song.artists.map((artist) => artist.name)),
       url_preview: song.url_preview,
-      album_cover: data.url_image,
+      album_cover: albumSongs.url_image,
     }));
   }
 }
