@@ -35,7 +35,7 @@ describe('GenresResolver', () => {
   describe('getAllGenres', () => {
     it('getAllGenres recieves the expected list of genres', async () => {
       const results = await resolver.getAllGenres();
-      
+
       expect(service.getAllGenres).toHaveBeenCalled();
       expect(results).toHaveLength(9);
       expect(results).toEqual(genreResData);

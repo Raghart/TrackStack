@@ -35,7 +35,8 @@ export class AlbumsService {
       }),
     );
 
-    if (!rawData) throw new NotFoundException(`Album: ${album} couldn't be found!`);
+    if (!rawData)
+      throw new NotFoundException(`Album: ${album} couldn't be found!`);
     return parseAlbumSong(rawData.get({ plain: true }));
   }
 

@@ -35,7 +35,7 @@ describe('GenresService', () => {
       });
     });
 
-    it('getAllGenres recieves expected list of genres', async () => {
+    it('getAllGenres recieves expected list of genres', () => {
       const results = service.getAllGenres(genreData);
       expect(results).toHaveLength(genreData.length);
       expect(results).toEqual(genreData.map((genre) => genre.genre));

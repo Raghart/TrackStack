@@ -11,7 +11,9 @@ export class GenresService {
   ) {}
 
   async fetchDBGenres(): Promise<{ genre: string }[]> {
-    return safeQuery(() => this.genreModel.findAll({ attributes: ['genre'], raw: true }) );
+    return safeQuery(() =>
+      this.genreModel.findAll({ attributes: ['genre'], raw: true }),
+    );
   }
 
   getAllGenres(genres: { genre: string }[]): string[] {
