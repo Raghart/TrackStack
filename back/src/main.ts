@@ -14,7 +14,7 @@ export async function bootstrap() {
   app.useStaticAssets(publicPath);
 
   app.use((req: Request, res: Response, next: NextFunction) => {
-    res.removeHeader("Permissions-Policy");
+    res.removeHeader('Permissions-Policy');
     next();
   });
 

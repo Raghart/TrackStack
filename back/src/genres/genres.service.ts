@@ -10,10 +10,13 @@ export class GenresService {
     @InjectModel(GenresModel) private genreModel: typeof GenresModel,
   ) {}
 
-  async getAllGenres(): Promise<string[]> {
-    const genres = await safeQuery(() =>
+  async fetchDBGenres(): Promise<{ genre: string }[]> {
+    return safeQuery(() =>
       this.genreModel.findAll({ attributes: ['genre'], raw: true }),
     );
+  }
+
+  getAllGenres(genres: { genre: string }[]): string[] {
     return parseStringArray(genres.map((g) => g.genre));
   }
 }
