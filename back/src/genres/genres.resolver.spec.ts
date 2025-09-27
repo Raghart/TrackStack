@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GenresResolver } from './genres.resolver';
 import { GenresService } from './genres.service';
 import { InternalServerErrorException } from '@nestjs/common';
-import { genreResData } from '../../test/data/genres/genresData';
+import { genreData, genreResData } from '../../test/data/genres/genresData';
 import { TimeoutResError } from 'src/utils/mockErrors';
 
 describe('GenresResolver', () => {
@@ -17,6 +17,7 @@ describe('GenresResolver', () => {
         {
           provide: GenresService,
           useValue: {
+            fetchDBGenres: jest.fn().mockResolvedValue(genreData),
             getAllGenres: jest.fn().mockResolvedValue(genreResData),
           },
         },
@@ -34,8 +35,9 @@ describe('GenresResolver', () => {
   describe('getAllGenres', () => {
     it('getAllGenres recieves the expected list of genres', async () => {
       const results = await resolver.getAllGenres();
+      
       expect(service.getAllGenres).toHaveBeenCalled();
-      expect(results.length).toBe(9);
+      expect(results).toHaveLength(9);
       expect(results).toEqual(genreResData);
     });
   });
@@ -48,6 +50,7 @@ describe('GenresResolver', () => {
           {
             provide: GenresService,
             useValue: {
+              fetchDBGenres: TimeoutResError(),
               getAllGenres: TimeoutResError(),
             },
           },
@@ -65,7 +68,6 @@ describe('GenresResolver', () => {
       await expect(resolver.getAllGenres()).rejects.toThrow(
         'Database Error: SequelizeTimeoutError: Query timed out',
       );
-      expect(service.getAllGenres).toHaveBeenCalled();
     });
   });
 });

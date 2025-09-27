@@ -15,9 +15,7 @@ describe('GenresService', () => {
         GenresService,
         {
           provide: getModelToken(GenresModel),
-          useValue: {
-            findAll: jest.fn().mockResolvedValue(genreData),
-          },
+          useValue: {},
         },
       ],
     }).compile();
@@ -30,21 +28,21 @@ describe('GenresService', () => {
   });
 
   describe('getAllGenres', () => {
-    it('getAllGenres recieves a list of strings', async () => {
-      const results = await service.getAllGenres();
+    it('getAllGenres parses correctly the recieved list of string', () => {
+      const results = service.getAllGenres(genreData);
       results.forEach((genre) => {
         expect(typeof genre).toBe('string');
       });
     });
 
     it('getAllGenres recieves expected list of genres', async () => {
-      const results = await service.getAllGenres();
+      const results = service.getAllGenres(genreData);
       expect(results).toHaveLength(genreData.length);
       expect(results).toEqual(genreData.map((genre) => genre.genre));
     });
   });
 
-  describe('getAllGenres DB Connection Error Handler', () => {
+  describe('fetchDBGenres throws an Error when it cant communicate with the database', () => {
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: [
@@ -62,10 +60,10 @@ describe('GenresService', () => {
     });
 
     it("getAllGenres throws InternalServerErrorException when it couldn't connect with the DB", async () => {
-      await expect(service.getAllGenres()).rejects.toThrow(
+      await expect(service.fetchDBGenres()).rejects.toThrow(
         InternalServerErrorException,
       );
-      await expect(service.getAllGenres()).rejects.toThrow(
+      await expect(service.fetchDBGenres()).rejects.toThrow(
         'Database Error: SequelizeTimeoutError: Connection refused',
       );
     });
