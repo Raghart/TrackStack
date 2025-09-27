@@ -62,7 +62,6 @@ export class AlbumsService {
     if (!rawData)
       throw new NotFoundException(`Album: ${album} couldn't be found!`);
     const data = parseAlbumSong(rawData.get({ plain: true }));
-    console.log(data)
 
     return data.songs.map((song) => ({
       id: song.id,
