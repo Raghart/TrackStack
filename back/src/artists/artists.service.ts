@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
 import { parseArtistSongs, parseFloatNum, parseString } from 'src/types/parses';
 import { SongResponse } from 'src/types/songAttributes';
-import { ArtistResponse } from 'src/types/artistAttributes';
+import { ArtistResponse, ArtistWithSongs } from 'src/types/artistAttributes';
 import safeQuery from 'src/utils/safeQuery';
 import { InvalidPaginationException } from 'src/utils/PaginationError';
 import { AlbumsModel } from '../../models/albums/albums.model';
@@ -21,11 +21,11 @@ export class ArtistsService {
     @InjectModel(ArtistsModel) private artistModel: typeof ArtistsModel,
   ) {}
 
-  async getAllArtists(
+  async fetchDBArtists(
     seed: string,
     page = 1,
     limit = 20,
-  ): Promise<ArtistResponse[]> {
+  ): Promise<ArtistWithSongs[]> {
     if (!isNumericString(seed))
       throw new BadRequestException(
         'The seed must be a valid string of numbers.',
@@ -51,17 +51,18 @@ export class ArtistsService {
       }),
     );
 
-    const data = rawData.map((entry) =>
-      parseArtistSongs(entry.get({ plain: true })),
-    );
-    return data.map((artist) => ({
+    return rawData.map((entry) => parseArtistSongs(entry.get({ plain: true })));
+  }
+
+  getAllArtists(artistData: ArtistWithSongs[]): ArtistResponse[] {
+    return artistData.map((artist) => ({
       id: artist.id,
       name: artist.name,
       album_cover: parseString(artist.songs[0].album.url_image),
     }));
   }
 
-  async getAllArtistSongs(artist: string): Promise<SongResponse[]> {
+  async fetchDBArtistSongs(artist: string): Promise<ArtistWithSongs> {
     const rawData = await safeQuery(() =>
       this.artistModel.findOne({
         where: { name: { [Op.iLike]: `${artist}` } },
@@ -80,12 +81,14 @@ export class ArtistsService {
       throw new NotFoundException(
         `The artist: '${artist}' doesn't exist in the DB!`,
       );
-    const data = parseArtistSongs(rawData.get({ plain: true }));
+    return parseArtistSongs(rawData.get({ plain: true }));
+  }
 
-    return data.songs.map((song) => ({
+  getAllArtistSongs(artist: ArtistWithSongs): SongResponse[] {
+    return artist.songs.map((song) => ({
       id: parseFloatNum(song.id),
       name: parseString(song.name),
-      artists: [data.name],
+      artists: [artist.name],
       url_preview: parseString(song.url_preview),
       album_cover: parseString(song.album.url_image),
     }));
