@@ -143,7 +143,7 @@ describe('parses return the data with the expected type', () => {
     });
 
     it('parseArtistSongs ensure that the songs match the correct artist songs object structure', () => {
-      artistSongs.forEach((song) => expect(parseArtistSongs(song)).toBe(song));
+      expect(parseArtistSongs(artistSongs)).toBe(artistSongs);
     });
   });
 

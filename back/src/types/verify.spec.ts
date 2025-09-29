@@ -136,7 +136,7 @@ describe('Verify value Types', () => {
     });
 
     it('isArtistSongs returns true when it has the correct props', () => {
-      expect(isArtistSongs(artistSongs[0])).toBe(true);
+      expect(isArtistSongs(artistSongs)).toBe(true);
     });
   });
 
