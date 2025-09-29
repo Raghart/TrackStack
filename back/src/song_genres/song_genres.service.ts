@@ -20,6 +20,7 @@ import { GenresModel } from '../../models/genres/genres.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { isNumericString } from 'src/types/verify';
+import { SongGenresRPWithSongs } from 'src/types/songGenresAttributes';
 
 @Injectable()
 export class SongGenresService {
@@ -28,12 +29,12 @@ export class SongGenresService {
     private songGenreModel: typeof SongGenresModel,
   ) {}
 
-  async getAllGenreSongs(
+  async fetchDBSongGenres(
     seed: string,
     genre: string,
     page = 1,
     limit = 20,
-  ): Promise<SongResponse[]> {
+  ): Promise<SongGenresRPWithSongs[]> {
     if (!isNumericString(seed))
       throw new BadRequestException(
         'The seed must be a valid string of numbers.',
@@ -66,17 +67,18 @@ export class SongGenresService {
         `The genre: '${genre}' doesn't exist in the DB!`,
       );
 
-    return rawData.map((entry) => {
-      const data = parseSongGenres(entry.get({ plain: true }));
-      return {
-        id: parseFloatNum(data.song.id),
-        name: parseString(data.song.name),
-        artists: parseStringArray(
-          data.song.artists.map((artist) => artist.name),
-        ),
-        url_preview: parseString(data.song.url_preview),
-        album_cover: parseString(data.song.album.url_image),
-      };
-    });
+    return rawData.map((entry) => parseSongGenres(entry.get({ plain: true })));
+  }
+
+  getAllGenreSongs(data: SongGenresRPWithSongs[]): SongResponse[] {
+    return data.map((entry) => ({
+      id: parseFloatNum(entry.song.id),
+      name: parseString(entry.song.name),
+      artists: parseStringArray(
+        entry.song.artists.map((artist) => artist.name),
+      ),
+      url_preview: parseString(entry.song.url_preview),
+      album_cover: parseString(entry.song.album.url_image),
+    }));
   }
 }

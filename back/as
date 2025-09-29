@@ -1,0 +1,7 @@
+[33m2ac8029[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mback-update[m[33m, [m[1;31morigin/back-update[m[33m, [m[1;31morigin/back-changes[m[33m, [m[1;32mmain[m[33m)[m HEAD@{0}: checkout: moving from main to back-update
+[33m2ac8029[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mback-update[m[33m, [m[1;31morigin/back-update[m[33m, [m[1;31morigin/back-changes[m[33m, [m[1;32mmain[m[33m)[m HEAD@{1}: Branch: renamed refs/heads/back-changes to refs/heads/main
+[33m2ac8029[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mback-update[m[33m, [m[1;31morigin/back-update[m[33m, [m[1;31morigin/back-changes[m[33m, [m[1;32mmain[m[33m)[m HEAD@{3}: checkout: moving from back-changes to back-changes
+[33m2ac8029[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mback-update[m[33m, [m[1;31morigin/back-update[m[33m, [m[1;31morigin/back-changes[m[33m, [m[1;32mmain[m[33m)[m HEAD@{4}: checkout: moving from back-changes to back-changes
+[33m2ac8029[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mback-update[m[33m, [m[1;31morigin/back-update[m[33m, [m[1;31morigin/back-changes[m[33m, [m[1;32mmain[m[33m)[m HEAD@{5}: checkout: moving from main to back-changes
+[33m2ac8029[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mback-update[m[33m, [m[1;31morigin/back-update[m[33m, [m[1;31morigin/back-changes[m[33m, [m[1;32mmain[m[33m)[m HEAD@{6}: commit (merge): commit
+[33m80121fb[m HEAD@{7}: commit (initial): r & t Refactoring genres & genres test

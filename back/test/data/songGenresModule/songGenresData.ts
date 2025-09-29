@@ -1,122 +1,55 @@
-export const songGenresData = [
+import { TESTING_IMG, TESTING_URL } from '../../../test/constants/constants';
+
+export const songGenresData: any[] = [
   {
-    id: 123456,
-    song_id: 1,
-    genre_id: 1,
-    genre: [
-      { genre: 'Rock' },
-      { genre: 'Alternative' },
-      { genre: 'grunge' },
-      { genre: 'Alternative Rock' },
-    ],
+    id: 736298,
+    song_id: 641705,
+    genre_id: 1624,
+    genre: { id: 1624, genre: 'Rock' },
     song: {
-      id: 1,
-      name: 'Come as You Are',
-      artists: [{ name: 'Nirvana' }],
-      url_preview:
-        'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
-      album: {
-        url_image:
-          'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
-      },
+      id: 641705,
+      name: "I'm A Mover",
+      spotify_id: '09Sweb86ucflf42EJNELf2',
+      url_preview: TESTING_URL,
+      duration: 2.94,
+      year: 2010,
+      album_id: 271488,
+      artists: [{ name: 'Iron Maiden' }],
+      album: { url_image: TESTING_IMG },
     },
   },
   {
-    id: 123457,
-    song_id: 2,
-    genre_id: 1,
-    genre: [
-      { genre: 'British' },
-      { genre: 'Pop' },
-      { genre: 'Love' },
-      { genre: 'Indie' },
-      { genre: 'Alternative Rock' },
-      { genre: 'Britpop' },
-    ],
+    id: 718402,
+    song_id: 635687,
+    genre_id: 1624,
+    genre: { id: 1624, genre: 'Rock' },
     song: {
-      id: 2,
-      name: 'Wonderwall',
-      artists: [{ name: 'Oasis' }],
-      url_preview:
-        'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
-      album: {
-        url_image:
-          'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
-      },
+      id: 635687,
+      name: 'Smoking Umbrellas',
+      spotify_id: '11IYFUPlQPPAQjxfl2HncN',
+      url_preview: TESTING_URL,
+      duration: 3.98,
+      year: 1996,
+      album_id: 269049,
+      artists: [{ name: 'Failure Band' }],
+      album: { url_image: TESTING_IMG },
     },
   },
   {
-    id: 123458,
-    song_id: 3,
-    genre_id: 1,
-    genre: [
-      { genre: 'Rock' },
-      { genre: 'Alternative' },
-      { genre: 'Indie' },
-      { genre: 'Alternative Rock' },
-      { genre: 'British' },
-      { genre: '00s' },
-      { genre: 'Britpop' },
-    ],
+    id: 566593,
+    song_id: 598474,
+    genre_id: 1624,
+    genre: { id: 1624, genre: 'Rock' },
     song: {
-      id: 3,
-      name: 'Take Me Out',
-      artists: [{ name: 'Franz Ferdinand' }],
-      url_preview:
-        'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
-      album: {
-        url_image:
-          'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
-      },
-    },
-  },
-  {
-    id: 123459,
-    song_id: 4,
-    genre_id: 1,
-    genre: [
-      { genre: 'Rock' },
-      { genre: 'Alternative' },
-      { genre: 'Indie' },
-      { genre: 'Alternative Rock' },
-      { genre: 'Indie Rock' },
-      { genre: '00s' },
-    ],
-    song: {
-      id: 4,
-      name: 'Mr. Brightside',
-      artists: [{ name: 'The Killers' }],
-      url_preview:
-        'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
-      album: {
-        url_image:
-          'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
-      },
-    },
-  },
-  {
-    id: 123410,
-    song_id: 5,
-    genre_id: 1,
-    genre: [
-      { genre: 'Rock' },
-      { genre: 'Alternative' },
-      { genre: 'Indie' },
-      { genre: 'Alternative Rock' },
-      { genre: 'Indie Rock' },
-      { genre: 'British' },
-      { genre: '90s' },
-    ],
-    song: {
-      id: 5,
-      name: 'Creep',
-      artists: [{ name: 'Radiohead' }],
-      url_preview:
-        'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
-      album: {
-        url_image:
-          'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
-      },
+      id: 598474,
+      name: 'Bones',
+      spotify_id: '15yTaT0c9Y9aPiKEwHeftf',
+      url_preview: TESTING_URL,
+      duration: 3.78,
+      year: 2010,
+      album_id: 254380,
+      artists: [{ name: 'Imagine Dragons' }],
+      album: { url_image: TESTING_IMG },
     },
   },
 ];
@@ -124,47 +57,23 @@ export const songGenresData = [
 export const songGenresResData = [
   {
     id: 1,
-    name: 'Come as You Are',
-    artists: ['Nirvana'],
-    url_preview:
-      'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
-    album_cover:
-      'https://i.scdn.co/image/ab67616d0000b273fbc71c99f9c1296c56dd51b6',
+    name: "I'm A Mover",
+    artists: ['Iron Maiden'],
+    url_preview: TESTING_URL,
+    album_cover: TESTING_IMG,
   },
   {
     id: 2,
-    name: 'Wonderwall',
-    artists: ['Oasis'],
-    url_preview:
-      'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
-    album_cover:
-      'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
+    name: 'Smoking Umbrellas',
+    artists: ['Failure Band'],
+    url_preview: TESTING_URL,
+    album_cover: TESTING_IMG,
   },
   {
     id: 3,
-    name: 'Take Me Out',
-    artists: ['Franz Ferdinand'],
-    url_preview:
-      'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
-    album_cover:
-      'https://i.scdn.co/image/ab67616d0000b27309a90531b85be7899c3234c4',
-  },
-  {
-    id: 4,
-    name: 'Mr. Brightside',
-    artists: ['The Killers'],
-    url_preview:
-      'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
-    album_cover:
-      'https://i.scdn.co/image/ab67616d0000b273ccdddd46119a4ff53eaf1f5d',
-  },
-  {
-    id: 5,
-    name: 'Creep',
-    artists: ['Radiohead'],
-    url_preview:
-      'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
-    album_cover:
-      'https://i.scdn.co/image/ab67616d0000b273df55e326ed144ab4f5cecf95',
+    name: 'Bones',
+    artists: ['Imagine Dragons'],
+    url_preview: TESTING_URL,
+    album_cover: TESTING_IMG,
   },
 ];
