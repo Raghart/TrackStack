@@ -15,7 +15,14 @@ import {
   parseString,
   parseStringArray,
 } from 'src/types/parses';
-import { FullSongResponse, SongResponse } from 'src/types/songAttributes';
+import {
+  FullSongResponse,
+  FullSongResponseAttributes,
+  IASongResponse,
+  IASongScores,
+  SongResponse,
+  SongResponseAttributes,
+} from 'src/types/songAttributes';
 import safeQuery from 'src/utils/safeQuery';
 import { InvalidPaginationException } from 'src/utils/PaginationError';
 import { AlbumsModel } from '../../models/albums/albums.model';
@@ -32,7 +39,7 @@ export class SongsService {
     return await safeQuery(() => this.songModel.count());
   }
 
-  async getLandpageSongs(limit = 20): Promise<SongResponse[]> {
+  async fetchLandpageSongs(limit = 20): Promise<SongResponseAttributes[]> {
     if (limit < 1) throw new InvalidPaginationException('limit', limit);
 
     const rawData = await safeQuery(() =>
@@ -50,20 +57,22 @@ export class SongsService {
         ],
       }),
     );
-
-    return rawData.map((entry) => {
-      const song = parseSongResponse(entry.get({ plain: true }));
-      return {
-        id: song.id,
-        name: song.name,
-        artists: parseStringArray(song.artists.map((a) => a.name)),
-        url_preview: song.url_preview,
-        album_cover: parseString(song.album.url_image),
-      };
-    });
+    return rawData.map((entry) =>
+      parseSongResponse(entry.get({ plain: true })),
+    );
   }
 
-  async getSongData(songID: number): Promise<FullSongResponse> {
+  parseSongList(songData: SongResponseAttributes[]): SongResponse[] {
+    return songData.map((song) => ({
+      id: song.id,
+      name: song.name,
+      artists: parseStringArray(song.artists.map((a) => a.name)),
+      url_preview: song.url_preview,
+      album_cover: parseString(song.album.url_image),
+    }));
+  }
+
+  async fetchFullSongData(songID: number): Promise<FullSongResponseAttributes> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -97,23 +106,55 @@ export class SongsService {
 
     if (!rawData) throw new NotFoundException("Song doesn't exist in the DB!");
 
-    const data = parseFullSongResponse(rawData.get({ plain: true }));
+    return parseFullSongResponse(rawData.get({ plain: true }));
+  }
+
+  parseFullSong(songData: FullSongResponseAttributes): FullSongResponse {
     return {
-      id: data.id,
-      name: data.name,
-      artists: parseStringArray(data.artists.map((artist) => artist.name)),
-      genres: parseStringArray(data.genres.map((g) => g.genre)),
-      album: parseString(data.album.name),
-      album_cover: parseString(data.album.url_image),
-      duration: data.duration,
-      year: data.year,
-      spotify_id: data.spotify_id,
-      url_preview: data.url_preview,
+      id: songData.id,
+      name: songData.name,
+      artists: parseStringArray(songData.artists.map((artist) => artist.name)),
+      genres: parseStringArray(songData.genres.map((g) => g.genre)),
+      album: parseString(songData.album.name),
+      album_cover: parseString(songData.album.url_image),
+      duration: songData.duration,
+      year: songData.year,
+      spotify_id: songData.spotify_id,
+      url_preview: songData.url_preview,
     };
   }
 
-  async getIARecommendations(
-    genres: string[] = [],
+  async fetchIARecommendations(genres: string[]): Promise<IASongResponse[]> {
+    const rawSongData = await safeQuery(() =>
+      this.songModel.findAll({
+        attributes: ['id', 'name', 'url_preview', 'duration'],
+        limit: 100,
+        order: Sequelize.literal('RANDOM()'),
+        include: [
+          { model: AlbumsModel, attributes: ['url_image'] },
+          {
+            model: ArtistsModel,
+            attributes: ['name'],
+            through: { attributes: [] },
+          },
+          { model: SongDetailsModel },
+          {
+            model: GenresModel,
+            through: { attributes: [] },
+            duplicating: false,
+            ...(genres.length > 0
+              ? { where: { genre: { [Op.in]: genres } } }
+              : {}),
+          },
+        ],
+      }),
+    );
+    return rawSongData.map((entry) =>
+      parseIASongData(entry.get({ plain: true })),
+    );
+  }
+
+  parseUserVector(
     energy: number = 0.5,
     speechLevel: number = 0.165,
     danceability: number = 0.5,
@@ -122,35 +163,8 @@ export class SongsService {
     voiceType: number = 0.05,
     mood: number = 1,
     acousticness: number = 0.15,
-  ): Promise<SongResponse[]> {
-    const rawSongData = await safeQuery(() =>
-      this.songModel.findAll({
-        attributes: ['id', 'name', 'url_preview', 'duration'],
-        limit: 100,
-        order: Sequelize.literal('RANDOM()'),
-        include: [
-          {
-            model: GenresModel,
-            ...(genres.length > 0
-              ? { where: { genre: { [Op.in]: genres } } }
-              : {}),
-            through: { attributes: [] },
-          },
-          { model: AlbumsModel, attributes: ['url_image'] },
-          {
-            model: ArtistsModel,
-            attributes: ['name'],
-            through: { attributes: [] },
-          },
-          { model: SongDetailsModel },
-        ],
-      }),
-    );
-
-    const songData = rawSongData.map((entry) =>
-      parseIASongData(entry.get({ plain: true })),
-    );
-    const userVector: number[] = parseNumberArray([
+  ) {
+    return parseNumberArray([
       energy,
       speechLevel,
       danceability,
@@ -160,8 +174,13 @@ export class SongsService {
       mood,
       acousticness,
     ]);
+  }
 
-    const songScores = songData
+  getIARecommendations(
+    songData: IASongResponse[],
+    userVector: number[],
+  ): IASongScores[] {
+    return songData
       .map((song) => ({
         id: song.id,
         song,
@@ -169,17 +188,9 @@ export class SongsService {
       }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 40);
-
-    return songScores.map(({ song }) => ({
-      id: song.id,
-      name: song.name,
-      artists: parseStringArray(song.artists.map((artist) => artist.name)),
-      url_preview: song.url_preview,
-      album_cover: parseString(song.album.url_image),
-    }));
   }
 
-  async getRandomSong(): Promise<SongResponse> {
+  async fetchRandomSong(): Promise<SongResponseAttributes> {
     const result = await safeQuery(() =>
       this.songModel.findOne({
         order: Sequelize.literal('RANDOM()'),
@@ -193,8 +204,10 @@ export class SongsService {
         ],
       }),
     );
-    const randomSong = parseSongResponse(result?.get({ plain: true }));
+    return parseSongResponse(result?.get({ plain: true }));
+  }
 
+  parseSongResponse(randomSong: SongResponseAttributes): SongResponse {
     return {
       id: randomSong.id,
       name: randomSong.name,
@@ -206,7 +219,7 @@ export class SongsService {
     };
   }
 
-  async getNextSong(songID: number): Promise<SongResponse> {
+  async fetchNextSong(songID: number): Promise<SongResponseAttributes> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -244,17 +257,10 @@ export class SongsService {
         `The song with this id doesn't exist: ${songID}`,
       );
 
-    const song = parseSongResponse(rawData.get({ plain: true }));
-    return {
-      id: song.id,
-      name: song.name,
-      artists: parseStringArray(song.artists.map((artist) => artist.name)),
-      album_cover: parseString(song.album.url_image),
-      url_preview: song.url_preview,
-    };
+    return parseSongResponse(rawData.get({ plain: true }));
   }
 
-  async getPreviousSong(songID: number): Promise<SongResponse> {
+  async fetchPreviousSong(songID: number): Promise<SongResponseAttributes> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -292,13 +298,6 @@ export class SongsService {
         `The song with this id doesn't exist: ${songID}`,
       );
 
-    const song = parseSongResponse(rawData.get({ plain: true }));
-    return {
-      id: song.id,
-      name: song.name,
-      artists: parseStringArray(song.artists.map((artist) => artist.name)),
-      album_cover: parseString(song.album.url_image),
-      url_preview: song.url_preview,
-    };
+    return parseSongResponse(rawData.get({ plain: true }));
   }
 }
