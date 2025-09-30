@@ -6,9 +6,11 @@ import {
   songResData,
   singleSongData,
   songResFullData,
+  songResIAData,
 } from '../../test/data/songsModule/resSongData';
 import { InternalServerErrorException } from '@nestjs/common';
 import { ConnectionResError, TimeoutResError } from 'src/utils/mockErrors';
+import { USER_VECTOR } from '../../test/constants/constants';
 
 describe('SongsResolver', () => {
   let service: SongsService;
@@ -21,11 +23,18 @@ describe('SongsResolver', () => {
         {
           provide: SongsService,
           useValue: {
-            getLandpageSongs: jest.fn().mockResolvedValue(songResData),
+            fetchLandpageSongs: jest.fn().mockResolvedValue(songResData),
+            parseSongList: jest.fn().mockReturnValue(songResData),
             getDBLength: jest.fn().mockResolvedValue(songResData.length),
-            getSongData: jest.fn().mockResolvedValue(songResFullData),
-            getIARecommendations: jest.fn().mockResolvedValue(songResData),
-            getRandomSong: jest.fn().mockResolvedValue(singleSongData),
+            fetchFullSongData: jest.fn().mockResolvedValue(songResFullData),
+            parseFullSong: jest.fn().mockReturnValue(songResFullData),
+            fetchIARecommendations: jest.fn().mockResolvedValue(songResData),
+            parseUserVector: jest.fn().mockReturnValue(USER_VECTOR),
+            getIARecommendations: jest.fn().mockReturnValue(songResIAData),
+            fetchRandomSong: jest.fn().mockResolvedValue(singleSongData),
+            fetchNextSong: jest.fn().mockResolvedValue(singleSongData),
+            fetchPreviousSong: jest.fn().mockResolvedValue(singleSongData),
+            parseSongResponse: jest.fn().mockReturnValue(singleSongData),
             getNextSong: jest.fn().mockResolvedValue(singleSongData),
             getPreviousSong: jest.fn().mockResolvedValue(singleSongData),
           },
@@ -49,70 +58,60 @@ describe('SongsResolver', () => {
 
   it('getLandpageSongs recieves the expected DBLength from the songs service', async () => {
     const results = await resolver.getLandpageSongs(5);
-    expect(service.getLandpageSongs).toHaveBeenCalledWith(5);
-    expect(results.length).toBe(5);
+    expect(service.fetchLandpageSongs).toHaveBeenCalledWith(5);
+    expect(results).toHaveLength(5);
   });
 
   it('getSongData recieves the expected DBLength from the songs service', async () => {
     const result = await resolver.getSongData(2);
-    expect(service.getSongData).toHaveBeenCalledWith(2);
+    expect(service.fetchFullSongData).toHaveBeenCalledWith(2);
     expect(result).toEqual(songResFullData);
   });
 
   it('getIARecommendations recieves the expected DBLength from the songs service', async () => {
     const results = await resolver.getIARecommendations(
       ['Rock', 'Alternative', 'Alternative Rock', 'Grunge'],
-      0.826,
-      0.04,
-      0.508,
-      2.5,
-      0.543,
-      0.000459,
-      0,
-      0.000175,
+      ...USER_VECTOR,
     );
 
-    expect(service.getIARecommendations).toHaveBeenCalledWith(
-      ['Rock', 'Alternative', 'Alternative Rock', 'Grunge'],
-      0.826,
-      0.04,
-      0.508,
-      2.5,
-      0.543,
-      0.000459,
-      0,
-      0.000175,
-    );
-    expect(results.length).toBe(5);
+    expect(service.fetchIARecommendations).toHaveBeenCalledWith([
+      'Rock',
+      'Alternative',
+      'Alternative Rock',
+      'Grunge',
+    ]);
+    expect(service.parseUserVector).toHaveBeenCalledWith(...USER_VECTOR);
+
+    expect(results).toHaveLength(5);
   });
 
-  it('getRandomSong recieves the expected DBLength from the songs service', async () => {
+  it('fetchRandomSong recieves the expected DBLength from the songs service', async () => {
     const result = await resolver.getRandomSong();
-    expect(service.getRandomSong).toHaveBeenCalled();
+    expect(service.fetchRandomSong).toHaveBeenCalled();
     expect(result).toEqual(singleSongData);
   });
 
   it('getNextSong recieves the expected DBLength from the songs service', async () => {
     const result = await resolver.getNextSong(1);
-    expect(service.getNextSong).toHaveBeenCalledWith(1);
+    expect(service.fetchNextSong).toHaveBeenCalledWith(1);
     expect(result).toEqual(singleSongData);
   });
 
   it("getNextSong recieves a song even if the id doesn't match", async () => {
     const result = await resolver.getNextSong(999);
-    expect(service.getNextSong).toHaveBeenCalledWith(999);
+    expect(service.fetchNextSong).toHaveBeenCalledWith(999);
     expect(result).toEqual(singleSongData);
   });
 
   it('getPreviousSong recieves the expected DBLength from the songs service', async () => {
     const result = await resolver.getPreviousSong(3);
-    expect(service.getPreviousSong).toHaveBeenCalledWith(3);
+    expect(service.fetchPreviousSong).toHaveBeenCalledWith(3);
     expect(result).toEqual(singleSongData);
   });
 
   it("getPreviousSong recieves a song even if the id doesn't match", async () => {
     const result = await resolver.getPreviousSong(999);
-    expect(service.getPreviousSong).toHaveBeenCalledWith(999);
+    expect(service.fetchPreviousSong).toHaveBeenCalledWith(999);
     expect(result).toEqual(singleSongData);
   });
 });
@@ -129,12 +128,12 @@ describe('SongsResolver Error Handling', () => {
           provide: SongsService,
           useValue: {
             getDBLength: TimeoutResError(),
-            getLandpageSongs: TimeoutResError(),
-            getRandomSong: TimeoutResError(),
-            getSongData: TimeoutResError(),
-            getIARecommendations: ConnectionResError(),
-            getNextSong: ConnectionResError(),
-            getPreviousSong: ConnectionResError(),
+            fetchLandpageSongs: TimeoutResError(),
+            fetchRandomSong: TimeoutResError(),
+            fetchFullSongData: TimeoutResError(),
+            fetchIARecommendations: ConnectionResError(),
+            fetchNextSong: ConnectionResError(),
+            fetchPreviousSong: ConnectionResError(),
           },
         },
       ],
@@ -161,7 +160,7 @@ describe('SongsResolver Error Handling', () => {
     await expect(resolver.getLandpageSongs(5)).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Query timed out',
     );
-    expect(service.getLandpageSongs).toHaveBeenCalledWith(5);
+    expect(service.fetchLandpageSongs).toHaveBeenCalledWith(5);
   });
 
   it("getRandomSong throws InternalServerErrorException when the service couldn't connect with the DB", async () => {
@@ -171,7 +170,7 @@ describe('SongsResolver Error Handling', () => {
     await expect(resolver.getRandomSong()).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Query timed out',
     );
-    expect(service.getRandomSong).toHaveBeenCalled();
+    expect(service.fetchRandomSong).toHaveBeenCalled();
   });
 
   it("getSongData throws InternalServerErrorException when the service couldn't connect with the DB", async () => {
@@ -181,51 +180,21 @@ describe('SongsResolver Error Handling', () => {
     await expect(resolver.getSongData(999)).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Query timed out',
     );
-    expect(service.getSongData).toHaveBeenCalledWith(999);
+    expect(service.fetchFullSongData).toHaveBeenCalledWith(999);
   });
 
   it("getIARecommendations throws InternalServerErrorException when the service couldn't connect with the DB", async () => {
     await expect(
-      resolver.getIARecommendations(
-        [],
-        0.826,
-        0.04,
-        0.508,
-        2.5,
-        0.543,
-        0.000459,
-        0,
-        0.000175,
-      ),
+      resolver.getIARecommendations([], ...USER_VECTOR),
     ).rejects.toThrow(InternalServerErrorException);
 
     await expect(
-      resolver.getIARecommendations(
-        [],
-        0.826,
-        0.04,
-        0.508,
-        2.5,
-        0.543,
-        0.000459,
-        0,
-        0.000175,
-      ),
+      resolver.getIARecommendations([], ...USER_VECTOR),
     ).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Connection refused',
     );
 
-    expect(service.getIARecommendations).toHaveBeenCalledWith(
-      [],
-      0.826,
-      0.04,
-      0.508,
-      2.5,
-      0.543,
-      0.000459,
-      0,
-      0.000175,
-    );
+    expect(service.fetchIARecommendations).toHaveBeenCalledWith([]);
   });
 
   it("getNextSong throws InternalServerErrorException when the service couldn't connect with the DB", async () => {
@@ -235,7 +204,7 @@ describe('SongsResolver Error Handling', () => {
     await expect(resolver.getNextSong(1)).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Connection refused',
     );
-    expect(service.getNextSong).toHaveBeenCalledWith(1);
+    expect(service.fetchNextSong).toHaveBeenCalledWith(1);
   });
 
   it("getNextSong throws InternalServerErrorException when the service couldn't connect with the DB", async () => {
@@ -245,6 +214,6 @@ describe('SongsResolver Error Handling', () => {
     await expect(resolver.getPreviousSong(3)).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Connection refused',
     );
-    expect(service.getPreviousSong).toHaveBeenCalledWith(3);
+    expect(service.fetchPreviousSong).toHaveBeenCalledWith(3);
   });
 });

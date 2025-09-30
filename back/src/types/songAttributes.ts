@@ -23,6 +23,12 @@ export interface SongResponseAttributes extends SongAttributes {
   album: AlbumsModel;
 }
 
+export interface IASongScores {
+  id: number;
+  song: SongResponseAttributes;
+  score: number;
+}
+
 export interface SongResponse {
   id: number;
   name: string;

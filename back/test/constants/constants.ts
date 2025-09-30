@@ -8,3 +8,13 @@ export const searchError =
   "ElasticSearch is not responding: Timeout Error: It's taking too long";
 export const NOGENRE_ERROR = "The genre: 'noGenre' doesn't exist in the DB!";
 export const WRONG_OBJ = { id: 123, name: 'papelon', url_image: '', songs: [] };
+export const USER_VECTOR: [
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+  number,
+] = [0.826, 0.04, 0.508, 2.5, 0.543, 0.000459, 0, 0.000175];
