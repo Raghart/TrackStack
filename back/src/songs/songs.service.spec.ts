@@ -81,7 +81,7 @@ describe('SongsService', () => {
 
   describe('getRandomSong', () => {
     it('parseSongResponse gets a random Song with correct props', () => {
-      const songResponse = service.parseSongResponse(songData[0]);
+      const songResponse = service.parseSongData(songData[0]);
       expectSongProps([songResponse]);
     });
   });

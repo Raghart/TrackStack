@@ -34,7 +34,7 @@ describe('SongsResolver', () => {
             fetchRandomSong: jest.fn().mockResolvedValue(singleSongData),
             fetchNextSong: jest.fn().mockResolvedValue(singleSongData),
             fetchPreviousSong: jest.fn().mockResolvedValue(singleSongData),
-            parseSongResponse: jest.fn().mockReturnValue(singleSongData),
+            parseSongData: jest.fn().mockReturnValue(singleSongData),
             getNextSong: jest.fn().mockResolvedValue(singleSongData),
             getPreviousSong: jest.fn().mockResolvedValue(singleSongData),
           },
