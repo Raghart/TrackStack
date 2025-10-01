@@ -4,9 +4,7 @@ import { ArtistsResolver } from './artists.resolver';
 import { ArtistsService } from './artists.service';
 import {
   artistResData,
-  artistSongs,
   artistsResSongs,
-  artistUnformattedData,
 } from '../../test/data/artistsModule/resArtistData';
 import {
   InternalServerErrorException,
@@ -26,9 +24,7 @@ describe('ArtistsResolver', () => {
         {
           provide: ArtistsService,
           useValue: {
-            fetchDBArtists: jest.fn().mockResolvedValue(artistUnformattedData),
             getAllArtists: jest.fn().mockResolvedValue(artistResData),
-            fetchDBArtistSongs: jest.fn().mockResolvedValue(artistSongs),
             getAllArtistSongs: jest.fn().mockResolvedValue(artistsResSongs),
           },
         },
@@ -45,14 +41,14 @@ describe('ArtistsResolver', () => {
 
   it('getAllArtists recieves the expected results from the artists service', async () => {
     const results = await resolver.getAllArtists('1', 1, 5);
-    expect(service.fetchDBArtists).toHaveBeenCalledWith('1', 1, 5);
+    expect(service.getAllArtists).toHaveBeenCalledWith('1', 1, 5);
     expect(results).toHaveLength(5);
     expect(results).toEqual(artistResData);
   });
 
   it('getAllArtistSongs recieves the expected results from the artists service', async () => {
     const results = await resolver.getAllArtistSongs('Nirvana');
-    expect(service.fetchDBArtistSongs).toHaveBeenCalledWith('Nirvana');
+    expect(service.getAllArtistSongs).toHaveBeenCalledWith('Nirvana');
     expect(results).toHaveLength(5);
     expect(results).toEqual(artistsResSongs);
   });
@@ -69,9 +65,7 @@ describe('ArtistsResolver Error Handler', () => {
         {
           provide: ArtistsService,
           useValue: {
-            fetchDBArtists: jest.fn(),
             getAllArtists: jest.fn(),
-            fetchDBArtistSongs: jest.fn(),
             getAllArtistSongs: jest.fn(),
           },
         },
@@ -83,9 +77,9 @@ describe('ArtistsResolver Error Handler', () => {
   });
 
   describe('getAllArtists', () => {
-    it('fetchDBArtists throws InvalidPaginationException when page < 1', async () => {
+    it('fetchArtists throws InvalidPaginationException when page < 1', async () => {
       const INVALID_PAGE = -500;
-      (service.fetchDBArtists as jest.Mock).mockRejectedValue(
+      (service.getAllArtists as jest.Mock).mockRejectedValue(
         new InvalidPaginationException('page', INVALID_PAGE),
       );
 
@@ -97,7 +91,7 @@ describe('ArtistsResolver Error Handler', () => {
         resolver.getAllArtists('123456', INVALID_PAGE, 5),
       ).rejects.toThrow(`Invalid page: ${INVALID_PAGE} must be >= 1`);
 
-      expect(service.fetchDBArtists).toHaveBeenCalledWith(
+      expect(service.getAllArtists).toHaveBeenCalledWith(
         '123456',
         INVALID_PAGE,
         5,
@@ -105,7 +99,7 @@ describe('ArtistsResolver Error Handler', () => {
     });
 
     it("getAllArtists throws InternalServerErrorException when the request couldn't connect with the DB", async () => {
-      (service.fetchDBArtists as jest.Mock).mockRejectedValue(
+      (service.getAllArtists as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(
           new Error(
             'Database Error: SequelizeTimeoutError: Connection refused',
@@ -118,12 +112,12 @@ describe('ArtistsResolver Error Handler', () => {
       await expect(resolver.getAllArtists('123456', 1, 5)).rejects.toThrow(
         'Database Error: SequelizeTimeoutError: Connection refused',
       );
-      expect(service.fetchDBArtists).toHaveBeenCalledWith('123456', 1, 5);
+      expect(service.getAllArtists).toHaveBeenCalledWith('123456', 1, 5);
     });
 
     it('getAllArtists throws InvalidPaginationException when page < 1', async () => {
       const INVALID_LIMIT = -500;
-      (service.fetchDBArtists as jest.Mock).mockRejectedValue(
+      (service.getAllArtists as jest.Mock).mockRejectedValue(
         new InvalidPaginationException('limit', INVALID_LIMIT),
       );
       await expect(
@@ -134,7 +128,7 @@ describe('ArtistsResolver Error Handler', () => {
         resolver.getAllArtists('123456', 1, INVALID_LIMIT),
       ).rejects.toThrow(`Invalid limit: ${INVALID_LIMIT} must be >= 1`);
 
-      expect(service.fetchDBArtists).toHaveBeenCalledWith(
+      expect(service.getAllArtists).toHaveBeenCalledWith(
         '123456',
         1,
         INVALID_LIMIT,
@@ -144,7 +138,7 @@ describe('ArtistsResolver Error Handler', () => {
 
   describe('getAllArtistSongs', () => {
     it('getAllArtistSongs throws NotFoundException when the artist is not found in the DB!', async () => {
-      (service.fetchDBArtistSongs as jest.Mock).mockRejectedValue(
+      (service.getAllArtistSongs as jest.Mock).mockRejectedValue(
         new NotFoundException(NOTFOUND_ERROR),
       );
       await expect(resolver.getAllArtistSongs('Benito')).rejects.toThrow(
@@ -153,11 +147,11 @@ describe('ArtistsResolver Error Handler', () => {
       await expect(resolver.getAllArtistSongs('Benito')).rejects.toThrow(
         NOTFOUND_ERROR,
       );
-      expect(service.fetchDBArtistSongs).toHaveBeenCalledWith('Benito');
+      expect(service.getAllArtistSongs).toHaveBeenCalledWith('Benito');
     });
 
     it("getAllArtistSongs throws InternalServerErrorException when the request couldn't connect with the DB", async () => {
-      (service.fetchDBArtistSongs as jest.Mock).mockRejectedValue(
+      (service.getAllArtistSongs as jest.Mock).mockRejectedValue(
         new InternalServerErrorException(
           new Error('Database Error: SequelizeTimeoutError: Query timed out'),
         ),
@@ -170,7 +164,7 @@ describe('ArtistsResolver Error Handler', () => {
         'Database Error: SequelizeTimeoutError: Query timed out',
       );
 
-      expect(service.fetchDBArtistSongs).toHaveBeenCalledWith('Duck');
+      expect(service.getAllArtistSongs).toHaveBeenCalledWith('Duck');
     });
   });
 });

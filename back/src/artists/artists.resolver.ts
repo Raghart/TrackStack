@@ -13,15 +13,13 @@ export class ArtistsResolver {
     @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
     @Args('limit', { type: () => Int, defaultValue: 20 }) limit: number,
   ): Promise<ArtistsResultsDto[]> {
-    const results = await this.ArtistService.fetchDBArtists(seed, page, limit);
-    return this.ArtistService.getAllArtists(results);
+    return this.ArtistService.getAllArtists(seed, page, limit);
   }
 
   @Query(() => [SongResponseDto], { name: 'getAllArtistSongs' })
   async getAllArtistSongs(
     @Args('artist', { type: () => String }) artist: string,
   ): Promise<SongResponseDto[]> {
-    const results = await this.ArtistService.fetchDBArtistSongs(artist);
-    return this.ArtistService.getAllArtistSongs(results);
+    return this.ArtistService.getAllArtistSongs(artist);
   }
 }

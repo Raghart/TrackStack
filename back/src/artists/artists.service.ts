@@ -21,7 +21,7 @@ export class ArtistsService {
     @InjectModel(ArtistsModel) private artistModel: typeof ArtistsModel,
   ) {}
 
-  async fetchDBArtists(
+  async fetchArtists(
     seed: string,
     page = 1,
     limit = 20,
@@ -54,7 +54,7 @@ export class ArtistsService {
     return rawData.map((entry) => parseArtistSongs(entry.get({ plain: true })));
   }
 
-  getAllArtists(artistData: ArtistWithSongs[]): ArtistResponse[] {
+  parseArtists(artistData: ArtistWithSongs[]): ArtistResponse[] {
     return artistData.map((artist) => ({
       id: artist.id,
       name: artist.name,
@@ -62,7 +62,16 @@ export class ArtistsService {
     }));
   }
 
-  async fetchDBArtistSongs(artist: string): Promise<ArtistWithSongs> {
+  async getAllArtists(
+    seed: string,
+    page: number,
+    limit: number,
+  ): Promise<ArtistResponse[]> {
+    const artistResults = await this.fetchArtists(seed, page, limit);
+    return this.parseArtists(artistResults);
+  }
+
+  async fetchArtistSongs(artist: string): Promise<ArtistWithSongs> {
     const rawData = await safeQuery(() =>
       this.artistModel.findOne({
         where: { name: { [Op.iLike]: `${artist}` } },
@@ -84,7 +93,7 @@ export class ArtistsService {
     return parseArtistSongs(rawData.get({ plain: true }));
   }
 
-  getAllArtistSongs(artist: ArtistWithSongs): SongResponse[] {
+  parseArtistSongs(artist: ArtistWithSongs): SongResponse[] {
     return artist.songs.map((song) => ({
       id: parseFloatNum(song.id),
       name: parseString(song.name),
@@ -92,5 +101,10 @@ export class ArtistsService {
       url_preview: parseString(song.url_preview),
       album_cover: parseString(song.album.url_image),
     }));
+  }
+
+  async getAllArtistSongs(artist: string): Promise<SongResponse[]> {
+    const artistSongs = await this.fetchArtistSongs(artist);
+    return this.parseArtistSongs(artistSongs);
   }
 }

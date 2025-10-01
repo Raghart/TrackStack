@@ -41,9 +41,9 @@ describe('ArtistsService', () => {
     expect(service).toBeDefined();
   });
 
-  describe('getAllArtists', () => {
-    it('getAllArtists returns artists with expected props', () => {
-      const results = service.getAllArtists(artistData);
+  describe('parseArtists', () => {
+    it('parseArtists returns artists with expected props', () => {
+      const results = service.parseArtists(artistData);
       expect(results.length).toBe(LIMIT);
 
       results.forEach((artist) =>
@@ -58,62 +58,62 @@ describe('ArtistsService', () => {
     it('fetchDBArtists throws InvalidPaginationException when the page is invalid', async () => {
       const INVALID_PAGE = -500;
       await expect(
-        service.fetchDBArtists('123456', INVALID_PAGE, 5),
+        service.fetchArtists('123456', INVALID_PAGE, 5),
       ).rejects.toThrow(InvalidPaginationException);
       await expect(
-        service.fetchDBArtists('123456', INVALID_PAGE, 5),
+        service.fetchArtists('123456', INVALID_PAGE, 5),
       ).rejects.toThrow(`Invalid page: ${INVALID_PAGE} must be >= 1`);
     });
 
-    it('fetchDBArtists throws BadRequestException when seed is invalid', async () => {
+    it('fetchArtists throws BadRequestException when seed is invalid', async () => {
       const INVALID_SEED = 'papitas123456';
-      await expect(service.fetchDBArtists(INVALID_SEED, 1, 5)).rejects.toThrow(
+      await expect(service.fetchArtists(INVALID_SEED, 1, 5)).rejects.toThrow(
         BadRequestException,
       );
-      await expect(service.fetchDBArtists(INVALID_SEED, 1, 5)).rejects.toThrow(
+      await expect(service.fetchArtists(INVALID_SEED, 1, 5)).rejects.toThrow(
         'The seed must be a valid string of numbers.',
       );
     });
 
-    it('fetchDBArtists throws InvalidPaginationException when page = 0', async () => {
+    it('fetchArtists throws InvalidPaginationException when page = 0', async () => {
       const INVALID_PAGE = 0;
       await expect(
-        service.fetchDBArtists('123456', INVALID_PAGE, 5),
+        service.fetchArtists('123456', INVALID_PAGE, 5),
       ).rejects.toThrow(InvalidPaginationException);
       await expect(
-        service.fetchDBArtists('123456', INVALID_PAGE, 5),
+        service.fetchArtists('123456', INVALID_PAGE, 5),
       ).rejects.toThrow(`Invalid page: ${INVALID_PAGE} must be >= 1`);
     });
 
-    it('fetchDBArtists throws InvalidPaginationException when the limit is invalid', async () => {
+    it('fetchArtists throws InvalidPaginationException when the limit is invalid', async () => {
       const INVALID_LIMIT = -500;
       await expect(
-        service.fetchDBArtists('123456', 1, INVALID_LIMIT),
+        service.fetchArtists('123456', 1, INVALID_LIMIT),
       ).rejects.toThrow(InvalidPaginationException);
       await expect(
-        service.fetchDBArtists('123456', 1, INVALID_LIMIT),
+        service.fetchArtists('123456', 1, INVALID_LIMIT),
       ).rejects.toThrow(`Invalid limit: ${INVALID_LIMIT} must be >= 1`);
     });
 
-    it('fetchDBArtists throws InvalidPaginationException when the limit = 0', async () => {
+    it('fetchArtists throws InvalidPaginationException when the limit = 0', async () => {
       const INVALID_LIMIT = 0;
       await expect(
-        service.fetchDBArtists('123456', 1, INVALID_LIMIT),
+        service.fetchArtists('123456', 1, INVALID_LIMIT),
       ).rejects.toThrow(InvalidPaginationException);
       await expect(
-        service.fetchDBArtists('123456', 1, INVALID_LIMIT),
+        service.fetchArtists('123456', 1, INVALID_LIMIT),
       ).rejects.toThrow(`Invalid limit: ${INVALID_LIMIT} must be >= 1`);
     });
   });
 
-  describe('getAllArtistSongs', () => {
-    it('getAllArtistSongs returns a list of objects with correct properties', () => {
-      const results = service.getAllArtistSongs(artistSongs);
+  describe('parseArtistSongs', () => {
+    it('parseArtistSongs returns a list of objects with correct properties', () => {
+      const results = service.parseArtistSongs(artistSongs);
       expectSongProps(results);
     });
 
     it('getAllArtistSongs get specific artist songs', () => {
-      const results = service.getAllArtistSongs(artistSongs);
+      const results = service.parseArtistSongs(artistSongs);
       const songNames = [
         'Come as You Are',
         'Lithium',
@@ -147,20 +147,20 @@ describe('ArtistsService DB Connection Error Handler', () => {
     service = module.get<ArtistsService>(ArtistsService);
   });
 
-  it("fetchDBArtists throws InternalServerErrorException when it couldn't connect with the DB", async () => {
-    await expect(service.fetchDBArtists('1', 1, 5)).rejects.toThrow(
+  it("fetchArtists throws InternalServerErrorException when it couldn't connect with the DB", async () => {
+    await expect(service.fetchArtists('1', 1, 5)).rejects.toThrow(
       InternalServerErrorException,
     );
-    await expect(service.fetchDBArtists('1', 1, 5)).rejects.toThrow(
+    await expect(service.fetchArtists('1', 1, 5)).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Connection refused',
     );
   });
 
-  it("fetchDBArtistSongs throws InternalServerErrorException when it couldn't connect with the DB", async () => {
-    await expect(service.fetchDBArtistSongs('Felipez')).rejects.toThrow(
+  it("fetchArtistSongs throws InternalServerErrorException when it couldn't connect with the DB", async () => {
+    await expect(service.fetchArtistSongs('Felipez')).rejects.toThrow(
       InternalServerErrorException,
     );
-    await expect(service.fetchDBArtistSongs('Felipez')).rejects.toThrow(
+    await expect(service.fetchArtistSongs('Felipez')).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Query timed out',
     );
   });
