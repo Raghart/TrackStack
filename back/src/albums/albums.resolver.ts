@@ -11,7 +11,6 @@ export class AlbumsResolver {
   async getAllAlbumSongs(
     @Args('album', { type: () => GraphQLString }) album: string,
   ): Promise<SongResponseDto[]> {
-    const results = await this.albumsService.fetchDBAlbumSongs(album);
-    return this.albumsService.getAllAlbumSongs(results);
+    return this.albumsService.getAllAlbumSongs(album);
   }
 }
