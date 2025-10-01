@@ -10,7 +10,6 @@ import { buildSongVector } from './utils/buildSongVector';
 import {
   parseFullSongResponse,
   parseIASongData,
-  parseNumberArray,
   parseSongResponse,
   parseString,
   parseStringArray,
@@ -30,6 +29,7 @@ import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import { SongDetailsModel } from '../../models/song_details/SongDetails.model';
+import { parseUserVector } from './utils/parseUserVector';
 
 @Injectable()
 export class SongsService {
@@ -70,6 +70,11 @@ export class SongsService {
       url_preview: song.url_preview,
       album_cover: parseString(song.album.url_image),
     }));
+  }
+
+  async getLandpageSongs(limit: number): Promise<SongResponse[]> {
+    const songData = await this.fetchLandpageSongs(limit);
+    return this.parseSongList(songData);
   }
 
   async fetchFullSongData(songID: number): Promise<FullSongResponseAttributes> {
@@ -124,6 +129,11 @@ export class SongsService {
     };
   }
 
+  async getSongData(songID: number) {
+    const songData = await this.fetchFullSongData(songID);
+    return this.parseFullSong(songData);
+  }
+
   async fetchIARecommendations(genres: string[]): Promise<IASongResponse[]> {
     const rawSongData = await safeQuery(() =>
       this.songModel.findAll({
@@ -154,29 +164,7 @@ export class SongsService {
     );
   }
 
-  parseUserVector(
-    energy: number = 0.5,
-    speechLevel: number = 0.165,
-    danceability: number = 0.5,
-    duration: number = 2.5,
-    sentiment: number = 0.5,
-    voiceType: number = 0.05,
-    mood: number = 1,
-    acousticness: number = 0.15,
-  ) {
-    return parseNumberArray([
-      energy,
-      speechLevel,
-      danceability,
-      duration,
-      sentiment,
-      voiceType,
-      mood,
-      acousticness,
-    ]);
-  }
-
-  getIARecommendations(
+  calculateIARecommendations(
     songData: IASongResponse[],
     userVector: number[],
   ): IASongScores[] {
@@ -188,6 +176,35 @@ export class SongsService {
       }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 40);
+  }
+
+  async getIARecommendations(
+    genres: string[],
+    energy: number,
+    speechLevel: number,
+    danceability: number,
+    duration: number,
+    sentiment: number,
+    voiceType: number,
+    mood: number,
+    acousticness: number,
+  ): Promise<SongResponse[]> {
+    const songData = await this.fetchIARecommendations(genres);
+    const userVector = parseUserVector(
+      energy,
+      speechLevel,
+      danceability,
+      duration,
+      sentiment,
+      voiceType,
+      mood,
+      acousticness,
+    );
+
+    const songScores = this.calculateIARecommendations(songData, userVector);
+    const songList = songScores.map((entry) => entry.song);
+
+    return this.parseSongList(songList);
   }
 
   async fetchRandomSong(): Promise<SongResponseAttributes> {
@@ -205,6 +222,11 @@ export class SongsService {
       }),
     );
     return parseSongResponse(result?.get({ plain: true }));
+  }
+
+  async getRandomSong() {
+    const randomSong = await this.fetchRandomSong();
+    return this.parseSongData(randomSong);
   }
 
   parseSongData(songData: SongResponseAttributes): SongResponse {
@@ -258,6 +280,11 @@ export class SongsService {
     return parseSongResponse(rawData.get({ plain: true }));
   }
 
+  async getNextSong(songId: number): Promise<SongResponse> {
+    const songData = await this.fetchNextSong(songId);
+    return this.parseSongData(songData);
+  }
+
   async fetchPreviousSong(songID: number): Promise<SongResponseAttributes> {
     if (songID < 1)
       throw new BadRequestException(
@@ -297,5 +324,10 @@ export class SongsService {
       );
 
     return parseSongResponse(rawData.get({ plain: true }));
+  }
+
+  async getPreviousSong(songID: number) {
+    const songData = await this.fetchPreviousSong(songID);
+    return this.parseSongData(songData);
   }
 }
