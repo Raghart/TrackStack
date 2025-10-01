@@ -15,7 +15,7 @@ export class AlbumsService {
     @InjectModel(AlbumsModel) private albumModel: typeof AlbumsModel,
   ) {}
 
-  async fetchDBAlbumSongs(album: string): Promise<AlbumWithSongs> {
+  async fetchAlbumSongs(album: string): Promise<AlbumWithSongs> {
     const rawData = await safeQuery(() =>
       this.albumModel.findOne({
         where: { name: { [Op.iLike]: `${album}` } },
@@ -40,7 +40,7 @@ export class AlbumsService {
     return parseAlbumSong(rawData.get({ plain: true }));
   }
 
-  getAllAlbumSongs(albumSongs: AlbumWithSongs): SongResponse[] {
+  parseAlbumSongs(albumSongs: AlbumWithSongs): SongResponse[] {
     return albumSongs.songs.map((song) => ({
       id: song.id,
       name: song.name,
@@ -48,5 +48,10 @@ export class AlbumsService {
       url_preview: song.url_preview,
       album_cover: albumSongs.url_image,
     }));
+  }
+
+  async getAllAlbumSongs(album: string): Promise<SongResponse[]> {
+    const albumSongs = await this.fetchAlbumSongs(album);
+    return this.parseAlbumSongs(albumSongs);
   }
 }

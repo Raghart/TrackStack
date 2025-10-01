@@ -25,14 +25,14 @@ describe('AlbumsService', () => {
     service = module.get<AlbumsService>(AlbumsService);
   });
 
-  describe('getAllAlbumSongs returns parsed songs of the same album', () => {
+  describe('parseAlbumSongs returns parsed songs of the same album', () => {
     it('it returns a list of songs of the same album with has correct properties', () => {
-      const results = service.getAllAlbumSongs(albumSongs);
+      const results = service.parseAlbumSongs(albumSongs);
       expectSongProps(results);
     });
 
     it('it parses correctly the songs of a specific album', () => {
-      const results = service.getAllAlbumSongs(albumSongs);
+      const results = service.parseAlbumSongs(albumSongs);
       expect(results.length).toBeGreaterThan(0);
       expectSongData(results[0], 'Come as You Are', 'Nirvana');
     });
@@ -58,12 +58,12 @@ describe('AlbumsService DB Connection Error handler', () => {
     service = module.get<AlbumsService>(AlbumsService);
   });
 
-  describe('fetchDBAlbumSongs Timeout Error', () => {
-    it("fetchDBAlbumSongs throws InternalServerErrorException when the request could't connect with the DB", async () => {
-      await expect(service.fetchDBAlbumSongs('Duck')).rejects.toThrow(
+  describe('fetchAlbumSongs Timeout Error', () => {
+    it("fetchAlbumSongs throws InternalServerErrorException when the request could't connect with the DB", async () => {
+      await expect(service.fetchAlbumSongs('Duck')).rejects.toThrow(
         InternalServerErrorException,
       );
-      await expect(service.fetchDBAlbumSongs('Duck')).rejects.toThrow(
+      await expect(service.fetchAlbumSongs('Duck')).rejects.toThrow(
         'Database Error: SequelizeTimeoutError: Query timed out',
       );
     });
