@@ -3,10 +3,10 @@ import { GenresService } from './genres.service';
 import { getModelToken } from '@nestjs/sequelize';
 import { InternalServerErrorException } from '@nestjs/common';
 import { SequelizeConnectionError } from 'src/utils/mockErrors';
-import { genreData } from '../../test/data/genres/genresData';
+import { genreData, genreResData } from '../../test/data/genres/genresData';
 import { GenresModel } from '../../models/genres/genres.model';
 
-describe('GenresService', () => {
+describe('GenresService should retrieve all the posible genres avaibles in the database', () => {
   let service: GenresService;
 
   beforeEach(async () => {
@@ -15,7 +15,9 @@ describe('GenresService', () => {
         GenresService,
         {
           provide: getModelToken(GenresModel),
-          useValue: {},
+          useValue: {
+            findAll: jest.fn().mockResolvedValue(genreData),
+          },
         },
       ],
     }).compile();
@@ -23,26 +25,25 @@ describe('GenresService', () => {
     service = module.get<GenresService>(GenresService);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+  it('parseGenres parses correctly the recieved data', () => {
+    const results = service.parseGenres(genreData);
+    results.forEach((genre) => expect(typeof genre).toBe('string'));
+    expect(results).toHaveLength(genreData.length);
+    expect(results).toEqual(genreData.map((genre) => genre.genre));
   });
 
-  describe('getAllGenres', () => {
-    it('getAllGenres parses correctly the recieved list of string', () => {
-      const results = service.parseGenres(genreData);
-      results.forEach((genre) => {
-        expect(typeof genre).toBe('string');
-      });
-    });
-
-    it('getAllGenres recieves expected list of genres', () => {
-      const results = service.parseGenres(genreData);
-      expect(results).toHaveLength(genreData.length);
-      expect(results).toEqual(genreData.map((genre) => genre.genre));
-    });
+  it("fetchGenres returns the list of avaibles genres with the expected props", async () => {
+    const genres = await service.fetchGenres();
+    genres.forEach(genre => expect(genre).toHaveProperty("genre"));
+    expect(genres).toEqual(genreData);
   });
 
-  describe('fetchDBGenres throws an Error when it cant communicate with the database', () => {
+  it("getAllGenres returns the list of string genres ready to deliver", async () => {
+    const genreList = await service.getAllGenres();
+    expect(genreList).toEqual(genreResData);
+  })
+
+  describe("fetchGenres is able to handle an error when a promise isn't fullfiled", () => {
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: [
@@ -59,11 +60,11 @@ describe('GenresService', () => {
       service = module.get<GenresService>(GenresService);
     });
 
-    it("getAllGenres throws InternalServerErrorException when it couldn't connect with the DB", async () => {
-      await expect(service.fetchDBGenres()).rejects.toThrow(
+    it("fetchDBGenres throws InternalServerErrorException when it couldn't connect with the database", async () => {
+      await expect(service.fetchGenres()).rejects.toThrow(
         InternalServerErrorException,
       );
-      await expect(service.fetchDBGenres()).rejects.toThrow(
+      await expect(service.fetchGenres()).rejects.toThrow(
         'Database Error: SequelizeTimeoutError: Connection refused',
       );
     });
