@@ -11,6 +11,11 @@ import {
 import { ServiceUnavailableException } from '@nestjs/common';
 import { expectSearchProps } from 'src/utils/expectSearch';
 import { Client } from 'elasticsearch';
+import {
+  albumSearchResults,
+  artistSearchResults,
+  songSearchResults,
+} from 'src/types/searchTypes';
 
 describe('SearchService', () => {
   let service: SearchService;
@@ -26,6 +31,7 @@ describe('SearchService', () => {
             ping: jest
               .fn()
               .mockImplementation((params, callback) => callback(null)),
+
             search: jest
               .fn()
               .mockResolvedValueOnce({
@@ -74,6 +80,54 @@ describe('SearchService', () => {
     expect(result.artistResults).toEqual(searchArtists.slice(1));
     expect(result.albumResults).toEqual(searchAlbums.slice(1));
     expect(result.songResults).toEqual(searchSongs.slice(1));
+  });
+
+  it('sortResults sorts correctly if the first item is exactly the query', () => {
+    expect(
+      service.sortResults<artistSearchResults>('nirvana', searchArtists)[0]
+        .name,
+    ).toBe('Nirvana');
+    expect(
+      service.sortResults<albumSearchResults>('pablo honey', searchAlbums)[0]
+        .name,
+    ).toBe('Pablo Honey');
+    expect(
+      service.sortResults<songSearchResults>('creep', searchSongs)[0].name,
+    ).toBe('Creep');
+  });
+
+  it('sortResults sorts correctly the first item even if it has an unique accentuation', () => {
+    expect(
+      service.sortResults<artistSearchResults>('mago de oz', searchArtists)[0]
+        .name,
+    ).toBe('Mägo de Oz');
+  });
+
+  it("sortResults sorts correctly even if the query doesn't have the exact name", () => {
+    expect(
+      service.sortResults<artistSearchResults>('nirv', searchArtists)[0].name,
+    ).toBe('Nirvana');
+    expect(
+      service.sortResults<albumSearchResults>('nevermind', searchAlbums)[0]
+        .name,
+    ).toBe('Nevermind (Remastered)');
+    expect(
+      service.sortResults<songSearchResults>('wonder', searchSongs)[0].name,
+    ).toBe('Wonderwall');
+  });
+
+  it("sortResults leaves the rest of the items as they are if the doesn't match the query", () => {
+    expect(
+      service.sortResults<artistSearchResults>('nirvana', searchArtists)[1]
+        .name,
+    ).not.toBe('Nirvana');
+    expect(
+      service.sortResults<albumSearchResults>('nevermind', searchAlbums)[1]
+        .name,
+    ).not.toBe('Nevermind (Remastered)');
+    expect(
+      service.sortResults<songSearchResults>('come', searchSongs)[1].name,
+    ).not.toBe('Come as You Are');
   });
 });
 

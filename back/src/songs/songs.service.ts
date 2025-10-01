@@ -207,15 +207,13 @@ export class SongsService {
     return parseSongResponse(result?.get({ plain: true }));
   }
 
-  parseSongResponse(randomSong: SongResponseAttributes): SongResponse {
+  parseSongData(songData: SongResponseAttributes): SongResponse {
     return {
-      id: randomSong.id,
-      name: randomSong.name,
-      artists: parseStringArray(
-        randomSong.artists.map((artist) => artist.name),
-      ),
-      album_cover: parseString(randomSong.album.url_image),
-      url_preview: randomSong.url_preview,
+      id: songData.id,
+      name: songData.name,
+      artists: parseStringArray(songData.artists.map((artist) => artist.name)),
+      album_cover: parseString(songData.album.url_image),
+      url_preview: songData.url_preview,
     };
   }
 

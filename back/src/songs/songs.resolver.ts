@@ -72,7 +72,7 @@ export class SongsResolver {
   @Query(() => SongResponseDto, { name: 'getRandomSong' })
   async getRandomSong() {
     const result = await this.songsService.fetchRandomSong();
-    return this.songsService.parseSongResponse(result);
+    return this.songsService.parseSongData(result);
   }
 
   @Query(() => SongResponseDto, { name: 'getNextSong' })
@@ -80,7 +80,7 @@ export class SongsResolver {
     @Args('songID', { type: () => Int }) songID: number,
   ): Promise<SongResponseDto> {
     const result = await this.songsService.fetchNextSong(songID);
-    return this.songsService.parseSongResponse(result);
+    return this.songsService.parseSongData(result);
   }
 
   @Query(() => SongResponseDto, { name: 'getPreviousSong' })
@@ -88,6 +88,6 @@ export class SongsResolver {
     @Args('songID', { type: () => Int }) songID: number,
   ): Promise<SongResponseDto> {
     const result = await this.songsService.fetchPreviousSong(songID);
-    return this.songsService.parseSongResponse(result);
+    return this.songsService.parseSongData(result);
   }
 }
