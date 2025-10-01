@@ -29,14 +29,14 @@ describe('GenresService', () => {
 
   describe('getAllGenres', () => {
     it('getAllGenres parses correctly the recieved list of string', () => {
-      const results = service.getAllGenres(genreData);
+      const results = service.parseGenres(genreData);
       results.forEach((genre) => {
         expect(typeof genre).toBe('string');
       });
     });
 
     it('getAllGenres recieves expected list of genres', () => {
-      const results = service.getAllGenres(genreData);
+      const results = service.parseGenres(genreData);
       expect(results).toHaveLength(genreData.length);
       expect(results).toEqual(genreData.map((genre) => genre.genre));
     });

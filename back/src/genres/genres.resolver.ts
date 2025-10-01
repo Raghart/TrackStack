@@ -8,7 +8,6 @@ export class GenresResolver {
 
   @Query(() => [GraphQLString], { name: 'getAllGenres' })
   async getAllGenres(): Promise<string[]> {
-    const genres = await this.genreService.fetchDBGenres();
-    return this.genreService.getAllGenres(genres);
+    return this.genreService.getAllGenres();
   }
 }

@@ -16,7 +16,12 @@ export class GenresService {
     );
   }
 
-  getAllGenres(genres: { genre: string }[]): string[] {
+  parseGenres(genres: { genre: string }[]): string[] {
     return parseStringArray(genres.map((g) => g.genre));
+  }
+
+  async getAllGenres(): Promise<string[]> {
+    const genreList = await this.fetchDBGenres();
+    return this.parseGenres(genreList);
   }
 }
