@@ -16,16 +16,14 @@ export class SongsResolver {
   async getLandpageSongs(
     @Args('limit', { type: () => Int, defaultValue: 20 }) limit: number,
   ): Promise<SongResponseDto[]> {
-    const results = await this.songsService.fetchLandpageSongs(limit);
-    return this.songsService.parseSongList(results);
+    return this.songsService.getLandpageSongs(limit);
   }
 
   @Query(() => FullSongResponseDto, { name: 'getSongData' })
   async getSongData(
     @Args('SongID', { type: () => Int }) songID: number,
   ): Promise<FullSongResponseDto> {
-    const result = await this.songsService.fetchFullSongData(songID);
-    return this.songsService.parseFullSong(result);
+    return this.songsService.getSongData(songID);
   }
 
   @Query(() => [SongResponseDto], { name: 'getIARecommendations' })
@@ -47,9 +45,8 @@ export class SongsResolver {
     @Args('acousticness', { type: () => Float, defaultValue: 0.15 })
     acousticness: number,
   ): Promise<SongResponseDto[]> {
-    const songData = await this.songsService.fetchIARecommendations(genres);
-
-    const userVector = this.songsService.parseUserVector(
+    return this.songsService.getIARecommendations(
+      genres,
       energy,
       speechLevel,
       danceability,
@@ -59,35 +56,24 @@ export class SongsResolver {
       mood,
       acousticness,
     );
-
-    const songScores = this.songsService.getIARecommendations(
-      songData,
-      userVector,
-    );
-    const songList = songScores.map((entry) => entry.song);
-
-    return this.songsService.parseSongList(songList);
   }
 
   @Query(() => SongResponseDto, { name: 'getRandomSong' })
   async getRandomSong() {
-    const result = await this.songsService.fetchRandomSong();
-    return this.songsService.parseSongData(result);
+    return this.songsService.getRandomSong();
   }
 
   @Query(() => SongResponseDto, { name: 'getNextSong' })
   async getNextSong(
     @Args('songID', { type: () => Int }) songID: number,
   ): Promise<SongResponseDto> {
-    const result = await this.songsService.fetchNextSong(songID);
-    return this.songsService.parseSongData(result);
+    return this.songsService.getNextSong(songID);
   }
 
   @Query(() => SongResponseDto, { name: 'getPreviousSong' })
   async getPreviousSong(
     @Args('songID', { type: () => Int }) songID: number,
   ): Promise<SongResponseDto> {
-    const result = await this.songsService.fetchPreviousSong(songID);
-    return this.songsService.parseSongData(result);
+    return this.songsService.getPreviousSong(songID);
   }
 }
