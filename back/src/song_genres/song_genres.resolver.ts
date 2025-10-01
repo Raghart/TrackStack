@@ -13,12 +13,6 @@ export class SongGenresResolver {
     @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
     @Args('limit', { type: () => Int, defaultValue: 20 }) limit: number,
   ): Promise<SongResponseDto[]> {
-    const results = await this.SongGenresService.fetchDBSongGenres(
-      seed,
-      genre,
-      page,
-      limit,
-    );
-    return this.SongGenresService.getAllGenreSongs(results);
+    return this.SongGenresService.getAllGenreSongs(seed, genre, page, limit);
   }
 }

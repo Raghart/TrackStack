@@ -29,7 +29,7 @@ export class SongGenresService {
     private songGenreModel: typeof SongGenresModel,
   ) {}
 
-  async fetchDBSongGenres(
+  async fetchSongGenres(
     seed: string,
     genre: string,
     page = 1,
@@ -70,7 +70,7 @@ export class SongGenresService {
     return rawData.map((entry) => parseSongGenres(entry.get({ plain: true })));
   }
 
-  getAllGenreSongs(data: SongGenresRPWithSongs[]): SongResponse[] {
+  parseGenreSongs(data: SongGenresRPWithSongs[]): SongResponse[] {
     return data.map((entry) => ({
       id: parseFloatNum(entry.song.id),
       name: parseString(entry.song.name),
@@ -80,5 +80,15 @@ export class SongGenresService {
       url_preview: parseString(entry.song.url_preview),
       album_cover: parseString(entry.song.album.url_image),
     }));
+  }
+
+  async getAllGenreSongs(
+    seed: string,
+    genre: string,
+    page: number,
+    limit: number,
+  ) {
+    const genreSongs = await this.fetchSongGenres(seed, genre, page, limit);
+    return this.parseGenreSongs(genreSongs);
   }
 }

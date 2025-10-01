@@ -6,10 +6,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import {
-  songGenresData,
-  songGenresResData,
-} from '../../test/data/songGenresModule/songGenresData';
+import { songGenresResData } from '../../test/data/songGenresModule/songGenresData';
 import { NOGENRE_ERROR } from '../../test/constants/constants';
 import { InvalidPaginationException } from 'src/utils/PaginationError';
 
@@ -25,7 +22,6 @@ describe('SongGenresResolver', () => {
           provide: SongGenresService,
           useValue: {
             getAllGenreSongs: jest.fn().mockResolvedValue(songGenresResData),
-            fetchDBSongGenres: jest.fn().mockResolvedValue(songGenresData),
           },
         },
       ],
@@ -41,8 +37,8 @@ describe('SongGenresResolver', () => {
 
   it('getAllGenreSongs recieves the expected data from the song_genres service', async () => {
     const results = await resolver.getAllGenreSongs('1', 'Rock', 1, 5);
-    expect(service.fetchDBSongGenres).toHaveBeenCalledWith('1', 'Rock', 1, 5);
-    expect(results.length).toBe(3);
+    expect(service.getAllGenreSongs).toHaveBeenCalledWith('1', 'Rock', 1, 5);
+    expect(results).toHaveLength(3);
     expect(results).toEqual(songGenresResData);
   });
 });
@@ -59,7 +55,6 @@ describe('SongGenresResolver Error Handling', () => {
           provide: SongGenresService,
           useValue: {
             getAllGenreSongs: jest.fn(),
-            fetchDBSongGenres: jest.fn(),
           },
         },
       ],
@@ -70,7 +65,7 @@ describe('SongGenresResolver Error Handling', () => {
   });
 
   it("getAllGenreSongs throws NotFoundException when genre doesn't exist", async () => {
-    (service.fetchDBSongGenres as jest.Mock).mockRejectedValue(
+    (service.getAllGenreSongs as jest.Mock).mockRejectedValue(
       new NotFoundException(NOGENRE_ERROR),
     );
 
@@ -81,17 +76,12 @@ describe('SongGenresResolver Error Handling', () => {
       resolver.getAllGenreSongs('1', 'noGenre', 1, 5),
     ).rejects.toThrow(NOGENRE_ERROR);
 
-    expect(service.fetchDBSongGenres).toHaveBeenCalledWith(
-      '1',
-      'noGenre',
-      1,
-      5,
-    );
+    expect(service.getAllGenreSongs).toHaveBeenCalledWith('1', 'noGenre', 1, 5);
   });
 
   it('getAllGenreSongs throws InvalidPaginationException when limit < 1', async () => {
     const INVALID_LIMIT = -50;
-    (service.fetchDBSongGenres as jest.Mock).mockRejectedValue(
+    (service.getAllGenreSongs as jest.Mock).mockRejectedValue(
       new InvalidPaginationException('limit', INVALID_LIMIT),
     );
 
@@ -103,7 +93,7 @@ describe('SongGenresResolver Error Handling', () => {
       resolver.getAllGenreSongs('1', 'Rock', 1, INVALID_LIMIT),
     ).rejects.toThrow(`Invalid limit: ${INVALID_LIMIT} must be >= 1`);
 
-    expect(service.fetchDBSongGenres).toHaveBeenCalledWith(
+    expect(service.getAllGenreSongs).toHaveBeenCalledWith(
       '1',
       'Rock',
       1,
@@ -113,7 +103,7 @@ describe('SongGenresResolver Error Handling', () => {
 
   it('getAllGenreSongs throws InvalidPaginationException when page < 1', async () => {
     const INVALID_PAGE = -50;
-    (service.fetchDBSongGenres as jest.Mock).mockRejectedValue(
+    (service.getAllGenreSongs as jest.Mock).mockRejectedValue(
       new InvalidPaginationException('page', INVALID_PAGE),
     );
 
@@ -125,7 +115,7 @@ describe('SongGenresResolver Error Handling', () => {
       resolver.getAllGenreSongs('1', 'Rock', INVALID_PAGE, 5),
     ).rejects.toThrow(`Invalid page: ${INVALID_PAGE} must be >= 1`);
 
-    expect(service.fetchDBSongGenres).toHaveBeenCalledWith(
+    expect(service.getAllGenreSongs).toHaveBeenCalledWith(
       '1',
       'Rock',
       INVALID_PAGE,
@@ -134,7 +124,7 @@ describe('SongGenresResolver Error Handling', () => {
   });
 
   it('getAllGenreSongs throws InternalServerErrorException the request timeout', async () => {
-    (service.fetchDBSongGenres as jest.Mock).mockRejectedValue(
+    (service.getAllGenreSongs as jest.Mock).mockRejectedValue(
       new InternalServerErrorException(
         new Error('Database Error: SequelizeTimeoutError: Query timed out'),
       ),
@@ -145,6 +135,6 @@ describe('SongGenresResolver Error Handling', () => {
     await expect(resolver.getAllGenreSongs('1', 'Rock', 1, 5)).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Query timed out',
     );
-    expect(service.fetchDBSongGenres).toHaveBeenCalledWith('1', 'Rock', 1, 5);
+    expect(service.getAllGenreSongs).toHaveBeenCalledWith('1', 'Rock', 1, 5);
   });
 });
