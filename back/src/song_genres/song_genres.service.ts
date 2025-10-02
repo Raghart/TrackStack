@@ -32,8 +32,8 @@ export class SongGenresService {
   async fetchSongGenres(
     seed: string,
     genre: string,
-    page = 1,
-    limit = 20,
+    page: number = 1,
+    limit: number = 20,
   ): Promise<SongGenresRPWithSongs[]> {
     if (!isNumericString(seed))
       throw new BadRequestException(
