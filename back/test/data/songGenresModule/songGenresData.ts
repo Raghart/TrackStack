@@ -1,60 +1,62 @@
+import { SongResponse } from 'src/types/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../../test/constants/constants';
+import { SongGenresRPWithSongs } from 'src/types/songGenresAttributes';
 
-export const songGenresData: any[] = [
+export const songGenresData = [
   {
-    id: 736298,
-    song_id: 641705,
-    genre_id: 1624,
-    genre: { id: 1624, genre: 'Rock' },
+    id: 1,
+    song_id: 1,
+    genre_id: 1,
+    genre: { id: 1, genre: 'Rock' },
     song: {
-      id: 641705,
+      id: 1,
       name: "I'm A Mover",
-      spotify_id: '09Sweb86ucflf42EJNELf2',
+      spotify_id: 'testingID',
       url_preview: TESTING_URL,
       duration: 2.94,
       year: 2010,
-      album_id: 271488,
+      album_id: 1,
       artists: [{ name: 'Iron Maiden' }],
       album: { url_image: TESTING_IMG },
     },
   },
   {
-    id: 718402,
-    song_id: 635687,
-    genre_id: 1624,
-    genre: { id: 1624, genre: 'Rock' },
+    id: 2,
+    song_id: 2,
+    genre_id: 2,
+    genre: { id: 1, genre: 'Rock' },
     song: {
-      id: 635687,
+      id: 2,
       name: 'Smoking Umbrellas',
-      spotify_id: '11IYFUPlQPPAQjxfl2HncN',
+      spotify_id: 'testingID',
       url_preview: TESTING_URL,
       duration: 3.98,
       year: 1996,
-      album_id: 269049,
+      album_id: 2,
       artists: [{ name: 'Failure Band' }],
       album: { url_image: TESTING_IMG },
     },
   },
   {
-    id: 566593,
-    song_id: 598474,
-    genre_id: 1624,
-    genre: { id: 1624, genre: 'Rock' },
+    id: 3,
+    song_id: 3,
+    genre_id: 3,
+    genre: { id: 3, genre: 'Rock' },
     song: {
-      id: 598474,
+      id: 3,
       name: 'Bones',
-      spotify_id: '15yTaT0c9Y9aPiKEwHeftf',
+      spotify_id: 'testingID',
       url_preview: TESTING_URL,
       duration: 3.78,
       year: 2010,
-      album_id: 254380,
+      album_id: 3,
       artists: [{ name: 'Imagine Dragons' }],
       album: { url_image: TESTING_IMG },
     },
   },
-];
+] as unknown as SongGenresRPWithSongs[];
 
-export const songGenresResData = [
+export const songGenresResponses: SongResponse[] = [
   {
     id: 1,
     name: "I'm A Mover",

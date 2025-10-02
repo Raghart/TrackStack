@@ -6,11 +6,11 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { songGenresResData } from '../../test/data/songGenresModule/songGenresData';
+import { songGenresResponses } from '../../test/data/songGenresModule/songGenresData';
 import { NOGENRE_ERROR } from '../../test/constants/constants';
 import { InvalidPaginationException } from 'src/utils/PaginationError';
 
-describe('SongGenresResolver', () => {
+describe('SongGenresResolver recieves and deliver the songs from a genre', () => {
   let resolver: SongGenresResolver;
   let service: SongGenresService;
 
@@ -21,7 +21,7 @@ describe('SongGenresResolver', () => {
         {
           provide: SongGenresService,
           useValue: {
-            getAllGenreSongs: jest.fn().mockResolvedValue(songGenresResData),
+            getAllGenreSongs: jest.fn().mockResolvedValue(songGenresResponses),
           },
         },
       ],
@@ -31,19 +31,15 @@ describe('SongGenresResolver', () => {
     resolver = module.get<SongGenresResolver>(SongGenresResolver);
   });
 
-  it('should be defined', () => {
-    expect(resolver).toBeDefined();
-  });
-
   it('getAllGenreSongs recieves the expected data from the song_genres service', async () => {
     const results = await resolver.getAllGenreSongs('1', 'Rock', 1, 5);
     expect(service.getAllGenreSongs).toHaveBeenCalledWith('1', 'Rock', 1, 5);
     expect(results).toHaveLength(3);
-    expect(results).toEqual(songGenresResData);
+    expect(results).toEqual(songGenresResponses);
   });
 });
 
-describe('SongGenresResolver Error Handling', () => {
+describe('SongGenresResolver handle errors from the service to inform the problems to the developers', () => {
   let resolver: SongGenresResolver;
   let service: SongGenresService;
 
