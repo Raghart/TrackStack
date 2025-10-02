@@ -6,7 +6,7 @@ import { SequelizeConnectionError } from 'src/utils/mockErrors';
 import { genreData, genreResData } from '../../test/data/genres/genresData';
 import { GenresModel } from '../../models/genres/genres.model';
 
-describe('GenresService should retrieve all the posible genres avaibles in the database', () => {
+describe('GenresService retrieves and parses all the avaibles genres from the database', () => {
   let service: GenresService;
 
   beforeEach(async () => {
@@ -32,16 +32,16 @@ describe('GenresService should retrieve all the posible genres avaibles in the d
     expect(results).toEqual(genreData.map((genre) => genre.genre));
   });
 
-  it("fetchGenres returns the list of avaibles genres with the expected props", async () => {
+  it('fetchGenres returns the list of avaibles genres with the expected props', async () => {
     const genres = await service.fetchGenres();
-    genres.forEach(genre => expect(genre).toHaveProperty("genre"));
+    genres.forEach((genre) => expect(genre).toHaveProperty('genre'));
     expect(genres).toEqual(genreData);
   });
 
-  it("getAllGenres returns the list of string genres ready to deliver", async () => {
+  it('getAllGenres returns the list of string genres ready to deliver', async () => {
     const genreList = await service.getAllGenres();
     expect(genreList).toEqual(genreResData);
-  })
+  });
 
   describe("fetchGenres is able to handle an error when a promise isn't fullfiled", () => {
     beforeEach(async () => {
