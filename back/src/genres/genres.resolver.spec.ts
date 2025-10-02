@@ -26,7 +26,7 @@ describe('GenresResolver delivers correctly to GraphQL the expected list of genr
     service = module.get<GenresService>(GenresService);
     resolver = module.get<GenresResolver>(GenresResolver);
   });
-  
+
   it('the resolver getAllGenres returns the expected list of genres ready to deliver to GraphQL', async () => {
     const genreList = await resolver.getAllGenres();
 

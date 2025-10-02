@@ -7,8 +7,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { albumResSongs } from '../../test/data/albumsModule/AlbumData';
+import { expectSongProps } from 'src/utils/expectSongs';
 
-describe('AlbumsResolver', () => {
+describe('AlbumsResolver returns the expected songs from an album ready to deliver them', () => {
   let resolver: AlbumsResolver;
   let service: AlbumsService;
 
@@ -29,18 +30,15 @@ describe('AlbumsResolver', () => {
     resolver = module.get<AlbumsResolver>(AlbumsResolver);
   });
 
-  it('should be defined', () => {
-    expect(resolver).toBeDefined();
-  });
-
-  it('getAllAlbumSongs gets the expected results from the albums service', async () => {
+  it('getAllAlbumSongs returns the expected results', async () => {
     const results = await resolver.getAllAlbumSongs('testingAlbum');
     expect(service.getAllAlbumSongs).toHaveBeenCalledWith('testingAlbum');
-    expect(results.length).toBe(5);
+    expect(results).toHaveLength(5);
+    expectSongProps(results);
   });
 });
 
-describe('AlbumsResolver Error handling', () => {
+describe('AlbumsResolver is able to handle errors thrown by the service to detect invalid results', () => {
   let resolver: AlbumsResolver;
   let service: AlbumsService;
 
@@ -62,7 +60,7 @@ describe('AlbumsResolver Error handling', () => {
     resolver = module.get<AlbumsResolver>(AlbumsResolver);
   });
 
-  it('getAllAlbumSongs throws NotFoundException when no songs are found for X album', async () => {
+  it('getAllAlbumSongs throws an error when no songs are found for an album', async () => {
     (service.getAllAlbumSongs as jest.Mock).mockRejectedValue(
       new NotFoundException("Album: noAlbum couldn't be found!"),
     );
@@ -75,7 +73,7 @@ describe('AlbumsResolver Error handling', () => {
     expect(service.getAllAlbumSongs).toHaveBeenCalledWith('noAlbum');
   });
 
-  it('getAllAlbumSongs throws NotFoundException when no songs are found for X album', async () => {
+  it("getAllAlbumSongs throws an error when it couldn't retrieve the data from the database", async () => {
     (service.getAllAlbumSongs as jest.Mock).mockRejectedValue(
       new InternalServerErrorException(
         new Error('Database Error: SequelizeTimeoutError: Connection refused'),
