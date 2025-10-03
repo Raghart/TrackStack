@@ -15,7 +15,6 @@ import {
   isStringArray,
 } from './verify';
 import { albumSongs } from '../../test/data/albumsModule/AlbumData';
-import { artistSongs } from '../../test/data/artistsModule/serArtistData';
 import { songGenresData } from '../../test/data/songGenresModule/songGenresData';
 import {
   fullResSongs,
@@ -28,6 +27,7 @@ import {
   searchSongs,
 } from '../../test/data/searchModule/searchData';
 import { WRONG_OBJ } from '../../test/constants/constants';
+import { artistSongsData } from '../../test/data/artistsModule/artistData';
 
 describe('Verify value Types', () => {
   describe('isString', () => {
@@ -136,7 +136,7 @@ describe('Verify value Types', () => {
     });
 
     it('isArtistSongs returns true when it has the correct props', () => {
-      expect(isArtistSongs(artistSongs)).toBe(true);
+      expect(isArtistSongs(artistSongsData)).toBe(true);
     });
   });
 

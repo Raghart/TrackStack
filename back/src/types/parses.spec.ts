@@ -14,7 +14,6 @@ import {
   parseStringArray,
 } from './parses';
 import { albumSongs } from '../../test/data/albumsModule/AlbumData';
-import { artistSongs } from '../../test/data/artistsModule/serArtistData';
 import { songGenresData } from '../../test/data/songGenresModule/songGenresData';
 import {
   fullResSongs,
@@ -27,6 +26,7 @@ import {
   searchSongs,
 } from '../../test/data/searchModule/searchData';
 import { expectParse, expectParseError } from 'src/utils/expectParse';
+import { artistSongsData } from '../../test/data/artistsModule/artistData';
 
 describe('parses return the data with the expected type', () => {
   describe('parseString', () => {
@@ -143,7 +143,7 @@ describe('parses return the data with the expected type', () => {
     });
 
     it('parseArtistSongs ensure that the songs match the correct artist songs object structure', () => {
-      expect(parseArtistSongs(artistSongs)).toBe(artistSongs);
+      expect(parseArtistSongs(artistSongsData)).toBe(artistSongsData);
     });
   });
 
