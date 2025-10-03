@@ -1,6 +1,4 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-call */
 import { Test, TestingModule } from '@nestjs/testing';
 import { SearchService } from './search.service';
 import {
@@ -10,16 +8,28 @@ import {
 } from '../../test/data/searchModule/searchData';
 import { ServiceUnavailableException } from '@nestjs/common';
 import { expectSearchProps } from 'src/utils/expectSearch';
-import { Client } from 'elasticsearch';
+import { Client, SearchResponse } from 'elasticsearch';
 import {
   albumSearchResults,
+  albumsHitStructure,
+  artistHitStructure,
   artistSearchResults,
   songSearchResults,
+  songsHitStructure,
 } from 'src/types/searchTypes';
 
-describe('SearchService', () => {
+describe('SearchService retrieves and sort lists of searched data from the elasticSearch server', () => {
   let service: SearchService;
-  let esService: Client;
+  let esService: jest.Mocked<Client>;
+  const artistHitData = {
+    hits: { hits: searchArtists.map((doc) => ({ _source: doc })) },
+  } as unknown as SearchResponse<artistHitStructure>;
+  const albumHitData = {
+    hits: { hits: searchAlbums.map((doc) => ({ _source: doc })) },
+  } as unknown as SearchResponse<albumsHitStructure>;
+  const songsHitData = {
+    hits: { hits: searchSongs.map((doc) => ({ _source: doc })) },
+  } as unknown as SearchResponse<songsHitStructure>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -30,30 +40,17 @@ describe('SearchService', () => {
           useValue: {
             ping: jest
               .fn()
-              .mockImplementation((params, callback) => callback(null)),
-
-            search: jest
-              .fn()
-              .mockResolvedValueOnce({
-                hits: { hits: searchArtists.map((doc) => ({ _source: doc })) },
-              })
-              .mockResolvedValueOnce({
-                hits: { hits: searchAlbums.map((doc) => ({ _source: doc })) },
-              })
-              .mockResolvedValueOnce({
-                hits: { hits: searchSongs.map((doc) => ({ _source: doc })) },
-              }),
+              .mockImplementation((_params, callback: (err: null) => void) =>
+                callback(null),
+              ),
+            search: jest.fn(),
           },
         },
       ],
     }).compile();
 
     service = module.get<SearchService>(SearchService);
-    esService = module.get<Client>('BonsaiClient');
-  });
-
-  it('should be defined', () => {
-    expect(service).toBeDefined();
+    esService = module.get('BonsaiClient');
   });
 
   it('ping resolves true when is called to confirm a communication with the DB', async () => {
@@ -62,24 +59,42 @@ describe('SearchService', () => {
     expect(result).toBe(true);
   });
 
-  it('multipleSearch result has correct properties', async () => {
-    const result = await service.multipleSearch('Nirvana');
-    expectSearchProps(result);
-    expect(result.artistResults.length).toBeGreaterThan(0);
-    expect(result.albumResults.length).toBeGreaterThan(0);
-    expect(result.songResults.length).toBeGreaterThan(0);
+  it('searchArtists returns a list of artists with expected properties', async () => {
+    esService.search.mockResolvedValue(artistHitData);
+
+    const result = await service.searchArtists('Nirvana');
+    expect(result).toHaveLength(4);
+    expect(result).toStrictEqual(searchArtists);
   });
 
-  it('multipleSearch has expected results', async () => {
-    const result = await service.multipleSearch('Nirvana');
+  it('searchAlbums returns a list of albums with expected properties', async () => {
+    esService.search.mockResolvedValue(albumHitData);
 
-    expect(result.exactArtist).toEqual(searchArtists[0]);
-    expect(result.exactAlbum).toEqual(searchAlbums[0]);
-    expect(result.exactSong).toEqual(searchSongs[0]);
+    const result = await service.searchAlbums('Pablo Honey');
+    expect(result).toHaveLength(3);
+    expect(result).toStrictEqual(searchAlbums);
+  });
 
-    expect(result.artistResults).toEqual(searchArtists.slice(1));
-    expect(result.albumResults).toEqual(searchAlbums.slice(1));
-    expect(result.songResults).toEqual(searchSongs.slice(1));
+  it('seachSongs returns a list of albums with expected properties', async () => {
+    esService.search.mockResolvedValue(songsHitData);
+
+    const result = await service.seachSongs('Creep');
+    expect(result).toHaveLength(3);
+    expect(result).toStrictEqual(searchSongs);
+  });
+
+  it('sortResults sorts the list to put in first the most similar to the query', () => {
+    const sortedResults = service.sortResults<artistSearchResults>(
+      'Mägo de Oz',
+      searchArtists,
+    );
+    expect(sortedResults.length).toBeGreaterThan(0);
+    expect(sortedResults[0]).toStrictEqual({
+      id: 4,
+      name: 'Mägo de Oz',
+      album_cover: 'url3',
+      type: 'artist',
+    });
   });
 
   it('sortResults sorts correctly if the first item is exactly the query', () => {
@@ -129,9 +144,19 @@ describe('SearchService', () => {
       service.sortResults<songSearchResults>('come', searchSongs)[1].name,
     ).not.toBe('Come as You Are');
   });
+
+  it('multipleSearch returns an object containing results from artists, albums and songs', async () => {
+    esService.search
+      .mockResolvedValueOnce(artistHitData)
+      .mockResolvedValueOnce(albumHitData)
+      .mockResolvedValueOnce(songsHitData);
+
+    const multipleResults = await service.multipleSearch('Nirvana');
+    expectSearchProps(multipleResults);
+  });
 });
 
-describe('SearchService Error handler', () => {
+describe("SearchService throws errors when the methods couldn't connect with the database", () => {
   let service: SearchService;
   let esService: Client;
 
@@ -144,7 +169,7 @@ describe('SearchService Error handler', () => {
           useValue: {
             ping: jest
               .fn()
-              .mockImplementation((params, callback) =>
+              .mockImplementation((_params, callback: (err: Error) => void) =>
                 callback(new Error('Ping failed')),
               ),
           },
@@ -156,7 +181,7 @@ describe('SearchService Error handler', () => {
     service = module.get<SearchService>(SearchService);
   });
 
-  it('Ping Error Handler', async () => {
+  it("Ping throws an error when it couldn't recieve a ping from the ES server", async () => {
     await expect(service.ping()).rejects.toThrow(ServiceUnavailableException);
     await expect(service.ping()).rejects.toThrow(
       /ElasticSearch is not responding: .*Ping failed/,
@@ -164,7 +189,7 @@ describe('SearchService Error handler', () => {
     expect(esService.ping).toHaveBeenCalled();
   });
 
-  it('multipleSearch Connection Error', async () => {
+  it("multipleSearch throws a connection error if some method couldn't received a response from ES", async () => {
     esService.search = jest
       .fn()
       .mockRejectedValue(new Error('No living connections'));
@@ -177,7 +202,18 @@ describe('SearchService Error handler', () => {
     expect(esService.search).toHaveBeenCalled();
   });
 
-  it('multipleSearch Timeout Error', async () => {
+  it('multipleSearch throws unknow database Error when a unidentified error ocurred while searching', async () => {
+    esService.search = jest.fn().mockRejectedValue(undefined);
+    await expect(service.multipleSearch('Pepe')).rejects.toThrow(
+      ServiceUnavailableException,
+    );
+    await expect(service.multipleSearch('Pepe')).rejects.toThrow(
+      /ElasticSearch is not responding: Unknow database error/,
+    );
+    expect(esService.search).toHaveBeenCalled();
+  });
+
+  it("multipleSearch throws timeout error when it couldn't resolve the promise in time", async () => {
     esService.search = jest
       .fn()
       .mockRejectedValue(new Error('timeout_exception: search timed out'));
@@ -186,19 +222,6 @@ describe('SearchService Error handler', () => {
     );
     await expect(service.multipleSearch('Pepe')).rejects.toThrow(
       /ElasticSearch is not responding: .*timeout_exception: search timed out/,
-    );
-    expect(esService.search).toHaveBeenCalled();
-  });
-
-  it('multipleSearch Unexpected Error', async () => {
-    esService.search = jest
-      .fn()
-      .mockRejectedValue(new Error('Unexpected error from ElasticSearch'));
-    await expect(service.multipleSearch('Pepe')).rejects.toThrow(
-      ServiceUnavailableException,
-    );
-    await expect(service.multipleSearch('Pepe')).rejects.toThrow(
-      /ElasticSearch is not responding: .*Unexpected error from ElasticSearch/,
     );
     expect(esService.search).toHaveBeenCalled();
   });
