@@ -23,6 +23,30 @@ export interface albumSearchResults {
   type: 'album';
 }
 
+export interface artistHitStructure {
+  hits: {
+    hits: {
+      _source: artistSearchResults;
+    }[];
+  };
+}
+
+export interface albumsHitStructure {
+  hits: {
+    hits: {
+      _source: albumSearchResults;
+    }[];
+  };
+}
+
+export interface songsHitStructure {
+  hits: {
+    hits: {
+      _source: songSearchResults;
+    }[];
+  };
+}
+
 export type searchResultType =
   | artistSearchResults
   | songSearchResults

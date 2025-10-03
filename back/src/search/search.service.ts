@@ -28,8 +28,7 @@ export class SearchService {
     return new Promise((resolve, reject) => {
       this.esClient.ping({}, (err) => {
         if (err) {
-          const message =
-            err instanceof Error ? err.message : 'Unknow database error';
+          const message = (err as Error).message;
           reject(
             new ServiceUnavailableException(
               'ElasticSearch is not responding: ' + message,

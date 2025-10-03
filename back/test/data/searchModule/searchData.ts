@@ -8,7 +8,7 @@ export const searchArtists: artistSearchResults[] = [
   { id: 1, name: 'Nirvana', album_cover: 'url1', type: 'artist' },
   { id: 2, name: 'Oasis', album_cover: 'url2', type: 'artist' },
   { id: 3, name: 'Radiohead', album_cover: 'url3', type: 'artist' },
-  { id: 3, name: 'Mägo de Oz', album_cover: 'url3', type: 'artist' },
+  { id: 4, name: 'Mägo de Oz', album_cover: 'url3', type: 'artist' },
 ];
 
 export const searchAlbums: albumSearchResults[] = [
