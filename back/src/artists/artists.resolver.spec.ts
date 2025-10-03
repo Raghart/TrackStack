@@ -13,7 +13,7 @@ import {
   artistTestSongs,
 } from '../../test/data/artistsModule/artistData';
 
-describe('ArtistsResolver', () => {
+describe('ArtistsResolver delivers the expected artists and artist songs to the frontend', () => {
   let resolver: ArtistsResolver;
   let service: ArtistsService;
 
