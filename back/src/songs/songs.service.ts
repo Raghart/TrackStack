@@ -2,10 +2,10 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import { getCosineSimilarity } from './utils/getCosineSimilarity';
 import { buildSongVector } from './utils/buildSongVector';
 import {
   parseFullSongResponse,
@@ -109,7 +109,10 @@ export class SongsService {
       }),
     );
 
-    if (!rawData) throw new NotFoundException("Song doesn't exist in the DB!");
+    if (!rawData)
+      throw new NotFoundException(
+        `The song with the ID: '${songID}' doesn't exist in the database!`,
+      );
 
     return parseFullSongResponse(rawData.get({ plain: true }));
   }
@@ -164,7 +167,21 @@ export class SongsService {
     );
   }
 
-  calculateIARecommendations(
+  getCosineSimilarity(songVector: number[], userVector: number[]) {
+    const dotProduct = songVector.reduce(
+      (sum, songVal, idx) => sum + songVal * userVector[idx],
+      0,
+    );
+    const songMagnitude = Math.sqrt(
+      songVector.reduce((sum, songVal) => sum + Math.pow(songVal, 2), 0),
+    );
+    const userMagnitude = Math.sqrt(
+      userVector.reduce((sum, userVal) => sum + Math.pow(userVal, 2), 0),
+    );
+    return dotProduct / (songMagnitude * userMagnitude);
+  }
+
+  calculateRecommendations(
     songData: IASongResponse[],
     userVector: number[],
   ): IASongScores[] {
@@ -172,7 +189,7 @@ export class SongsService {
       .map((song) => ({
         id: song.id,
         song,
-        score: getCosineSimilarity(buildSongVector(song), userVector),
+        score: this.getCosineSimilarity(buildSongVector(song), userVector),
       }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 40);
@@ -201,7 +218,7 @@ export class SongsService {
       acousticness,
     );
 
-    const songScores = this.calculateIARecommendations(songData, userVector);
+    const songScores = this.calculateRecommendations(songData, userVector);
     const songList = songScores.map((entry) => entry.song);
 
     return this.parseSongList(songList);
@@ -273,8 +290,8 @@ export class SongsService {
     }
 
     if (!rawData)
-      throw new NotFoundException(
-        `The song with this id doesn't exist: ${songID}`,
+      throw new ServiceUnavailableException(
+        "It couldn't retrieve the song from the database",
       );
 
     return parseSongResponse(rawData.get({ plain: true }));
@@ -319,8 +336,8 @@ export class SongsService {
     }
 
     if (!rawData)
-      throw new NotFoundException(
-        `The song with this id doesn't exist: ${songID}`,
+      throw new ServiceUnavailableException(
+        "It couldn't retrieve the song from the database",
       );
 
     return parseSongResponse(rawData.get({ plain: true }));

@@ -17,10 +17,10 @@ import {
 import { albumSongs } from '../../test/data/albumsModule/AlbumData';
 import { songGenresData } from '../../test/data/songGenresModule/songGenresData';
 import {
-  fullResSongs,
-  songData,
+  songFullRawResponse,
+  songIARawResponse,
+  songTestData,
 } from '../../test/data/songsModule/serSongData';
-import { IASongs } from '../../test/data/songsModule/serAISongData';
 import {
   searchAlbums,
   searchArtists,
@@ -166,7 +166,7 @@ describe('Verify value Types', () => {
     });
 
     it('isSongResponse returns true when it has the correct props', () => {
-      expect(isSongResponse(songData[0])).toBe(true);
+      expect(isSongResponse(songTestData[0])).toBe(true);
     });
   });
 
@@ -181,7 +181,7 @@ describe('Verify value Types', () => {
     });
 
     it('isFullSongResponse returns true when it has the correct props', () => {
-      expect(isFullSongResponse(fullResSongs[0])).toBe(true);
+      expect(isFullSongResponse(songFullRawResponse)).toBe(true);
     });
   });
 
@@ -196,7 +196,7 @@ describe('Verify value Types', () => {
     });
 
     it('isIASongData returns true when it has the correct props', () => {
-      expect(isIASongData(IASongs[0])).toBe(true);
+      expect(isIASongData(songIARawResponse[0])).toBe(true);
     });
   });
 

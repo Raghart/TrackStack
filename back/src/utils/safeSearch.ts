@@ -5,7 +5,7 @@ export const safeSearch = async <T>(fn: () => Promise<T>): Promise<T> => {
     return await fn();
   } catch (error: unknown) {
     const message =
-      error instanceof Error ? error.message : 'Unknow database error';
+      error instanceof Error ? error.message : 'Unknown database error';
     throw new ServiceUnavailableException(
       'ElasticSearch is not responding: ' + message,
     );
