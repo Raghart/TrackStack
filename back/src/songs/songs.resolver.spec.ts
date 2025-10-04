@@ -3,16 +3,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { SongsResolver } from './songs.resolver';
 import { SongsService } from './songs.service';
 import {
-  songResData,
   singleSongData,
-  songResFullData,
-  songResIAData,
+  songFullTestResponse,
+  songIATestResponses,
+  songTestResponses,
 } from '../../test/data/songsModule/resSongData';
 import { InternalServerErrorException } from '@nestjs/common';
 import { ConnectionResError, TimeoutResError } from 'src/utils/mockErrors';
 import { USER_VECTOR } from '../../test/constants/constants';
 
-describe('SongsResolver', () => {
+describe('SongsResolver receives the expected list of songs from the service', () => {
   let service: SongsService;
   let resolver: SongsResolver;
 
@@ -23,11 +23,12 @@ describe('SongsResolver', () => {
         {
           provide: SongsService,
           useValue: {
-            getLandpageSongs: jest.fn().mockResolvedValue(songResData),
-            parseSongList: jest.fn().mockReturnValue(songResData),
-            getDBLength: jest.fn().mockResolvedValue(songResData.length),
-            getSongData: jest.fn().mockResolvedValue(songResFullData),
-            getIARecommendations: jest.fn().mockReturnValue(songResIAData),
+            getLandpageSongs: jest.fn().mockResolvedValue(songTestResponses),
+            getDBLength: jest.fn().mockResolvedValue(songTestResponses.length),
+            getSongData: jest.fn().mockResolvedValue(songFullTestResponse),
+            getIARecommendations: jest
+              .fn()
+              .mockReturnValue(songIATestResponses),
             getRandomSong: jest.fn().mockResolvedValue(singleSongData),
             getNextSong: jest.fn().mockResolvedValue(singleSongData),
             getPreviousSong: jest.fn().mockResolvedValue(singleSongData),
@@ -40,29 +41,25 @@ describe('SongsResolver', () => {
     resolver = module.get<SongsResolver>(SongsResolver);
   });
 
-  it('should be defined', () => {
-    expect(resolver).toBeDefined();
-  });
-
-  it('getDBLength recieves the expected DBLength from the songs service', async () => {
+  it('getDBLength retrieves the expected quantity of songs from the songs service', async () => {
     const result = await resolver.getDBLength();
     expect(service.getDBLength).toHaveBeenCalled();
     expect(result).toBe(5);
   });
 
-  it('getLandpageSongs recieves the expected DBLength from the songs service', async () => {
+  it('getLandpageSongs retrieves the expected list of songs for the landpage from the songs service', async () => {
     const results = await resolver.getLandpageSongs(5);
     expect(service.getLandpageSongs).toHaveBeenCalledWith(5);
     expect(results).toHaveLength(5);
   });
 
-  it('getSongData recieves the expected DBLength from the songs service', async () => {
+  it('getSongData retrieves the expected Full song response from the songs service', async () => {
     const result = await resolver.getSongData(2);
     expect(service.getSongData).toHaveBeenCalledWith(2);
-    expect(result).toEqual(songResFullData);
+    expect(result).toEqual(songFullTestResponse);
   });
 
-  it('getIARecommendations recieves the expected DBLength from the songs service', async () => {
+  it('getIARecommendations retrieves the expected song recommendations from the songs service', async () => {
     const results = await resolver.getIARecommendations(
       ['Rock', 'Alternative', 'Alternative Rock', 'Grunge'],
       ...USER_VECTOR,
@@ -76,25 +73,25 @@ describe('SongsResolver', () => {
     expect(results).toHaveLength(5);
   });
 
-  it('getRandomSong recieves the expected DBLength from the songs service', async () => {
+  it('getRandomSong retrieves the expected song from the songs service', async () => {
     const result = await resolver.getRandomSong();
     expect(service.getRandomSong).toHaveBeenCalled();
     expect(result).toEqual(singleSongData);
   });
 
-  it('getNextSong recieves the expected DBLength from the songs service', async () => {
+  it('getNextSong retrieves the expected song from the songs service', async () => {
     const result = await resolver.getNextSong(1);
     expect(service.getNextSong).toHaveBeenCalledWith(1);
     expect(result).toEqual(singleSongData);
   });
 
-  it("getNextSong recieves a song even if the id doesn't match", async () => {
+  it("getNextSong retrieves a song even if the id doesn't match", async () => {
     const result = await resolver.getNextSong(999);
     expect(service.getNextSong).toHaveBeenCalledWith(999);
     expect(result).toEqual(singleSongData);
   });
 
-  it('getPreviousSong recieves the expected DBLength from the songs service', async () => {
+  it('getPreviousSong retrieves the expected song from the songs service', async () => {
     const result = await resolver.getPreviousSong(3);
     expect(service.getPreviousSong).toHaveBeenCalledWith(3);
     expect(result).toEqual(singleSongData);
@@ -107,7 +104,7 @@ describe('SongsResolver', () => {
   });
 });
 
-describe('SongsResolver Error Handling', () => {
+describe('SongsResolver is able to communicate the error from the service to help development', () => {
   let resolver: SongsResolver;
   let service: SongsService;
 
@@ -134,7 +131,7 @@ describe('SongsResolver Error Handling', () => {
     resolver = module.get<SongsResolver>(SongsResolver);
   });
 
-  it("getDBLength throws InvalidConnectionError when the service couldn't connect with the DB", async () => {
+  it("getDBLength throws an error when the service couldn't connect with the database", async () => {
     await expect(resolver.getDBLength()).rejects.toThrow(
       InternalServerErrorException,
     );
@@ -144,7 +141,7 @@ describe('SongsResolver Error Handling', () => {
     expect(service.getDBLength).toHaveBeenCalled();
   });
 
-  it("getLandpageSongs throws InternalServerErrorException when the service couldn't connect with the DB", async () => {
+  it("getLandpageSongs throws an error when the service couldn't connect with the database", async () => {
     await expect(resolver.getLandpageSongs(5)).rejects.toThrow(
       InternalServerErrorException,
     );
@@ -154,7 +151,7 @@ describe('SongsResolver Error Handling', () => {
     expect(service.getLandpageSongs).toHaveBeenCalledWith(5);
   });
 
-  it("getRandomSong throws InternalServerErrorException when the service couldn't connect with the DB", async () => {
+  it("getRandomSong throws an error when the service couldn't connect with the database", async () => {
     await expect(resolver.getRandomSong()).rejects.toThrow(
       InternalServerErrorException,
     );
@@ -164,7 +161,7 @@ describe('SongsResolver Error Handling', () => {
     expect(service.getRandomSong).toHaveBeenCalled();
   });
 
-  it("getSongData throws InternalServerErrorException when the service couldn't connect with the DB", async () => {
+  it("getSongData throws an error when the service couldn't connect with the database", async () => {
     await expect(resolver.getSongData(999)).rejects.toThrow(
       InternalServerErrorException,
     );
@@ -174,7 +171,7 @@ describe('SongsResolver Error Handling', () => {
     expect(service.getSongData).toHaveBeenCalledWith(999);
   });
 
-  it("getIARecommendations throws InternalServerErrorException when the service couldn't connect with the DB", async () => {
+  it("getIARecommendations throws an error when the service couldn't connect with the database", async () => {
     await expect(
       resolver.getIARecommendations([], ...USER_VECTOR),
     ).rejects.toThrow(InternalServerErrorException);
@@ -191,7 +188,7 @@ describe('SongsResolver Error Handling', () => {
     );
   });
 
-  it("getNextSong throws InternalServerErrorException when the service couldn't connect with the DB", async () => {
+  it("getNextSong throws an error when the service couldn't connect with the database", async () => {
     await expect(resolver.getNextSong(1)).rejects.toThrow(
       InternalServerErrorException,
     );
@@ -201,7 +198,7 @@ describe('SongsResolver Error Handling', () => {
     expect(service.getNextSong).toHaveBeenCalledWith(1);
   });
 
-  it("getPreviousSong throws InternalServerErrorException when the service couldn't connect with the DB", async () => {
+  it("getPreviousSong throws an error when the service couldn't connect with the database", async () => {
     await expect(resolver.getPreviousSong(3)).rejects.toThrow(
       InternalServerErrorException,
     );

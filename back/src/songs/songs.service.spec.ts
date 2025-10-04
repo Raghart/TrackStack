@@ -1,31 +1,42 @@
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-/* eslint-disable @typescript-eslint/no-unsafe-return */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 import { Test, TestingModule } from '@nestjs/testing';
 import { SongsService } from './songs.service';
 import { getModelToken } from '@nestjs/sequelize';
 import {
   BadRequestException,
   InternalServerErrorException,
+  NotFoundException,
+  ServiceUnavailableException,
 } from '@nestjs/common';
 import {
-  songData,
-  songFullResponse,
+  singleSongTestData,
+  songTestData,
+  songFullRawResponse,
+  songIARawResponse,
 } from '../../test/data/songsModule/serSongData';
-import {
-  expectFullSongProps,
-  expectSongNames,
-  expectSongProps,
-} from 'src/utils/expectSongs';
+import { expectFullSongProps, expectSongProps } from 'src/utils/expectSongs';
 import {
   SequelizeConnectionError,
   SequelizeTimeoutError,
 } from 'src/utils/mockErrors';
 import { InvalidPaginationException } from 'src/utils/PaginationError';
 import { SongsModel } from '../../models/songs/song.model';
+import {
+  singleSongData,
+  songFullTestResponse,
+  songIATestResponses,
+  songIATestScores,
+  songTestResponses,
+} from '../../test/data/songsModule/resSongData';
+import { USER_VECTOR } from '../../test/constants/constants';
 
 describe('SongsService', () => {
   let service: SongsService;
+  let songModel: {
+    count: jest.Mock;
+    findAll: jest.Mock;
+    findByPk: jest.Mock;
+    findOne: jest.Mock;
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -34,41 +45,51 @@ describe('SongsService', () => {
         {
           provide: getModelToken(SongsModel),
           useValue: {
-            count: jest.fn().mockResolvedValue(songData.length),
+            count: jest.fn(),
+            findAll: jest.fn(),
+            findByPk: jest.fn(),
+            findOne: jest.fn(),
           },
         },
       ],
     }).compile();
 
     service = module.get<SongsService>(SongsService);
+    songModel = module.get(getModelToken(SongsModel));
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+  describe('DBLength returns the current number of songs in the database', () => {
+    beforeEach(() => {
+      songModel.count.mockResolvedValue(songTestData.length);
+    });
 
-  describe('DBLength', () => {
-    it('DBLength gets the correct quantity of songs', async () => {
+    it('DBLength retrieves from the database the current number of songs', async () => {
       const result = await service.getDBLength();
-      expect(result).toBe(songData.length);
+      expect(result).toBe(songTestData.length);
     });
   });
 
-  describe('getLandpageSongs', () => {
-    it('parseSongList has the expected properties', () => {
-      const results = service.parseSongList(songData);
-      expect(results.length).toBe(songData.length);
-      expectSongProps(results);
+  describe('getLandpageSongs returns a list of songs ready to be delivered', () => {
+    const rawLandpageSongs = songTestData.map((entry) => ({
+      get: () => entry,
+    }));
+    beforeEach(() => {
+      songModel.findAll.mockResolvedValue(rawLandpageSongs);
     });
 
-    it('parseSongList get expected song results', () => {
-      const results = service.parseSongList(songData);
-      expect(results).toHaveLength(songData.length);
-      const songNames = songData.map((song) => song?.name);
-      expectSongNames(results, songNames);
+    it('fetchLandpageSongs retrieves a list of songs data from the database', async () => {
+      const landpageSongs = await service.fetchLandpageSongs();
+      expect(landpageSongs).toHaveLength(5);
+      expect(landpageSongs).toStrictEqual(songTestData);
     });
 
-    it('getLandpageSongs throws InvalidPaginationException when limit < 1', async () => {
+    it('getLandpageSongs returns a list of song responses', async () => {
+      const landpageSongs = await service.getLandpageSongs(5);
+      expect(landpageSongs).toHaveLength(5);
+      expect(landpageSongs).toStrictEqual(songTestResponses);
+    });
+
+    it('fetchLandpageSongs throws InvalidPaginationException when limit < 1', async () => {
       const INVALID_LIMIT = -500;
       await expect(service.fetchLandpageSongs(INVALID_LIMIT)).rejects.toThrow(
         InvalidPaginationException,
@@ -79,58 +100,163 @@ describe('SongsService', () => {
     });
   });
 
-  describe('getRandomSong', () => {
+  describe('the parse methods parses correctly the raw data into the expected format', () => {
     it('parseSongResponse gets a random Song with correct props', () => {
-      const songResponse = service.parseSongData(songData[0]);
+      const songResponse = service.parseSongData(songTestData[0]);
       expectSongProps([songResponse]);
     });
-  });
 
-  describe('fetchDBNextSong', () => {
-    it('getNextSong handles a request with an ID < 1', async () => {
-      const INVALID_SONGID = -999;
-      await expect(service.fetchNextSong(INVALID_SONGID)).rejects.toThrow(
-        BadRequestException,
-      );
-      await expect(service.fetchNextSong(INVALID_SONGID)).rejects.toThrow(
-        `The ID: '${INVALID_SONGID}' is not valid, It must be >= 1!`,
-      );
-    });
-  });
-
-  describe('fetchDBPreviousSong', () => {
-    it('getNextSong handles a request with an ID < 1', async () => {
-      const INVALID_SONGID = -999;
-      await expect(service.fetchPreviousSong(INVALID_SONGID)).rejects.toThrow(
-        BadRequestException,
-      );
-      await expect(service.fetchPreviousSong(INVALID_SONGID)).rejects.toThrow(
-        `The ID: '${INVALID_SONGID}' is not valid, It must be >= 1!`,
-      );
-    });
-  });
-
-  describe('getSongData', () => {
-    beforeEach(async () => {
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [
-          SongsService,
-          {
-            provide: getModelToken(SongsModel),
-            useValue: {},
-          },
-        ],
-      }).compile();
-
-      service = module.get<SongsService>(SongsService);
+    it('parseSongList returns a list of songs with expected properties', () => {
+      const results = service.parseSongList(songTestData);
+      expect(results.length).toBe(songTestData.length);
+      expectSongProps(results);
     });
 
     it('parseFullSong recieves the song with the correct props', () => {
-      const song = service.parseFullSong(songFullResponse);
+      const song = service.parseFullSong(songFullRawResponse);
       expectFullSongProps(song);
     });
+  });
 
-    it('fetchFullSongData throws BadRequestException when the id has an invalid range < 1', async () => {
+  describe('getRandomSong returns a random song from the database ready to deliver', () => {
+    beforeEach(() => {
+      songModel.findOne.mockResolvedValue({ get: () => singleSongTestData });
+    });
+
+    it('fetchRandomSong retrieves a random song from the database', async () => {
+      const randomSong = await service.fetchRandomSong();
+      expect(randomSong).toStrictEqual(singleSongTestData);
+    });
+
+    it('getRandomSong returns a random song with the expected format', async () => {
+      const randomSong = await service.getRandomSong();
+      expectSongProps([randomSong]);
+      expect(randomSong).toStrictEqual(singleSongData);
+    });
+  });
+
+  describe('getNextSong returns a song response ready to deliver', () => {
+    beforeEach(() => {
+      songModel.findByPk.mockResolvedValue({ get: () => singleSongTestData });
+    });
+
+    it("fetchNextSong retrieves the next song's data from the database by ID", async () => {
+      const result = await service.fetchNextSong(1);
+      expect(result).toStrictEqual(singleSongTestData);
+    });
+
+    it("fetchNextSong returns another song if it couldn't find the given id in the database", async () => {
+      songModel.findByPk.mockResolvedValue(undefined);
+      songModel.findOne.mockResolvedValue({ get: () => singleSongTestData });
+
+      const results = await service.fetchNextSong(1);
+      expect(results).toStrictEqual(singleSongTestData);
+    });
+
+    it("getNextSong returns the next song's response of the given ID", async () => {
+      const song = await service.getNextSong(1);
+      expect(song).toStrictEqual(singleSongData);
+    });
+
+    it("fetchNextSong throws an error when it couldn't retrieve a song after 2 attempts", async () => {
+      songModel.findByPk.mockResolvedValue(undefined);
+      songModel.findOne.mockResolvedValue(undefined);
+
+      await expect(service.fetchNextSong(5)).rejects.toThrow(
+        ServiceUnavailableException,
+      );
+      await expect(service.fetchNextSong(5)).rejects.toThrow(
+        "It couldn't retrieve the song from the database",
+      );
+    });
+
+    it('fetchNextSong throws a BadRequestException when the ID < 1', async () => {
+      const INVALID_SONGID = -999;
+      await expect(service.fetchNextSong(INVALID_SONGID)).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(service.fetchNextSong(INVALID_SONGID)).rejects.toThrow(
+        `The ID: '${INVALID_SONGID}' is not valid, It must be >= 1!`,
+      );
+    });
+  });
+
+  describe('getPreviousSong returns a song of the previous ID from the database', () => {
+    beforeEach(() => {
+      songModel.findByPk.mockResolvedValue({ get: () => singleSongTestData });
+    });
+
+    it('fetchPreviousSong retrieves the song data of the given ID minus 1 from the database', async () => {
+      const song = await service.fetchPreviousSong(3);
+      expect(song).toStrictEqual(singleSongTestData);
+    });
+
+    it("fetchPreviousSong returns another song when it couldn't retrieve a song from the ID", async () => {
+      songModel.findByPk.mockResolvedValue(undefined);
+      songModel.findOne.mockResolvedValue({ get: () => singleSongTestData });
+
+      const song = await service.fetchPreviousSong(3);
+      expect(song).toStrictEqual(singleSongTestData);
+    });
+
+    it('getPreviousSong returns the previous song response of the given ID', async () => {
+      const song = await service.getPreviousSong(3);
+      expect(song).toStrictEqual(singleSongData);
+    });
+
+    it("fetchPreviousSong throws an error when it couldn't find a song after 2 attempts", async () => {
+      songModel.findByPk.mockResolvedValue(undefined);
+      songModel.findOne.mockResolvedValue(undefined);
+
+      await expect(service.fetchPreviousSong(3)).rejects.toThrow(
+        ServiceUnavailableException,
+      );
+      await expect(service.fetchPreviousSong(3)).rejects.toThrow(
+        "It couldn't retrieve the song from the database",
+      );
+    });
+
+    it('fetchPreviousSong throws a BadRequestException when the ID < 1', async () => {
+      const INVALID_SONGID = -999;
+      await expect(service.fetchPreviousSong(INVALID_SONGID)).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(service.fetchPreviousSong(INVALID_SONGID)).rejects.toThrow(
+        `The ID: '${INVALID_SONGID}' is not valid, It must be >= 1!`,
+      );
+    });
+  });
+
+  describe('getSongData returns a full song response by the given ID', () => {
+    beforeEach(() => {
+      songModel.findByPk.mockResolvedValue({ get: () => songFullRawResponse });
+    });
+
+    it('fetchFullSongData retrieves a raw full song data of the given ID from the database', async () => {
+      const fullSong = await service.fetchFullSongData(2);
+      expect(fullSong).toStrictEqual(songFullRawResponse);
+    });
+
+    it('getSongData returns a full response song of the given ID ready to deliver', async () => {
+      const fullSong = await service.getSongData(2);
+      expectFullSongProps(fullSong);
+      expect(fullSong).toStrictEqual(songFullTestResponse);
+    });
+
+    it("fetchFullSongData throws NotFoundException if the ID doesn't exist in the database", async () => {
+      songModel.findByPk.mockResolvedValue(undefined);
+
+      const errID = 5;
+
+      await expect(service.fetchFullSongData(errID)).rejects.toThrow(
+        NotFoundException,
+      );
+      await expect(service.fetchFullSongData(errID)).rejects.toThrow(
+        `The song with the ID: '${errID}' doesn't exist in the database!`,
+      );
+    });
+
+    it('fetchFullSongData throws BadRequestException when the id < 1', async () => {
       const INVALID_ID = -999;
       await expect(service.fetchFullSongData(INVALID_ID)).rejects.toThrow(
         BadRequestException,
@@ -140,9 +266,47 @@ describe('SongsService', () => {
       );
     });
   });
+
+  describe('getIARecommendations returns a list of songs recommendations based by user input', () => {
+    const rawIASongs = songIARawResponse.map((entry) => ({ get: () => entry }));
+    beforeEach(() => {
+      songModel.findAll.mockResolvedValue(rawIASongs);
+    });
+
+    it('fetchIARecommendations retrieves a list of songs matching the given genres', async () => {
+      const songData = await service.fetchIARecommendations(['Rock']);
+      expect(songData).toStrictEqual(songIARawResponse);
+    });
+
+    it('getCosineSimilarity returns a score representing the similiraty of two number arrays', () => {
+      const score = service.getCosineSimilarity(
+        [1, 2, 3, 4, 5],
+        [1, 2, 3, 4, 5],
+      );
+      expect(score).toBe(1);
+    });
+
+    it('calculateRecommendations returns a list of songs, sorted by their score (highest to lowest)', () => {
+      const songRecommendations = service.calculateRecommendations(
+        songIARawResponse,
+        USER_VECTOR,
+      );
+      expect(songRecommendations).toHaveLength(5);
+      expect(songRecommendations).toStrictEqual(songIATestScores);
+    });
+
+    it('getIARecommendations returns a list of song recommendations ready to deliver', async () => {
+      const songRecommendations = await service.getIARecommendations(
+        ['Rock'],
+        ...USER_VECTOR,
+      );
+      expect(songRecommendations).toHaveLength(5);
+      expect(songRecommendations).toStrictEqual(songIATestResponses);
+    });
+  });
 });
 
-describe('SongsService Error handling', () => {
+describe("SongsService throw an error if the data isn't in the expected format", () => {
   let service: SongsService;
 
   beforeEach(async () => {
@@ -164,7 +328,7 @@ describe('SongsService Error handling', () => {
     service = module.get<SongsService>(SongsService);
   });
 
-  it("getDBLength throws InternalServerErrorException when it can't collect the info from the DB", async () => {
+  it("getDBLength throws an error if it couldn't collect the length from the database", async () => {
     await expect(service.getDBLength()).rejects.toThrow(
       InternalServerErrorException,
     );
@@ -173,7 +337,7 @@ describe('SongsService Error handling', () => {
     );
   });
 
-  it("fetchLandpageSongs throws InternalServerErrorException when it can't collect the info from the DB", async () => {
+  it("fetchLandpageSongs throws an error if it couldn't retrieve the song data from the database", async () => {
     await expect(service.fetchLandpageSongs(5)).rejects.toThrow(
       InternalServerErrorException,
     );
@@ -182,7 +346,7 @@ describe('SongsService Error handling', () => {
     );
   });
 
-  it("fetchRandomSong throws InternalServerErrorException when it can't collect the info from the DB", async () => {
+  it("fetchRandomSong throws an error if it couldn't retrieve the random song from the database", async () => {
     await expect(service.fetchRandomSong()).rejects.toThrow(
       InternalServerErrorException,
     );
@@ -191,7 +355,7 @@ describe('SongsService Error handling', () => {
     );
   });
 
-  it("fetchNextSong throws InternalServerErrorException when it can't collect the info from the DB", async () => {
+  it("fetchNextSong throws an error if it couldn't retrieve the song data from the database", async () => {
     await expect(service.fetchNextSong(1)).rejects.toThrow(
       InternalServerErrorException,
     );
@@ -200,7 +364,7 @@ describe('SongsService Error handling', () => {
     );
   });
 
-  it("fetchPreviousSong throws InternalServerErrorException when it can't collect the info from the DB", async () => {
+  it("fetchPreviousSong throws an error if it couldn't retrieve the song data from the database", async () => {
     await expect(service.fetchPreviousSong(2)).rejects.toThrow(
       InternalServerErrorException,
     );
@@ -209,7 +373,7 @@ describe('SongsService Error handling', () => {
     );
   });
 
-  it("fetchFullSongData throws InternalServerErrorException when it can't collect the info from the DB", async () => {
+  it("fetchFullSongData throws an error if it can't retrieve the full song data from the database", async () => {
     await expect(service.fetchFullSongData(1)).rejects.toThrow(
       InternalServerErrorException,
     );
@@ -218,7 +382,7 @@ describe('SongsService Error handling', () => {
     );
   });
 
-  it("getIARecommendations throws InternalServerErrorException when it can't collect the info from the DB", async () => {
+  it("getIARecommendations throws an error if it couldn't retrieve the song data from the database", async () => {
     await expect(service.fetchIARecommendations([])).rejects.toThrow(
       InternalServerErrorException,
     );

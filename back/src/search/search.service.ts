@@ -17,7 +17,7 @@ import {
   songSearchResults,
 } from 'src/types/searchTypes';
 import { Client } from 'elasticsearch';
-import { normalizeText } from 'src/types/normalizeText';
+import { normalizeText } from 'src/search/utils/normalizeText';
 import { safeSearch } from 'src/utils/safeSearch';
 
 @Injectable()

@@ -202,13 +202,13 @@ describe("SearchService throws errors when the methods couldn't connect with the
     expect(esService.search).toHaveBeenCalled();
   });
 
-  it('multipleSearch throws unknow database Error when a unidentified error ocurred while searching', async () => {
+  it('multipleSearch throws unknown database Error when a unidentified error ocurred while searching', async () => {
     esService.search = jest.fn().mockRejectedValue(undefined);
     await expect(service.multipleSearch('Pepe')).rejects.toThrow(
       ServiceUnavailableException,
     );
     await expect(service.multipleSearch('Pepe')).rejects.toThrow(
-      /ElasticSearch is not responding: Unknow database error/,
+      /ElasticSearch is not responding: Unknown database error/,
     );
     expect(esService.search).toHaveBeenCalled();
   });

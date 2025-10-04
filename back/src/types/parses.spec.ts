@@ -16,10 +16,10 @@ import {
 import { albumSongs } from '../../test/data/albumsModule/AlbumData';
 import { songGenresData } from '../../test/data/songGenresModule/songGenresData';
 import {
-  fullResSongs,
-  songData,
+  songFullRawResponse,
+  songIARawResponse,
+  songTestData,
 } from '../../test/data/songsModule/serSongData';
-import { IASongs } from '../../test/data/songsModule/serAISongData';
 import {
   searchAlbums,
   searchArtists,
@@ -179,7 +179,9 @@ describe('parses return the data with the expected type', () => {
     });
 
     it('parseSongResponse ensure that the songs match the correct songResponse object structure', () => {
-      songData.forEach((song) => expect(parseSongResponse(song)).toBe(song));
+      songTestData.forEach((song) =>
+        expect(parseSongResponse(song)).toBe(song),
+      );
     });
   });
 
@@ -196,8 +198,8 @@ describe('parses return the data with the expected type', () => {
     });
 
     it('parseFullSongResponse ensure that the songs match the correct full songResponse object structure', () => {
-      fullResSongs.forEach((song) =>
-        expect(parseFullSongResponse(song)).toBe(song),
+      expect(parseFullSongResponse(songFullRawResponse)).toBe(
+        songFullRawResponse,
       );
     });
   });
@@ -215,7 +217,9 @@ describe('parses return the data with the expected type', () => {
     });
 
     it('parseIASongData ensure that the songs match the correct object structure', () => {
-      IASongs.forEach((song) => expect(parseIASongData(song)).toBe(song));
+      songIARawResponse.forEach((song) =>
+        expect(parseIASongData(song)).toBe(song),
+      );
     });
   });
 
