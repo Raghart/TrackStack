@@ -6,7 +6,7 @@ import { mockMultipleSeach } from '../../test/data/searchModule/searchData';
 import { ServiceUnavailableException } from '@nestjs/common';
 import { pingError, searchError } from '../../test/constants/constants';
 
-describe('SearchResolver recieves the expected answer from the service ready to deliver it', () => {
+describe('SearchResolver recieves the expected data from the service', () => {
   let resolver: SearchResolver;
   let service: SearchService;
 
@@ -28,7 +28,7 @@ describe('SearchResolver recieves the expected answer from the service ready to 
     resolver = module.get<SearchResolver>(SearchResolver);
   });
 
-  it('ping returns a string to indicate that the connection to ES is avaible', async () => {
+  it('ping returns a string to indicate that the connection to elasticsearch is avaible', async () => {
     const result = await resolver.ping();
     expect(service.ping).toHaveBeenCalled();
     expect(result).toBe('Elastic Search is working!');
@@ -41,7 +41,7 @@ describe('SearchResolver recieves the expected answer from the service ready to 
   });
 });
 
-describe('SearchResolver handle errors from the service to indicate the problems to the devs', () => {
+describe('SearchResolver throws errors from the service locate problems', () => {
   let resolver: SearchResolver;
   let service: SearchService;
 

@@ -18,9 +18,10 @@ import {
   songsHitStructure,
 } from 'src/types/searchTypes';
 
-describe('SearchService retrieves and sort lists of searched data from the elasticSearch server', () => {
+describe('SearchService retrieves and sort the data incoming from the elasticSearch server', () => {
   let service: SearchService;
   let esService: jest.Mocked<Client>;
+
   const artistHitData = {
     hits: { hits: searchArtists.map((doc) => ({ _source: doc })) },
   } as unknown as SearchResponse<artistHitStructure>;
@@ -53,13 +54,13 @@ describe('SearchService retrieves and sort lists of searched data from the elast
     esService = module.get('BonsaiClient');
   });
 
-  it('ping resolves true when is called to confirm a communication with the DB', async () => {
+  it('ping resolves true when is called to confirm a communication with the database', async () => {
     const result = await service.ping();
     expect(esService.ping).toHaveBeenCalled();
     expect(result).toBe(true);
   });
 
-  it('searchArtists returns a list of artists with expected properties', async () => {
+  it('searchArtists returns an artists array with expected properties', async () => {
     esService.search.mockResolvedValue(artistHitData);
 
     const result = await service.searchArtists('Nirvana');
@@ -67,7 +68,7 @@ describe('SearchService retrieves and sort lists of searched data from the elast
     expect(result).toStrictEqual(searchArtists);
   });
 
-  it('searchAlbums returns a list of albums with expected properties', async () => {
+  it('searchAlbums returns an albums array with expected properties', async () => {
     esService.search.mockResolvedValue(albumHitData);
 
     const result = await service.searchAlbums('Pablo Honey');
@@ -75,7 +76,7 @@ describe('SearchService retrieves and sort lists of searched data from the elast
     expect(result).toStrictEqual(searchAlbums);
   });
 
-  it('seachSongs returns a list of albums with expected properties', async () => {
+  it('seachSongs returns a songs array with expected properties', async () => {
     esService.search.mockResolvedValue(songsHitData);
 
     const result = await service.seachSongs('Creep');
@@ -83,7 +84,7 @@ describe('SearchService retrieves and sort lists of searched data from the elast
     expect(result).toStrictEqual(searchSongs);
   });
 
-  it('sortResults sorts the list to put in first the most similar to the query', () => {
+  it('sortResults sorts the list to put in first place the most similar to the query', () => {
     const sortedResults = service.sortResults<artistSearchResults>(
       'Mägo de Oz',
       searchArtists,
@@ -97,7 +98,7 @@ describe('SearchService retrieves and sort lists of searched data from the elast
     });
   });
 
-  it('sortResults sorts correctly if the first item is exactly the query', () => {
+  it('sortResults puts in first place the item which name is equal to the query', () => {
     expect(
       service.sortResults<artistSearchResults>('nirvana', searchArtists)[0]
         .name,
@@ -111,7 +112,7 @@ describe('SearchService retrieves and sort lists of searched data from the elast
     ).toBe('Creep');
   });
 
-  it('sortResults sorts correctly the first item even if it has an unique accentuation', () => {
+  it('sortResults sorts correctly even if the first item even has an unique accentuation', () => {
     expect(
       service.sortResults<artistSearchResults>('mago de oz', searchArtists)[0]
         .name,

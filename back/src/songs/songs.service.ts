@@ -62,6 +62,11 @@ export class SongsService {
     );
   }
 
+  async getLandpageSongs(limit: number): Promise<SongResponse[]> {
+    const songData = await this.fetchLandpageSongs(limit);
+    return this.parseSongList(songData);
+  }
+
   parseSongList(songData: SongResponseAttributes[]): SongResponse[] {
     return songData.map((song) => ({
       id: song.id,
@@ -70,11 +75,6 @@ export class SongsService {
       url_preview: song.url_preview,
       album_cover: parseString(song.album.url_image),
     }));
-  }
-
-  async getLandpageSongs(limit: number): Promise<SongResponse[]> {
-    const songData = await this.fetchLandpageSongs(limit);
-    return this.parseSongList(songData);
   }
 
   async fetchFullSongData(songID: number): Promise<FullSongResponseAttributes> {

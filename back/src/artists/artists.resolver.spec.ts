@@ -13,7 +13,7 @@ import {
   artistTestSongs,
 } from '../../test/data/artistsModule/artistData';
 
-describe('ArtistsResolver delivers the expected artists and artist songs to the frontend', () => {
+describe('ArtistsResolver retrieves the expected artists and artist songs from the service', () => {
   let resolver: ArtistsResolver;
   let service: ArtistsService;
 
@@ -35,14 +35,14 @@ describe('ArtistsResolver delivers the expected artists and artist songs to the 
     resolver = module.get<ArtistsResolver>(ArtistsResolver);
   });
 
-  it('getAllArtists recieves the expected results from the artists service', async () => {
+  it('getAllArtists retrieves an array of artists from the service', async () => {
     const results = await resolver.getAllArtists('1', 1, 5);
     expect(service.getAllArtists).toHaveBeenCalledWith('1', 1, 5);
     expect(results).toHaveLength(5);
     expect(results).toEqual(artistTestResponses);
   });
 
-  it('getAllArtistSongs recieves the expected results from the artists service', async () => {
+  it('getAllArtistSongs retrieves an array of songs of an artists from the service', async () => {
     const results = await resolver.getAllArtistSongs('Nirvana');
     expect(service.getAllArtistSongs).toHaveBeenCalledWith('Nirvana');
     expect(results).toHaveLength(5);
@@ -72,7 +72,7 @@ describe('ArtistsResolver handles error from the service to communicate them to 
     resolver = module.get<ArtistsResolver>(ArtistsResolver);
   });
 
-  it('fetchArtists throws InvalidPaginationException when page < 1', async () => {
+  it('getAllArtists throws InvalidPaginationException when page < 1', async () => {
     const INVALID_PAGE = -500;
     (service.getAllArtists as jest.Mock).mockRejectedValue(
       new InvalidPaginationException('page', INVALID_PAGE),
