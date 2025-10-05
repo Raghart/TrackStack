@@ -15,7 +15,7 @@ import { songGenresData } from '../../test/data/songGenresModule/songGenresData'
 describe('SongGenresService retrieves and parses songs of a genre from the database', () => {
   let service: SongGenresService;
   let songGenresModel: { findAll: jest.Mock };
-  const receivedTestData = songGenresData.map((entry) => ({
+  const songGenresRawData = songGenresData.map((entry) => ({
     get: () => entry,
   }));
 
@@ -36,42 +36,45 @@ describe('SongGenresService retrieves and parses songs of a genre from the datab
     songGenresModel = module.get(getModelToken(SongGenresModel));
   });
 
-  it('parseGenreSongs parses songs from a genre with the expected properties', () => {
-    const results = service.parseGenreSongs(songGenresData);
-    expect(results.length).toBeGreaterThan(0);
-    expectSongProps(results);
-  });
+  describe('getAllGenreSongs returns an array of songs of a specific genre', () => {
+    beforeEach(() => {
+      songGenresModel.findAll.mockResolvedValue(songGenresRawData);
+    });
 
-  it('fetchSongGenres returns the expected list of songs from the database', async () => {
-    songGenresModel.findAll.mockResolvedValue(receivedTestData);
+    it('parseGenreSongs parses songs of a genre with the expected properties', () => {
+      const results = service.parseGenreSongs(songGenresData);
+      expect(results.length).toBeGreaterThan(0);
+      expectSongProps(results);
+    });
 
-    const results = await service.fetchSongGenres('1', 'Rock');
-    expect(results).toHaveLength(3);
-    expect(results).toStrictEqual(songGenresData);
-  });
+    it('fetchSongGenres returns the expected list of songs from the database', async () => {
+      const results = await service.fetchSongGenres('1', 'Rock');
+      expect(results).toHaveLength(3);
+      expect(results).toStrictEqual(songGenresData);
+    });
 
-  it('getAllGenreSongs returns the expected list of songs ready to deliver to the resolver', async () => {
-    songGenresModel.findAll.mockResolvedValue(receivedTestData);
+    it('getAllGenreSongs returns an array of songs of a specific genre ready to deliver', async () => {
+      const genreSongs = await service.getAllGenreSongs('1', 'Rock', 1, 3);
+      expect(genreSongs).toHaveLength(3);
+      expectSongProps(genreSongs);
+    });
 
-    const genreSongs = await service.getAllGenreSongs('1', 'Rock', 1, 3);
-    expect(genreSongs).toHaveLength(3);
-    expectSongProps(genreSongs);
-  });
+    it('fetchSongGenres throws NotFoundException when no songs where found for a genre', async () => {
+      songGenresModel.findAll.mockResolvedValue(undefined);
 
-  it('fetchSongGenres throws NotFoundException when no songs where found for a genre', async () => {
-    songGenresModel.findAll.mockResolvedValue(undefined);
-
-    await expect(
-      service.fetchSongGenres('1', 'Potatoes', 1, 5),
-    ).rejects.toThrow(NotFoundException);
-    await expect(
-      service.fetchSongGenres('1', 'Potatoes', 1, 5),
-    ).rejects.toThrow(`The genre: 'Potatoes' doesn't exist in the DB!`);
+      await expect(
+        service.fetchSongGenres('1', 'Potatoes', 1, 5),
+      ).rejects.toThrow(NotFoundException);
+      await expect(
+        service.fetchSongGenres('1', 'Potatoes', 1, 5),
+      ).rejects.toThrow(`The genre: 'Potatoes' doesn't exist in the DB!`);
+    });
   });
 });
 
-describe('SongGenresService is ready to throws errors if not intentional behavior is detected', () => {
+describe("SongGenresService throws an error if it couldn't retrieve the data from the database", () => {
   let service: SongGenresService;
+  let songGenresModel: { findAll: jest.Mock };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -85,6 +88,13 @@ describe('SongGenresService is ready to throws errors if not intentional behavio
     }).compile();
 
     service = module.get<SongGenresService>(SongGenresService);
+    songGenresModel = module.get(getModelToken(SongGenresModel));
+  });
+
+  beforeEach(() => {
+    songGenresModel.findAll.mockRejectedValue(
+      new Error('SequelizeTimeoutError: Connection refused'),
+    );
   });
 
   it('fetchSongGenres throws BadRequestException when seed is not a valid string of numbers', async () => {
@@ -121,6 +131,17 @@ describe('SongGenresService is ready to throws errors if not intentional behavio
     );
     await expect(service.fetchSongGenres('1', 'Rock', 1, 5)).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Connection refused',
+    );
+  });
+
+  it('fetchSongGenres throws a generic error if there is no message in the rejected request', async () => {
+    songGenresModel.findAll.mockRejectedValue(undefined);
+
+    await expect(service.fetchSongGenres('1', 'Rock', 1, 5)).rejects.toThrow(
+      InternalServerErrorException,
+    );
+    await expect(service.fetchSongGenres('1', 'Rock', 1, 5)).rejects.toThrow(
+      'Database Error: Unknown database error',
     );
   });
 });

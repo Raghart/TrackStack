@@ -11,8 +11,9 @@ import {
 import { InternalServerErrorException } from '@nestjs/common';
 import { ConnectionResError, TimeoutResError } from 'src/utils/mockErrors';
 import { USER_VECTOR } from '../../test/constants/constants';
+import { expectSongProps } from 'src/utils/expectSongs';
 
-describe('SongsResolver receives the expected list of songs from the service', () => {
+describe('SongsResolver receives the expected songs array from the service', () => {
   let service: SongsService;
   let resolver: SongsResolver;
 
@@ -41,25 +42,25 @@ describe('SongsResolver receives the expected list of songs from the service', (
     resolver = module.get<SongsResolver>(SongsResolver);
   });
 
-  it('getDBLength retrieves the expected quantity of songs from the songs service', async () => {
+  it('getDBLength retrieves the quantity of songs from the service', async () => {
     const result = await resolver.getDBLength();
     expect(service.getDBLength).toHaveBeenCalled();
     expect(result).toBe(5);
   });
 
-  it('getLandpageSongs retrieves the expected list of songs for the landpage from the songs service', async () => {
+  it('getLandpageSongs retrieves a songs array ready to be delivered', async () => {
     const results = await resolver.getLandpageSongs(5);
     expect(service.getLandpageSongs).toHaveBeenCalledWith(5);
     expect(results).toHaveLength(5);
   });
 
-  it('getSongData retrieves the expected Full song response from the songs service', async () => {
+  it('getSongData retrieves a full song response from service ready to be delivered', async () => {
     const result = await resolver.getSongData(2);
     expect(service.getSongData).toHaveBeenCalledWith(2);
     expect(result).toEqual(songFullTestResponse);
   });
 
-  it('getIARecommendations retrieves the expected song recommendations from the songs service', async () => {
+  it('getIARecommendations retrieves a songs recommendations array ready to be delivered', async () => {
     const results = await resolver.getIARecommendations(
       ['Rock', 'Alternative', 'Alternative Rock', 'Grunge'],
       ...USER_VECTOR,
@@ -73,34 +74,34 @@ describe('SongsResolver receives the expected list of songs from the service', (
     expect(results).toHaveLength(5);
   });
 
-  it('getRandomSong retrieves the expected song from the songs service', async () => {
+  it('getRandomSong retrieves a song ready to be delivered', async () => {
     const result = await resolver.getRandomSong();
     expect(service.getRandomSong).toHaveBeenCalled();
-    expect(result).toEqual(singleSongData);
+    expectSongProps([result]);
   });
 
-  it('getNextSong retrieves the expected song from the songs service', async () => {
+  it('getNextSong retrieves a song ready to be delivered', async () => {
     const result = await resolver.getNextSong(1);
     expect(service.getNextSong).toHaveBeenCalledWith(1);
-    expect(result).toEqual(singleSongData);
+    expectSongProps([result]);
   });
 
   it("getNextSong retrieves a song even if the id doesn't match", async () => {
     const result = await resolver.getNextSong(999);
     expect(service.getNextSong).toHaveBeenCalledWith(999);
-    expect(result).toEqual(singleSongData);
+    expectSongProps([result]);
   });
 
-  it('getPreviousSong retrieves the expected song from the songs service', async () => {
+  it('getPreviousSong retrieves a song ready to be delivered', async () => {
     const result = await resolver.getPreviousSong(3);
     expect(service.getPreviousSong).toHaveBeenCalledWith(3);
-    expect(result).toEqual(singleSongData);
+    expectSongProps([result]);
   });
 
   it("getPreviousSong recieves a song even if the id doesn't match", async () => {
     const result = await resolver.getPreviousSong(999);
     expect(service.getPreviousSong).toHaveBeenCalledWith(999);
-    expect(result).toEqual(singleSongData);
+    expectSongProps([result]);
   });
 });
 

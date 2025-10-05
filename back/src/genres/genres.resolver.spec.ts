@@ -6,7 +6,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { genreResData } from '../../test/data/genres/genresData';
 import { TimeoutResError } from 'src/utils/mockErrors';
 
-describe('GenresResolver delivers correctly to GraphQL the expected list of genres', () => {
+describe('GenresResolver retrieves a genres array from the service', () => {
   let resolver: GenresResolver;
   let service: GenresService;
 
@@ -27,7 +27,7 @@ describe('GenresResolver delivers correctly to GraphQL the expected list of genr
     resolver = module.get<GenresResolver>(GenresResolver);
   });
 
-  it('the resolver getAllGenres returns the expected list of genres ready to deliver to GraphQL', async () => {
+  it('getAllGenres retrieves the genres array ready to be delivered', async () => {
     const genreList = await resolver.getAllGenres();
 
     expect(service.getAllGenres).toHaveBeenCalled();
@@ -35,7 +35,7 @@ describe('GenresResolver delivers correctly to GraphQL the expected list of genr
     expect(genreList).toEqual(genreResData);
   });
 
-  describe("the resolver getAllGenres throws an error when it couldn't connect to the database", () => {
+  describe("getAllGenres throws an error when it couldn't connect to the database", () => {
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: [

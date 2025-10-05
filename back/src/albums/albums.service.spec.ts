@@ -13,7 +13,7 @@ import { expectSongData, expectSongProps } from 'src/utils/expectSongs';
 import { SequelizeTimeoutError } from 'src/utils/mockErrors';
 import { AlbumsModel } from '../../models/albums/albums.model';
 
-describe('AlbumsService retrieves and parses from the database all the songs of an album', () => {
+describe('AlbumsService retrieves and parses all the songs of an album', () => {
   let service: AlbumsService;
   let albumModel: { findOne: jest.Mock };
 
@@ -34,23 +34,28 @@ describe('AlbumsService retrieves and parses from the database all the songs of 
     albumModel = module.get(getModelToken(AlbumsModel));
   });
 
-  it('parseAlbumSongs parses correctly the songs of a specific album', () => {
+  beforeEach(() => {
     albumModel.findOne.mockResolvedValue({ get: () => albumSongs });
+  });
 
+  it('parseAlbumSongs parses the raw songs data of an album', () => {
     const results = service.parseAlbumSongs(albumSongs);
     expectSongProps(results);
     expect(results.length).toBeGreaterThan(0);
     expectSongData(results[0], 'Come as You Are', 'Nirvana');
   });
 
-  it('fetchAlbumSongs returns an object with the expected props', async () => {
-    albumModel.findOne.mockResolvedValue({ get: () => albumSongs });
-
+  it('fetchAlbumSongs retrieves all the songs of an album from the database', async () => {
     const results = await service.fetchAlbumSongs('Nirvana');
     expect(results).toStrictEqual(albumSongs);
   });
 
-  it("fetchAlbumSongs throws an error when the searched album isn't in the database", async () => {
+  it('getAllAlbumSongs returns a song array of an album ready to be delivered', async () => {
+    const results = await service.getAllAlbumSongs('Nirvana');
+    expect(results).toStrictEqual(albumParsedSongs);
+  });
+
+  it("fetchAlbumSongs throws an error when the album isn't in the database", async () => {
     albumModel.findOne.mockResolvedValue(undefined);
 
     await expect(service.fetchAlbumSongs('noAlbum')).rejects.toThrow(
@@ -60,16 +65,9 @@ describe('AlbumsService retrieves and parses from the database all the songs of 
       `Album: noAlbum couldn't be found!`,
     );
   });
-
-  it('getAllAlbumSongs returns a list of songs ready to deliver to the resolver', async () => {
-    albumModel.findOne.mockResolvedValue({ get: () => albumSongs });
-
-    const results = await service.getAllAlbumSongs('Nirvana');
-    expect(results).toStrictEqual(albumParsedSongs);
-  });
 });
 
-describe("AlbumsService is able to manage errors when it couldn't connect to the database", () => {
+describe("AlbumsService throws errors if it couldn't retrieve the data from the database", () => {
   let service: AlbumsService;
 
   beforeEach(async () => {

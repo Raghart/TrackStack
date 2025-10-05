@@ -10,7 +10,7 @@ import { songGenresResponses } from '../../test/data/songGenresModule/songGenres
 import { NOGENRE_ERROR } from '../../test/constants/constants';
 import { InvalidPaginationException } from 'src/utils/PaginationError';
 
-describe('SongGenresResolver recieves and deliver the songs from a genre', () => {
+describe('SongGenresResolver recieves and deliver the songs from a genre from the service', () => {
   let resolver: SongGenresResolver;
   let service: SongGenresService;
 
@@ -31,7 +31,7 @@ describe('SongGenresResolver recieves and deliver the songs from a genre', () =>
     resolver = module.get<SongGenresResolver>(SongGenresResolver);
   });
 
-  it('getAllGenreSongs recieves the expected data from the song_genres service', async () => {
+  it('getAllGenreSongs recieves the expected songs of a genre ready to be delivered', async () => {
     const results = await resolver.getAllGenreSongs('1', 'Rock', 1, 5);
     expect(service.getAllGenreSongs).toHaveBeenCalledWith('1', 'Rock', 1, 5);
     expect(results).toHaveLength(3);
@@ -39,7 +39,7 @@ describe('SongGenresResolver recieves and deliver the songs from a genre', () =>
   });
 });
 
-describe('SongGenresResolver handle errors from the service to inform the problems to the developers', () => {
+describe('SongGenresResolver throws errors from the service to inform the problems to the developers', () => {
   let resolver: SongGenresResolver;
   let service: SongGenresService;
 

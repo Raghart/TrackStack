@@ -9,7 +9,7 @@ import {
 import { albumResSongs } from '../../test/data/albumsModule/AlbumData';
 import { expectSongProps } from 'src/utils/expectSongs';
 
-describe('AlbumsResolver returns the expected songs from an album ready to deliver them', () => {
+describe('AlbumsResolver returns the expected songs from an album', () => {
   let resolver: AlbumsResolver;
   let service: AlbumsService;
 
@@ -30,7 +30,7 @@ describe('AlbumsResolver returns the expected songs from an album ready to deliv
     resolver = module.get<AlbumsResolver>(AlbumsResolver);
   });
 
-  it('getAllAlbumSongs returns the expected results', async () => {
+  it('getAllAlbumSongs returns a song array of an album ready to be delivered', async () => {
     const results = await resolver.getAllAlbumSongs('testingAlbum');
     expect(service.getAllAlbumSongs).toHaveBeenCalledWith('testingAlbum');
     expect(results).toHaveLength(5);
@@ -38,7 +38,7 @@ describe('AlbumsResolver returns the expected songs from an album ready to deliv
   });
 });
 
-describe('AlbumsResolver is able to handle errors thrown by the service to detect invalid results', () => {
+describe('AlbumsResolver retrieves the errors thrown by the service to detect invalid results', () => {
   let resolver: AlbumsResolver;
   let service: AlbumsService;
 

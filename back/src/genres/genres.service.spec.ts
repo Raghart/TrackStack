@@ -25,25 +25,27 @@ describe('GenresService retrieves and parses all the avaibles genres from the da
     service = module.get<GenresService>(GenresService);
   });
 
-  it('parseGenres parses correctly the recieved data', () => {
-    const results = service.parseGenres(genreData);
-    results.forEach((genre) => expect(typeof genre).toBe('string'));
-    expect(results).toHaveLength(genreData.length);
-    expect(results).toEqual(genreData.map((genre) => genre.genre));
+  describe('getAllGenres returns a genre array ready to deliver', () => {
+    it('parseGenres parses the given data to the expected format', () => {
+      const results = service.parseGenres(genreData);
+      results.forEach((genre) => expect(typeof genre).toBe('string'));
+      expect(results).toHaveLength(genreData.length);
+      expect(results).toEqual(genreData.map((genre) => genre.genre));
+    });
+
+    it('fetchGenres returns an array of all the avaibles genres with the expected props', async () => {
+      const genres = await service.fetchGenres();
+      genres.forEach((genre) => expect(genre).toHaveProperty('genre'));
+      expect(genres).toEqual(genreData);
+    });
+
+    it('getAllGenres returns an array of genres', async () => {
+      const genreList = await service.getAllGenres();
+      expect(genreList).toEqual(genreResData);
+    });
   });
 
-  it('fetchGenres returns the list of avaibles genres with the expected props', async () => {
-    const genres = await service.fetchGenres();
-    genres.forEach((genre) => expect(genre).toHaveProperty('genre'));
-    expect(genres).toEqual(genreData);
-  });
-
-  it('getAllGenres returns the list of string genres ready to deliver', async () => {
-    const genreList = await service.getAllGenres();
-    expect(genreList).toEqual(genreResData);
-  });
-
-  describe("fetchGenres is able to handle an error when a promise isn't fullfiled", () => {
+  describe("fetchGenres throws an error if it couldn't retrieve the genres array", () => {
     beforeEach(async () => {
       const module: TestingModule = await Test.createTestingModule({
         providers: [
