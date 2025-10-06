@@ -1,10 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const getIARecommendations = gql`
-query getIARecommendedSongs ($genres: [String!], $energy: Float!, $speechLevel: Float!, $danceability: Float!,
-  $duration: Float!, $sentiment: Float!, $voiceType: Float!, $mood: Int!, $acousticness: Float!) {
-  getIARecommendations (genres: $genres, energy: $energy, speechLevel: $speechLevel, danceability: $danceability,
-  duration: $duration, sentiment: $sentiment, voiceType: $voiceType, mood: $mood, acousticness: $acousticness) {
+query getIARecommendedSongs ($genres: [String!], $userVector: [Float!]) {
+  getIARecommendations (genres: $genres, userVector: $userVector) {
     id
     name
     artists
