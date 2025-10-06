@@ -18,7 +18,6 @@ import {
   FullSongResponse,
   FullSongResponseAttributes,
   IASongResponse,
-  IASongScores,
   SongResponse,
   SongResponseAttributes,
 } from 'src/types/songAttributes';
@@ -29,7 +28,6 @@ import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import { SongDetailsModel } from '../../models/song_details/SongDetails.model';
-import { parseUserVector } from './utils/parseUserVector';
 
 @Injectable()
 export class SongsService {
@@ -184,8 +182,8 @@ export class SongsService {
   calculateRecommendations(
     songData: IASongResponse[],
     userVector: number[],
-  ): IASongScores[] {
-    return songData
+  ): SongResponseAttributes[] {
+    const songScores = songData
       .map((song) => ({
         id: song.id,
         song,
@@ -193,34 +191,16 @@ export class SongsService {
       }))
       .sort((a, b) => b.score - a.score)
       .slice(0, 40);
+
+    return songScores.map((entry) => entry.song);
   }
 
   async getIARecommendations(
     genres: string[],
-    energy: number,
-    speechLevel: number,
-    danceability: number,
-    duration: number,
-    sentiment: number,
-    voiceType: number,
-    mood: number,
-    acousticness: number,
+    userVector: number[],
   ): Promise<SongResponse[]> {
     const songData = await this.fetchIARecommendations(genres);
-    const userVector = parseUserVector(
-      energy,
-      speechLevel,
-      danceability,
-      duration,
-      sentiment,
-      voiceType,
-      mood,
-      acousticness,
-    );
-
-    const songScores = this.calculateRecommendations(songData, userVector);
-    const songList = songScores.map((entry) => entry.song);
-
+    const songList = this.calculateRecommendations(songData, userVector);
     return this.parseSongList(songList);
   }
 
