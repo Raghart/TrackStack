@@ -297,7 +297,7 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
     it('getIARecommendations returns a song recommendations array ready to be delivered', async () => {
       const songRecommendations = await service.getIARecommendations(
         ['Rock'],
-        ...USER_VECTOR,
+        USER_VECTOR,
       );
       expect(songRecommendations).toHaveLength(5);
       expect(songRecommendations).toStrictEqual(songIATestResponses);

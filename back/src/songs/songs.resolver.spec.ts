@@ -63,12 +63,12 @@ describe('SongsResolver receives the expected songs array from the service', () 
   it('getIARecommendations retrieves a songs recommendations array ready to be delivered', async () => {
     const results = await resolver.getIARecommendations(
       ['Rock', 'Alternative', 'Alternative Rock', 'Grunge'],
-      ...USER_VECTOR,
+      USER_VECTOR,
     );
 
     expect(service.getIARecommendations).toHaveBeenCalledWith(
       ['Rock', 'Alternative', 'Alternative Rock', 'Grunge'],
-      ...USER_VECTOR,
+      USER_VECTOR,
     );
 
     expect(results).toHaveLength(5);
@@ -174,19 +174,16 @@ describe('SongsResolver is able to communicate the error from the service to hel
 
   it("getIARecommendations throws an error when the service couldn't connect with the database", async () => {
     await expect(
-      resolver.getIARecommendations([], ...USER_VECTOR),
+      resolver.getIARecommendations([], USER_VECTOR),
     ).rejects.toThrow(InternalServerErrorException);
 
     await expect(
-      resolver.getIARecommendations([], ...USER_VECTOR),
+      resolver.getIARecommendations([], USER_VECTOR),
     ).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Connection refused',
     );
 
-    expect(service.getIARecommendations).toHaveBeenCalledWith(
-      [],
-      ...USER_VECTOR,
-    );
+    expect(service.getIARecommendations).toHaveBeenCalledWith([], USER_VECTOR);
   });
 
   it("getNextSong throws an error when the service couldn't connect with the database", async () => {

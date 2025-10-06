@@ -2,6 +2,7 @@ import { Args, Float, Int, Query, Resolver } from '@nestjs/graphql';
 import { SongsService } from './songs.service';
 import { SongResponseDto } from '../../scripts/dto/SongResponse.dto';
 import { FullSongResponseDto } from '../../scripts/dto/FullSongResponse.dto';
+import { USER_VECTOR } from '../../test/constants/constants';
 
 @Resolver()
 export class SongsResolver {
@@ -30,32 +31,10 @@ export class SongsResolver {
   async getIARecommendations(
     @Args('genres', { type: () => [String], defaultValue: ['Rock'] })
     genres: string[],
-    @Args('energy', { type: () => Float, defaultValue: 0.5 }) energy: number,
-    @Args('speechLevel', { type: () => Float, defaultValue: 0.165 })
-    speechLevel: number,
-    @Args('danceability', { type: () => Float, defaultValue: 0.5 })
-    danceability: number,
-    @Args('duration', { type: () => Float, defaultValue: 2.5 })
-    duration: number,
-    @Args('sentiment', { type: () => Float, defaultValue: 0.5 })
-    sentiment: number,
-    @Args('voiceType', { type: () => Float, defaultValue: 0.05 })
-    voiceType: number,
-    @Args('mood', { type: () => Int, defaultValue: 1 }) mood: number,
-    @Args('acousticness', { type: () => Float, defaultValue: 0.15 })
-    acousticness: number,
+    @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR })
+    userVector: number[],
   ): Promise<SongResponseDto[]> {
-    return this.songsService.getIARecommendations(
-      genres,
-      energy,
-      speechLevel,
-      danceability,
-      duration,
-      sentiment,
-      voiceType,
-      mood,
-      acousticness,
-    );
+    return this.songsService.getIARecommendations(genres, userVector);
   }
 
   @Query(() => SongResponseDto, { name: 'getRandomSong' })
