@@ -8,15 +8,17 @@ import { getIARecommendations } from "@/queries/LaraRecQuerie";
 const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
+    
     const { genres, energy, speechLevel, danceability, duration, sentiment, voiceType, mood, acousticness } = 
         useAppSelector(state => state.songData);
     const dispatch = useAppDispatch();
     const [getIASongs] = useLazyQuery(getIARecommendations);
     
+    const userVector = [energy, speechLevel, danceability, duration, sentiment, voiceType, mood, acousticness];
+    
     const loadRecommendations = () => {
         setLoading(true);
-        getIASongs({ variables: { genres, energy, speechLevel, danceability, duration, sentiment, voiceType, mood,
-            acousticness}, 
+        getIASongs({ variables: { genres, userVector}, 
             onCompleted: (data) => {
                 if (data.getIARecommendations) {
                     dispatch(setLaraRecommendations(data.getIARecommendations));
