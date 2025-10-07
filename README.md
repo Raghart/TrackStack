@@ -11,7 +11,7 @@ Do you like artists such as **Linkin Park**, **Shakira**, or **Eminem**?
 With this optimized search system, powered by ElasticSearch and its fuzzy search technology, you can quickly and accurately find the artists, songs, and albums you want from all the available options:
 
 <p align="center">
-    <img src="./assets/SearchArtist.png" alt="Intelligent Artist Search" />
+    <img src="./assets/songSearch.png" alt="Intelligent Song Search" />
 </p>
 
 Explore over **100 genres** and find your next favorite song based on your tastes!
@@ -43,7 +43,7 @@ You can check out the live version in the link below:
 🔗 **[Live Project](https://trackstack-c9rh.onrender.com/)**
 
 <p align="center"> 
-    <img src="./assets/TrackStack.png" alt="Preview" width="600" />
+    <img src="./assets/TrackStack.png" alt="TrackStack Landpage Preview" />
 </p>
 
 ---
