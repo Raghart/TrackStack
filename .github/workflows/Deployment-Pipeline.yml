@@ -77,6 +77,13 @@ jobs:
       - name: Build Backend
         run: npm run build
         working-directory: ./back
+        env:
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          DB_NAME: ${{ secrets.DB_NAME }}
+          DB_USERNAME: ${{ secrets.DB_USERNAME }}
+          DB_PORT: ${{ secrets.DB_PORT }}
+          ELASTICSEARCH_NODE: ${{ secrets.ELASTICSEARCH_NODE }}
 
       - name: Install Playwright dependencies
         run: npm ci
@@ -112,3 +119,4 @@ jobs:
       - uses: actions/checkout@v4
       - name: Trigger Deployment
         run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}
+
