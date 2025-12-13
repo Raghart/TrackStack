@@ -24,10 +24,10 @@ dotenv.config();
     SequelizeModule.forRoot({
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
-      database: process.env.DB_TYPE,
+      database: process.env.DB_NAME,
       dialect: 'postgres',
       host: process.env.DB_HOST,
-      port: 6543,
+      port: Number(process.env.DB_PORT),
       dialectOptions: {
         ssl: {
           require: true,
