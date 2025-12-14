@@ -85,7 +85,10 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Server
-        run: npm run start:prod &
+        run: |
+          npm run start:prod &
+          npx wait-on http://localhost:3000 
+
         working-directory: ./back
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
@@ -94,9 +97,6 @@ jobs:
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           ELASTICSEARCH_NODE: ${{ secrets.ELASTICSEARCH_NODE }}
-      
-      - name: Wait for backend
-        run: npx wait-on http://localhost:3000/graphql
 
       - name: Running Playwright tests
         run: npm run test
