@@ -94,6 +94,9 @@ jobs:
           DB_PORT: ${{ secrets.DB_PORT }}
           DB_USERNAME: ${{ secrets.DB_USERNAME }}
           ELASTICSEARCH_NODE: ${{ secrets.ELASTICSEARCH_NODE }}
+      
+      - name: Wait for backend
+        run: npx wait-on http://localhost:3000/graphql
 
       - name: Running Playwright tests
         run: npm run test
