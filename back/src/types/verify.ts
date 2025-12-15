@@ -51,8 +51,7 @@ export const isNumberArray = (array: unknown): array is number[] => {
 export const isAlbumSong = (data: unknown): data is AlbumWithSongs => {
   if (data === null || data === undefined) return false;
 
-  if (
-    typeof data === 'object' &&
+  return typeof data === 'object' &&
     'id' in data &&
     'name' in data &&
     'url_image' in data &&
@@ -62,17 +61,12 @@ export const isAlbumSong = (data: unknown): data is AlbumWithSongs => {
     isString(data.url_image) &&
     Array.isArray(data.songs) &&
     data.songs.length > 0
-  ) {
-    return true;
-  }
-  return false;
 };
 
 export const isArtistSongs = (data: unknown): data is ArtistWithSongs => {
   if (data === null || data === undefined) return false;
 
-  if (
-    typeof data === 'object' &&
+  return typeof data === 'object' &&
     'id' in data &&
     'name' in data &&
     'songs' in data &&
@@ -80,17 +74,12 @@ export const isArtistSongs = (data: unknown): data is ArtistWithSongs => {
     isString(data.name) &&
     Array.isArray(data.songs) &&
     data.songs.length > 0
-  ) {
-    return true;
-  }
-  return false;
 };
 
 export const isSongGenres = (data: unknown): data is SongGenresRPWithSongs => {
   if (data === null || data === undefined) return false;
 
-  if (
-    typeof data === 'object' &&
+  return typeof data === 'object' &&
     'id' in data &&
     'song_id' in data &&
     'genre_id' in data &&
@@ -101,10 +90,6 @@ export const isSongGenres = (data: unknown): data is SongGenresRPWithSongs => {
     isNumber(data.genre_id) &&
     typeof data.song === 'object' &&
     typeof data.genre === 'object'
-  ) {
-    return true;
-  }
-  return false;
 };
 
 export const isSongResponse = (
@@ -112,8 +97,7 @@ export const isSongResponse = (
 ): data is FullSongResponseAttributes => {
   if (data === null || data === undefined) return false;
 
-  if (
-    typeof data === 'object' &&
+  return typeof data === 'object' &&
     'id' in data &&
     'name' in data &&
     'url_preview' in data &&
@@ -124,11 +108,6 @@ export const isSongResponse = (
     isString(data.url_preview) &&
     Array.isArray(data.artists) &&
     typeof data.album === 'object'
-  ) {
-    return true;
-  }
-
-  return false;
 };
 
 export const isFullSongResponse = (
