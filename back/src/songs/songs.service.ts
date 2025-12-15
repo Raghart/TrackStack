@@ -28,6 +28,7 @@ import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import { SongDetailsModel } from '../../models/song_details/SongDetails.model';
+import { printType } from 'graphql';
 
 @Injectable()
 export class SongsService {
