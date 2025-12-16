@@ -85,10 +85,7 @@ jobs:
         run: npx playwright install --with-deps
 
       - name: Run Server
-        run: |
-          npm run start:prod &
-          npx wait-on http://localhost:3000 
-
+        run: npm run start:prod &
         working-directory: ./back
         env:
           DB_HOST: ${{ secrets.DB_HOST }}

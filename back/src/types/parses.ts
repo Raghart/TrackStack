@@ -86,9 +86,7 @@ export const parseSongResponse = (data: unknown): SongResponseAttributes => {
   );
 };
 
-export const parseFullSongResponse = (
-  data: unknown,
-): FullSongResponseAttributes => {
+export const parseFullSongResponse = (data: unknown): FullSongResponseAttributes => {
   if (isFullSongResponse(data)) return data;
   throw new BadRequestException(
     "The data recieved doesn't match the required full song response structure.",
