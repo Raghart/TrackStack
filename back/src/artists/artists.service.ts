@@ -13,7 +13,7 @@ import { InvalidPaginationException } from 'src/utils/PaginationError';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { SongsModel } from '../../models/songs/song.model';
-import { isNumericString } from 'src/types/verify';
+import { isNumber } from 'src/types/verify';
 
 @Injectable()
 export class ArtistsService {
@@ -26,7 +26,7 @@ export class ArtistsService {
     page = 1,
     limit = 20,
   ): Promise<ArtistWithSongs[]> {
-    if (!isNumericString(seed))
+    if (!isNumber(seed))
       throw new BadRequestException(
         'The seed must be a valid string of numbers.',
       );

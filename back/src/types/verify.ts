@@ -9,43 +9,20 @@ import { FullSongResponseAttributes, IASongResponse } from './songAttributes';
 import { SongGenresRPWithSongs } from './songGenresAttributes';
 
 export const isString = (text: unknown): text is string => {
-  if (
-    text !== null &&
-    text !== undefined &&
-    typeof text === 'string' &&
-    text.trim() !== ''
-  ) {
-    return true;
-  }
-  return false;
+  return text !== null && text !== undefined && typeof text === 'string' && text.trim() !== '';
 };
 
 export const isNumber = (value: unknown): value is number => {
-  if (
-    value !== null &&
-    value !== undefined &&
-    !Number.isNaN(value)
-  ) {
-    return true;
-  }
-  return false;
-};
-
-export const isNumericString = (value: unknown): value is string => {
-  if (typeof value === 'string' && /^-?\d+(\.\d+)?$/.test(value.trim())) {
-    return true;
-  }
-  return false;
+  if (typeof value === "string") return value.trim() !== "" && /^-?\d+(\.\d+)?$/.test(value.trim());
+  return value !== null && value !== undefined && typeof value === "number" && !Number.isNaN(value);
 };
 
 export const isStringArray = (array: unknown): array is string[] => {
-  if (Array.isArray(array) && array.every(isString)) return true;
-  return false;
+  return Array.isArray(array) && array.every(isString);
 };
 
 export const isNumberArray = (array: unknown): array is number[] => {
-  if (Array.isArray(array) && array.every(isNumber)) return true;
-  return false;
+  return Array.isArray(array) && array.every(isNumber);
 };
 
 export const isAlbumSong = (data: unknown): data is AlbumWithSongs => {

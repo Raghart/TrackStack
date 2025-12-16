@@ -26,7 +26,6 @@ import {
   isStringArray,
   isString,
   isNumber,
-  isNumericString,
 } from './verify';
 
 export const parseString = (text: unknown): string => {
@@ -51,8 +50,8 @@ export const parseNumberArray = (array: unknown): number[] => {
 };
 
 export const parseFloatNum = (value: unknown): number => {
-  if (isNumber(value)) return value;
-  if (isNumericString(value)) return parseFloat(value);
+  if (isNumber(value) && typeof value === "number") return value;
+  if (isNumber(value) && typeof value === "string") return parseFloat(value);
 
   throw new BadRequestException(
     `The data received is not a valid number or a string of numbers: ${String(value)}`,

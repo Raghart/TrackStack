@@ -7,7 +7,6 @@ import {
   isIASongData,
   isNumber,
   isNumberArray,
-  isNumericString,
   isSongGenres,
   isSongResponse,
   isSongSearchData,
@@ -52,10 +51,8 @@ describe('Verify value Types', () => {
       const numbers = [123, 456];
       numbers.forEach((num) => expect(isNumber(num)).toBeTruthy());
     });
-  });
 
-  describe('isNumericString', () => {
-    it('isNumericString returns false when value is not a valid numeric string', () => {
+    it('isNumber returns false when value is not a valid numeric string', () => {
       const NOTVALID_STRS = [
         'wekeke18',
         '18Jenkins18',
@@ -63,12 +60,12 @@ describe('Verify value Types', () => {
         null,
         undefined,
       ];
-      NOTVALID_STRS.forEach((str) => expect(isNumericString(str)).toBe(false));
+      NOTVALID_STRS.forEach((str) => expect(isNumber(str)).toBe(false));
     });
 
-    it('isNumericString returns true when value is a valid numeric string', () => {
+    it('isNumber returns true when value is a valid numeric string', () => {
       const VALID_STRS = ['123456', '    456897      '];
-      VALID_STRS.forEach((str) => expect(isNumericString(str)).toBe(true));
+      VALID_STRS.forEach((str) => expect(isNumber(str)).toBe(true));
     });
   });
 

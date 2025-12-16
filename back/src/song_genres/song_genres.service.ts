@@ -19,8 +19,8 @@ import { SongGenresModel } from '../../models/song_genres/SongGenres.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
-import { isNumericString } from 'src/types/verify';
 import { SongGenresRPWithSongs } from 'src/types/songGenresAttributes';
+import { isNumber } from 'src/types/verify';
 
 @Injectable()
 export class SongGenresService {
@@ -35,7 +35,7 @@ export class SongGenresService {
     page: number = 1,
     limit: number = 20,
   ): Promise<SongGenresRPWithSongs[]> {
-    if (!isNumericString(seed))
+    if (!isNumber(seed))
       throw new BadRequestException(
         'The seed must be a valid string of numbers.',
       );
