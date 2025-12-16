@@ -50,8 +50,8 @@ export const parseNumberArray = (array: unknown): number[] => {
 };
 
 export const parseFloatNum = (value: unknown): number => {
-  if (isNumber(value) && typeof value === "number") return value;
-  if (isNumber(value) && typeof value === "string") return parseFloat(value);
+  if (isNumber(value) && typeof value === 'number') return value;
+  if (isNumber(value) && typeof value === 'string') return parseFloat(value);
 
   throw new BadRequestException(
     `The data received is not a valid number or a string of numbers: ${String(value)}`,
@@ -86,7 +86,9 @@ export const parseSongResponse = (data: unknown): SongResponseAttributes => {
   );
 };
 
-export const parseFullSongResponse = (data: unknown): FullSongResponseAttributes => {
+export const parseFullSongResponse = (
+  data: unknown,
+): FullSongResponseAttributes => {
   if (isFullSongResponse(data)) return data;
   throw new BadRequestException(
     "The data recieved doesn't match the required full song response structure.",

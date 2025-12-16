@@ -9,12 +9,23 @@ import { FullSongResponseAttributes, IASongResponse } from './songAttributes';
 import { SongGenresRPWithSongs } from './songGenresAttributes';
 
 export const isString = (text: unknown): text is string => {
-  return text !== null && text !== undefined && typeof text === 'string' && text.trim() !== '';
+  return (
+    text !== null &&
+    text !== undefined &&
+    typeof text === 'string' &&
+    text.trim() !== ''
+  );
 };
 
 export const isNumber = (value: unknown): value is number => {
-  if (typeof value === "string") return value.trim() !== "" && /^-?\d+(\.\d+)?$/.test(value.trim());
-  return value !== null && value !== undefined && typeof value === "number" && !Number.isNaN(value);
+  if (typeof value === 'string')
+    return value.trim() !== '' && /^-?\d+(\.\d+)?$/.test(value.trim());
+  return (
+    value !== null &&
+    value !== undefined &&
+    typeof value === 'number' &&
+    !Number.isNaN(value)
+  );
 };
 
 export const isStringArray = (array: unknown): array is string[] => {
@@ -28,7 +39,8 @@ export const isNumberArray = (array: unknown): array is number[] => {
 export const isAlbumSong = (data: unknown): data is AlbumWithSongs => {
   if (data === null || data === undefined) return false;
 
-  return typeof data === 'object' &&
+  return (
+    typeof data === 'object' &&
     'id' in data &&
     'name' in data &&
     'url_image' in data &&
@@ -38,12 +50,14 @@ export const isAlbumSong = (data: unknown): data is AlbumWithSongs => {
     isString(data.url_image) &&
     Array.isArray(data.songs) &&
     data.songs.length > 0
+  );
 };
 
 export const isArtistSongs = (data: unknown): data is ArtistWithSongs => {
   if (data === null || data === undefined) return false;
 
-  return typeof data === 'object' &&
+  return (
+    typeof data === 'object' &&
     'id' in data &&
     'name' in data &&
     'songs' in data &&
@@ -51,12 +65,14 @@ export const isArtistSongs = (data: unknown): data is ArtistWithSongs => {
     isString(data.name) &&
     Array.isArray(data.songs) &&
     data.songs.length > 0
+  );
 };
 
 export const isSongGenres = (data: unknown): data is SongGenresRPWithSongs => {
   if (data === null || data === undefined) return false;
 
-  return typeof data === 'object' &&
+  return (
+    typeof data === 'object' &&
     'id' in data &&
     'song_id' in data &&
     'genre_id' in data &&
@@ -67,6 +83,7 @@ export const isSongGenres = (data: unknown): data is SongGenresRPWithSongs => {
     isNumber(data.genre_id) &&
     typeof data.song === 'object' &&
     typeof data.genre === 'object'
+  );
 };
 
 export const isSongResponse = (
@@ -74,7 +91,8 @@ export const isSongResponse = (
 ): data is FullSongResponseAttributes => {
   if (data === null || data === undefined) return false;
 
-  return typeof data === 'object' &&
+  return (
+    typeof data === 'object' &&
     'id' in data &&
     'name' in data &&
     'url_preview' in data &&
@@ -85,14 +103,16 @@ export const isSongResponse = (
     isString(data.url_preview) &&
     Array.isArray(data.artists) &&
     typeof data.album === 'object'
+  );
 };
 
 export const isFullSongResponse = (
   data: unknown,
 ): data is FullSongResponseAttributes => {
   if (data === null || data === undefined) return false;
-  
-  return typeof data === 'object' &&
+
+  return (
+    typeof data === 'object' &&
     'name' in data &&
     'spotify_id' in data &&
     'url_preview' in data &&
@@ -109,12 +129,14 @@ export const isFullSongResponse = (
     Array.isArray(data.artists) &&
     Array.isArray(data.genres) &&
     typeof data.album === 'object'
+  );
 };
 
 export const isIASongData = (data: unknown): data is IASongResponse => {
   if (data === null || data === undefined) return false;
 
-  return typeof data === 'object' &&
+  return (
+    typeof data === 'object' &&
     'id' in data &&
     'name' in data &&
     'duration' in data &&
@@ -131,6 +153,7 @@ export const isIASongData = (data: unknown): data is IASongResponse => {
     Array.isArray(data.genres) &&
     typeof data.album === 'object' &&
     typeof data.songDetails === 'object'
+  );
 };
 
 export const isArtistSearchData = (
@@ -138,7 +161,8 @@ export const isArtistSearchData = (
 ): data is artistSearchResults => {
   if (data === null || data === undefined) return false;
 
-  return typeof data === 'object' &&
+  return (
+    typeof data === 'object' &&
     'id' in data &&
     'name' in data &&
     'album_cover' in data &&
@@ -148,6 +172,7 @@ export const isArtistSearchData = (
     isString(data.album_cover) &&
     isString(data.type) &&
     data.type === 'artist'
+  );
 };
 
 export const isAlbumSearchData = (
@@ -155,7 +180,8 @@ export const isAlbumSearchData = (
 ): data is albumSearchResults => {
   if (data === null || data === undefined) return false;
 
-  return typeof data === 'object' &&
+  return (
+    typeof data === 'object' &&
     'id' in data &&
     'name' in data &&
     'artists' in data &&
@@ -167,19 +193,21 @@ export const isAlbumSearchData = (
     isString(data.type) &&
     Array.isArray(data.artists) &&
     data.type === 'album'
+  );
 };
 
 export const isSongSearchData = (data: unknown): data is songSearchResults => {
   if (data === null || data === undefined) return false;
 
-  return typeof data === 'object' &&
+  return (
+    typeof data === 'object' &&
     'id' in data &&
     'name' in data &&
     'artists' in data &&
     'album' in data &&
     'album_cover' in data &&
     'url_preview' in data &&
-    'type' in data && 
+    'type' in data &&
     isNumber(data.id) &&
     isString(data.name) &&
     isString(data.album) &&
@@ -187,4 +215,5 @@ export const isSongSearchData = (data: unknown): data is songSearchResults => {
     isString(data.url_preview) &&
     isString(data.type) &&
     Array.isArray(data.artists)
+  );
 };

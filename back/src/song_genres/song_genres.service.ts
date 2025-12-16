@@ -45,7 +45,7 @@ export class SongGenresService {
     const rawData = await safeQuery(() =>
       this.songGenreModel.findAll({
         order: Sequelize.literal(
-          `md5(CAST("SongGenresModel"."id" AS TEXT) || '${seed}')`,
+          `md5(CAST("SongGenresModel"."id" AS TEXT) || '${Number(seed)}')`,
         ),
         offset: (page - 1) * limit,
         limit,

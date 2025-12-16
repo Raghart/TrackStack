@@ -37,7 +37,7 @@ export class ArtistsService {
     const rawData = await safeQuery(() =>
       this.artistModel.findAll({
         order: Sequelize.literal(
-          `md5(CAST("ArtistsModel"."id" AS TEXT) || '${seed}')`,
+          `md5(CAST("ArtistsModel"."id" AS TEXT) || '${Number(seed)}')`,
         ),
         offset,
         limit,
