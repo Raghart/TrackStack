@@ -167,6 +167,8 @@ A superset of JavaScript with static typing, helping catch errors early and maki
 ## 🧩 End-to-End Tests
 - **Playwright**: Runs in the **CI/CD pipeline** to simulate real user workflows across multiple browsers, ensuring seamless and consistent communication between the Frontend and Backend in different environments. The tests cover navigation, UI interaction, and visual checks to confirm that the API responds as expected.
 
+---
+
 ## 🤝 Contributing
 
 ### Clone the repo
@@ -192,15 +194,15 @@ npm install
 
 ### Setup the required .env variables
 
-In a .env file, setup all of your database information using these names: **DB_USERNAME**, **DB_PASSWORD**, **DB_HOST**, **DB_NAME**, **DB_PORT**.
+In a `.env` file, setup up your database information using these variables names: **DB_USERNAME**, **DB_PASSWORD**, **DB_HOST**, **DB_NAME**, **DB_PORT**.
 
-To setup the ElasticSearch service, setup your link using the next variable name: **ELASTICSEARCH_NODE**.
+To configure the Elasticsearch service, setup your node URL using the **ELASTICSEARCH_NODE** variable.
 
-Finally, if you want the build to run in a different Port make sure to setup the variable: **PORT**.
+Optionally, want can configure a custom port for the backend using the **PORT** variable.
 
 ### Run the web app locally from the back directory
 
-Keep in mind that running the app locally requires all the **.env** variables from the previous step to connect to the external service that provide the data shown to the users:
+Keep in mind that running the app locally requires all the **.env** variables from the previous step to connect to the external services that provide the data shown to the users:
 
 ```bash
 npm run dev
