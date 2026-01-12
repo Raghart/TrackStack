@@ -11,7 +11,7 @@ import LoadingBeat from "../Utils/LoadingBeat";
 
 const ArtistSelection = () => {
     const { data, onLoadMore } = useGetArtistCards();
-    var dataLength = data?.getAllArtists ? data.getAllArtists.length : 20;
+    const dataLength = data?.getAllArtists ? data.getAllArtists.length : 20;
 
     return(
         <Box w="full" h="full" direction="column" pt={8} gap={12}>
