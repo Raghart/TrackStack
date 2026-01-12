@@ -5,13 +5,13 @@ const useGenreSel = () => {
     const [visibleCount, setVisibleCount] = useState<number>(20);
     const visibleGenres = genreList.slice(0, visibleCount);
 
-    const onLoadMore = () => {
+    const loadMoreGenres = () => {
         if (visibleGenres.length < genreList.length) {
             setVisibleCount(prev => prev + 20);
         };
     };
 
-    return { visibleGenres, onLoadMore };
+    return { visibleGenres, loadMoreGenres };
 };
 
 export default useGenreSel;

@@ -13,7 +13,6 @@ import LoadingBeat from "@/components/Utils/LoadingBeat";
 const DetailSongs = ({ type, filterValue, error }: { type: ValidDetail, filterValue: string, error: string }) => {
     const { data, loading, detailSongs } = useGetDetailSongs(type, filterValue);
     const { visibleSongs, loadMoreSongs } = PaginateSongs(detailSongs);
-
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
     if (!loading && !data && detailSongs.length === 0) return <NotFound message={error} />
 
