@@ -1,7 +1,7 @@
 import { SongResponse } from "@/types/songTypes";
 import { useState } from "react";
 
-const PaginateSongs = (songs: SongResponse[]) => {
+const usePaginateSongs = (songs: SongResponse[]) => {
     const [visibleCount, setVisibleCount] = useState<number>(20);
     const visibleSongs = songs.slice(0, visibleCount);
     const loadMoreSongs = () => {
@@ -13,4 +13,4 @@ const PaginateSongs = (songs: SongResponse[]) => {
     return { visibleSongs, loadMoreSongs }
 };
 
-export default PaginateSongs;
+export default usePaginateSongs;

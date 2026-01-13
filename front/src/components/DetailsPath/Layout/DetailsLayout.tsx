@@ -13,7 +13,7 @@ const DetailsLayout = ({ type, gradientInit, gradientMid, error } : { type: Vali
     const { filterValue, hightlightDetails } = useDetailFilter(type);
     if (!isValidDetail(type) || !isString(filterValue)) return <NotFound message={error} />
     return (
-        <Box direction="column" gap={{ base: 8, sm: 10, md: 11, lg: 11 }} pt={7} textAlign="center">
+        <Box direction="column" gap={{ base: 8, sm: 10, md: 11, lg: 11 }} pt={7} textAlign="center" pb={20}>
             <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 40 }}>
                 <HighlightTitle title={hightlightDetails.title} gradientInit={gradientInit} grandientMid={gradientMid}
                     hightlight={hightlightDetails.hightlight} />
