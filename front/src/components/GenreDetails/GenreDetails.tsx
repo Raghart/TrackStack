@@ -20,13 +20,13 @@ const GenreDetails = () => {
     message={`The genre: "${genre}" was not found in the DB!`} />;
   
   return (
-    <Box w="full" h="full" direction="column" pt={8} gap={5} textAlign="center">
+    <Box w="full" h="full" direction="column" pt={8} gap={5} textAlign="center" pb={20}>
       <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 40 }}>
         <GenreDetHeader genre={genreKey} />
       </Zoom>
 
       <InfiniteScroll dataLength={dataLength} next={loadMore} hasMore={true} 
-        loader={<Center m={2}><LoadingBeat /></Center>} style={{ display: "block" }}>
+        loader={<Center m={2}><LoadingBeat /></Center>} style={{ overflow: "visible" }}>
           <SimpleGrid columns={{ base: 2, sm: 3, md: 4, lg: 5 }} pt={5} gap={{ base: 3, sm: 3, md: 3, 
             lg: 4 }} w="full">
           {!data && (Array.from({ length: 20 }).map((_, idx) => (

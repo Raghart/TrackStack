@@ -12,7 +12,7 @@ const useSongRec = () => {
         };
     };
 
-    return { visibleSongs, loadMoreSongs };
+    return { visibleSongs, recommendations, loadMoreSongs };
 };
 
 export default useSongRec;

@@ -14,7 +14,7 @@ const ArtistSelection = () => {
     const dataLength = data?.getAllArtists ? data.getAllArtists.length : 20;
 
     return(
-        <Box w="full" h="full" direction="column" pt={8} gap={12}>
+        <Box w="full" h="full" direction="column" pt={8} gap={12} pb={20}>
             <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 40 }}>
                 <ArtistHeader />
             </Zoom>    
