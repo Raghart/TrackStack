@@ -13,7 +13,7 @@ export async function bootstrap() {
   });
 
   await app.listen(process.env.PORT ?? 3000);
-  console.log(`Page on: ${process.env.LOCAL_PAGE_URL}`)
+  console.log(`Page on: ${process.env.LOCAL_PAGE_URL}`);
   console.log(`GraphQL on: ${process.env.LOCAL_GRAPHQL}`);
 }
 void bootstrap();
