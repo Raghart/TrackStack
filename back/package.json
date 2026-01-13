@@ -31,6 +31,7 @@
     "@nestjs/graphql": "^13.1.0",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/sequelize": "^11.0.0",
+    "@nestjs/serve-static": "^5.0.4",
     "cors": "^2.8.5",
     "coverage": "^0.0.0",
     "dotenv": "^16.5.0",

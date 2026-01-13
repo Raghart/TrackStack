@@ -13,13 +13,18 @@ import { SongArtistsModule } from './song_artists/song_artists.module';
 import { SongGenresModule } from './song_genres/song_genres.module';
 import { SearchModule } from './search/search.module';
 import { ConfigModule } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import dotenv from 'dotenv';
+import { join } from 'path';
 dotenv.config();
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "..", "..", "public")
     }),
     SequelizeModule.forRoot({
       username: process.env.DB_USERNAME,
