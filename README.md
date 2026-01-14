@@ -1,6 +1,6 @@
 # 🎵 TrackStack
 
-Do you want to find a new banger song? Try out this music recommendation web app that uses an algorithm based on song metadata (genre, energy, danceability, and more) to recommend tracks based on the parameters you choose. Discover new songs from a database of over 50,000 tracks!
+Do you want to find a new **banger**? Try out this **music recommendation web app** that uses an algorithm based on **song metadata** (genre, energy, danceability, and more) to recommend **tracks** based on the parameters you choose. Discover new tracks from a database of over **50,000 tracks**!
 
 Check out the live version in Render:
 
@@ -14,21 +14,21 @@ Check out the live version in Render:
 
 ## Description
 
-To deliver the best possible user experience, I combined several modern technologies: **ElasticSearch** for lightning-fast searches, **React** with **React Router DOM** and **Chakra UI** for a responsive and smooth interface, all powered by a **NestJS** backend with **GraphQL** to handle requests for songs, artists, genres and albums efficiently. 
+TrackStack is a **music recommendation web app** that combines an Elasticsearch-powered advanced search, an integrated **track player**, and a **recommendation system** based on song metadata over a catalog of **50,000+ tracks** stored in a **PostgreSQL database**.
 
-All of this delivered via a **CI/CD pipeline** that automates Jest unit tests, end-to-end testing, routine health checks, and deployment, ensuring continuous performance, reliability, and seamless delivery of new API versions.
+To deliver the best possible user experience, the frontend is built with **React**, **React Router DOM**, and **Chakra UI** for a responsive and smooth interface, while a **NestJS** backend with **GraphQL** efficiently serves songs, artists, genres, and albums. Delivered by a **CI/CD pipeline** that automates Jest unit tests, end-to-end testing, health checks, and deployments to ensure reliability and smooth delivery of new versions.
 
 ---
 
 ## Motivation
 
-Music has always been a vital part of my life, accompanying me when I am happy, sad, or when I just want to relax. It is a wonderful companion that has been helping me throughout my life. However, when I want to discover new songs from a specific genre to expand my horizons, It's really difficult to find a song that matches the mood you're in. For that reason, I realized a solution to this problem would be an advanced song recommender that can suggest songs that suits what you want to listen according to a set of parameters.
+Music has always been a **vital part of my life**, accompanying me at the happiest moments and lifting me up at the roughtest times. It is a wonderful companion that has been helping me throughout my life. However, when I want to discover new songs from a specific genre to expand my horizons, It's really difficult to find a song that matches the mood you're in. For that reason, I realized a solution to this problem would be an advanced song recommender that can suggest songs that suits what you want to listen according to a set of parameters.
 
-I built this projet for two main reasons:  
+I built this project for two main reasons:
 
 1. **To showcase my skills** that I've gained throughout my programming journey, to have a way to put into practice and present the knowledge I've built in this newfound **passion** for coding and software design. That's why I set out to build a large-scale project that would truly challenge my abilities: a smooth, responsive Frontend where users can listen to song previews that spark their interests, paired with a well-typed, efficient Backend that delivers requests as quickly and reliably as possible.
 
-2. **To help people discover new songs**, this API features a database of over **50,000 songs**, where users can search and explore new tracks, and, if they like what they hear, jump straight to Spotify to enjoy the full version!
+2. **To help people discover new songs**, this web app features a database of over **50,000 songs**, where users can search and explore new tracks, and, if they like what they hear, jump straight to Spotify to enjoy the full version!
 
 ---
 
@@ -54,7 +54,7 @@ Want to find a new banger?
 2. Adjust your preferences using the sliders, switches and input search to modify the parameters (e.g. mood, energy, danceability, etc.) according to your tastes.
 3. Press the **Send Data** button to submit your request. 
 
-In a few seconds you'll be redirected to a page showing songs that match your preferences:
+In a few seconds you'll be redirected to a page showing the tracks that match your preferences:
 
 <p align="center">
     <img src="./assets/Modal.png" alt="Lara's Recommendation Modal" />
@@ -74,12 +74,12 @@ To search for a specific song, artist, or album, use the search bar in the top n
 
 ### Check out the tracks
 
-What's a good recommendation system if you can't listen to the tracks it suggests?
+What's a good recommendation system if you can't **listen** to the tracks it suggests?
 
 1. Hover over the image of the song you want to check out.
 2. Click the play button.
 
-A 30-second song-preview will be played automatically. At the bottom of the page, you can see more information about the currently playing track, such as its elapsed time and artists. The player also includes extra controls, like a button to play a random song, buttons to play the previous and next tracks by ID, and a slider to control the volume:
+A **30-second song-preview** will be played automatically. At the bottom of the page, you can see more information about the currently playing track, such as its elapsed time and artists. The player also includes extra controls, like a button to play a random song, buttons to play the previous and next tracks by ID, and a slider to control the volume:
 
 <p align="center">
     <img src="./assets/play_song.png" alt="Click the play button" />
@@ -87,14 +87,14 @@ A 30-second song-preview will be played automatically. At the bottom of the page
 
 ### Learn more about a track
 
-Want to know more about a specific song that caught your eye?
+Want to know more about a specific track that caught your eye?
 
-1. Click the title of the song (the text in white).
+1. Click the **title** of the song (the text in white).
 
 You'll be redirected to a page that shows additional information about the track, including its genres, duration, release date, album, and even a link to Spotify if you want to hear the full version:
 
 <p align="center">
-    <img src="./assets/song_details.png" alt="Music Artists" />
+    <img src="./assets/song_details.png" alt="Track Details" />
 </p>
 
 ### Discover songs by artists
@@ -151,7 +151,7 @@ Explore over **100 genres** and find your next favorite song based on your taste
 
 - **ElasticSearch**: High-performance search engine used to execute complex queries, with over **30k indexed documents** for lightning-fast retrieval. Designed to be flexible, being able to return the exact song, artist or album that you're looking for, or provide approximate matches by doing a **fuzzy search**, **n-grams**, and **edge-ngrams**, offering users a fast and modern search experience.
 
-- **Jest**: A robust testing framework used to verify that services, resolvers and core API functions behave exactly as expected through unit and integration tests. With **196 automated tests**, it covers everything from standard data flows to edge cases and error handling, ensuring the Backend remains reliable even under unexpected conditions to maintain a smooth user experience. 
+- **Jest**: A robust testing framework used to verify that services, resolvers and core functions behave exactly as expected through unit and integration tests. With **196 automated tests**, it covers everything from standard data flows to edge cases and error handling, ensuring the Backend remains reliable even under unexpected conditions to maintain a smooth user experience. 
 
 Thanks to this coverage, the codebase consistently delivers over **90% statement coverage** and strong metrics in every category, a clear sign of a well-tested and production-ready system:
 
@@ -159,13 +159,13 @@ Thanks to this coverage, the codebase consistently delivers over **90% statement
     <img src="./assets/coverage.png" alt="Coverage Image" />
 </p>
 
-These tests run automatically in the **CI/CD pipeline**, ensuring that every feature or change is validated before deployment - keeping the API stable, performant and ready for production at all times.
+These tests run automatically in the **CI/CD pipeline**, ensuring that every feature or change is validated before deployment - keeping the web app stable, performant and ready for production at all times.
 
 ## 📜 TypeScript
 A superset of JavaScript with static typing, helping catch errors early and making the codebase more reliable and easier to maintain. In this project, over **25 custom verification and parsing functions** strenghthen data handling, ensuring that any incoming variable is validated and processed correctly - resulting in a smooth, predictable and robust codebase.
 
 ## 🧩 End-to-End Tests
-- **Playwright**: Runs in the **CI/CD pipeline** to simulate real user workflows across multiple browsers, ensuring seamless and consistent communication between the Frontend and Backend in different environments. The tests cover navigation, UI interaction, and visual checks to confirm that the API responds as expected.
+- **Playwright**: Runs in the **CI/CD pipeline** to simulate real user workflows across multiple browsers, ensuring seamless and consistent communication between the Frontend and Backend in different environments. The tests cover navigation, UI interaction, and visual checks to confirm that the app responds as expected.
 
 ---
 
