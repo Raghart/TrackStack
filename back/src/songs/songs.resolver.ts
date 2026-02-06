@@ -1,8 +1,8 @@
 import { Args, Float, Int, Query, Resolver } from '@nestjs/graphql';
 import { SongsService } from './songs.service';
-import { SongResponseDto } from '../../scripts/dto/SongResponse.dto';
-import { FullSongResponseDto } from '../../scripts/dto/FullSongResponse.dto';
 import { USER_VECTOR } from '../../test/constants/constants';
+import { FullSongResponseDto } from './dto/FullSongResponse.dto';
+import { SongResponseDto } from './dto/SongResponse.dto';
 
 @Resolver()
 export class SongsResolver {

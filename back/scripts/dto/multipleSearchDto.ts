@@ -1,7 +1,4 @@
 import { Field, ObjectType } from "@nestjs/graphql";
-import { artistsSearchDto } from "./artistsSearchDto";
-import { albumsSearchDto } from "./albumsSearchDto";
-import { searchSongsDto } from "./songsSearchDto";
 
 @ObjectType()
 export class multipleSearchResultsDto {
@@ -22,4 +19,61 @@ export class multipleSearchResultsDto {
 
     @Field(() => [searchSongsDto])
     songResults: searchSongsDto[];
+};
+
+@ObjectType()
+export class albumsSearchDto {
+    @Field()
+    id: number;
+
+    @Field()
+    name: string;
+
+    @Field(() => [String])
+    artists: string[];
+
+    @Field()
+    album_cover: string;
+
+    @Field(() => String)
+    type: "album";
+};
+
+@ObjectType()
+export class artistsSearchDto {
+    @Field()
+    id: number;
+
+    @Field()
+    name: string;
+
+    @Field()
+    album_cover: string;
+
+    @Field(() => String)
+    type: "artist";
+};
+
+@ObjectType()
+export class searchSongsDto {
+    @Field()
+    id: number;
+
+    @Field()
+    name: string;
+
+    @Field(() => [String])
+    artists: string[];
+
+    @Field()
+    album: string;
+
+    @Field()
+    album_cover: string;
+
+    @Field()
+    url_preview: string;
+
+    @Field(() => String)
+    type: "song";
 };

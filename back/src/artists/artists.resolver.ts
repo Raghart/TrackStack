@@ -1,7 +1,7 @@
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { ArtistsService } from './artists.service';
-import { ArtistsResultsDto } from '../../scripts/dto/artistsResults.dto';
-import { SongResponseDto } from '../../scripts/dto/SongResponse.dto';
+import { SongResponseDto } from 'src/songs/dto/SongResponse.dto';
+import { ArtistsResultsDto } from './dto/artistsResults.dto';
 
 @Resolver()
 export class ArtistsResolver {
