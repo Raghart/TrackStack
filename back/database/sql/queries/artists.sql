@@ -1,4 +1,4 @@
--- name: AddArtist :one
+-- name: CreateArtist :one
 INSERT INTO artists (id, name)
 VALUES ($1, $2)
 RETURNING *;

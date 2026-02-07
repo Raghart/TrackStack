@@ -9,19 +9,19 @@ import (
 	"context"
 )
 
-const addGenre = `-- name: AddGenre :one
+const createGenre = `-- name: CreateGenre :one
 INSERT INTO genres(id, genre) 
 VALUES($1, $2) 
 RETURNING id, genre
 `
 
-type AddGenreParams struct {
+type CreateGenreParams struct {
 	ID    int32
 	Genre string
 }
 
-func (q *Queries) AddGenre(ctx context.Context, arg AddGenreParams) (Genre, error) {
-	row := q.db.QueryRowContext(ctx, addGenre, arg.ID, arg.Genre)
+func (q *Queries) CreateGenre(ctx context.Context, arg CreateGenreParams) (Genre, error) {
+	row := q.db.QueryRowContext(ctx, createGenre, arg.ID, arg.Genre)
 	var i Genre
 	err := row.Scan(&i.ID, &i.Genre)
 	return i, err

@@ -36,7 +36,7 @@ func (cfg *DbConfig) AddArtistsDatabase(records [][]string) {
 		}
 
 		name := record[1]
-		artist, err := cfg.Queries.AddArtist(context.Background(), database.AddArtistParams{
+		artist, err := cfg.Queries.CreateArtist(context.Background(), database.CreateArtistParams{
 			ID:   int32(id),
 			Name: name,
 		})
@@ -65,7 +65,7 @@ func (cfg *DbConfig) AddGenresDatabase(records [][]string) {
 			log.Fatal(err)
 		}
 
-		genreAdded, err := cfg.Queries.AddGenre(context.Background(), database.AddGenreParams{
+		genreAdded, err := cfg.Queries.CreateGenre(context.Background(), database.CreateGenreParams{
 			ID:    int32(genreID),
 			Genre: genreName,
 		})
@@ -77,6 +77,37 @@ func (cfg *DbConfig) AddGenresDatabase(records [][]string) {
 		fmt.Println(genreAdded)
 	}
 	fmt.Println("Finish adding genres!")
+}
+
+func (cfg *DbConfig) AddAlbumsDatabase(records [][]string) {
+	fmt.Println("Adding albums to the database...")
+	for idx, albumRecord := range records {
+		if idx == 0 {
+			continue
+		}
+
+		albumStrId := albumRecord[0]
+		albumName := albumRecord[1]
+		albumUrlImg := albumRecord[2]
+
+		albumID, err := strconv.Atoi(albumStrId)
+		if err != nil {
+			log.Fatalf("%v is not a valid string: %v", albumStrId, err)
+		}
+
+		addedAlbum, err := cfg.Queries.CreateAlbum(context.Background(), database.CreateAlbumParams{
+			ID:       int32(albumID),
+			Name:     albumName,
+			UrlImage: albumUrlImg,
+		})
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(addedAlbum)
+	}
+	fmt.Println("Finish adding albums!")
 }
 
 func parseCSV(path string) ([][]string, error) {

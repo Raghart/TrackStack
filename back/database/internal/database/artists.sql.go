@@ -9,24 +9,6 @@ import (
 	"context"
 )
 
-const addArtist = `-- name: AddArtist :one
-INSERT INTO artists (id, name)
-VALUES ($1, $2)
-RETURNING id, name
-`
-
-type AddArtistParams struct {
-	ID   int32
-	Name string
-}
-
-func (q *Queries) AddArtist(ctx context.Context, arg AddArtistParams) (Artist, error) {
-	row := q.db.QueryRowContext(ctx, addArtist, arg.ID, arg.Name)
-	var i Artist
-	err := row.Scan(&i.ID, &i.Name)
-	return i, err
-}
-
 const cleanArtists = `-- name: CleanArtists :exec
 DELETE FROM artists
 `
@@ -34,6 +16,24 @@ DELETE FROM artists
 func (q *Queries) CleanArtists(ctx context.Context) error {
 	_, err := q.db.ExecContext(ctx, cleanArtists)
 	return err
+}
+
+const createArtist = `-- name: CreateArtist :one
+INSERT INTO artists (id, name)
+VALUES ($1, $2)
+RETURNING id, name
+`
+
+type CreateArtistParams struct {
+	ID   int32
+	Name string
+}
+
+func (q *Queries) CreateArtist(ctx context.Context, arg CreateArtistParams) (Artist, error) {
+	row := q.db.QueryRowContext(ctx, createArtist, arg.ID, arg.Name)
+	var i Artist
+	err := row.Scan(&i.ID, &i.Name)
+	return i, err
 }
 
 const getArtist = `-- name: GetArtist :one
