@@ -50,6 +50,35 @@ func (cfg *DbConfig) AddArtistsDatabase(records [][]string) {
 	fmt.Println("the records has been added!")
 }
 
+func (cfg *DbConfig) AddGenresDatabase(records [][]string) {
+	fmt.Println("Adding the genres to the database...")
+	for idx, genre := range records {
+		if idx == 0 {
+			continue
+		}
+
+		genreStrID := genre[0]
+		genreName := genre[1]
+
+		genreID, err := strconv.Atoi(genreStrID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		genreAdded, err := cfg.Queries.AddGenre(context.Background(), database.AddGenreParams{
+			ID:    int32(genreID),
+			Genre: genreName,
+		})
+
+		if err != nil {
+			log.Fatalf("there was a problem while trying to add the genre")
+		}
+
+		fmt.Println(genreAdded)
+	}
+	fmt.Println("Finish adding genres!")
+}
+
 func parseCSV(path string) ([][]string, error) {
 	file, err := os.Open(path)
 	if err != nil {
