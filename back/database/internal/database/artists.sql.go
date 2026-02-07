@@ -27,6 +27,15 @@ func (q *Queries) AddArtist(ctx context.Context, arg AddArtistParams) (Artist, e
 	return i, err
 }
 
+const cleanArtists = `-- name: CleanArtists :exec
+DELETE FROM artists
+`
+
+func (q *Queries) CleanArtists(ctx context.Context) error {
+	_, err := q.db.ExecContext(ctx, cleanArtists)
+	return err
+}
+
 const getArtist = `-- name: GetArtist :one
 SELECT id, name FROM artists WHERE id = $1
 `

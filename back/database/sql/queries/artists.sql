@@ -5,3 +5,6 @@ RETURNING *;
 
 -- name: GetArtist :one
 SELECT * FROM artists WHERE id = $1;
+
+-- name: CleanArtists :exec
+DELETE FROM artists;

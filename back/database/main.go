@@ -1,23 +1,20 @@
 package main
 
 import (
-	"context"
 	"database/sql"
-	"encoding/csv"
 	"fmt"
 	"log"
 	"net/url"
 	"os"
-	"path/filepath"
+	databaseConfig "scripts/dbConfig"
 	"scripts/internal/database"
-	"strconv"
+	paths "scripts/pathConstants"
 
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	serviceURI := os.Getenv("LOCAL_DB_URI")
-	var ARTISTPATH = filepath.Join("csv_data", "artists_rows.csv")
+	serviceURI := "postgresql://postgres:postgres@localhost:5432/music_db?sslmode=disable"
 
 	if len(os.Args) != 2 {
 		printHelp()
@@ -34,47 +31,14 @@ func main() {
 	}
 	defer db.Close()
 
-	queries := database.New(db)
+	dbCfg := databaseConfig.DbConfig{
+		Queries: database.New(db),
+	}
 
 	switch os.Args[1] {
 	case "artists":
 		{
-			artistFile, err := os.Open(ARTISTPATH)
-			if err != nil {
-				log.Fatal(err)
-			}
-
-			defer artistFile.Close()
-			reader := csv.NewReader(artistFile)
-			records, err := reader.ReadAll()
-
-			if err != nil {
-				log.Fatalf("error while trying to read the records: %v", err)
-			}
-			fmt.Println("starting to print the records!")
-			for idx, record := range records {
-				if idx == 0 {
-					continue
-				}
-
-				id, err := strconv.Atoi(record[0])
-				if err != nil {
-					log.Fatalf("id is not a valin number")
-				}
-
-				name := record[1]
-				artist, err := queries.AddArtist(context.Background(), database.AddArtistParams{
-					ID:   int32(id),
-					Name: name,
-				})
-
-				if err != nil {
-					log.Fatalf("error while trying to add the artist: %v", err)
-				}
-
-				fmt.Println(artist)
-			}
-			fmt.Println("the records has been added!")
+			databaseConfig.AddToDatabase(paths.ARTISTPATH, dbCfg.AddArtistsDatabase)
 		}
 	default:
 		{
