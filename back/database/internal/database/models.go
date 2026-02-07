@@ -25,8 +25,9 @@ type Song struct {
 	Name       string
 	SpotifyID  string
 	UrlPreview string
-	Duration   int32
+	Duration   float32
 	Year       int32
+	AlbumID    int32
 }
 
 type SongArtist struct {

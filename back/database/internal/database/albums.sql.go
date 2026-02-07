@@ -36,3 +36,14 @@ func (q *Queries) CreateAlbum(ctx context.Context, arg CreateAlbumParams) (Album
 	err := row.Scan(&i.ID, &i.Name, &i.UrlImage)
 	return i, err
 }
+
+const getAlbumByID = `-- name: GetAlbumByID :one
+SELECT id, name, url_image FROM albums WHERE id = $1
+`
+
+func (q *Queries) GetAlbumByID(ctx context.Context, id int32) (Album, error) {
+	row := q.db.QueryRowContext(ctx, getAlbumByID, id)
+	var i Album
+	err := row.Scan(&i.ID, &i.Name, &i.UrlImage)
+	return i, err
+}

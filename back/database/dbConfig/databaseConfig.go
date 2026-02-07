@@ -110,6 +110,66 @@ func (cfg *DbConfig) AddAlbumsDatabase(records [][]string) {
 	fmt.Println("Finish adding albums!")
 }
 
+func (cfg *DbConfig) AddSongsDatabase(records [][]string) {
+	fmt.Println("Addings songs to the database...")
+	for idx, songRecord := range records {
+		if idx == 0 {
+			continue
+		}
+
+		songStrID := songRecord[0]
+		songName := songRecord[1]
+		songSpotify := songRecord[2]
+		songUrlPreview := songRecord[3]
+		songDurationStr := songRecord[4]
+		songYearStr := songRecord[5]
+		songAlbumIDStr := songRecord[6]
+
+		songAlbumID, err := strconv.Atoi(songAlbumIDStr)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		albumData, err := cfg.Queries.GetAlbumByID(context.Background(), int32(songAlbumID))
+		if err != nil {
+			log.Fatalf("album with the ID: %v not in database: %v", songAlbumID, err)
+		}
+
+		songDuration, err := strconv.ParseFloat(songDurationStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		songID, err := strconv.Atoi(songStrID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		songYear, err := strconv.Atoi(songYearStr)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		addedSong, err := cfg.Queries.CreateSong(context.Background(), database.CreateSongParams{
+			ID:         int32(songID),
+			Name:       songName,
+			SpotifyID:  songSpotify,
+			UrlPreview: songUrlPreview,
+			Duration:   float32(songDuration),
+			Year:       int32(songYear),
+			AlbumID:    albumData.ID,
+		})
+
+		if err != nil {
+			log.Fatalf("error while trying to add the song: %v", err)
+		}
+
+		fmt.Println(addedSong)
+	}
+
+	fmt.Println("Finish adding songs!")
+}
+
 func parseCSV(path string) ([][]string, error) {
 	file, err := os.Open(path)
 	if err != nil {
