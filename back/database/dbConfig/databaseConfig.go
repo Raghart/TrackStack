@@ -221,6 +221,56 @@ func (cfg *DbConfig) AddSongsArtistsDatabase(records [][]string) {
 	fmt.Println("Finish processing the relationship!")
 }
 
+func (cfg *DbConfig) AddSongGenresDatabase(records [][]string) {
+	fmt.Println("Processing the song genres relationship...")
+	for idx, record := range records {
+		if idx == 0 {
+			continue
+		}
+
+		songGenreStrID := record[0]
+		songStrID := record[1]
+		genreStrID := record[2]
+
+		songGenreID, err := strconv.Atoi(songGenreStrID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		songID, err := strconv.Atoi(songStrID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		genreID, err := strconv.Atoi(genreStrID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		genreDB, err := cfg.Queries.GetGenreByID(context.Background(), int32(genreID))
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		songDB, err := cfg.Queries.GetSongByID(context.Background(), int32(songID))
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		addedSongGenre, err := cfg.Queries.CreateSongGenre(context.Background(), database.CreateSongGenreParams{
+			ID:      int32(songGenreID),
+			SongID:  songDB.ID,
+			GenreID: genreDB.ID,
+		})
+
+		if err != nil {
+			log.Fatalf("error while trying to add a song genre rp: %v", err)
+		}
+		fmt.Println(addedSongGenre)
+	}
+	fmt.Println("Finish processing the relationship!")
+}
+
 func parseCSV(path string) ([][]string, error) {
 	file, err := os.Open(path)
 	if err != nil {

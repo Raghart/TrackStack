@@ -26,3 +26,14 @@ func (q *Queries) CreateGenre(ctx context.Context, arg CreateGenreParams) (Genre
 	err := row.Scan(&i.ID, &i.Genre)
 	return i, err
 }
+
+const getGenreByID = `-- name: GetGenreByID :one
+SELECT id, genre FROM genres WHERE id = $1
+`
+
+func (q *Queries) GetGenreByID(ctx context.Context, id int32) (Genre, error) {
+	row := q.db.QueryRowContext(ctx, getGenreByID, id)
+	var i Genre
+	err := row.Scan(&i.ID, &i.Genre)
+	return i, err
+}
