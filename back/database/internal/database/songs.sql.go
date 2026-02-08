@@ -56,3 +56,22 @@ func (q *Queries) CreateSong(ctx context.Context, arg CreateSongParams) (Song, e
 	)
 	return i, err
 }
+
+const getSongByID = `-- name: GetSongByID :one
+SELECT id, name, spotify_id, url_preview, duration, year, album_id FROM songs WHERE id = $1
+`
+
+func (q *Queries) GetSongByID(ctx context.Context, id int32) (Song, error) {
+	row := q.db.QueryRowContext(ctx, getSongByID, id)
+	var i Song
+	err := row.Scan(
+		&i.ID,
+		&i.Name,
+		&i.SpotifyID,
+		&i.UrlPreview,
+		&i.Duration,
+		&i.Year,
+		&i.AlbumID,
+	)
+	return i, err
+}

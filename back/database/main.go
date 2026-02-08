@@ -52,6 +52,10 @@ func main() {
 		{
 			databaseConfig.AddToDatabase(paths.SongsPath, dbCfg.AddSongsDatabase)
 		}
+	case "song_artists":
+		{
+			databaseConfig.AddToDatabase(paths.SongArtistsPath, dbCfg.AddSongsArtistsDatabase)
+		}
 	default:
 		{
 			fmt.Printf("'%v' is not a valid command\n", os.Args[1])

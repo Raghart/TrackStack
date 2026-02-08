@@ -36,12 +36,12 @@ func (q *Queries) CreateArtist(ctx context.Context, arg CreateArtistParams) (Art
 	return i, err
 }
 
-const getArtist = `-- name: GetArtist :one
+const getArtistByID = `-- name: GetArtistByID :one
 SELECT id, name FROM artists WHERE id = $1
 `
 
-func (q *Queries) GetArtist(ctx context.Context, id int32) (Artist, error) {
-	row := q.db.QueryRowContext(ctx, getArtist, id)
+func (q *Queries) GetArtistByID(ctx context.Context, id int32) (Artist, error) {
+	row := q.db.QueryRowContext(ctx, getArtistByID, id)
 	var i Artist
 	err := row.Scan(&i.ID, &i.Name)
 	return i, err

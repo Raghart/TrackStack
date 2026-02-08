@@ -3,7 +3,7 @@ INSERT INTO artists (id, name)
 VALUES ($1, $2)
 RETURNING *;
 
--- name: GetArtist :one
+-- name: GetArtistByID :one
 SELECT * FROM artists WHERE id = $1;
 
 -- name: CleanArtists :exec

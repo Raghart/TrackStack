@@ -170,6 +170,57 @@ func (cfg *DbConfig) AddSongsDatabase(records [][]string) {
 	fmt.Println("Finish adding songs!")
 }
 
+func (cfg *DbConfig) AddSongsArtistsDatabase(records [][]string) {
+	fmt.Println("Processing the relationship between song and artists...")
+	for idx, record := range records {
+		if idx == 0 {
+			continue
+		}
+
+		songArtistStrID := record[0]
+		songStrID := record[1]
+		artistStrID := record[2]
+
+		songArtistID, err := strconv.Atoi(songArtistStrID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		songID, err := strconv.Atoi(songStrID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		artistID, err := strconv.Atoi(artistStrID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		dbSong, err := cfg.Queries.GetSongByID(context.Background(), int32(songID))
+		if err != nil {
+			log.Fatalf("error while trying to get the song: %v", err)
+		}
+
+		dbArtist, err := cfg.Queries.GetArtistByID(context.Background(), int32(artistID))
+		if err != nil {
+			log.Fatalf("error while trying to get the artist: %v", err)
+		}
+
+		addedArtistSong, err := cfg.Queries.CreateSongArtist(context.Background(), database.CreateSongArtistParams{
+			ID:       int32(songArtistID),
+			SongID:   dbSong.ID,
+			ArtistID: dbArtist.ID,
+		})
+
+		if err != nil {
+			log.Fatalf("error while trying to create the artist song rp: %v", err)
+		}
+
+		fmt.Println(addedArtistSong)
+	}
+	fmt.Println("Finish processing the relationship!")
+}
+
 func parseCSV(path string) ([][]string, error) {
 	file, err := os.Open(path)
 	if err != nil {
