@@ -31,7 +31,7 @@ func main() {
 	}
 	defer db.Close()
 
-	dbCfg := databaseConfig.DbConfig{
+	dbCfg := &databaseConfig.DbConfig{
 		Queries: database.New(db),
 	}
 
@@ -59,6 +59,10 @@ func main() {
 	case "song_genres":
 		{
 			databaseConfig.AddToDatabase(paths.SongGenresPath, dbCfg.AddSongGenresDatabase)
+		}
+	case "song_details":
+		{
+			databaseConfig.AddToDatabase(paths.SongDetailsPath, dbCfg.AddSongDetailsDatabase)
 		}
 	default:
 		{

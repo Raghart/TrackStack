@@ -266,9 +266,133 @@ func (cfg *DbConfig) AddSongGenresDatabase(records [][]string) {
 		if err != nil {
 			log.Fatalf("error while trying to add a song genre rp: %v", err)
 		}
+
 		fmt.Println(addedSongGenre)
 	}
 	fmt.Println("Finish processing the relationship!")
+}
+
+func (cfg *DbConfig) AddSongDetailsDatabase(records [][]string) {
+	fmt.Println("Processing the song details...")
+	for idx, record := range records {
+		if idx == 0 {
+			continue
+		}
+
+		songDetailsStrID := record[0]
+		songStrID := record[1]
+		danceabilityStr := record[2]
+		energyStr := record[3]
+		track_keyStr := record[4]
+		loudnessStr := record[5]
+		modeStr := record[6]
+		speechinessStr := record[7]
+		acousticnessStr := record[8]
+		instrumentalnessStr := record[9]
+		livenessStr := record[10]
+		valenceStr := record[11]
+		tempoStr := record[12]
+		time_signatureStr := record[13]
+
+		songDetailsID, err := strconv.Atoi(songDetailsStrID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		songID, err := strconv.Atoi(songStrID)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		dbSong, err := cfg.Queries.GetSongByID(context.Background(), int32(songID))
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		danceability, err := strconv.ParseFloat(danceabilityStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		energy, err := strconv.ParseFloat(energyStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		trackKey, err := strconv.ParseFloat(track_keyStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		loudness, err := strconv.ParseFloat(loudnessStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		mode, err := strconv.ParseFloat(modeStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		speechiness, err := strconv.ParseFloat(speechinessStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		acousticness, err := strconv.ParseFloat(acousticnessStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		instrumentalness, err := strconv.ParseFloat(instrumentalnessStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		liveness, err := strconv.ParseFloat(livenessStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		valence, err := strconv.ParseFloat(valenceStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		tempo, err := strconv.ParseFloat(tempoStr, 32)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		timeSignature, err := strconv.Atoi(time_signatureStr)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		added_details, err := cfg.Queries.CreateSongDetails(context.Background(), database.CreateSongDetailsParams{
+			ID:               int32(songDetailsID),
+			SongID:           dbSong.ID,
+			Danceability:     float32(danceability),
+			Energy:           float32(energy),
+			TrackKey:         float32(trackKey),
+			Loudness:         float32(loudness),
+			Mode:             float32(mode),
+			Speechiness:      float32(speechiness),
+			Acousticness:     acousticness,
+			Instrumentalness: instrumentalness,
+			Liveness:         float32(liveness),
+			Valence:          float32(valence),
+			Tempo:            float32(tempo),
+			TimeSignature:    int32(timeSignature),
+		})
+
+		if err != nil {
+			log.Fatalf("error while trying to add the song details: %v", err)
+		}
+
+		fmt.Println(added_details)
+	}
+	fmt.Println("Finish processing the song details!")
 }
 
 func parseCSV(path string) ([][]string, error) {
