@@ -64,6 +64,10 @@ func main() {
 		{
 			databaseConfig.AddToDatabase(paths.SongDetailsPath, dbCfg.AddSongDetailsDatabase)
 		}
+	case "vectors":
+		{
+			dbCfg.AddVectorsDatabase()
+		}
 	default:
 		{
 			fmt.Printf("'%v' is not a valid command\n", os.Args[1])

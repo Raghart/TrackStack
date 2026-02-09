@@ -8,6 +8,8 @@ import (
 	"os"
 	"scripts/internal/database"
 	"strconv"
+
+	"github.com/pgvector/pgvector-go"
 )
 
 type DbConfig struct {
@@ -393,6 +395,51 @@ func (cfg *DbConfig) AddSongDetailsDatabase(records [][]string) {
 		fmt.Println(added_details)
 	}
 	fmt.Println("Finish processing the song details!")
+}
+
+func (cfg *DbConfig) AddVectorsDatabase() {
+	fmt.Println("Processing vector to the database...")
+	songDetails, err := cfg.Queries.GetSongDetails(context.Background())
+	if err != nil {
+		log.Fatalf("there was a problem while trying to get the songs details: %v", err)
+	}
+
+	for _, song := range songDetails {
+		dbSong, err := cfg.Queries.GetSongByID(context.Background(), song.SongID)
+		if err != nil {
+			log.Fatalf("there was a problem while trying to get the song: %v", err)
+		}
+
+		songParams := []float32{
+			dbSong.Duration,
+			song.Danceability,
+			song.Energy,
+			song.TrackKey,
+			song.Loudness,
+			song.Mode,
+			song.Speechiness,
+			float32(song.Acousticness),
+			float32(song.Instrumentalness),
+			song.Liveness,
+			song.Valence,
+			song.Tempo,
+			float32(song.TimeSignature),
+		}
+
+		embedding := pgvector.NewVector(songParams)
+
+		vectorAdded, err := cfg.Queries.CreateVector(context.Background(), database.CreateVectorParams{
+			Vectors: embedding,
+			SongID:  song.SongID,
+		})
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(vectorAdded)
+	}
+	fmt.Println("Finish processing the vectors!")
 }
 
 func parseCSV(path string) ([][]string, error) {

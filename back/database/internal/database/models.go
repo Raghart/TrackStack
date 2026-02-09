@@ -51,6 +51,7 @@ type SongDetail struct {
 	Valence          float32
 	Tempo            float32
 	TimeSignature    int32
+	Vectors          interface{}
 }
 
 type SongGenre struct {

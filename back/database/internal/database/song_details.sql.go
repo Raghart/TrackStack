@@ -22,7 +22,7 @@ const createSongDetails = `-- name: CreateSongDetails :one
 INSERT INTO song_details (id, song_id, danceability, energy, track_key, loudness, 
 mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo, time_signature)
 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-RETURNING id, song_id, danceability, energy, track_key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo, time_signature
+RETURNING id, song_id, danceability, energy, track_key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo, time_signature, vectors
 `
 
 type CreateSongDetailsParams struct {
@@ -75,6 +75,85 @@ func (q *Queries) CreateSongDetails(ctx context.Context, arg CreateSongDetailsPa
 		&i.Valence,
 		&i.Tempo,
 		&i.TimeSignature,
+		&i.Vectors,
 	)
 	return i, err
+}
+
+const createVector = `-- name: CreateVector :one
+UPDATE song_details
+SET vectors = $1
+WHERE song_id = $2
+RETURNING id, song_id, danceability, energy, track_key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo, time_signature, vectors
+`
+
+type CreateVectorParams struct {
+	Vectors interface{}
+	SongID  int32
+}
+
+func (q *Queries) CreateVector(ctx context.Context, arg CreateVectorParams) (SongDetail, error) {
+	row := q.db.QueryRowContext(ctx, createVector, arg.Vectors, arg.SongID)
+	var i SongDetail
+	err := row.Scan(
+		&i.ID,
+		&i.SongID,
+		&i.Danceability,
+		&i.Energy,
+		&i.TrackKey,
+		&i.Loudness,
+		&i.Mode,
+		&i.Speechiness,
+		&i.Acousticness,
+		&i.Instrumentalness,
+		&i.Liveness,
+		&i.Valence,
+		&i.Tempo,
+		&i.TimeSignature,
+		&i.Vectors,
+	)
+	return i, err
+}
+
+const getSongDetails = `-- name: GetSongDetails :many
+SELECT id, song_id, danceability, energy, track_key, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence, tempo, time_signature, vectors FROM song_details
+`
+
+func (q *Queries) GetSongDetails(ctx context.Context) ([]SongDetail, error) {
+	rows, err := q.db.QueryContext(ctx, getSongDetails)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	var items []SongDetail
+	for rows.Next() {
+		var i SongDetail
+		if err := rows.Scan(
+			&i.ID,
+			&i.SongID,
+			&i.Danceability,
+			&i.Energy,
+			&i.TrackKey,
+			&i.Loudness,
+			&i.Mode,
+			&i.Speechiness,
+			&i.Acousticness,
+			&i.Instrumentalness,
+			&i.Liveness,
+			&i.Valence,
+			&i.Tempo,
+			&i.TimeSignature,
+			&i.Vectors,
+		); err != nil {
+			return nil, err
+		}
+		items = append(items, i)
+	}
+	if err := rows.Close(); err != nil {
+		return nil, err
+	}
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+	return items, nil
 }
