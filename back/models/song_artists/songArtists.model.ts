@@ -5,7 +5,7 @@ import { AllowNull, AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Mode
 import { SongArtistsAttributes, SongArtistsCreationAttributes } from "src/types/songArtistsAttributes";
 
 @Table({
-    tableName: "song_artists_rp",
+    tableName: "song_artists",
     underscored: true,
     timestamps: false
 }) export class SongArtistsModel extends Model<SongArtistsAttributes, SongArtistsCreationAttributes> {
