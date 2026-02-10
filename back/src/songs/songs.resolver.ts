@@ -34,6 +34,8 @@ export class SongsResolver {
     @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR })
     userVector: number[],
   ): Promise<SongResponseDto[]> {
+    this.songsService.fetchIACosRecommendations(genres)
+
     return this.songsService.getIARecommendations(genres, userVector);
   }
 

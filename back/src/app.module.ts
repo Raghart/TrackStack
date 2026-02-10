@@ -23,9 +23,6 @@ dotenv.config();
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "..", "..", "public")
-    }),
     SequelizeModule.forRoot({
       dialect: 'postgres',
       uri: "postgresql://postgres:postgres@localhost:5432/music_db",
@@ -58,3 +55,9 @@ dotenv.config();
   providers: [AppService],
 })
 export class AppModule {}
+
+/*
+ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "..", "..", "public")
+    })
+*/

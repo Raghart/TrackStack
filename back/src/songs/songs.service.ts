@@ -5,7 +5,7 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op, Sequelize } from 'sequelize';
+import { Op, QueryTypes, Sequelize } from 'sequelize';
 import { buildSongVector } from './utils/buildSongVector';
 import {
   parseFullSongResponse,
@@ -133,6 +133,32 @@ export class SongsService {
   async getSongData(songID: number) {
     const songData = await this.fetchFullSongData(songID);
     return this.parseFullSong(songData);
+  }
+
+  async fetchIACosRecommendations(genres: string[]) {
+    const rawSongData = await this.songModel.sequelize?.query(`SELECT songs.id, 
+      songs.name, 
+      string_agg(artists.name, ', ') AS artists,
+      songs.url_preview,
+      albums.url_image AS album_cover,
+      1 - (song_details.vectors <=> '[3.39,0.373,0.86,11,-4.869,0,0.0533,0.009039999917149544,2.8000000384054147e-05,0.228,0.48,175.103,4]') AS cos_sim
+      FROM songs
+      JOIN song_details ON songs.id = song_details.song_id
+      JOIN albums ON albums.id = songs.album_id
+      JOIN song_artists ON songs.id = song_artists.song_id
+      JOIN artists ON song_artists.artist_id = artists.id
+      JOIN song_genres ON songs.id = song_genres.song_id
+      JOIN genres ON song_genres.genre_id = genres.id
+      WHERE genres.genre IN(:genres)
+      GROUP BY songs.id, songs.name, songs.url_preview, albums.url_image, song_details.vectors
+      ORDER BY cos_sim DESC
+      LIMIT 10;`, {
+      type: QueryTypes.SELECT,
+      logging: console.log,
+      replacements:{ genres }
+    })
+
+    console.log(rawSongData)
   }
 
   async fetchIARecommendations(genres: string[]): Promise<IASongResponse[]> {
