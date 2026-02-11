@@ -140,28 +140,12 @@ export class SongsService {
   async fetchIACosRecommendations(genres: string[], userVector: number[], 
     limit: number) : Promise<SongResponse[]> {
     const parsedVector = `[${userVector.join(", ")}]`
-    const rawSongData = await this.songModel.sequelize?.query(`SELECT songs.id, 
-      songs.name, 
-      string_agg(DISTINCT artists.name, ', ') AS artists,
-      songs.url_preview,
-      albums.url_image AS album_cover,
-      1 - (song_details.vectors <=> :userVector) AS cos_sim
-      FROM songs
-      JOIN song_details ON songs.id = song_details.song_id
-      JOIN albums ON albums.id = songs.album_id
-      JOIN song_artists ON songs.id = song_artists.song_id
-      JOIN artists ON song_artists.artist_id = artists.id
-      JOIN song_genres ON songs.id = song_genres.song_id
-      JOIN genres ON song_genres.genre_id = genres.id
-      WHERE genres.genre IN(:genres)
-      GROUP BY songs.id, songs.name, songs.url_preview, albums.url_image, song_details.vectors
-      ORDER BY cos_sim DESC
-      LIMIT :limit;`, {
+    const rawSongData = await this.songModel.sequelize?.query(`SELECT *
+      FROM search_songs_cosine_similarity(ARRAY[:genres]::text[], :userVector::vector, :limit::int);`, {
       type: QueryTypes.SELECT,
       logging: console.log,
       replacements:{ genres, userVector: [parsedVector], limit }
     })
-    console.log(rawSongData)
 
     const parsedData = parseCosSongData(rawSongData)  
 
@@ -171,7 +155,6 @@ export class SongsService {
       artists: songData.artists.split(","),
       url_preview: songData.url_preview,
       album_cover: songData.album_cover,
-
     }))
   }
 
