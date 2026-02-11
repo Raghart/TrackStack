@@ -137,7 +137,8 @@ export class SongsService {
     return this.parseFullSong(songData);
   }
 
-  async fetchIACosRecommendations(genres: string[], userVector: number[]) : Promise<SongResponse[]> {
+  async fetchIACosRecommendations(genres: string[], userVector: number[], 
+    limit: number) : Promise<SongResponse[]> {
     const parsedVector = `[${userVector.join(", ")}]`
     const rawSongData = await this.songModel.sequelize?.query(`SELECT songs.id, 
       songs.name, 
@@ -155,10 +156,10 @@ export class SongsService {
       WHERE genres.genre IN(:genres)
       GROUP BY songs.id, songs.name, songs.url_preview, albums.url_image, song_details.vectors
       ORDER BY cos_sim DESC
-      LIMIT 10;`, {
+      LIMIT :limit;`, {
       type: QueryTypes.SELECT,
       logging: console.log,
-      replacements:{ genres, userVector: [parsedVector] }
+      replacements:{ genres, userVector: [parsedVector], limit }
     })
     console.log(rawSongData)
 

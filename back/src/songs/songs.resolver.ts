@@ -33,8 +33,10 @@ export class SongsResolver {
     genres: string[],
     @Args('userVector', { type: () => [Float], defaultValue: TRUE_USER_VECTOR })
     userVector: number[],
+    @Args('limit', {type: () => Int, defaultValue: 40})
+    limit: number,
   ): Promise<SongResponseDto[]> {
-    return this.songsService.fetchIACosRecommendations(genres, userVector)
+    return this.songsService.fetchIACosRecommendations(genres, userVector, limit)
   }
 
   @Query(() => SongResponseDto, { name: 'getRandomSong' })
