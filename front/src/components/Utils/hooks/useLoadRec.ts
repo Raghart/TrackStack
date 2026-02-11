@@ -14,7 +14,24 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const dispatch = useAppDispatch();
     const [getIASongs] = useLazyQuery(getIARecommendations);
     
-    const userVector = [energy, speechLevel, danceability, duration, sentiment, voiceType, mood, acousticness];
+    const trackKey = 9;
+    const loudness = mood == 1 ? -4.356: -10.356;
+    const tempo = sentiment > 0.5 ? 130.576 : 85.365;
+    const timeSignature = 4;
+    
+    const liveness = mood == 1 ? 0.735 : 0.135;
+    
+    const userVector = [
+        energy, 
+        speechLevel, 
+        danceability, 
+        duration, 
+        sentiment, 
+        voiceType, 
+        mood, 
+        acousticness,
+        liveness
+    ];
     
     const loadRecommendations = () => {
         setLoading(true);

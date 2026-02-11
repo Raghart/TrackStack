@@ -410,20 +410,42 @@ func (cfg *DbConfig) AddVectorsDatabase() {
 			log.Fatalf("there was a problem while trying to get the song: %v", err)
 		}
 
+		minLoudness := -60.00
+		maxLoudness := 3.642
+
+		minTempo := 0.0
+		maxTempo := 238.895
+
+		minTimeSig := 0
+		maxTimeSig := 5
+
+		minTrackKey := 0
+		maxTrackKey := 11
+
+		minDuration := 0.2
+		maxDuration := 63.31
+
+		loudnessNor := minMaxScaling(song.Loudness, float32(minLoudness), float32(maxLoudness))
+		tempoNor := minMaxScaling(song.Tempo, float32(minTempo), float32(maxTempo))
+		timeSigNor := minMaxScaling(float32(song.TimeSignature), float32(minTimeSig),
+			float32(maxTimeSig))
+		trackKeyNor := minMaxScaling(song.TrackKey, float32(minTrackKey), float32(maxTrackKey))
+		durationNor := minMaxScaling(dbSong.Duration, float32(minDuration), float32(maxDuration))
+
 		songParams := []float32{
-			dbSong.Duration,
+			durationNor,
 			song.Danceability,
 			song.Energy,
-			song.TrackKey,
-			song.Loudness,
+			trackKeyNor,
+			loudnessNor,
 			song.Mode,
 			song.Speechiness,
 			float32(song.Acousticness),
 			float32(song.Instrumentalness),
 			song.Liveness,
 			song.Valence,
-			song.Tempo,
-			float32(song.TimeSignature),
+			tempoNor,
+			timeSigNor,
 		}
 
 		embedding := pgvector.NewVector(songParams)
@@ -440,6 +462,10 @@ func (cfg *DbConfig) AddVectorsDatabase() {
 		fmt.Println(vectorAdded)
 	}
 	fmt.Println("Finish processing the vectors!")
+}
+
+func minMaxScaling(value, dbMin, dbMax float32) float32 {
+	return (value - dbMin) / (dbMax - dbMin)
 }
 
 func parseCSV(path string) ([][]string, error) {

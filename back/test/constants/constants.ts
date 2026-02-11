@@ -22,16 +22,17 @@ export const USER_VECTOR: [
 export const TRUE_USER_VECTOR: [
 number,number,number,number,number,number,number,number,number,number,number,number,number,
 ] = [
-  3.39,
-  0.373,
-  0.86,11,
-  -4.869,
+  0.049279034,
+  0.508,
+  0.979,
+  0.90909094,
+  0.87538105,
   0,
-  0.0533,
-  0.009039999917149544,
-  2.8000000384054147e-05,
-  0.228,
-  0.48,
-  175.103,
-  4
+  0.0847,
+  8.7e-05,
+  0.000643,
+  0.0641,
+  0.704,
+  0.5777852,
+  0.8
 ]
