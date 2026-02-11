@@ -31,6 +31,15 @@ export interface SongResponse {
   url_preview: string;
 }
 
+export interface SongCosResponse {
+  id: number;
+  name: string;
+  artists: string;
+  album_cover: string;
+  url_preview: string;
+  cos_sim: number;
+}
+
 export interface FullSongResponse {
   id: number;
   name: string;

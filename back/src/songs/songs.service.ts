@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Op, QueryTypes, Sequelize } from 'sequelize';
 import { buildSongVector } from './utils/buildSongVector';
 import {
+  parseCosSongData,
   parseFullSongResponse,
   parseIASongData,
   parseSongResponse,
@@ -18,6 +19,7 @@ import {
   FullSongResponse,
   FullSongResponseAttributes,
   IASongResponse,
+  SongCosResponse,
   SongResponse,
   SongResponseAttributes,
 } from 'src/types/songAttributes';
@@ -135,13 +137,14 @@ export class SongsService {
     return this.parseFullSong(songData);
   }
 
-  async fetchIACosRecommendations(genres: string[]) {
+  async fetchIACosRecommendations(genres: string[], userVector: number[]) : Promise<SongResponse[]> {
+    const parsedVector = `[${userVector.join(", ")}]`
     const rawSongData = await this.songModel.sequelize?.query(`SELECT songs.id, 
       songs.name, 
-      string_agg(artists.name, ', ') AS artists,
+      string_agg(DISTINCT artists.name, ', ') AS artists,
       songs.url_preview,
       albums.url_image AS album_cover,
-      1 - (song_details.vectors <=> '[3.39,0.373,0.86,11,-4.869,0,0.0533,0.009039999917149544,2.8000000384054147e-05,0.228,0.48,175.103,4]') AS cos_sim
+      1 - (song_details.vectors <=> :userVector) AS cos_sim
       FROM songs
       JOIN song_details ON songs.id = song_details.song_id
       JOIN albums ON albums.id = songs.album_id
@@ -155,10 +158,20 @@ export class SongsService {
       LIMIT 10;`, {
       type: QueryTypes.SELECT,
       logging: console.log,
-      replacements:{ genres }
+      replacements:{ genres, userVector: [parsedVector] }
     })
-
     console.log(rawSongData)
+
+    const parsedData = parseCosSongData(rawSongData)  
+
+    return parsedData.map(songData => ({
+      id: songData.id,
+      name: songData.name,
+      artists: songData.artists.split(","),
+      url_preview: songData.url_preview,
+      album_cover: songData.album_cover,
+
+    }))
   }
 
   async fetchIARecommendations(genres: string[]): Promise<IASongResponse[]> {

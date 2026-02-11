@@ -18,3 +18,20 @@ export const USER_VECTOR: [
   number,
   number,
 ] = [0.5, 0.165, 0.5, 2.5, 0.5, 0.05, 1, 0.15];
+
+export const TRUE_USER_VECTOR: [
+number,number,number,number,number,number,number,number,number,number,number,number,number,
+] = [
+  3.39,
+  0.373,
+  0.86,11,
+  -4.869,
+  0,
+  0.0533,
+  0.009039999917149544,
+  2.8000000384054147e-05,
+  0.228,
+  0.48,
+  175.103,
+  4
+]

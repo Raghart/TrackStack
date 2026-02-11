@@ -5,7 +5,7 @@ import {
   artistSearchResults,
   songSearchResults,
 } from './searchTypes';
-import { FullSongResponseAttributes, IASongResponse } from './songAttributes';
+import { FullSongResponseAttributes, IASongResponse, SongCosResponse } from './songAttributes';
 import { SongGenresRPWithSongs } from './songGenresAttributes';
 
 export const isString = (text: unknown): text is string => {
@@ -129,6 +129,18 @@ export const isFullSongResponse = (
     Array.isArray(data.artists) &&
     Array.isArray(data.genres) &&
     typeof data.album === 'object'
+  );
+};
+
+export const isSongCosData = (data: unknown): data is SongCosResponse[] => {
+  if (data === null || data === undefined) return false;
+  return (Array.isArray(data) &&
+    "id" in data[0] &&
+    "name" in data[0] &&
+    "artists" in data[0] &&
+    "url_preview" in data[0] &&
+    "album_cover" in data[0] &&
+    "cos_sim" in data[0]
   );
 };
 

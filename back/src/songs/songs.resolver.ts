@@ -1,6 +1,6 @@
 import { Args, Float, Int, Query, Resolver } from '@nestjs/graphql';
 import { SongsService } from './songs.service';
-import { USER_VECTOR } from '../../test/constants/constants';
+import { TRUE_USER_VECTOR, USER_VECTOR } from '../../test/constants/constants';
 import { FullSongResponseDto } from './dto/FullSongResponse.dto';
 import { SongResponseDto } from './dto/SongResponse.dto';
 
@@ -31,12 +31,10 @@ export class SongsResolver {
   async getIARecommendations(
     @Args('genres', { type: () => [String], defaultValue: ['Rock'] })
     genres: string[],
-    @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR })
+    @Args('userVector', { type: () => [Float], defaultValue: TRUE_USER_VECTOR })
     userVector: number[],
   ): Promise<SongResponseDto[]> {
-    this.songsService.fetchIACosRecommendations(genres)
-
-    return this.songsService.getIARecommendations(genres, userVector);
+    return this.songsService.fetchIACosRecommendations(genres, userVector)
   }
 
   @Query(() => SongResponseDto, { name: 'getRandomSong' })
