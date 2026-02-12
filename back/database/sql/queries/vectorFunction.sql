@@ -26,7 +26,7 @@ AS $$
     JOIN artists ON song_artists.artist_id = artists.id
     JOIN song_genres ON songs.id = song_genres.song_id
     JOIN genres ON song_genres.genre_id = genres.id
-    WHERE genres.genre = ANY(genres_filter)
+    WHERE (cardinality(genres_filter) = 0 OR genres.genre = ANY(genres_filter))
     GROUP BY songs.id, songs.name, songs.url_preview, albums.url_image, song_details.vectors
     ORDER BY cos_sim DESC
     LIMIT limit_num;

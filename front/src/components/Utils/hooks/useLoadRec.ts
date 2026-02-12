@@ -18,8 +18,8 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     
     const loudness = mood == 1 ? -4.356: -10.356;
     const tempo = sentiment > 0.5 ? 130.576 : 85.365;
-
     const liveness = mood == 1 ? 0.735 : 0.135;
+    
     const durationNor = minMaxScale(duration, MINDURATION, MAXDURATION)
     const loudnessNor = minMaxScale(loudness, minLoudness, maxLoudness)
     const tempoNor = minMaxScale(tempo, minLoudness, maxLoudness)
