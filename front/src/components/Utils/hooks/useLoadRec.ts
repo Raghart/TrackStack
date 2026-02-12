@@ -23,8 +23,6 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const durationNor = minMaxScale(duration, MINDURATION, MAXDURATION)
     const loudnessNor = minMaxScale(loudness, minLoudness, maxLoudness)
     const tempoNor = minMaxScale(tempo, minLoudness, maxLoudness)
-    console.log(tempoNor)
-    console.log(genres)
     
     const userVector = [
         durationNor,
