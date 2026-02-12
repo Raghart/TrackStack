@@ -5,7 +5,9 @@ import { useLazyQuery } from "@apollo/client";
 import { setLaraRecommendations } from "@/reducers/recommendReducer";
 import { getIARecommendations } from "@/queries/LaraRecQuerie";
 import minMaxScale from "../minMaxScale";
-import { MAXDURATION, maxLoudness, MINDURATION, minLoudness, TIMESIGNATURENOR, TRACKKEYNOR } from "@/components/constants/ModalC";
+import { MAXDURATION, maxLoudness, maxTempo, MINDURATION, minLoudness, minTempo, 
+    TIMESIGNATURENOR, TRACKKEYNOR } from "@/components/constants/ModalC";
+import randInRange from "../randInRange";
 
 const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -16,13 +18,13 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const dispatch = useAppDispatch();
     const [getIASongs] = useLazyQuery(getIARecommendations);
     
-    const loudness = mood == 1 ? -4.356: -10.356;
-    const tempo = sentiment > 0.5 ? 130.576 : 85.365;
-    const liveness = mood == 1 ? 0.735 : 0.135;
+    const liveness = mood === 1 ? randInRange(0.6, 0.9) : randInRange(0.05, 0.3);
+    const tempo = sentiment > 0.5 ? randInRange(120, 150) : randInRange(70, 100);
+    const loudness = mood === 1 ? randInRange(-6, -3) : randInRange(-14, -8);
     
     const durationNor = minMaxScale(duration, MINDURATION, MAXDURATION)
     const loudnessNor = minMaxScale(loudness, minLoudness, maxLoudness)
-    const tempoNor = minMaxScale(tempo, minLoudness, maxLoudness)
+    const tempoNor = minMaxScale(tempo, minTempo, maxTempo)
     
     const userVector = [
         durationNor,
