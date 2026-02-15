@@ -8,7 +8,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Op, QueryTypes, Sequelize } from 'sequelize';
 import { buildSongVector } from './utils/buildSongVector';
 import {
-  parseCosSongData,
+  parseSongRecommendations,
   parseFullSongResponse,
   parseIASongData,
   parseSongResponse,
@@ -137,24 +137,31 @@ export class SongsService {
     return this.parseFullSong(songData);
   }
 
-  async fetchIACosRecommendations(genres: string[], userVector: number[], 
-    limit: number) : Promise<SongResponse[]> {
-    const parsedVector = `[${userVector.join(", ")}]`
-    const rawSongData = await this.songModel.sequelize?.query(`SELECT *
-      FROM search_songs_cosine_similarity(ARRAY[:genres]::text[], :userVector::vector, :limit::int);`, {
-      type: QueryTypes.SELECT,
-      replacements:{ genres, userVector: [parsedVector], limit }
-    })
+  async getSongRecommendations(
+    genres: string[],
+    userVector: number[],
+    limit: number,
+  ): Promise<SongResponse[]> {
+    const parsedVector = `[${userVector.join(', ')}]`;
+    const rawSongData = await this.songModel.sequelize?.query(
+      `SELECT *
+      FROM search_songs_cosine_similarity(ARRAY[:genres]::text[], :userVector::vector, :limit::int);`,
+      {
+        type: QueryTypes.SELECT,
+        replacements: { genres, userVector: [parsedVector], limit },
+      },
+    );
+    console.log(rawSongData)
 
-    const parsedData = parseCosSongData(rawSongData)  
+    const parsedData = parseSongRecommendations(rawSongData);
 
-    return parsedData.map(songData => ({
+    return parsedData.map((songData) => ({
       id: songData.id,
       name: songData.name,
-      artists: songData.artists.split(","),
+      artists: songData.artists.split(','),
       url_preview: songData.url_preview,
       album_cover: songData.album_cover,
-    }))
+    }));
   }
 
   async fetchRandomSong(): Promise<SongResponseAttributes> {

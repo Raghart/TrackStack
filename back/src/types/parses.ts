@@ -104,10 +104,12 @@ export const parseIASongData = (data: unknown): IASongResponse => {
   );
 };
 
-export const parseCosSongData = (data: unknown): SongCosResponse[] => {
+export const parseSongRecommendations = (data: unknown): SongCosResponse[] => {
   if (isSongCosData(data)) return data;
-  throw new BadRequestException("The data recieved didn't match with the expected song recommendation format")
-}
+  throw new BadRequestException(
+    "The data recieved didn't match with the expected song recommendation format",
+  );
+};
 
 export const parseArtistSearchData = (data: unknown): artistSearchResults => {
   if (isArtistSearchData(data)) return data;

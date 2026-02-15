@@ -1,34 +1,34 @@
-import { Field, ObjectType } from "@nestjs/graphql";
+import { Field, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class FullSongResponseDto {
-    @Field()
-    id: number;
-    
-    @Field()
-    name: string;
+  @Field()
+  id: number;
 
-    @Field(() => [String])
-    artists: string[];
+  @Field()
+  name: string;
 
-    @Field(() => [String])
-    genres: string[];
+  @Field(() => [String])
+  artists: string[];
 
-    @Field()
-    album: string;
+  @Field(() => [String])
+  genres: string[];
 
-    @Field()
-    album_cover: string;
+  @Field()
+  album: string;
 
-    @Field()
-    year: number;
+  @Field()
+  album_cover: string;
 
-    @Field()
-    duration: number;
+  @Field()
+  year: number;
 
-    @Field()
-    spotify_id: string;
+  @Field()
+  duration: number;
 
-    @Field()
-    url_preview: string;
-};
+  @Field()
+  spotify_id: string;
+
+  @Field()
+  url_preview: string;
+}

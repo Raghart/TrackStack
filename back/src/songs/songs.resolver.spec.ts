@@ -5,7 +5,7 @@ import { SongsService } from './songs.service';
 import {
   singleSongData,
   songFullTestResponse,
-  songIATestResponses,
+  songRecommendResponses,
   songTestResponses,
 } from '../../test/data/songsModule/resSongData';
 import { InternalServerErrorException } from '@nestjs/common';
@@ -29,7 +29,7 @@ describe('SongsResolver receives the expected songs array from the service', () 
             getSongData: jest.fn().mockResolvedValue(songFullTestResponse),
             getIARecommendations: jest
               .fn()
-              .mockReturnValue(songIATestResponses),
+              .mockReturnValue(songRecommendResponses),
             getRandomSong: jest.fn().mockResolvedValue(singleSongData),
             getNextSong: jest.fn().mockResolvedValue(singleSongData),
             getPreviousSong: jest.fn().mockResolvedValue(singleSongData),
@@ -63,7 +63,8 @@ describe('SongsResolver receives the expected songs array from the service', () 
   it('getIARecommendations retrieves a songs recommendations array ready to be delivered', async () => {
     const results = await resolver.getIARecommendations(
       ['Rock', 'Alternative', 'Alternative Rock', 'Grunge'],
-      USER_VECTOR, 40
+      USER_VECTOR,
+      40,
     );
 
     expect(results).toHaveLength(5);
@@ -178,7 +179,11 @@ describe('SongsResolver is able to communicate the error from the service to hel
       'Database Error: SequelizeTimeoutError: Connection refused',
     );
 
-    expect(service.fetchIACosRecommendations).toHaveBeenCalledWith([], USER_VECTOR);
+    expect(service.getSongRecommendations).toHaveBeenCalledWith(
+      [],
+      USER_VECTOR,
+      40,
+    );
   });
 
   it("getNextSong throws an error when the service couldn't connect with the database", async () => {

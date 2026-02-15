@@ -23,8 +23,7 @@ import { SongsModel } from '../../models/songs/song.model';
 import {
   singleSongData,
   songFullTestResponse,
-  songIATestResponses,
-  songIATestScores,
+  songRecommendResponses,
   songTestResponses,
 } from '../../test/data/songsModule/resSongData';
 import { USER_VECTOR } from '../../test/constants/constants';
@@ -36,6 +35,9 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
     findAll: jest.Mock;
     findByPk: jest.Mock;
     findOne: jest.Mock;
+    sequelize: {
+      query: jest.Mock
+    };
   };
 
   beforeEach(async () => {
@@ -49,6 +51,9 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
             findAll: jest.fn(),
             findByPk: jest.fn(),
             findOne: jest.fn(),
+            sequelize: {
+              query: jest.fn(),
+            }
           },
         },
       ],
@@ -266,11 +271,16 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
     });
   });
 
-  describe('getIARecommendations returns a song recommendations array based by user input', () => {
-    const rawIASongs = songIARawResponse.map((entry) => ({ get: () => entry }));
+  describe('getSongRecommendations returns a song recommendations array based by user input', () => {
     beforeEach(() => {
-      songModel.findAll.mockResolvedValue(rawIASongs);
+      songModel.sequelize?.query.mockResolvedValue(songIARawResponse);
     });
+
+    it("getSongRecommendations returns an array with the expected songs", async () => {
+      const songRecommendations = await service.getSongRecommendations(["Rock"], USER_VECTOR, 5)
+      expect(songRecommendations).toHaveLength(5);
+      expect(songRecommendations).toStrictEqual(songRecommendResponses);
+    })
   });
 });
 
