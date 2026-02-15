@@ -1,7 +1,6 @@
 import {
   FullSongResponse,
   SongResponse,
-  SongResponseAttributes,
 } from 'src/types/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../../test/constants/constants';
 

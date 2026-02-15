@@ -31,7 +31,7 @@ export interface SongResponse {
   url_preview: string;
 }
 
-export interface SongCosResponse {
+export interface SongRecResponse {
   id: number;
   name: string;
   artists: string;
@@ -57,13 +57,6 @@ export interface FullSongResponseAttributes extends SongAttributes {
   artists: ArtistsModel[];
   album: AlbumsModel;
   genres: GenresModel[];
-}
-
-export interface IASongResponse extends SongAttributes {
-  artists: ArtistsModel[];
-  album: AlbumsModel;
-  genres: GenresModel[];
-  songDetails: SongDetailsModel;
 }
 
 export type SongCreationAttributes = Optional<

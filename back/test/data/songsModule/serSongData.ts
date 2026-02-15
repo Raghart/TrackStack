@@ -1,6 +1,6 @@
 import {
   FullSongResponseAttributes,
-  IASongResponse,
+  SongRecResponse,
   SongResponseAttributes,
 } from 'src/types/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../../test/constants/constants';
@@ -98,7 +98,7 @@ export const songFullRawResponse = {
   ],
 } as unknown as FullSongResponseAttributes;
 
-export const songIARawResponse = [
+export const songRecRawResponse = [
   {
     id: 1,
     name: 'Malpractice',
@@ -139,4 +139,4 @@ export const songIARawResponse = [
     artists: 'Quicksand',
     cos_sim: 0.9994
   },
-] as unknown as IASongResponse[];
+] as unknown as SongRecResponse[];

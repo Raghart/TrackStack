@@ -11,7 +11,7 @@ import {
   singleSongTestData,
   songTestData,
   songFullRawResponse,
-  songIARawResponse,
+  songRecRawResponse,
 } from '../../test/data/songsModule/serSongData';
 import { expectFullSongProps, expectSongProps } from 'src/utils/expectSongs';
 import {
@@ -273,14 +273,14 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
 
   describe('getSongRecommendations returns a song recommendations array based by user input', () => {
     beforeEach(() => {
-      songModel.sequelize?.query.mockResolvedValue(songIARawResponse);
+      songModel.sequelize?.query.mockResolvedValue(songRecRawResponse);
     });
 
     it("getSongRecommendations returns an array with the expected songs", async () => {
       const songRecommendations = await service.getSongRecommendations(["Rock"], USER_VECTOR, 5)
       expect(songRecommendations).toHaveLength(5);
       expect(songRecommendations).toStrictEqual(songRecommendResponses);
-    })
+    });
   });
 });
 

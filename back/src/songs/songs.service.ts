@@ -5,12 +5,10 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op, QueryTypes, Sequelize } from 'sequelize';
-import { buildSongVector } from './utils/buildSongVector';
+import { QueryTypes, Sequelize } from 'sequelize';
 import {
   parseSongRecommendations,
   parseFullSongResponse,
-  parseIASongData,
   parseSongResponse,
   parseString,
   parseStringArray,
@@ -18,8 +16,6 @@ import {
 import {
   FullSongResponse,
   FullSongResponseAttributes,
-  IASongResponse,
-  SongCosResponse,
   SongResponse,
   SongResponseAttributes,
 } from 'src/types/songAttributes';
@@ -151,7 +147,6 @@ export class SongsService {
         replacements: { genres, userVector: [parsedVector], limit },
       },
     );
-    console.log(rawSongData)
 
     const parsedData = parseSongRecommendations(rawSongData);
 

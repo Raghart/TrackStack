@@ -27,8 +27,8 @@ export class SongsResolver {
     return this.songsService.getSongData(songID);
   }
 
-  @Query(() => [SongResponseDto], { name: 'getIARecommendations' })
-  async getIARecommendations(
+  @Query(() => [SongResponseDto], { name: 'getSongRecommendations' })
+  async getSongRecommendations(
     @Args('genres', { type: () => [String], defaultValue: ['Rock'] })
     genres: string[],
     @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR })

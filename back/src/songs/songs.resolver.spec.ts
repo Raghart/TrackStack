@@ -27,7 +27,7 @@ describe('SongsResolver receives the expected songs array from the service', () 
             getLandpageSongs: jest.fn().mockResolvedValue(songTestResponses),
             getDBLength: jest.fn().mockResolvedValue(songTestResponses.length),
             getSongData: jest.fn().mockResolvedValue(songFullTestResponse),
-            getIARecommendations: jest
+            getSongRecommendations: jest
               .fn()
               .mockReturnValue(songRecommendResponses),
             getRandomSong: jest.fn().mockResolvedValue(singleSongData),
@@ -60,8 +60,8 @@ describe('SongsResolver receives the expected songs array from the service', () 
     expect(result).toEqual(songFullTestResponse);
   });
 
-  it('getIARecommendations retrieves a songs recommendations array ready to be delivered', async () => {
-    const results = await resolver.getIARecommendations(
+  it('getSongRecommendations retrieves a songs recommendations array ready to be delivered', async () => {
+    const results = await resolver.getSongRecommendations(
       ['Rock', 'Alternative', 'Alternative Rock', 'Grunge'],
       USER_VECTOR,
       40,
@@ -166,24 +166,6 @@ describe('SongsResolver is able to communicate the error from the service to hel
       'Database Error: SequelizeTimeoutError: Query timed out',
     );
     expect(service.getSongData).toHaveBeenCalledWith(999);
-  });
-
-  it("getIARecommendations throws an error when the service couldn't connect with the database", async () => {
-    await expect(
-      resolver.getIARecommendations([], USER_VECTOR, 40),
-    ).rejects.toThrow(InternalServerErrorException);
-
-    await expect(
-      resolver.getIARecommendations([], USER_VECTOR, 40),
-    ).rejects.toThrow(
-      'Database Error: SequelizeTimeoutError: Connection refused',
-    );
-
-    expect(service.getSongRecommendations).toHaveBeenCalledWith(
-      [],
-      USER_VECTOR,
-      40,
-    );
   });
 
   it("getNextSong throws an error when the service couldn't connect with the database", async () => {

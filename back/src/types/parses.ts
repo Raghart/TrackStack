@@ -8,8 +8,7 @@ import {
 } from './searchTypes';
 import {
   FullSongResponseAttributes,
-  IASongResponse,
-  SongCosResponse,
+  SongRecResponse,
   SongResponseAttributes,
 } from './songAttributes';
 import { SongGenresRPWithSongs } from './songGenresAttributes';
@@ -19,7 +18,6 @@ import {
   isArtistSearchData,
   isArtistSongs,
   isFullSongResponse,
-  isIASongData,
   isNumberArray,
   isSongGenres,
   isSongResponse,
@@ -97,14 +95,7 @@ export const parseFullSongResponse = (
   );
 };
 
-export const parseIASongData = (data: unknown): IASongResponse => {
-  if (isIASongData(data)) return data;
-  throw new BadRequestException(
-    "The data received doesn't have the required structure for the IA recommendation.",
-  );
-};
-
-export const parseSongRecommendations = (data: unknown): SongCosResponse[] => {
+export const parseSongRecommendations = (data: unknown): SongRecResponse[] => {
   if (isSongCosData(data)) return data;
   throw new BadRequestException(
     "The data recieved didn't match with the expected song recommendation format",
