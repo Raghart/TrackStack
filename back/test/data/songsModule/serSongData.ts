@@ -104,8 +104,8 @@ export const songRecRawResponse = [
     name: 'Malpractice',
     url_preview: TESTING_URL,
     album_cover: TESTING_IMG,
-    artists: "Testament",
-    cos_sim: 0.9998
+    artists: 'Testament',
+    cos_sim: 0.9998,
   },
   {
     id: 2,
@@ -113,7 +113,7 @@ export const songRecRawResponse = [
     url_preview: TESTING_URL,
     album_cover: TESTING_IMG,
     artists: 'The Cardigans',
-    cos_sim: 0.9997
+    cos_sim: 0.9997,
   },
   {
     id: 3,
@@ -121,7 +121,7 @@ export const songRecRawResponse = [
     url_preview: TESTING_URL,
     album_cover: TESTING_IMG,
     artists: 'Aerosmith',
-    cos_sim: 0.9996
+    cos_sim: 0.9996,
   },
   {
     id: 4,
@@ -129,7 +129,7 @@ export const songRecRawResponse = [
     url_preview: TESTING_URL,
     album_cover: TESTING_IMG,
     artists: 'JAMES',
-    cos_sim: 0.9995
+    cos_sim: 0.9995,
   },
   {
     id: 5,
@@ -137,6 +137,6 @@ export const songRecRawResponse = [
     url_preview: TESTING_URL,
     album_cover: TESTING_IMG,
     artists: 'Quicksand',
-    cos_sim: 0.9994
+    cos_sim: 0.9994,
   },
 ] as unknown as SongRecResponse[];

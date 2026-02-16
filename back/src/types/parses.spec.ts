@@ -217,9 +217,9 @@ describe('parses return the data with the expected type', () => {
     });
 
     it('parseIASongData ensure that the songs match the correct object structure', () => {
-      songRecRawResponse.forEach((song) =>
-        expect(parseSongRecommendations(song)).toBe(song),
-      );
+      const songResults = parseSongRecommendations(songRecRawResponse);
+      expect(songResults).toHaveLength(songRecRawResponse.length);
+      expect(songResults).toStrictEqual(songRecRawResponse);
     });
   });
 

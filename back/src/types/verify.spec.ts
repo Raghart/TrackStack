@@ -182,17 +182,17 @@ describe('Verify value Types', () => {
     });
   });
 
-  describe('isIASongData', () => {
-    it('isIASongData returns early false when value is null or undefined', () => {
+  describe('isSongCosData', () => {
+    it('isSongCosData returns early false when value is null or undefined', () => {
       expect(isSongCosData(null)).toBe(false);
       expect(isSongCosData(undefined)).toBe(false);
     });
 
-    it("isIASongData returns false when the object doesn't have the expected props", () => {
+    it("isSongCosData returns false when the object doesn't have the expected props", () => {
       expect(isSongCosData(WRONG_OBJ)).toBe(false);
     });
 
-    it('isIASongData returns true when it has the correct props', () => {
+    it('isSongCosData returns true when it has the correct props', () => {
       expect(isSongCosData(songRecRawResponse)).toBe(true);
     });
   });

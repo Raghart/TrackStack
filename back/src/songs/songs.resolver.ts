@@ -36,11 +36,7 @@ export class SongsResolver {
     @Args('limit', { type: () => Int, defaultValue: 40 })
     limit: number,
   ): Promise<SongResponseDto[]> {
-    return this.songsService.getSongRecommendations(
-      genres,
-      userVector,
-      limit,
-    );
+    return this.songsService.getSongRecommendations(genres, userVector, limit);
   }
 
   @Query(() => SongResponseDto, { name: 'getRandomSong' })

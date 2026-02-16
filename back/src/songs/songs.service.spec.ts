@@ -36,7 +36,7 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
     findByPk: jest.Mock;
     findOne: jest.Mock;
     sequelize: {
-      query: jest.Mock
+      query: jest.Mock;
     };
   };
 
@@ -53,7 +53,7 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
             findOne: jest.fn(),
             sequelize: {
               query: jest.fn(),
-            }
+            },
           },
         },
       ],
@@ -276,8 +276,12 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
       songModel.sequelize?.query.mockResolvedValue(songRecRawResponse);
     });
 
-    it("getSongRecommendations returns an array with the expected songs", async () => {
-      const songRecommendations = await service.getSongRecommendations(["Rock"], USER_VECTOR, 5)
+    it('getSongRecommendations returns an array with the expected songs', async () => {
+      const songRecommendations = await service.getSongRecommendations(
+        ['Rock'],
+        USER_VECTOR,
+        5,
+      );
       expect(songRecommendations).toHaveLength(5);
       expect(songRecommendations).toStrictEqual(songRecommendResponses);
     });

@@ -5,10 +5,7 @@ import {
   artistSearchResults,
   songSearchResults,
 } from './searchTypes';
-import {
-  FullSongResponseAttributes,
-  SongRecResponse,
-} from './songAttributes';
+import { FullSongResponseAttributes, SongRecResponse } from './songAttributes';
 import { SongGenresRPWithSongs } from './songGenresAttributes';
 
 export const isString = (text: unknown): text is string => {
@@ -139,12 +136,13 @@ export const isSongCosData = (data: unknown): data is SongRecResponse[] => {
   if (data === null || data === undefined) return false;
   return (
     Array.isArray(data) &&
-    data.every(song => "id" in song) &&
-    data.every(song => "name" in song) &&
-    data.every(song => "artists" in song) &&
-    data.every(song => "url_preview" in song) &&
-    data.every(song => "album_cover" in song) &&
-    data.every(song => "cos_sim" in song)
+    data.every((song) => typeof song === 'object') &&
+    data.every((song) => 'id' in song) &&
+    data.every((song) => 'name' in song) &&
+    data.every((song) => 'artists' in song) &&
+    data.every((song) => 'url_preview' in song) &&
+    data.every((song) => 'album_cover' in song) &&
+    data.every((song) => 'cos_sim' in song)
   );
 };
 

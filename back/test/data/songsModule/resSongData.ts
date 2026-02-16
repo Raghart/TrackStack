@@ -1,7 +1,4 @@
-import {
-  FullSongResponse,
-  SongResponse,
-} from 'src/types/songAttributes';
+import { FullSongResponse, SongResponse } from 'src/types/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../../test/constants/constants';
 
 export const songTestResponses: SongResponse[] = [
