@@ -15,7 +15,6 @@ import (
 
 func main() {
 	serviceURI := os.Getenv("dbURI")
-
 	if len(os.Args) != 2 {
 		printHelp()
 		return

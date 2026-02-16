@@ -37,6 +37,9 @@ dotenv.config();
       synchronize: true,
       logging: false,
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, "..", "..", "public")
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
@@ -55,9 +58,3 @@ dotenv.config();
   providers: [AppService],
 })
 export class AppModule {}
-
-/*
-ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "..", "..", "public")
-    })
-*/

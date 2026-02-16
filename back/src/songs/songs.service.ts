@@ -143,7 +143,6 @@ export class SongsService {
     const rawSongData = await this.songModel.sequelize?.query(`SELECT *
       FROM search_songs_cosine_similarity(ARRAY[:genres]::text[], :userVector::vector, :limit::int);`, {
       type: QueryTypes.SELECT,
-      logging: console.log,
       replacements:{ genres, userVector: [parsedVector], limit }
     })
 
@@ -156,75 +155,6 @@ export class SongsService {
       url_preview: songData.url_preview,
       album_cover: songData.album_cover,
     }))
-  }
-
-  async fetchIARecommendations(genres: string[]): Promise<IASongResponse[]> {
-    const rawSongData = await safeQuery(() =>
-      this.songModel.findAll({
-        attributes: ['id', 'name', 'url_preview', 'duration'],
-        limit: 100,
-        order: Sequelize.literal('RANDOM()'),
-        include: [
-          { model: AlbumsModel, attributes: ['url_image'] },
-          {
-            model: ArtistsModel,
-            attributes: ['name'],
-            through: { attributes: [] },
-          },
-          { model: SongDetailsModel },
-          {
-            model: GenresModel,
-            through: { attributes: [] },
-            duplicating: false,
-            ...(genres.length > 0
-              ? { where: { genre: { [Op.in]: genres } } }
-              : {}),
-          },
-        ],
-      }),
-    );
-    return rawSongData.map((entry) =>
-      parseIASongData(entry.get({ plain: true })),
-    );
-  }
-
-  getCosineSimilarity(songVector: number[], userVector: number[]) {
-    const dotProduct = songVector.reduce(
-      (sum, songVal, idx) => sum + songVal * userVector[idx],
-      0,
-    );
-    const songMagnitude = Math.sqrt(
-      songVector.reduce((sum, songVal) => sum + Math.pow(songVal, 2), 0),
-    );
-    const userMagnitude = Math.sqrt(
-      userVector.reduce((sum, userVal) => sum + Math.pow(userVal, 2), 0),
-    );
-    return dotProduct / (songMagnitude * userMagnitude);
-  }
-
-  calculateRecommendations(
-    songData: IASongResponse[],
-    userVector: number[],
-  ): SongResponseAttributes[] {
-    const songScores = songData
-      .map((song) => ({
-        id: song.id,
-        song,
-        score: this.getCosineSimilarity(buildSongVector(song), userVector),
-      }))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 40);
-
-    return songScores.map((entry) => entry.song);
-  }
-
-  async getIARecommendations(
-    genres: string[],
-    userVector: number[],
-  ): Promise<SongResponse[]> {
-    const songData = await this.fetchIARecommendations(genres);
-    const songList = this.calculateRecommendations(songData, userVector);
-    return this.parseSongList(songList);
   }
 
   async fetchRandomSong(): Promise<SongResponseAttributes> {
