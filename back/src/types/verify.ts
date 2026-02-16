@@ -5,7 +5,7 @@ import {
   artistSearchResults,
   songSearchResults,
 } from './searchTypes';
-import { FullSongResponseAttributes, IASongResponse } from './songAttributes';
+import { FullSongResponseAttributes, SongRecResponse } from './songAttributes';
 import { SongGenresRPWithSongs } from './songGenresAttributes';
 
 export const isString = (text: unknown): text is string => {
@@ -132,27 +132,17 @@ export const isFullSongResponse = (
   );
 };
 
-export const isIASongData = (data: unknown): data is IASongResponse => {
+export const isSongCosData = (data: unknown): data is SongRecResponse[] => {
   if (data === null || data === undefined) return false;
-
   return (
-    typeof data === 'object' &&
-    'id' in data &&
-    'name' in data &&
-    'duration' in data &&
-    'url_preview' in data &&
-    'artists' in data &&
-    'genres' in data &&
-    'album' in data &&
-    'songDetails' in data &&
-    isNumber(data.id) &&
-    isString(data.name) &&
-    isNumber(data.duration) &&
-    isString(data.url_preview) &&
-    Array.isArray(data.artists) &&
-    Array.isArray(data.genres) &&
-    typeof data.album === 'object' &&
-    typeof data.songDetails === 'object'
+    Array.isArray(data) &&
+    data.every((song) => typeof song === 'object') &&
+    data.every((song) => 'id' in song) &&
+    data.every((song) => 'name' in song) &&
+    data.every((song) => 'artists' in song) &&
+    data.every((song) => 'url_preview' in song) &&
+    data.every((song) => 'album_cover' in song) &&
+    data.every((song) => 'cos_sim' in song)
   );
 };
 

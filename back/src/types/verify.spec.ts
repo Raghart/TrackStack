@@ -4,7 +4,7 @@ import {
   isArtistSearchData,
   isArtistSongs,
   isFullSongResponse,
-  isIASongData,
+  isSongCosData,
   isNumber,
   isNumberArray,
   isSongGenres,
@@ -17,7 +17,7 @@ import { albumSongs } from '../../test/data/albumsModule/AlbumData';
 import { songGenresData } from '../../test/data/songGenresModule/songGenresData';
 import {
   songFullRawResponse,
-  songIARawResponse,
+  songRecRawResponse,
   songTestData,
 } from '../../test/data/songsModule/serSongData';
 import {
@@ -182,18 +182,18 @@ describe('Verify value Types', () => {
     });
   });
 
-  describe('isIASongData', () => {
-    it('isIASongData returns early false when value is null or undefined', () => {
-      expect(isIASongData(null)).toBe(false);
-      expect(isIASongData(undefined)).toBe(false);
+  describe('isSongCosData', () => {
+    it('isSongCosData returns early false when value is null or undefined', () => {
+      expect(isSongCosData(null)).toBe(false);
+      expect(isSongCosData(undefined)).toBe(false);
     });
 
-    it("isIASongData returns false when the object doesn't have the expected props", () => {
-      expect(isIASongData(WRONG_OBJ)).toBe(false);
+    it("isSongCosData returns false when the object doesn't have the expected props", () => {
+      expect(isSongCosData(WRONG_OBJ)).toBe(false);
     });
 
-    it('isIASongData returns true when it has the correct props', () => {
-      expect(isIASongData(songIARawResponse[0])).toBe(true);
+    it('isSongCosData returns true when it has the correct props', () => {
+      expect(isSongCosData(songRecRawResponse)).toBe(true);
     });
   });
 

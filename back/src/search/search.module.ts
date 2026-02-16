@@ -10,7 +10,9 @@ import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { GenresModel } from '../../models/genres/genres.model';
-import { bonsaiClientProvider } from '../../scripts/bonsai/bonsaiClient';
+import { Client } from 'elasticsearch';
+import dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
   imports: [
@@ -25,7 +27,20 @@ import { bonsaiClientProvider } from '../../scripts/bonsai/bonsaiClient';
       GenresModel,
     ]),
   ],
-  providers: [bonsaiClientProvider, SearchService, SearchResolver],
+  providers: [
+    {
+      provide: 'BonsaiClient',
+      useFactory: () => {
+        return new Client({
+          host: process.env.ELASTICSEARCH_NODE,
+          log: 'error',
+          ssl: { rejectUnauthorized: false },
+        });
+      },
+    },
+    SearchService,
+    SearchResolver,
+  ],
   exports: [SearchService],
 })
 export class SearchModule {}

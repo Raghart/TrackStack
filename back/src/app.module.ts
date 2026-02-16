@@ -23,15 +23,9 @@ dotenv.config();
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    ServeStaticModule.forRoot({
-      rootPath: join(__dirname, "..", "..", "public")
-    }),
     SequelizeModule.forRoot({
-      username: process.env.DB_USERNAME,
-      password: process.env.DB_PASSWORD,
-      database: process.env.DB_NAME,
       dialect: 'postgres',
-      host: process.env.DB_HOST,
+      uri: process.env.DB_URL,
       port: Number(process.env.DB_PORT),
       dialectOptions: {
         ssl: {
@@ -42,6 +36,9 @@ dotenv.config();
       autoLoadModels: true,
       synchronize: true,
       logging: false,
+    }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'public'),
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

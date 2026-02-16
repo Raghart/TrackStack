@@ -1,6 +1,8 @@
 # compiled output
 node_modules/
 
+back/database/csv_data/
+
 # Logs
 logs
 *.log

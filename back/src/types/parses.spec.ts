@@ -5,7 +5,7 @@ import {
   parseArtistSongs,
   parseFloatNum,
   parseFullSongResponse,
-  parseIASongData,
+  parseSongRecommendations,
   parseNumberArray,
   parseSongGenres,
   parseSongResponse,
@@ -17,7 +17,7 @@ import { albumSongs } from '../../test/data/albumsModule/AlbumData';
 import { songGenresData } from '../../test/data/songGenresModule/songGenresData';
 import {
   songFullRawResponse,
-  songIARawResponse,
+  songRecRawResponse,
   songTestData,
 } from '../../test/data/songsModule/serSongData';
 import {
@@ -204,22 +204,22 @@ describe('parses return the data with the expected type', () => {
     });
   });
 
-  describe('parseIASongData', () => {
-    it('parseIASongData returns an error when the parse is not an array of numbers', () => {
+  describe('parseSongRecommendations', () => {
+    it('parseSongRecommendations returns an error when the parse is not an array of numbers', () => {
       const errArray = [123456, ['testing'], null, undefined];
       errArray.forEach((err) =>
         expectParseError(
-          parseIASongData,
+          parseSongRecommendations,
           err,
-          "The data received doesn't have the required structure for the IA recommendation.",
+          "The data recieved didn't match with the expected song recommendation format",
         ),
       );
     });
 
     it('parseIASongData ensure that the songs match the correct object structure', () => {
-      songIARawResponse.forEach((song) =>
-        expect(parseIASongData(song)).toBe(song),
-      );
+      const songResults = parseSongRecommendations(songRecRawResponse);
+      expect(songResults).toHaveLength(songRecRawResponse.length);
+      expect(songResults).toStrictEqual(songRecRawResponse);
     });
   });
 

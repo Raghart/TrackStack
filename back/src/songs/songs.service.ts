@@ -5,11 +5,10 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { Op, Sequelize } from 'sequelize';
-import { buildSongVector } from './utils/buildSongVector';
+import { QueryTypes, Sequelize } from 'sequelize';
 import {
+  parseSongRecommendations,
   parseFullSongResponse,
-  parseIASongData,
   parseSongResponse,
   parseString,
   parseStringArray,
@@ -17,7 +16,6 @@ import {
 import {
   FullSongResponse,
   FullSongResponseAttributes,
-  IASongResponse,
   SongResponse,
   SongResponseAttributes,
 } from 'src/types/songAttributes';
@@ -27,7 +25,6 @@ import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
-import { SongDetailsModel } from '../../models/song_details/SongDetails.model';
 
 @Injectable()
 export class SongsService {
@@ -135,73 +132,30 @@ export class SongsService {
     return this.parseFullSong(songData);
   }
 
-  async fetchIARecommendations(genres: string[]): Promise<IASongResponse[]> {
-    const rawSongData = await safeQuery(() =>
-      this.songModel.findAll({
-        attributes: ['id', 'name', 'url_preview', 'duration'],
-        limit: 100,
-        order: Sequelize.literal('RANDOM()'),
-        include: [
-          { model: AlbumsModel, attributes: ['url_image'] },
-          {
-            model: ArtistsModel,
-            attributes: ['name'],
-            through: { attributes: [] },
-          },
-          { model: SongDetailsModel },
-          {
-            model: GenresModel,
-            through: { attributes: [] },
-            duplicating: false,
-            ...(genres.length > 0
-              ? { where: { genre: { [Op.in]: genres } } }
-              : {}),
-          },
-        ],
-      }),
-    );
-    return rawSongData.map((entry) =>
-      parseIASongData(entry.get({ plain: true })),
-    );
-  }
-
-  getCosineSimilarity(songVector: number[], userVector: number[]) {
-    const dotProduct = songVector.reduce(
-      (sum, songVal, idx) => sum + songVal * userVector[idx],
-      0,
-    );
-    const songMagnitude = Math.sqrt(
-      songVector.reduce((sum, songVal) => sum + Math.pow(songVal, 2), 0),
-    );
-    const userMagnitude = Math.sqrt(
-      userVector.reduce((sum, userVal) => sum + Math.pow(userVal, 2), 0),
-    );
-    return dotProduct / (songMagnitude * userMagnitude);
-  }
-
-  calculateRecommendations(
-    songData: IASongResponse[],
-    userVector: number[],
-  ): SongResponseAttributes[] {
-    const songScores = songData
-      .map((song) => ({
-        id: song.id,
-        song,
-        score: this.getCosineSimilarity(buildSongVector(song), userVector),
-      }))
-      .sort((a, b) => b.score - a.score)
-      .slice(0, 40);
-
-    return songScores.map((entry) => entry.song);
-  }
-
-  async getIARecommendations(
+  async getSongRecommendations(
     genres: string[],
     userVector: number[],
+    limit: number,
   ): Promise<SongResponse[]> {
-    const songData = await this.fetchIARecommendations(genres);
-    const songList = this.calculateRecommendations(songData, userVector);
-    return this.parseSongList(songList);
+    const parsedVector = `[${userVector.join(', ')}]`;
+    const rawSongData = await this.songModel.sequelize?.query(
+      `SELECT *
+      FROM search_songs_cosine_similarity(ARRAY[:genres]::text[], :userVector::vector, :limit::int);`,
+      {
+        type: QueryTypes.SELECT,
+        replacements: { genres, userVector: [parsedVector], limit },
+      },
+    );
+
+    const parsedData = parseSongRecommendations(rawSongData);
+
+    return parsedData.map((songData) => ({
+      id: songData.id,
+      name: songData.name,
+      artists: songData.artists.split(','),
+      url_preview: songData.url_preview,
+      album_cover: songData.album_cover,
+    }));
   }
 
   async fetchRandomSong(): Promise<SongResponseAttributes> {

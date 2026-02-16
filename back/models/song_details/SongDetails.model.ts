@@ -140,4 +140,9 @@ import { SongDetailsAttributes, SongDetailsCreationAttributes } from "src/types/
         }
     })
     declare time_signature: number;
+
+    @Column({
+        type: DataType.TSVECTOR,
+    })
+    declare vectors: number[];
 }

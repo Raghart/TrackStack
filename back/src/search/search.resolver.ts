@@ -1,6 +1,6 @@
 import { Args, Query, Resolver } from '@nestjs/graphql';
 import { SearchService } from './search.service';
-import { multipleSearchResultsDto } from '../../scripts/dto/multipleSearchDto';
+import { multipleSearchResultsDto } from './dto/multipleSearchDto';
 
 @Resolver()
 export class SearchResolver {

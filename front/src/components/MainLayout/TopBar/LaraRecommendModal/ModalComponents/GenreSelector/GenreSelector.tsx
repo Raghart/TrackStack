@@ -13,7 +13,6 @@ import { GenreListFormat } from "@/types/genreTypes";
 const GenreSelector = () => {
     const [searchValue, setSearchValue] = useState<string>("");
     const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
-    const [isNavigating, setIsNavigating] = useState<boolean>(false);
     const collection = useGenreCollection(searchValue, selectedGenres);
     const dispatch = useAppDispatch();
     return(
@@ -33,13 +32,13 @@ const GenreSelector = () => {
 
             <Combobox.Root w="full" collection={collection} value={selectedGenres} multiple closeOnSelect 
                 onInputValueChange={(details) => setSearchValue(details.inputValue)} aria-label="Select a Music Genre"
-                onValueChange={(details) => dispatch(handleValueChange(details, setSelectedGenres, setIsNavigating))} 
+                onValueChange={(details) => dispatch(handleValueChange(details, setSelectedGenres))} 
                 placeholder={selectedGenres.length > 0 ? "Delete by pressing 'Del'" : "Select a Genre"}
-                onHighlightChange={(details) => setIsNavigating(details.highlightedValue != null)} variant="outline">
+                variant="outline">
                 <Combobox.Control>
                     <Combobox.Input borderRadius="2xl" border="2px solid" borderColor="gray.400" 
                         data-testid="GenreInput" onKeyDown={(e) => dispatch(handleDelLastGenre(e, selectedGenres, 
-                        setSelectedGenres, collection, isNavigating))} />
+                        setSelectedGenres))} />
                     <Combobox.IndicatorGroup>
                         <Combobox.ClearTrigger />
                         <Combobox.Trigger />

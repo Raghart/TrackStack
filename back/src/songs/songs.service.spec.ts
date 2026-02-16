@@ -11,7 +11,7 @@ import {
   singleSongTestData,
   songTestData,
   songFullRawResponse,
-  songIARawResponse,
+  songRecRawResponse,
 } from '../../test/data/songsModule/serSongData';
 import { expectFullSongProps, expectSongProps } from 'src/utils/expectSongs';
 import {
@@ -23,8 +23,7 @@ import { SongsModel } from '../../models/songs/song.model';
 import {
   singleSongData,
   songFullTestResponse,
-  songIATestResponses,
-  songIATestScores,
+  songRecommendResponses,
   songTestResponses,
 } from '../../test/data/songsModule/resSongData';
 import { USER_VECTOR } from '../../test/constants/constants';
@@ -36,6 +35,9 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
     findAll: jest.Mock;
     findByPk: jest.Mock;
     findOne: jest.Mock;
+    sequelize: {
+      query: jest.Mock;
+    };
   };
 
   beforeEach(async () => {
@@ -49,6 +51,9 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
             findAll: jest.fn(),
             findByPk: jest.fn(),
             findOne: jest.fn(),
+            sequelize: {
+              query: jest.fn(),
+            },
           },
         },
       ],
@@ -266,41 +271,19 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
     });
   });
 
-  describe('getIARecommendations returns a song recommendations array based by user input', () => {
-    const rawIASongs = songIARawResponse.map((entry) => ({ get: () => entry }));
+  describe('getSongRecommendations returns a song recommendations array based by user input', () => {
     beforeEach(() => {
-      songModel.findAll.mockResolvedValue(rawIASongs);
+      songModel.sequelize?.query.mockResolvedValue(songRecRawResponse);
     });
 
-    it('fetchIARecommendations retrieves a song array matching the given genres', async () => {
-      const songData = await service.fetchIARecommendations(['Rock']);
-      expect(songData).toStrictEqual(songIARawResponse);
-    });
-
-    it('getCosineSimilarity returns a score representing the similiraty of two number arrays', () => {
-      const score = service.getCosineSimilarity(
-        [1, 2, 3, 4, 5],
-        [1, 2, 3, 4, 5],
-      );
-      expect(score).toBe(1);
-    });
-
-    it('calculateRecommendations returns a song array, sorted by their score (highest to lowest)', () => {
-      const songRecommendations = service.calculateRecommendations(
-        songIARawResponse,
-        USER_VECTOR,
-      );
-      expect(songRecommendations).toHaveLength(5);
-      expect(songRecommendations).toStrictEqual(songIATestScores);
-    });
-
-    it('getIARecommendations returns a song recommendations array ready to be delivered', async () => {
-      const songRecommendations = await service.getIARecommendations(
+    it('getSongRecommendations returns an array with the expected songs', async () => {
+      const songRecommendations = await service.getSongRecommendations(
         ['Rock'],
         USER_VECTOR,
+        5,
       );
       expect(songRecommendations).toHaveLength(5);
-      expect(songRecommendations).toStrictEqual(songIATestResponses);
+      expect(songRecommendations).toStrictEqual(songRecommendResponses);
     });
   });
 });
@@ -378,16 +361,6 @@ describe("SongsService throws an error if it couldn't retrieve the data from the
     );
     await expect(service.fetchFullSongData(1)).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Connection refused',
-    );
-  });
-
-  it("getIARecommendations throws an error if it couldn't retrieve the song data from the database", async () => {
-    await expect(service.fetchIARecommendations([])).rejects.toThrow(
-      InternalServerErrorException,
-    );
-
-    await expect(service.fetchIARecommendations([])).rejects.toThrow(
-      'Database Error: SequelizeTimeoutError: Query timed out',
     );
   });
 });
