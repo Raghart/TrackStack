@@ -10,11 +10,18 @@ import (
 	"scripts/internal/database"
 	paths "scripts/pathConstants"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("error while trying to load the env: %v", err)
+	}
+
 	serviceURI := os.Getenv("dbURI")
+	fmt.Println(serviceURI)
 
 	if len(os.Args) != 2 {
 		printHelp()
@@ -67,6 +74,10 @@ func main() {
 	case "vectors":
 		{
 			dbCfg.AddVectorsDatabase()
+		}
+	case "updateVectors":
+		{
+			dbCfg.UpdateVectors()
 		}
 	default:
 		{

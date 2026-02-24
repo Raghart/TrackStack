@@ -397,6 +397,66 @@ func (cfg *DbConfig) AddSongDetailsDatabase(records [][]string) {
 	fmt.Println("Finish processing the song details!")
 }
 
+func (cfg *DbConfig) UpdateVectors() {
+	fmt.Println("Processing vector to the local database...")
+	songDetails, err := cfg.Queries.GetSongDetails(context.Background())
+	if err != nil {
+		log.Fatalf("there was a problem while trying to get the songs details: %v", err)
+	}
+
+	for _, song := range songDetails {
+		dbSong, err := cfg.Queries.GetSongByID(context.Background(), song.SongID)
+		if err != nil {
+			log.Fatalf("there was a problem while trying to get the song: %v", err)
+		}
+
+		durationScore := getZScore(dbSong.Duration, durationAVG, durationDEV)
+		danceabilityScore := getZScore(song.Danceability, danceabilityAVG, danceabilityDEV)
+		energyScore := getZScore(song.Energy, energyAVG, energyDEV)
+		trackKeyScore := getZScore(song.TrackKey, track_keyAVG, track_keyDEV)
+		loudnessScore := getZScore(song.Loudness, loudnessAVG, loudnessDEV)
+		modeScore := getZScore(song.Mode, modeAVG, modeDEV)
+		speechinessScore := getZScore(song.Speechiness, speechinessAVG, speechinessDEV)
+		acousticnessScore := getZScore(float32(song.Acousticness), acousticnessAVG, acousticnessDEV)
+		instrumentalnessScore := getZScore(float32(song.Instrumentalness),
+			instrumentalnessAVG, instrumentalnessDEV)
+		livenessScore := getZScore(song.Liveness, livenessAVG, livenessDEV)
+		valenceScore := getZScore(song.Valence, valenceAVG, valenceDEV)
+		tempoScore := getZScore(song.Tempo, tempoAVG, tempoDEV)
+		time_sigScore := getZScore(float32(song.TimeSignature), time_sigAVG, time_sigDEV)
+
+		songParams := []float32{
+			durationScore,
+			danceabilityScore,
+			energyScore,
+			trackKeyScore,
+			loudnessScore,
+			modeScore,
+			speechinessScore,
+			acousticnessScore,
+			instrumentalnessScore,
+			livenessScore,
+			valenceScore,
+			tempoScore,
+			time_sigScore,
+		}
+
+		embedding := pgvector.NewVector(songParams)
+
+		vectorAdded, err := cfg.Queries.CreateVector(context.Background(), database.CreateVectorParams{
+			Vectors: embedding,
+			SongID:  song.SongID,
+		})
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(vectorAdded)
+	}
+	fmt.Println("Finish processing the vectors!")
+}
+
 func (cfg *DbConfig) AddVectorsDatabase() {
 	fmt.Println("Processing vector to the database...")
 	songDetails, err := cfg.Queries.GetSongDetails(context.Background())
@@ -447,6 +507,10 @@ func (cfg *DbConfig) AddVectorsDatabase() {
 		fmt.Println(vectorAdded)
 	}
 	fmt.Println("Finish processing the vectors!")
+}
+
+func getZScore(value, avg, dev float32) float32 {
+	return (value - avg) / dev
 }
 
 func minMaxScaling(value, dbMin, dbMax float32) float32 {
