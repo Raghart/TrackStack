@@ -410,35 +410,35 @@ func (cfg *DbConfig) UpdateVectors() {
 			log.Fatalf("there was a problem while trying to get the song: %v", err)
 		}
 
-		durationScore := getZScore(dbSong.Duration, durationAVG, durationDEV)
-		danceabilityScore := getZScore(song.Danceability, danceabilityAVG, danceabilityDEV)
-		energyScore := getZScore(song.Energy, energyAVG, energyDEV)
-		trackKeyScore := getZScore(song.TrackKey, track_keyAVG, track_keyDEV)
-		loudnessScore := getZScore(song.Loudness, loudnessAVG, loudnessDEV)
-		modeScore := getZScore(song.Mode, modeAVG, modeDEV)
-		speechinessScore := getZScore(song.Speechiness, speechinessAVG, speechinessDEV)
-		acousticnessScore := getZScore(float32(song.Acousticness), acousticnessAVG, acousticnessDEV)
-		instrumentalnessScore := getZScore(float32(song.Instrumentalness),
-			instrumentalnessAVG, instrumentalnessDEV)
-		livenessScore := getZScore(song.Liveness, livenessAVG, livenessDEV)
-		valenceScore := getZScore(song.Valence, valenceAVG, valenceDEV)
-		tempoScore := getZScore(song.Tempo, tempoAVG, tempoDEV)
-		time_sigScore := getZScore(float32(song.TimeSignature), time_sigAVG, time_sigDEV)
+		durationScaled := minMaxScaling(dbSong.Duration, durationMin, durationMax)
+		danceabilityScaled := minMaxScaling(song.Danceability, danceabilityMin, danceabilityMax)
+		energyScaled := minMaxScaling(song.Energy, energyMIN, energyMAX)
+		trackKeyScaled := minMaxScaling(song.TrackKey, trackKeyMIN, trackKeyMAX)
+		loudnessScaled := minMaxScaling(song.Loudness, loudnessMIN, loudnessMAX)
+		modeScaled := minMaxScaling(song.Mode, modeMin, modeMax)
+		speechinessScaled := minMaxScaling(song.Speechiness, speechinessMIN, speechinessMAX)
+		acousticnessScaled := minMaxScaling(float32(song.Acousticness), acousticnessMIN, acousticnessMAX)
+		instrumentalnessScaled := minMaxScaling(float32(song.Instrumentalness),
+			instrumentalnessMIN, instrumentalnessMAX)
+		livenessScaled := minMaxScaling(song.Liveness, livenessMIN, livenessMAX)
+		valenceScaled := minMaxScaling(song.Valence, valenceMIN, valenceMAX)
+		tempoScaled := minMaxScaling(song.Tempo, tempoMIN, tempoMAX)
+		timeSignatureScaled := minMaxScaling(float32(song.TimeSignature), timeSigMin, timeSigMax)
 
 		songParams := []float32{
-			durationScore,
-			danceabilityScore,
-			energyScore,
-			trackKeyScore,
-			loudnessScore,
-			modeScore,
-			speechinessScore,
-			acousticnessScore,
-			instrumentalnessScore,
-			livenessScore,
-			valenceScore,
-			tempoScore,
-			time_sigScore,
+			durationScaled,
+			danceabilityScaled,
+			energyScaled,
+			trackKeyScaled,
+			loudnessScaled,
+			modeScaled,
+			speechinessScaled,
+			acousticnessScaled,
+			instrumentalnessScaled,
+			livenessScaled,
+			valenceScaled,
+			tempoScaled,
+			timeSignatureScaled,
 		}
 
 		embedding := pgvector.NewVector(songParams)
@@ -470,12 +470,12 @@ func (cfg *DbConfig) AddVectorsDatabase() {
 			log.Fatalf("there was a problem while trying to get the song: %v", err)
 		}
 
-		loudnessNor := minMaxScaling(song.Loudness, float32(minLoudness), float32(maxLoudness))
-		tempoNor := minMaxScaling(song.Tempo, float32(minTempo), float32(maxTempo))
-		timeSigNor := minMaxScaling(float32(song.TimeSignature), float32(minTimeSig),
-			float32(maxTimeSig))
-		trackKeyNor := minMaxScaling(song.TrackKey, float32(minTrackKey), float32(maxTrackKey))
-		durationNor := minMaxScaling(dbSong.Duration, float32(minDuration), float32(maxDuration))
+		loudnessNor := minMaxScaling(song.Loudness, float32(loudnessMIN), float32(loudnessMAX))
+		tempoNor := minMaxScaling(song.Tempo, float32(tempoMIN), float32(tempoMAX))
+		timeSigNor := minMaxScaling(float32(song.TimeSignature), float32(timeSigMin),
+			float32(timeSigMax))
+		trackKeyNor := minMaxScaling(song.TrackKey, float32(trackKeyMIN), float32(trackKeyMAX))
+		durationNor := minMaxScaling(dbSong.Duration, float32(durationMin), float32(durationMax))
 
 		songParams := []float32{
 			durationNor,
@@ -507,10 +507,6 @@ func (cfg *DbConfig) AddVectorsDatabase() {
 		fmt.Println(vectorAdded)
 	}
 	fmt.Println("Finish processing the vectors!")
-}
-
-func getZScore(value, avg, dev float32) float32 {
-	return (value - avg) / dev
 }
 
 func minMaxScaling(value, dbMin, dbMax float32) float32 {

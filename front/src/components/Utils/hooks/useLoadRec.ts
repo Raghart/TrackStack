@@ -5,9 +5,15 @@ import { useLazyQuery } from "@apollo/client";
 import { setLaraRecommendations } from "@/reducers/recommendReducer";
 import { getSongRecommendations } from "@/queries/LaraRecQuerie";
 import minMaxScale from "../minMaxScale";
-import { MAXDURATION, maxLoudness, maxTempo, MINDURATION, minLoudness, minTempo, 
-    TIMESIGNATURENOR, TRACKKEYNOR } from "@/components/constants/ModalC";
 import randInRange from "../randInRange";
+import { acousticnessMAX, acousticnessMIN, danceabilityMax, danceabilityMin, durationMax, durationMin, energyMAX, energyMIN, instrumentalnessMAX, instrumentalnessMIN, livenessMAX, livenessMIN, loudnessMAX, 
+    loudnessMIN, modeMax, modeMin, speechinessMAX, speechinessMIN, tempoMAX, tempoMIN, 
+    timeSigMax, 
+    timeSigMin, 
+    trackKeyMAX, 
+    trackKeyMIN,
+    valenceMAX,
+    valenceMIN} from "@/components/constants/ModalC";
 
 const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -22,24 +28,34 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const tempo = sentiment > 0.5 ? randInRange(120, 150) : randInRange(70, 100);
     const loudness = mood === 1 ? randInRange(-6, -3) : randInRange(-14, -8);
     
-    const durationNor = minMaxScale(duration, MINDURATION, MAXDURATION)
-    const loudnessNor = minMaxScale(loudness, minLoudness, maxLoudness)
-    const tempoNor = minMaxScale(tempo, minTempo, maxTempo)
+    const durationNor = minMaxScale(duration, durationMin, durationMax);
+    const danceabilityNor = minMaxScale(danceability, danceabilityMin, danceabilityMax);
+    const energyNor = minMaxScale(energy, energyMIN, energyMAX);
+    const trackKeyNor = minMaxScale(4, trackKeyMIN, trackKeyMAX);
+    const loudnessNor = minMaxScale(loudness, loudnessMIN, loudnessMAX);
+    const modeNor = minMaxScale(mood, modeMin, modeMax);
+    const speechinessNor = minMaxScale(speechLevel, speechinessMIN, speechinessMAX);
+    const acousticnessNor = minMaxScale(acousticness, acousticnessMIN, acousticnessMAX)
+    const instrumentalnessNor = minMaxScale(voiceType, instrumentalnessMIN, instrumentalnessMAX)
+    const livenessNor = minMaxScale(liveness, livenessMIN, livenessMAX)
+    const valenceNor = minMaxScale(sentiment, valenceMIN, valenceMAX)
+    const tempoNor = minMaxScale(tempo, tempoMIN, tempoMAX)
+    const timeSigNor = minMaxScale(4, timeSigMin, timeSigMax)
     
     const userVector = [
         durationNor,
-        danceability,
-        energy,
-        TRACKKEYNOR,
+        danceabilityNor,
+        energyNor,
+        trackKeyNor,
         loudnessNor,
-        mood,
-        speechLevel,
-        acousticness,
-        voiceType, 
-        liveness,
-        sentiment,
+        modeNor,
+        speechinessNor,
+        acousticnessNor,
+        instrumentalnessNor,
+        livenessNor,
+        valenceNor,
         tempoNor,
-        TIMESIGNATURENOR,
+        timeSigNor,
     ];
 
     const limit = 40;
