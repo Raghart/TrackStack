@@ -18,16 +18,16 @@ import { acousticnessMAX, acousticnessMIN, danceabilityMax, danceabilityMin, dur
     trackKeyMIN,
     valenceMAX,
     valenceMIN} from "../constants/ModalC";
+import generateLiveness from "./generateLivenes";
 import generateLoudness from "./generateLoudness";
 import generateTempo from "./generateTempo";
 import minMaxScale from "./minMaxScale";
-import randInRange from "./randInRange";
 
 const generateUserVector = (duration: number, danceability: number, energy: number,
     mood: number, speechLevel: number, acousticness: number, voiceType: number,
     sentiment: number
 ) : number[] => {
-    const liveness = mood === 1 ? randInRange(0.6, 0.9) : randInRange(0.05, 0.3);
+    const liveness = generateLiveness(mood, sentiment);
     const tempo = generateTempo(sentiment);
     const loudness = generateLoudness(mood, sentiment);
     

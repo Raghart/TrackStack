@@ -25,6 +25,7 @@ import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
+import parseGenres from 'src/utils/parseGenres';
 
 @Injectable()
 export class SongsService {
@@ -138,16 +139,18 @@ export class SongsService {
     limit: number,
   ): Promise<SongResponse[]> {
     const parsedVector = `[${userVector.join(', ')}]`;
+    const genresParsed = parseGenres(genres)
     const rawSongData = await this.songModel.sequelize?.query(
       `SELECT *
       FROM search_songs_cosine_similarity(ARRAY[:genres]::text[], :userVector::vector, :limit::int);`,
       {
         type: QueryTypes.SELECT,
-        replacements: { genres, userVector: [parsedVector], limit },
+        replacements: { genres: genresParsed, userVector: [parsedVector], limit },
       },
     );
 
     const parsedData = parseSongRecommendations(rawSongData);
+    console.log(parsedData)
 
     return parsedData.map((songData) => ({
       id: songData.id,
