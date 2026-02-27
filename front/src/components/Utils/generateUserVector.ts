@@ -28,7 +28,7 @@ const generateUserVector = (duration: number, danceability: number, energy: numb
     sentiment: number
 ) : number[] => {
     const liveness = generateLiveness(mood, sentiment);
-    const tempo = generateTempo(sentiment);
+    const tempo = generateTempo(mood, sentiment);
     const loudness = generateLoudness(mood, sentiment);
     
     const durationNor = minMaxScale(duration, durationMin, durationMax);
