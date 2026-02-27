@@ -2,7 +2,7 @@ import { chillGenreArr, electroGenreArr, jazzGenreArr, metalGenreArr, popGenreAr
     videogameGenreArr} from "./genreConstantsArrays";
 
 const parseGenres = (genres: string[]) : string[] => {
-    var genresEnchanced = genres;
+    var genresEnchanced = [...genres];
 
     if (genres.some(genre => genre.includes("Rock"))) {
         pushGenres(genresEnchanced, rockGenreArr);

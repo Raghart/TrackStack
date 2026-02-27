@@ -1,16 +1,14 @@
 export const rockGenreArr = ["Rock","Alternative Rock","Indie Rock","Hard Rock",
-    "Progressive Rock","Classic Rock","Pop Rock","Punk Rock","Blues Rock","Psychedelic Rock",
-    "Guitar","Post Rock","Jazz Rock","Rap-rock"
-];
-export const popGenreArr = ["Pop","Britpop","Synthpop", "Electronic","Dance","Indie Pop","J Pop",
-    "Asian Pop","J-pop",
+    "Progressive Rock","Pop Rock","Punk Rock","Blues Rock","Psychedelic Rock",
+    "Post Rock","Jazz Rock","Rap-rock"
 ];
 
-export const electroGenreArr = ["Electronic","Electro","House",
-    "Techno","J Pop","Electronica"
-];
-export const metalGenreArr = ["Metal","Nu Metal","Heavy Metal","Gothic Metal","Thrash Metal","Guitar"
-    ,"Hardcore","Metalcore","Doom Metal","Power Metal","Progressive Metal"
+export const popGenreArr = ["Pop","Britpop","Indie Pop","J Pop","Asian Pop","J-pop"];
+
+export const electroGenreArr = ["Electronic","Electro","House","Techno","J Pop","Electronica"];
+
+export const metalGenreArr = ["Metal","Nu Metal","Heavy Metal","Gothic Metal","Thrash Metal",
+    "Metalcore","Doom Metal","Power Metal","Progressive Metal"
     ,"Black Metal","Death Metal","Melodic Death Metal","Alternative Metal"
 ];
 

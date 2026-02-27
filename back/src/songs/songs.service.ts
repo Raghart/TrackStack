@@ -150,7 +150,6 @@ export class SongsService {
     );
 
     const parsedData = parseSongRecommendations(rawSongData);
-    console.log(parsedData)
 
     return parsedData.map((songData) => ({
       id: songData.id,
