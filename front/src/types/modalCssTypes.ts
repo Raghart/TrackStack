@@ -49,7 +49,7 @@ export interface SliderTagsOptions {
     Rhythmic: SliderTagsProps;
     Energetic: SliderTagsProps;
     "70 BPM": SliderTagsProps;
-    "150 BPM": SliderTagsProps;
+    "120 BPM": SliderTagsProps;
     "230 BPM": SliderTagsProps;
     "😌": SliderTagsProps;
     "🙂": SliderTagsProps;

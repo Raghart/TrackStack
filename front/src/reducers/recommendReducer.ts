@@ -7,7 +7,7 @@ const initialState: RecommendData = {
     energy: 0.5,
     speechLevel: 0.165,
     danceability: 0.5,
-    duration: 2.5,
+    tempo: 120,
     sentiment: 0.5,
     voiceType: 0.05,
     mood: 1,
@@ -35,7 +35,7 @@ const recommendSlice = createSlice({
             state.danceability = action.payload;
         },
         setTempo(state, action: PayloadAction<number>) {
-            state.duration = action.payload;
+            state.tempo = action.payload;
         },
         setSentiment(state, action: PayloadAction<number>) {
             state.sentiment = action.payload;

@@ -18,7 +18,7 @@ export const SWITCH_BTN_TRANSITION = "box-shadow 0.2s ease-in-out, transform 0.2
 export const LEFT_SWITCH_PX = { base: 1, sm: 3, md: 3, lg: 4};
 export const RIGHT_SWITCH_PX = { base: 1, sm: 3, md: 4, lg: 4 };
 export const SLIDER_TAGS_PX_SIZES = { base: 1, sm: 2, md: 3, lg: 3 };
-export const SLIDER_TAGS_GAP_SIZES = { base: 5, sm: 5, md: 7, lg: 7 };
+export const SLIDER_TAGS_GAP_SIZES = { base: 5, sm: 5, md: 5, lg: 5 };
 export const COUNTBOX_SIZES = { base: "75px", sm: "100px", md: "180px", lg: "180px"};
 
 export const tagRBG = (label: SwitchLabelType) => {

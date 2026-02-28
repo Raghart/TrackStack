@@ -11,7 +11,7 @@ export const SliderOptions: SlidersDataTypes[] = [
         min: 0, default: 0.5, max: 1 
     },
     { 
-        title: "Tempo", setValue: setTempo, step:1, labels: ["70 BPM", "150 BPM", "230 BPM"], 
+        title: "Tempo", setValue: setTempo, step:1, labels: ["70 BPM", "120 BPM", "230 BPM"], 
         min: 0, default: 120, max: 238
     },
     { 

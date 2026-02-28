@@ -32,7 +32,7 @@ export interface RecommendData {
     energy: number;
     speechLevel: number;
     danceability: number;
-    duration: number;
+    tempo: number;
     sentiment: number;
     voiceType: number;
     mood: number;
@@ -54,7 +54,7 @@ type EnergyLabels = "Relaxed" | "Active" | "Intense";
 
 type DanceabilityLabels = "Calm" | "Rhythmic" | "Energetic";
 
-type TempoLabels = "70 BPM" | "150 BPM" | "230 BPM";
+type TempoLabels = "70 BPM" | "120 BPM" | "230 BPM";
 
 type SentimentLabels = "😌" | "🙂" | "😝";
 

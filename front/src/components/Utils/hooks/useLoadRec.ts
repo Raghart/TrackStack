@@ -10,12 +10,11 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
     
-    const { genres, energy, speechLevel, danceability, duration, sentiment, voiceType, mood, acousticness } = 
-        useAppSelector(state => state.songData);
+    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
+            mood, acousticness } = useAppSelector(state => state.songData);
     const dispatch = useAppDispatch();
     const [getIASongs] = useLazyQuery(getSongRecommendations);
-    
-    const userVector = generateUserVector(duration, danceability, energy, mood, speechLevel,
+    const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel,
         acousticness, voiceType, sentiment)
 
     const limit = 40;

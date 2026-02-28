@@ -25,7 +25,7 @@ dotenv.config();
     }),
     SequelizeModule.forRoot({
       dialect: 'postgres',
-      uri: process.env.DB_URL,
+      uri: process.env.LOCAL_DB_URL,
       port: Number(process.env.DB_PORT),
       dialectOptions: {
         ssl: {

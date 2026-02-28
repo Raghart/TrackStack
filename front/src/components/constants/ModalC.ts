@@ -1,5 +1,3 @@
-export const durationMin = 0.02
-export const durationMax = 63.31
 export const danceabilityMin = 0
 export const danceabilityMax = 0.986
 export const energyMIN = 0

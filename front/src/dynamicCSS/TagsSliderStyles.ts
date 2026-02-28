@@ -29,7 +29,7 @@ export const TagSliderStyles: SliderTagsOptions = {
         bg: "orange.500",
         border: "0 0 0 2px var(--chakra-colors-yellow-600), 0 0 8px var(--chakra-colors-yellow-600)"
     },
-    "150 BPM": {
+    "120 BPM": {
         bg: "green.500",
         border: "0 0 0 2px var(--chakra-colors-cyan-600), 0 0 8px var(--chakra-colors-cyan-600)"
     }, 
