@@ -405,15 +405,10 @@ func (cfg *DbConfig) UpdateVectors() {
 	}
 
 	for _, song := range songDetails {
-		dbSong, err := cfg.Queries.GetSongByID(context.Background(), song.SongID)
-		if err != nil {
-			log.Fatalf("there was a problem while trying to get the song: %v", err)
-		}
-
-		durationScaled := minMaxScaling(dbSong.Duration, durationMin, durationMax)
+		durationScaled := float32(0.0)
 		danceabilityScaled := minMaxScaling(song.Danceability, danceabilityMin, danceabilityMax)
 		energyScaled := minMaxScaling(song.Energy, energyMIN, energyMAX)
-		trackKeyScaled := minMaxScaling(song.TrackKey, trackKeyMIN, trackKeyMAX)
+		trackKeyScaled := float32(0.0)
 		loudnessScaled := minMaxScaling(song.Loudness, loudnessMIN, loudnessMAX)
 		modeScaled := minMaxScaling(song.Mode, modeMin, modeMax)
 		speechinessScaled := minMaxScaling(song.Speechiness, speechinessMIN, speechinessMAX)
@@ -423,7 +418,7 @@ func (cfg *DbConfig) UpdateVectors() {
 		livenessScaled := minMaxScaling(song.Liveness, livenessMIN, livenessMAX)
 		valenceScaled := minMaxScaling(song.Valence, valenceMIN, valenceMAX)
 		tempoScaled := minMaxScaling(song.Tempo, tempoMIN, tempoMAX)
-		timeSignatureScaled := minMaxScaling(float32(song.TimeSignature), timeSigMin, timeSigMax)
+		timeSignatureScaled := float32(0.0)
 
 		songParams := []float32{
 			durationScaled,

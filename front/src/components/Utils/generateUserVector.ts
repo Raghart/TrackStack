@@ -29,12 +29,12 @@ const generateUserVector = (duration: number, danceability: number, energy: numb
 ) : number[] => {
     const liveness = generateLiveness(mood, sentiment);
     const tempo = generateTempo(mood, sentiment);
-    const loudness = generateLoudness(mood, sentiment);
+    const loudness = generateLoudness(mood, energy);
     
-    const durationNor = minMaxScale(duration, durationMin, durationMax);
+    const durationNor = 0;
     const danceabilityNor = minMaxScale(danceability, danceabilityMin, danceabilityMax);
     const energyNor = minMaxScale(energy, energyMIN, energyMAX);
-    const trackKeyNor = minMaxScale(4, trackKeyMIN, trackKeyMAX);
+    const trackKeyNor = 0;
     const loudnessNor = minMaxScale(loudness, loudnessMIN, loudnessMAX);
     const modeNor = minMaxScale(mood, modeMin, modeMax);
     const speechinessNor = minMaxScale(speechLevel, speechinessMIN, speechinessMAX);
@@ -43,7 +43,7 @@ const generateUserVector = (duration: number, danceability: number, energy: numb
     const livenessNor = minMaxScale(liveness, livenessMIN, livenessMAX);
     const valenceNor = minMaxScale(sentiment, valenceMIN, valenceMAX);
     const tempoNor = minMaxScale(tempo, tempoMIN, tempoMAX);
-    const timeSigNor = minMaxScale(4, timeSigMin, timeSigMax);
+    const timeSigNor = 0;
     
     const userVector = [
         durationNor,

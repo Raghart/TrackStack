@@ -8,8 +8,8 @@ export const popGenreArr = ["Pop","Britpop","Indie Pop","J Pop","Asian Pop","J-p
 export const electroGenreArr = ["Electronic","Electro","House","Techno","J Pop","Electronica"];
 
 export const metalGenreArr = ["Metal","Nu Metal","Heavy Metal","Gothic Metal","Thrash Metal",
-    "Metalcore","Doom Metal","Power Metal","Progressive Metal"
-    ,"Black Metal","Death Metal","Melodic Death Metal","Alternative Metal"
+    "Metalcore","Doom Metal","Power Metal","Progressive Metal","Death Metal","Melodic Death Metal"
+    ,"Alternative Metal"
 ];
 
 export const jazzGenreArr = ["Jazz","Jazz Rock","Piano","Beautiful","Mellow"];
