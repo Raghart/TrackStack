@@ -2,10 +2,6 @@ import { acousticnessMAX, acousticnessMIN, danceabilityMax, danceabilityMin,
     energyMAX, energyMIN, 
     instrumentalnessMAX, 
     instrumentalnessMIN, 
-    livenessMAX, 
-    livenessMIN, 
-    loudnessMAX, 
-    loudnessMIN, 
     modeMax, 
     modeMin, 
     speechinessMAX, 
@@ -14,27 +10,22 @@ import { acousticnessMAX, acousticnessMIN, danceabilityMax, danceabilityMin,
     tempoMIN, 
     valenceMAX,
     valenceMIN} from "../constants/ModalC";
-import generateLiveness from "./generateLivenes";
-import generateLoudness from "./generateLoudness";
 import minMaxScale from "./minMaxScale";
 
 const generateUserVector = (tempo: number, danceability: number, energy: number,
     mood: number, speechLevel: number, acousticness: number, voiceType: number,
     sentiment: number
 ) : number[] => {
-    const liveness = generateLiveness(mood, sentiment);
-    const loudness = generateLoudness(mood, energy);
-
     const durationNor = 0;
     const danceabilityNor = minMaxScale(danceability, danceabilityMin, danceabilityMax);
     const energyNor = minMaxScale(energy, energyMIN, energyMAX);
     const trackKeyNor = 0;
-    const loudnessNor = minMaxScale(loudness, loudnessMIN, loudnessMAX);
+    const loudnessNor = 0;
     const modeNor = minMaxScale(mood, modeMin, modeMax);
     const speechinessNor = minMaxScale(speechLevel, speechinessMIN, speechinessMAX);
     const acousticnessNor = minMaxScale(acousticness, acousticnessMIN, acousticnessMAX);
     const instrumentalnessNor = minMaxScale(voiceType, instrumentalnessMIN, instrumentalnessMAX);
-    const livenessNor = minMaxScale(liveness, livenessMIN, livenessMAX);
+    const livenessNor = 0;
     const valenceNor = minMaxScale(sentiment, valenceMIN, valenceMAX);
     const tempoNor = minMaxScale(tempo, tempoMIN, tempoMAX);
     const timeSigNor = 0;
