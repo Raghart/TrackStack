@@ -28,8 +28,8 @@ export const SliderStyles: SliderStylesOptions = {
         shadow: ["0 0 8px var(--chakra-colors-blue-500)", "0 0 8px var(--chakra-colors-teal-500)",
           "0 0 8px var(--chakra-colors-red-600)" ]
     },
-    Duration: {
-        threshold: [1.71, 3.60],
+    Tempo: {
+        threshold: [75, 160],
         SliderBg: ["yellow.600", "green.500", "purple.500"],
         Icon: [MdTimer, HiMiniClock, BsClockFill],
         IconColor: ["orange.300", "green.400", "purple.400"],

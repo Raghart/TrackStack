@@ -34,7 +34,7 @@ const recommendSlice = createSlice({
         setDanceability(state, action: PayloadAction<number>) {
             state.danceability = action.payload;
         },
-        setDuration(state, action: PayloadAction<number>) {
+        setTempo(state, action: PayloadAction<number>) {
             state.duration = action.payload;
         },
         setSentiment(state, action: PayloadAction<number>) {
@@ -55,7 +55,7 @@ const recommendSlice = createSlice({
     }
 });
 
-export const { setRecommendedGenres, setEnergy, setSpeechLevel, setDuration, setSentiment, setVoiceType, setMood,
+export const { setRecommendedGenres, setEnergy, setSpeechLevel, setTempo, setSentiment, setVoiceType, setMood,
     setDanceability, setAcousticness, setLaraRecommendations, deleteLastGenre } = recommendSlice.actions;
 
 export default recommendSlice.reducer;

@@ -25,15 +25,15 @@ export const TagSliderStyles: SliderTagsOptions = {
         bg: "red.600",
         border: "0 0 0 2px var(--chakra-colors-orange-600), 0 0 8px var(--chakra-colors-orange-600)"
     },
-    "30 Seg": {
+    "70 BPM": {
         bg: "orange.500",
         border: "0 0 0 2px var(--chakra-colors-yellow-600), 0 0 8px var(--chakra-colors-yellow-600)"
     },
-    "2.5 Min": {
+    "150 BPM": {
         bg: "green.500",
         border: "0 0 0 2px var(--chakra-colors-cyan-600), 0 0 8px var(--chakra-colors-cyan-600)"
     }, 
-    "5 Min": {
+    "230 BPM": {
         bg: "purple.500",
         border: "0 0 0 2px var(--chakra-colors-purple-600), 0 0 8px var(--chakra-colors-purple-600)"
     },
