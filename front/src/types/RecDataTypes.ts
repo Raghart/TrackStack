@@ -40,6 +40,17 @@ export interface RecommendData {
     results: SongResponse[];
 };
 
+export interface WeightRecommendations {
+    energy: number;
+    speechLevel: number;
+    danceability: number;
+    tempo: number;
+    sentiment: number;
+    voiceType: readonly [number, number];
+    mood: number;
+    acousticness: readonly [number, number];
+}
+
 export type SpeechLevelOptions = "Mixed" | "Music" | "Speech";
 
 export type VoiceTypeOptions = "Vocals" | "Instrumental";

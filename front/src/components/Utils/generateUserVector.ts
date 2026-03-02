@@ -10,6 +10,7 @@ import { acousticnessMAX, acousticnessMIN, danceabilityMax, danceabilityMin,
     tempoMIN, 
     valenceMAX,
     valenceMIN} from "../constants/ModalC";
+import { weightRecommendations } from "../constants/WeightData";
 import minMaxScale from "./minMaxScale";
 
 const generateUserVector = (tempo: number, danceability: number, energy: number,
@@ -17,17 +18,33 @@ const generateUserVector = (tempo: number, danceability: number, energy: number,
     sentiment: number
 ) : number[] => {
     const durationNor = 0;
-    const danceabilityNor = minMaxScale(danceability, danceabilityMin, danceabilityMax);
-    const energyNor = minMaxScale(energy, energyMIN, energyMAX);
+    const danceabilityNor = minMaxScale(
+        danceability, 
+        danceabilityMin, danceabilityMax) * weightRecommendations.danceability;
+
+    const energyNor = minMaxScale(energy, energyMIN, energyMAX) * weightRecommendations.energy;
     const trackKeyNor = 0;
     const loudnessNor = 0;
-    const modeNor = minMaxScale(mood, modeMin, modeMax);
-    const speechinessNor = minMaxScale(speechLevel, speechinessMIN, speechinessMAX);
-    const acousticnessNor = minMaxScale(acousticness, acousticnessMIN, acousticnessMAX);
-    const instrumentalnessNor = minMaxScale(voiceType, instrumentalnessMIN, instrumentalnessMAX);
+    const modeNor = minMaxScale(mood, modeMin, modeMax) * weightRecommendations.mood;
+    const speechinessNor = minMaxScale(
+        speechLevel, speechinessMIN, speechinessMAX) * weightRecommendations.speechLevel;
+
+    const acousticnessNor = minMaxScale(
+        acousticness, 
+        acousticnessMIN, 
+        acousticnessMAX) * (acousticness == 0.15 ? 
+            weightRecommendations.acousticness[0] : weightRecommendations.acousticness[1]);
+
+    const instrumentalnessNor = minMaxScale(
+        voiceType, 
+        instrumentalnessMIN, 
+        instrumentalnessMAX) * (voiceType == 0.05 ? 
+            weightRecommendations.voiceType[0] : weightRecommendations.voiceType[1]);
+            
     const livenessNor = 0;
-    const valenceNor = minMaxScale(sentiment, valenceMIN, valenceMAX);
-    const tempoNor = minMaxScale(tempo, tempoMIN, tempoMAX);
+    const valenceNor = minMaxScale(
+        sentiment, valenceMIN, valenceMAX) * weightRecommendations.sentiment;
+    const tempoNor = minMaxScale(tempo, tempoMIN, tempoMAX) * weightRecommendations.tempo;
     const timeSigNor = 0;
     
     const userVector = [
