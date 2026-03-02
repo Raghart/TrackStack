@@ -10,8 +10,8 @@ import SendDataButton from "./Header/SendDataButton.tsx";
 const LaraRecommendModal = () => {
     const [open, setOpen] = useState<boolean>(false);
     return(
-        <Dialog.Root size="cover" placement="center" open={open} onOpenChange={(details) => setOpen(details.open)} 
-            motionPreset="slide-in-bottom">
+        <Dialog.Root size="cover" placement="center" open={open} motionPreset="slide-in-bottom" 
+            onOpenChange={(details) => setOpen(details.open)}>
             <Bounce triggerOnce direction="down" delay={200}>
                 <AttentionSeeker effect="heartBeat" delay={4000} triggerOnce>
                     <BtnOpenModal />
@@ -24,8 +24,8 @@ const LaraRecommendModal = () => {
                     <Dialog.Content bg="blackAlpha.800" backdropFilter="blur(6px)" border="1px solid" 
                         borderColor="gray.700">
 
-                        <Dialog.Header borderBottom="1px solid" borderColor="gray.700" py={3} h="80px" display="flex" 
-                            alignItems="center">
+                        <Dialog.Header borderBottom="1px solid" borderColor="gray.700" py={3} h="80px" 
+                            display="flex" alignItems="center">
                             <Zoom triggerOnce direction="left">
                                 <SendDataButton setOpen={setOpen} />
                             </Zoom>
