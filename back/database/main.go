@@ -21,6 +21,7 @@ func main() {
 	}
 
 	serviceURI := os.Getenv("dbURI")
+	localURI := os.Getenv("localURI")
 	fmt.Println(serviceURI)
 
 	if len(os.Args) != 2 {
@@ -36,10 +37,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	localConn, _ := url.Parse(localURI)
+	localDB, err := sql.Open("postgres", localConn.String())
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer db.Close()
+	defer localDB.Close()
 
 	dbCfg := &databaseConfig.DbConfig{
-		Queries: database.New(db),
+		Queries:      database.New(db),
+		LocalQueries: database.New(localDB),
 	}
 
 	switch os.Args[1] {
@@ -71,9 +80,9 @@ func main() {
 		{
 			databaseConfig.AddToDatabase(paths.SongDetailsPath, dbCfg.AddSongDetailsDatabase)
 		}
-	case "vectors":
+	case "addVectors":
 		{
-			dbCfg.AddVectorsDatabase()
+			dbCfg.AddVectorsFromLocal()
 		}
 	case "updateVectors":
 		{

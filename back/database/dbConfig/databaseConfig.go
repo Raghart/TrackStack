@@ -13,7 +13,8 @@ import (
 )
 
 type DbConfig struct {
-	Queries *database.Queries
+	Queries      *database.Queries
+	LocalQueries *database.Queries
 }
 
 func AddToDatabase(path string, databaseMethod func([][]string)) {
@@ -442,40 +443,35 @@ func (cfg *DbConfig) UpdateVectors() {
 	fmt.Println("Finish processing the vectors!")
 }
 
-func (cfg *DbConfig) AddVectorsDatabase() {
+func (cfg *DbConfig) AddVectorsFromLocal() {
 	fmt.Println("Processing vector to the database...")
-	songDetails, err := cfg.Queries.GetSongDetails(context.Background())
+	songDetails, err := cfg.LocalQueries.GetSongDetails(context.Background())
 	if err != nil {
 		log.Fatalf("there was a problem while trying to get the songs details: %v", err)
 	}
 
-	for _, song := range songDetails {
-		dbSong, err := cfg.Queries.GetSongByID(context.Background(), song.SongID)
-		if err != nil {
-			log.Fatalf("there was a problem while trying to get the song: %v", err)
-		}
+	localSongSlice := songDetails[:1000]
 
-		loudnessNor := minMaxScaling(song.Loudness, float32(loudnessMIN), float32(loudnessMAX))
+	for _, song := range localSongSlice {
+		danceabilityNor := minMaxScaling(song.Danceability, danceabilityMin, danceabilityMax)
+		energyNor := minMaxScaling(song.Energy, energyMIN, energyMAX)
+		modeNor := minMaxScaling(song.Mode, modeMin, modeMax)
+		speechinesNor := minMaxScaling(song.Speechiness, speechinessMIN, speechinessMAX)
+		acousticnessNor := minMaxScaling(float32(song.Acousticness), acousticnessMIN, acousticnessMAX)
+		instrumentalnessNor := minMaxScaling(float32(song.Instrumentalness),
+			instrumentalnessMIN, instrumentalnessMAX)
+		valenceNor := minMaxScaling(song.Valence, valenceMIN, valenceMAX)
 		tempoNor := minMaxScaling(song.Tempo, float32(tempoMIN), float32(tempoMAX))
-		timeSigNor := minMaxScaling(float32(song.TimeSignature), float32(timeSigMin),
-			float32(timeSigMax))
-		trackKeyNor := minMaxScaling(song.TrackKey, float32(trackKeyMIN), float32(trackKeyMAX))
-		durationNor := minMaxScaling(dbSong.Duration, float32(durationMin), float32(durationMax))
 
 		songParams := []float32{
-			durationNor,
-			song.Danceability,
-			song.Energy,
-			trackKeyNor,
-			loudnessNor,
-			song.Mode,
-			song.Speechiness,
-			float32(song.Acousticness),
-			float32(song.Instrumentalness),
-			song.Liveness,
-			song.Valence,
+			danceabilityNor,
+			energyNor,
+			modeNor,
+			speechinesNor,
+			acousticnessNor,
+			instrumentalnessNor,
+			valenceNor,
 			tempoNor,
-			timeSigNor,
 		}
 
 		embedding := pgvector.NewVector(songParams)

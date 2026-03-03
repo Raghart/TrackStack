@@ -42,7 +42,7 @@ export interface RecommendData {
 
 export interface WeightRecommendations {
     energy: number;
-    speechLevel: number;
+    speechLevel: readonly [number, number];
     danceability: number;
     tempo: number;
     sentiment: number;

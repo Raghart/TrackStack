@@ -25,7 +25,10 @@ const generateUserVector = (tempo: number, danceability: number, energy: number,
     const modeNor = minMaxScale(mood, modeMin, modeMax) * weightRecommendations.mood;
 
     const speechinessNor = minMaxScale(
-        speechLevel, speechinessMIN, speechinessMAX) * weightRecommendations.speechLevel;
+        speechLevel, 
+        speechinessMIN, 
+        speechinessMAX) * (speechLevel === 0.165 ? 
+            weightRecommendations.speechLevel[0] : weightRecommendations.speechLevel[1]);
 
     const acousticnessNor = minMaxScale(
         acousticness, 
