@@ -8,6 +8,7 @@ import InfiniteScroll from "react-infinite-scroll-component"
 import { ArtistResponse } from "@/types/artistTypes";
 import ArtistCard from "./ArtistCard";
 import LoadingBeat from "../Utils/LoadingBeat";
+import PathHeader from "../Utils/PathHeader";
 
 const ArtistSelection = () => {
     const { data, onLoadMore } = useGetArtistCards();
@@ -16,7 +17,7 @@ const ArtistSelection = () => {
     return(
         <Box w="full" h="full" direction="column" pt={8} gap={12} pb={20}>
             <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 40 }}>
-                <ArtistHeader />
+                <PathHeader type="Artists" />
             </Zoom>    
 
             <InfiniteScroll dataLength={dataLength} next={onLoadMore} hasMore={true}
