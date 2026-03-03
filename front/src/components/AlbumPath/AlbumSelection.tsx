@@ -1,9 +1,13 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
+import AlbumHeader from "./AlbumHeader";
+import { Zoom } from "react-awesome-reveal";
 
 const AlbumSelection = () => {
     return(
-        <Box>
-            <Text>Albums!</Text>
+        <Box w="full" h="full" direction="column" pt={8} gap={12} pb={20}>
+            <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 40 }}>
+                <AlbumHeader />
+            </Zoom>
         </Box>
     )
 };

@@ -10,7 +10,7 @@ export interface highlightType {
 
 export type ValidDetail = "album" | "artist";
 
-type NavNameOptions = "Home"  | "Artists" | "Genres" | "Albums";
+export type NavNameOptions = "Home"  | "Artists" | "Genres" | "Albums";
 type NavPath = "/" | "/artists" | "/genres" | "/albums";
 
 export interface NavItem {

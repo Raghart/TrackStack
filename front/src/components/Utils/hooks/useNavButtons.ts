@@ -17,7 +17,7 @@ const useNavButtons = (): NavItem[] => {
     { name: "Genres", iconType: FaTags, IconColor: "teal.500", path: "/genres", 
         bg: current === "/genres" ? "gray.800": "transparent",
         hover: current === "/genres" ? "gray.700" : "gray.800" },
-    { name: "Albums", iconType: FaTags, IconColor: "orange.600", path: "/albums",
+    { name: "Albums", iconType: FaTags, IconColor: "orange.500", path: "/albums",
         bg: current === "/albums" ? "gray.800": "transparent",
         hover: current === "/albums" ? "gray.700" : "gray.800"
     }
