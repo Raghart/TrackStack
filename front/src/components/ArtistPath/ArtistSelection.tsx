@@ -1,6 +1,5 @@
 import { Box, Center, For, SimpleGrid, Skeleton } from "@chakra-ui/react";
 import ScrollUpArrow from "@/components/Utils/ScrollUpArrow";
-import ArtistHeader from "./ArtistHeader";
 import useGetArtistCards from "../Utils/hooks/useGetArtistCards";
 import { Zoom } from "react-awesome-reveal";
 import { ARTIST_CARD_SIZES } from "../constants/ArtistPathC";

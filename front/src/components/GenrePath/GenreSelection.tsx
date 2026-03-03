@@ -1,7 +1,6 @@
 import { Box, Center, For, SimpleGrid } from "@chakra-ui/react";
 import GenreCard from "./GenreCard";
 import ScrollUpArrow from "@/components/Utils/ScrollUpArrow";
-import GenreSelHeader from "./GenreSelHeader";
 import useGenreSel from "../Utils/hooks/useGenreSel";
 import { Zoom } from "react-awesome-reveal";
 import { GenreListFormat } from "@/types/genreTypes";

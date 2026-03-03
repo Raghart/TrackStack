@@ -56,7 +56,7 @@ const generateUserVector = (tempo: number, danceability: number, energy: number,
         instrumentalnessNor,
         valenceNor,
         tempoNor,
-    ]
-}
+    ];
+};
 
 export default generateUserVector;
