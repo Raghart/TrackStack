@@ -8,13 +8,14 @@ import { GenreListFormat } from "@/types/genreTypes";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { genreList } from "../Utils/genreIconList";
 import LoadingBeat from "../Utils/LoadingBeat";
+import PathHeader from "../Utils/PathHeader";
 
 const GenreSelection = () => {
     const { visibleGenres, loadMoreGenres } = useGenreSel();
     return(
         <Box w="full" h="full" direction="column" gap={12} pt={8} pb={20}>
             <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 30 }}>
-                <GenreSelHeader />
+                <PathHeader type="Genres" />
             </Zoom>
 
             <Zoom triggerOnce direction="up" delay={100}>
