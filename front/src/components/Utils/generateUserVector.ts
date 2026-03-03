@@ -17,15 +17,13 @@ const generateUserVector = (tempo: number, danceability: number, energy: number,
     mood: number, speechLevel: number, acousticness: number, voiceType: number,
     sentiment: number
 ) : number[] => {
-    const durationNor = 0;
     const danceabilityNor = minMaxScale(
         danceability, 
         danceabilityMin, danceabilityMax) * weightRecommendations.danceability;
 
     const energyNor = minMaxScale(energy, energyMIN, energyMAX) * weightRecommendations.energy;
-    const trackKeyNor = 0;
-    const loudnessNor = 0;
     const modeNor = minMaxScale(mood, modeMin, modeMax) * weightRecommendations.mood;
+
     const speechinessNor = minMaxScale(
         speechLevel, speechinessMIN, speechinessMAX) * weightRecommendations.speechLevel;
 
@@ -41,29 +39,21 @@ const generateUserVector = (tempo: number, danceability: number, energy: number,
         instrumentalnessMAX) * (voiceType == 0.05 ? 
             weightRecommendations.voiceType[0] : weightRecommendations.voiceType[1]);
             
-    const livenessNor = 0;
     const valenceNor = minMaxScale(
         sentiment, valenceMIN, valenceMAX) * weightRecommendations.sentiment;
+
     const tempoNor = minMaxScale(tempo, tempoMIN, tempoMAX) * weightRecommendations.tempo;
-    const timeSigNor = 0;
-    
-    const userVector = [
-        durationNor,
+
+    return [
         danceabilityNor,
         energyNor,
-        trackKeyNor,
-        loudnessNor,
         modeNor,
         speechinessNor,
         acousticnessNor,
         instrumentalnessNor,
-        livenessNor,
         valenceNor,
         tempoNor,
-        timeSigNor,
-    ];
-
-    return userVector
+    ]
 }
 
 export default generateUserVector;

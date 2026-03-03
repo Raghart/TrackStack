@@ -405,35 +405,25 @@ func (cfg *DbConfig) UpdateVectors() {
 	}
 
 	for _, song := range songDetails {
-		durationScaled := float32(0.0)
 		danceabilityScaled := minMaxScaling(song.Danceability, danceabilityMin, danceabilityMax)
 		energyScaled := minMaxScaling(song.Energy, energyMIN, energyMAX)
-		trackKeyScaled := float32(0.0)
-		loudnessScaled := float32(0.0)
 		modeScaled := minMaxScaling(song.Mode, modeMin, modeMax)
 		speechinessScaled := minMaxScaling(song.Speechiness, speechinessMIN, speechinessMAX)
 		acousticnessScaled := minMaxScaling(float32(song.Acousticness), acousticnessMIN, acousticnessMAX)
 		instrumentalnessScaled := minMaxScaling(float32(song.Instrumentalness),
 			instrumentalnessMIN, instrumentalnessMAX)
-		livenessScaled := float32(0.0)
 		valenceScaled := minMaxScaling(song.Valence, valenceMIN, valenceMAX)
 		tempoScaled := minMaxScaling(song.Tempo, tempoMIN, tempoMAX)
-		timeSignatureScaled := float32(0.0)
 
 		songParams := []float32{
-			durationScaled,
 			danceabilityScaled,
 			energyScaled,
-			trackKeyScaled,
-			loudnessScaled,
 			modeScaled,
 			speechinessScaled,
 			acousticnessScaled,
 			instrumentalnessScaled,
-			livenessScaled,
 			valenceScaled,
 			tempoScaled,
-			timeSignatureScaled,
 		}
 
 		embedding := pgvector.NewVector(songParams)
