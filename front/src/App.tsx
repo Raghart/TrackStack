@@ -7,6 +7,7 @@ import GenreSelection from "./components/GenrePath/GenreSelection";
 import ArtistSelection from "./components/ArtistPath/ArtistSelection";
 import LaraRecommendations from "./components/LaraRecommendationsPath/LaraRecommendations";
 import GenreDetails from "./components/GenreDetails/GenreDetails";
+import AlbumSelection from "./components/AlbumPath/AlbumSelection";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
             <Route path="/artists" element={<ArtistSelection /> } />
             <Route path="/artists/:artist" element={<DetailsLayout type="artist" gradientInit="orange.500" 
               gradientMid="yellow.500" error="Not found in the Database" /> } />
+            <Route path="/albums" element={<AlbumSelection />} />
             <Route path="/albums/:album" element={<DetailsLayout type="album" gradientInit="yellow.500" 
               gradientMid="orange.500" error="Not found in the Database" /> } />
             <Route path="/genres" element={<GenreSelection /> } />
