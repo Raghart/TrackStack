@@ -2,7 +2,7 @@ import { useLocation } from "react-router-dom";
 import { FaUserAlt } from "react-icons/fa";
 import { FaTags } from "react-icons/fa6";
 import { NavItem } from "@/types/utilTypes";
-import { IoHomeSharp } from "react-icons/io5";
+import { IoHomeSharp, IoDiscSharp } from "react-icons/io5";
 
 const useNavButtons = (): NavItem[] => {
     const location = useLocation();
@@ -17,7 +17,7 @@ const useNavButtons = (): NavItem[] => {
     { name: "Genres", iconType: FaTags, IconColor: "teal.500", path: "/genres", 
         bg: current === "/genres" ? "gray.800": "transparent",
         hover: current === "/genres" ? "gray.700" : "gray.800" },
-    { name: "Albums", iconType: FaTags, IconColor: "orange.500", path: "/albums",
+    { name: "Albums", iconType: IoDiscSharp, IconColor: "orange.500", path: "/albums",
         bg: current === "/albums" ? "gray.800": "transparent",
         hover: current === "/albums" ? "gray.700" : "gray.800"
     }
