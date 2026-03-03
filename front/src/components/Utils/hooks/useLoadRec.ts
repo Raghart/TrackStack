@@ -15,7 +15,7 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const dispatch = useAppDispatch();
     const [getIASongs] = useLazyQuery(getSongRecommendations);
     const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel,
-        acousticness, voiceType, sentiment)
+        acousticness, voiceType, sentiment);
 
     const limit = 40;
     

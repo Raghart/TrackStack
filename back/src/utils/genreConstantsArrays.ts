@@ -22,4 +22,4 @@ export const chillGenreArr = ["Chillout","Love","Piano","Beautiful","Mellow","Ch
     ,"Folk","Jazz","Atmospheric","Melancholic","Beatiful",
 ];
 
-export const rapGenreArr = ["Rap","Hip Hop","Trip Hop","Gangsta Rap","Hardcore Rap","Rap-rock"];
+export const rapGenreArr = ["Rap","Hip Hop","Gangsta Rap","Hardcore Rap","Rap-rock"];
