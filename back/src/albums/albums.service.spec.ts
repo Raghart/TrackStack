@@ -15,7 +15,7 @@ import { AlbumsModel } from '../../models/albums/albums.model';
 
 describe('AlbumsService retrieves and parses all the songs of an album', () => {
   let service: AlbumsService;
-  let albumModel: { findOne: jest.Mock };
+  let albumModel: { findOne: jest.Mock, findAll: jest.Mock };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,6 +25,7 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
           provide: getModelToken(AlbumsModel),
           useValue: {
             findOne: jest.fn(),
+            findAll: jest.fn(),
           },
         },
       ],
@@ -36,6 +37,7 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
 
   beforeEach(() => {
     albumModel.findOne.mockResolvedValue({ get: () => albumSongs });
+    albumModel.findAll.mockResolvedValue([{ get: () => albumSongs }]);
   });
 
   it('parseAlbumSongs parses the raw songs data of an album', () => {
@@ -48,6 +50,11 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
   it('fetchAlbumSongs retrieves all the songs of an album from the database', async () => {
     const results = await service.fetchAlbumSongs('Nirvana');
     expect(results).toStrictEqual(albumSongs);
+  });
+
+  it('fetchAlbums retrieves the albums from the database', async () => {
+    const results = await service.fetchAlbums("1", 1, 1);
+    expect(results).toStrictEqual([albumSongs]);
   });
 
   it('getAllAlbumSongs returns a song array of an album ready to be delivered', async () => {
