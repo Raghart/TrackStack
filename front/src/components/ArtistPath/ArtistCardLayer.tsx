@@ -1,5 +1,5 @@
 import { Box, LinkOverlay } from "@chakra-ui/react";
-import { PATHCARD_FONTSIZES } from "../constants/ArtistPathC";
+import { PATHCARD_FONTSIZES } from "../constants/PathC";
 
 const ArtistCardLayer = ({ name } : { name: string }) => {
     return(

@@ -6,7 +6,7 @@ import useGetAlbumCards from "../Utils/hooks/useGetAlbumCards";
 import LoadingBeat from "../Utils/LoadingBeat";
 import { AlbumResponse } from "@/types/albumTypes";
 import AlbumCard from "./AlbumCard";
-import { PATH_CARD_SIZES } from "../constants/ArtistPathC";
+import { PATH_CARD_SIZES } from "../constants/PathC";
 
 const AlbumSelection = () => {
     const { data, onLoadMore } = useGetAlbumCards();

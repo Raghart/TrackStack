@@ -1,6 +1,6 @@
 import { NavNameOptions } from "@/types/utilTypes";
 import { Heading, Highlight } from "@chakra-ui/react";
-import { PATH_HEADER_SIZES, PATH_HIGHLIGHT_SIZES } from "../constants/ArtistPathC";
+import { PATH_HEADER_SIZES, PATH_HIGHLIGHT_SIZES } from "../constants/PathC";
 
 const PathHeader = ({type}: {type: NavNameOptions}) => {
     switch (type) {

@@ -2,7 +2,7 @@ import { AlbumResponse } from "@/types/albumTypes";
 import { Image, LinkBox, Skeleton } from "@chakra-ui/react";
 import { useState } from "react";
 import AlbumCardLayer from "./AlbumCardLayer";
-import { PATH_CARD_SIZES } from "../constants/ArtistPathC";
+import { PATH_CARD_SIZES } from "../constants/PathC";
 
 const AlbumCard = ({ name, album_cover } : AlbumResponse) => {
     const [loading, setLoading] = useState(true);

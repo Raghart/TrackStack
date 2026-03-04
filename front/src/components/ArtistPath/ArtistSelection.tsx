@@ -7,7 +7,7 @@ import { ArtistResponse } from "@/types/artistTypes";
 import ArtistCard from "./ArtistCard";
 import LoadingBeat from "../Utils/LoadingBeat";
 import PathHeader from "../Utils/PathHeader";
-import { PATH_CARD_SIZES } from "../constants/ArtistPathC";
+import { PATH_CARD_SIZES } from "../constants/PathC";
 
 const ArtistSelection = () => {
     const { data, onLoadMore } = useGetArtistCards();
