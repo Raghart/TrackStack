@@ -7,7 +7,7 @@ import safeQuery from 'src/utils/safeQuery';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
-import { AlbumWithSongs } from 'src/types/albumAttributes';
+import { AlbumResponse, AlbumWithSongs } from 'src/types/albumAttributes';
 import { isNumber } from 'src/types/verify';
 import { InvalidPaginationException } from 'src/utils/PaginationError';
 
@@ -17,7 +17,7 @@ export class AlbumsService {
     @InjectModel(AlbumsModel) private albumModel: typeof AlbumsModel,
   ) {}
 
-  async fetchAlbums(seed: string, page = 1, limit = 20) {
+  async fetchAlbums(seed: string, page = 1, limit = 20) : Promise<AlbumWithSongs[]> {
     if (!isNumber(seed))
       throw new BadRequestException(
         'The seed must be a valid string of numbers.',
@@ -40,10 +40,21 @@ export class AlbumsService {
         }
       ]
     }));
+    return rawData.map(entry => parseAlbumSong(entry.get({ plain: true })));
+  }
 
-    const data = rawData.map(entry => entry.get({ plain: true }));
-    console.log(data)
-    return "ok";
+  parseAlbums(albumData: AlbumWithSongs[]) : AlbumResponse[] {
+    return albumData.map(data => ({
+      id: data.id,
+      name: data.name,
+      url_image: data.url_image,
+      artists: data.songs[0].artists.map(artist => artist.name),
+    }))
+  };
+
+  async getAlbums(seed: string, page = 1, limit = 20) : Promise<AlbumResponse[]> {
+    const albumResults = await this.fetchAlbums(seed, page, limit);
+    return this.parseAlbums(albumResults);
   }
 
   async fetchAlbumSongs(album: string): Promise<AlbumWithSongs> {

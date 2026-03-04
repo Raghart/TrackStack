@@ -11,6 +11,6 @@ export class AlbumsResultsDto {
     @Field()
     url_image: string;
 
-    @Field()
+    @Field(() => [String])
     artists: string[];
 }
