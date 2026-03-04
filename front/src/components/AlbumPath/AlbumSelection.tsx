@@ -28,7 +28,7 @@ const AlbumSelection = () => {
 
                     {data && (
                         <For each={data.getAlbums}>
-                            {(album: AlbumResponse) => (<AlbumCard {...album} />)}
+                            {(album: AlbumResponse) => (<AlbumCard key={album.id} {...album} />)}
                         </For>
                     )}
                 </SimpleGrid>
