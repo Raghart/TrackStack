@@ -86,14 +86,18 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
     );
   });
 
-  it("fetchAlbums thows an error when the seed is not a valid number", async () => {
+  it("fetchAlbums throws an error when the seed is not a valid number", async () => {
     await expect(service.fetchAlbums("abc", 1, 1)).rejects.toThrow(BadRequestException);
     await expect(service.fetchAlbums("abc", 1, 1)).rejects.toThrow(
       "The seed must be a valid string of numbers.");
   });
 
-  it("fetchAlbums thows an error when the seed is not a valid number", async () => {
+  it("fetchAlbums throws an error when page is not a valid number", async () => {
     await expect(service.fetchAlbums("1", -500, 1)).rejects.toThrow(InvalidPaginationException);
+  });
+
+  it("fetchAlbums throws an error when limit is not a valid number", async () => {
+    await expect(service.fetchAlbums("1",1,-500)).rejects.toThrow(InvalidPaginationException);
   });
 });
 
