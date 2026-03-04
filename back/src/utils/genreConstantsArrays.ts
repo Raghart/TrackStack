@@ -66,12 +66,12 @@ export const videogameGenreArr = [
 ];
 
 export const chillGenreArr = [
+  'Chill',
   'Chillout',
   'Love',
   'Piano',
   'Beautiful',
   'Mellow',
-  'Chill',
   'Folk',
   'Jazz',
   'Atmospheric',
