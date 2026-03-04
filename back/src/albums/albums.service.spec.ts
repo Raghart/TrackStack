@@ -58,8 +58,13 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
     expect(results).toStrictEqual([albumSongs]);
   });
 
-  it('parseAlbums parses the data into the expected format', async () => {
+  it('parseAlbums parses the data into the expected format', () => {
     const results = service.parseAlbums([albumSongs]);
+    expect(results).toStrictEqual(albumResponse);
+  });
+
+  it('getAlbums recieves expected album results', async () => {
+    const results = await service.getAlbums("1", 1, 1);
     expect(results).toStrictEqual(albumResponse);
   });
 
