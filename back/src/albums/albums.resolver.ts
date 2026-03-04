@@ -13,7 +13,7 @@ export class AlbumsResolver {
     @Args('seed', { type: () => GraphQLString }) seed: string,
     @Args('page', { type: () => Int, defaultValue: 1 }) page: number,
     @Args('limit', { type: () => Int, defaultValue: 20 }) limit: number,
-  ) : Promise<AlbumsResultsDto[]> {
+  ): Promise<AlbumsResultsDto[]> {
     return this.albumsService.getAlbums(seed, page, limit);
   }
 

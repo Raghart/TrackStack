@@ -139,13 +139,17 @@ export class SongsService {
     limit: number,
   ): Promise<SongResponse[]> {
     const parsedVector = `[${userVector.join(', ')}]`;
-    const genresParsed = parseGenres(genres)
+    const genresParsed = parseGenres(genres);
     const rawSongData = await this.songModel.sequelize?.query(
       `SELECT *
       FROM search_songs_cosine_similarity(ARRAY[:genres]::text[], :userVector::vector, :limit::int);`,
       {
         type: QueryTypes.SELECT,
-        replacements: { genres: genresParsed, userVector: [parsedVector], limit },
+        replacements: {
+          genres: genresParsed,
+          userVector: [parsedVector],
+          limit,
+        },
       },
     );
 

@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
 import { parseAlbumSong, parseStringArray } from 'src/types/parses';
@@ -17,7 +21,11 @@ export class AlbumsService {
     @InjectModel(AlbumsModel) private albumModel: typeof AlbumsModel,
   ) {}
 
-  async fetchAlbums(seed: string, page = 1, limit = 20) : Promise<AlbumWithSongs[]> {
+  async fetchAlbums(
+    seed: string,
+    page = 1,
+    limit = 20,
+  ): Promise<AlbumWithSongs[]> {
     if (!isNumber(seed))
       throw new BadRequestException(
         'The seed must be a valid string of numbers.',
@@ -27,32 +35,37 @@ export class AlbumsService {
 
     const offset = (page - 1) * limit;
     const rawData = await safeQuery(() =>
-    this.albumModel.findAll({
-      order: Sequelize.literal(
-        `md5(CAST("AlbumsModel"."id" AS TEXT) || '${Number(seed)}')`
-      ),
-      offset,
-      limit,
-      include: [
-        {
-          model: SongsModel,
-          include: [{ model: ArtistsModel, attributes: ['name'] }]
-        }
-      ]
-    }));
-    return rawData.map(entry => parseAlbumSong(entry.get({ plain: true })));
+      this.albumModel.findAll({
+        order: Sequelize.literal(
+          `md5(CAST("AlbumsModel"."id" AS TEXT) || '${Number(seed)}')`,
+        ),
+        offset,
+        limit,
+        include: [
+          {
+            model: SongsModel,
+            include: [{ model: ArtistsModel, attributes: ['name'] }],
+          },
+        ],
+      }),
+    );
+    return rawData.map((entry) => parseAlbumSong(entry.get({ plain: true })));
   }
 
-  parseAlbums(albumData: AlbumWithSongs[]) : AlbumResponse[] {
-    return albumData.map(data => ({
+  parseAlbums(albumData: AlbumWithSongs[]): AlbumResponse[] {
+    return albumData.map((data) => ({
       id: data.id,
       name: data.name,
       album_cover: data.url_image,
-      artists: data.songs[0].artists.map(artist => artist.name),
-    }))
-  };
+      artists: data.songs[0].artists.map((artist) => artist.name),
+    }));
+  }
 
-  async getAlbums(seed: string, page = 1, limit = 20) : Promise<AlbumResponse[]> {
+  async getAlbums(
+    seed: string,
+    page = 1,
+    limit = 20,
+  ): Promise<AlbumResponse[]> {
     const albumResults = await this.fetchAlbums(seed, page, limit);
     return this.parseAlbums(albumResults);
   }
