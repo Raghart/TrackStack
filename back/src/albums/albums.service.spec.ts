@@ -14,6 +14,7 @@ import {
 import { expectSongData, expectSongProps } from 'src/utils/expectSongs';
 import { SequelizeTimeoutError } from 'src/utils/mockErrors';
 import { AlbumsModel } from '../../models/albums/albums.model';
+import { InvalidPaginationException } from 'src/utils/PaginationError';
 
 describe('AlbumsService retrieves and parses all the songs of an album', () => {
   let service: AlbumsService;
@@ -89,6 +90,10 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
     await expect(service.fetchAlbums("abc", 1, 1)).rejects.toThrow(BadRequestException);
     await expect(service.fetchAlbums("abc", 1, 1)).rejects.toThrow(
       "The seed must be a valid string of numbers.");
+  });
+
+  it("fetchAlbums thows an error when the seed is not a valid number", async () => {
+    await expect(service.fetchAlbums("1", -500, 1)).rejects.toThrow(InvalidPaginationException);
   });
 });
 
