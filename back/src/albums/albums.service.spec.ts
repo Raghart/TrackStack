@@ -7,6 +7,7 @@ import {
 } from '@nestjs/common';
 import {
   albumParsedSongs,
+  albumResponse,
   albumSongs,
 } from '../../test/data/albumsModule/AlbumData';
 import { expectSongData, expectSongProps } from 'src/utils/expectSongs';
@@ -53,8 +54,13 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
   });
 
   it('fetchAlbums retrieves the albums from the database', async () => {
-    const results = await service.fetchAlbums("1", 1, 1);
+    const results = await service.fetchAlbums("1",1,1);
     expect(results).toStrictEqual([albumSongs]);
+  });
+
+  it('parseAlbums parses the data into the expected format', async () => {
+    const results = service.parseAlbums([albumSongs]);
+    expect(results).toStrictEqual(albumResponse);
   });
 
   it('getAllAlbumSongs returns a song array of an album ready to be delivered', async () => {

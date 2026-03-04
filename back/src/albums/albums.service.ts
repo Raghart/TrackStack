@@ -23,8 +23,8 @@ export class AlbumsService {
 
   async fetchAlbums(
     seed: string,
-    page = 1,
-    limit = 20,
+    page: number,
+    limit: number,
   ): Promise<AlbumWithSongs[]> {
     if (!isNumber(seed))
       throw new BadRequestException(
