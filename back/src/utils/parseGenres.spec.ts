@@ -6,4 +6,9 @@ describe('Parse genres from userVector to enhance response', () => {
         const parsedResults = parseGenres(["Rock"]);
         expect(parsedResults).toStrictEqual(rockGenreArr);
     });
+
+    it("returns the same array if no genre matches the enhanced option", () => {
+        const parsedResults = parseGenres(["Disco"]);
+        expect(parsedResults).toStrictEqual(["Disco"]);
+    });
 });
