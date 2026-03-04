@@ -112,6 +112,7 @@ describe("AlbumsService throws errors if it couldn't retrieve the data from the 
           provide: getModelToken(AlbumsModel),
           useValue: {
             findOne: SequelizeTimeoutError(),
+            findAll: SequelizeTimeoutError(),
           },
         },
       ],
@@ -128,4 +129,14 @@ describe("AlbumsService throws errors if it couldn't retrieve the data from the 
       'Database Error: SequelizeTimeoutError: Query timed out',
     );
   });
+
+  it("fetchAlbums throws InternalServerErrorException when it could't connect with the database", async () => {
+    await expect(service.fetchAlbums("1",1,1)).rejects.toThrow(
+      InternalServerErrorException,
+    );
+
+    await expect(service.fetchAlbums('1',1,1)).rejects.toThrow(
+      'Database Error: SequelizeTimeoutError: Query timed out',
+    );
+  })
 });
