@@ -18,7 +18,7 @@ import { InvalidPaginationException } from 'src/utils/PaginationError';
 
 describe('AlbumsService retrieves and parses all the songs of an album', () => {
   let service: AlbumsService;
-  let albumModel: { findOne: jest.Mock, findAll: jest.Mock };
+  let albumModel: { findOne: jest.Mock; findAll: jest.Mock };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -56,7 +56,7 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
   });
 
   it('fetchAlbums retrieves the albums from the database', async () => {
-    const results = await service.fetchAlbums("1",1,1);
+    const results = await service.fetchAlbums('1', 1, 1);
     expect(results).toStrictEqual([albumSongs]);
   });
 
@@ -66,7 +66,7 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
   });
 
   it('getAlbums recieves expected album results', async () => {
-    const results = await service.getAlbums("1", 1, 1);
+    const results = await service.getAlbums('1');
     expect(results).toStrictEqual(albumResponse);
   });
 
@@ -86,18 +86,25 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
     );
   });
 
-  it("fetchAlbums throws an error when the seed is not a valid number", async () => {
-    await expect(service.fetchAlbums("abc", 1, 1)).rejects.toThrow(BadRequestException);
-    await expect(service.fetchAlbums("abc", 1, 1)).rejects.toThrow(
-      "The seed must be a valid string of numbers.");
+  it('fetchAlbums throws an error when the seed is not a valid number', async () => {
+    await expect(service.fetchAlbums('abc', 1, 1)).rejects.toThrow(
+      BadRequestException,
+    );
+    await expect(service.fetchAlbums('abc', 1, 1)).rejects.toThrow(
+      'The seed must be a valid string of numbers.',
+    );
   });
 
-  it("fetchAlbums throws an error when page is not a valid number", async () => {
-    await expect(service.fetchAlbums("1", -500, 1)).rejects.toThrow(InvalidPaginationException);
+  it('fetchAlbums throws an error when page is not a valid number', async () => {
+    await expect(service.fetchAlbums('1', -500, 1)).rejects.toThrow(
+      InvalidPaginationException,
+    );
   });
 
-  it("fetchAlbums throws an error when limit is not a valid number", async () => {
-    await expect(service.fetchAlbums("1",1,-500)).rejects.toThrow(InvalidPaginationException);
+  it('fetchAlbums throws an error when limit is not a valid number', async () => {
+    await expect(service.fetchAlbums('1', 1, -500)).rejects.toThrow(
+      InvalidPaginationException,
+    );
   });
 });
 
@@ -131,12 +138,12 @@ describe("AlbumsService throws errors if it couldn't retrieve the data from the 
   });
 
   it("fetchAlbums throws InternalServerErrorException when it could't connect with the database", async () => {
-    await expect(service.fetchAlbums("1",1,1)).rejects.toThrow(
+    await expect(service.fetchAlbums('1', 1, 1)).rejects.toThrow(
       InternalServerErrorException,
     );
 
-    await expect(service.fetchAlbums('1',1,1)).rejects.toThrow(
+    await expect(service.fetchAlbums('1', 1, 1)).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Query timed out',
     );
-  })
+  });
 });

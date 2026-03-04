@@ -16,12 +16,15 @@ export const albumSongs = {
   ],
 } as unknown as AlbumWithSongs;
 
-export const albumResponse : AlbumResponse[] = [{
-  id: 549818,
-  name: "Nevermind (Remastered)",
-  album_cover: "https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480",
-  artists: ["Nirvana"]
-}]
+export const albumResponse: AlbumResponse[] = [
+  {
+    id: 549818,
+    name: 'Nevermind (Remastered)',
+    album_cover:
+      'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
+    artists: ['Nirvana'],
+  },
+];
 
 export const albumParsedSongs: SongResponse[] = [
   {
