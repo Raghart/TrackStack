@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ARTIST_CARD_SIZES } from "../constants/ArtistPathC";
 import AlbumCardLayer from "./AlbumCardLayer";
 
-const AlbumCard = ({ name, album_cover, artists } : AlbumResponse) => {
+const AlbumCard = ({ name, album_cover } : AlbumResponse) => {
     const [loading, setLoading] = useState(true);
     return(
         <LinkBox position="relative" borderRadius="2xl" overflow="hidden" aspectRatio={3/4} w="full" 
@@ -16,7 +16,7 @@ const AlbumCard = ({ name, album_cover, artists } : AlbumResponse) => {
                 borderRadius="2xl" opacity={loading ? 0 : 1} transform={loading ? "scale(0.95)" : "scale(1)"} 
                 transition="opacity 0.5s ease, transform 0.5s ease" alt={`Cover image of the artist ${name}`} />
 
-            <AlbumCardLayer name={name} artists={artists} />
+            <AlbumCardLayer name={name} />
         </LinkBox>
     );
 };
