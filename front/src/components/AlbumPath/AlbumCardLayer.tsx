@@ -1,5 +1,5 @@
 import { Box, LinkOverlay } from "@chakra-ui/react";
-import { ARTCARD_FONTSIZES } from "../constants/ArtistPathC";
+import { PATHCARD_FONTSIZES } from "../constants/ArtistPathC";
 
 const AlbumCardLayer = ({ name } : { name: string }) => {
     return(
@@ -8,7 +8,7 @@ const AlbumCardLayer = ({ name } : { name: string }) => {
             backdropFilter="blur(6px)" transition="opacity 0.3s ease" bg="rgba(0, 0, 0, 0.4)">
 
             <LinkOverlay href={`/albums/${encodeURIComponent(name)}`} textAlign="center" lineClamp={3}
-                fontSize={ARTCARD_FONTSIZES} color="orange.400" fontWeight="800" fontStyle="italic" 
+                fontSize={PATHCARD_FONTSIZES} color="orange.400" fontWeight="800" fontStyle="italic" 
                 lineHeight={1} overflow={name.length < 20 ? "visible" : "hidden"} 
                 fontFamily="'Barlow', sans-serif">
                 {name}

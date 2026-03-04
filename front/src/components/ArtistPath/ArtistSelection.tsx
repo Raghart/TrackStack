@@ -2,12 +2,12 @@ import { Box, Center, For, SimpleGrid, Skeleton } from "@chakra-ui/react";
 import ScrollUpArrow from "@/components/Utils/ScrollUpArrow";
 import useGetArtistCards from "../Utils/hooks/useGetArtistCards";
 import { Zoom } from "react-awesome-reveal";
-import { ARTIST_CARD_SIZES } from "../constants/ArtistPathC";
 import InfiniteScroll from "react-infinite-scroll-component"
 import { ArtistResponse } from "@/types/artistTypes";
 import ArtistCard from "./ArtistCard";
 import LoadingBeat from "../Utils/LoadingBeat";
 import PathHeader from "../Utils/PathHeader";
+import { PATH_CARD_SIZES } from "../constants/ArtistPathC";
 
 const ArtistSelection = () => {
     const { data, onLoadMore } = useGetArtistCards();
@@ -23,7 +23,7 @@ const ArtistSelection = () => {
                 loader={<Center m={2}><LoadingBeat /></Center>} style={{ overflow: "visible" }}>
                 <SimpleGrid columns={{ base: 2, sm: 3, md: 4, lg: 5 }} w="full" gap={4}>
                     {!data && (Array.from({ length: 20 }).map((_, idx) => (
-                        <Skeleton key={idx} w="full" maxW={ARTIST_CARD_SIZES} aspectRatio={3/4} 
+                        <Skeleton key={idx} w="full" maxW={PATH_CARD_SIZES} aspectRatio={3/4} 
                             borderRadius="2xl" inset={0} />
                         ))
                     )}
