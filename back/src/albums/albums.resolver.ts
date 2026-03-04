@@ -3,7 +3,6 @@ import { AlbumsService } from './albums.service';
 import { GraphQLString } from 'graphql';
 import { SongResponseDto } from 'src/songs/dto/SongResponse.dto';
 import { AlbumsResultsDto } from './dto/AlbumResultsDto';
-import { AlbumResponse } from 'src/types/albumAttributes';
 
 @Resolver()
 export class AlbumsResolver {

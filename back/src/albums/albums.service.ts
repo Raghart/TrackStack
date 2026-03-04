@@ -47,7 +47,7 @@ export class AlbumsService {
     return albumData.map(data => ({
       id: data.id,
       name: data.name,
-      url_image: data.url_image,
+      album_cover: data.url_image,
       artists: data.songs[0].artists.map(artist => artist.name),
     }))
   };

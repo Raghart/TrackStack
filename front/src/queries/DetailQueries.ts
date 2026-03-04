@@ -39,6 +39,17 @@ query getAllArtistsPagination ($seed: String!, $page: Int!, $limit: Int!) {
 }
 `;
 
+export const getAlbums = gql`
+query getAlbumsPagination ($seed: String!, $page: Int!, $limit: Int!) {
+  getAlbums(seed: $seed, page: $page, limit: $limit) {
+    id
+    name
+    album_cover
+    artists
+  }
+}
+`;
+
 export const getAllGenreSongs = gql`
 query getAllGenreSongsByName ($seed: String!, $genre: String!, $page: Int!, $limit: Int!) {
   getAllGenreSongs(seed: $seed, genre: $genre, page: $page, limit: $limit) {

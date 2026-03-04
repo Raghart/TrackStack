@@ -9,7 +9,7 @@ export class AlbumsResultsDto {
     name: string;
 
     @Field()
-    url_image: string;
+    album_cover: string;
 
     @Field(() => [String])
     artists: string[];

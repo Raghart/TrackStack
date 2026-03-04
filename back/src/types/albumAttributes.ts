@@ -15,7 +15,7 @@ export interface AlbumWithSongs extends AlbumAttributes {
 export interface AlbumResponse {
   id: number;
   name: string;
-  url_image: string;
+  album_cover: string;
   artists: string[];
 }
 
