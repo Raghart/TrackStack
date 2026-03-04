@@ -1,4 +1,4 @@
-import { electroGenreArr, jazzGenreArr, metalGenreArr, popGenreArr, rockGenreArr } from "./genreConstantsArrays";
+import { electroGenreArr, jazzGenreArr, metalGenreArr, popGenreArr, rockGenreArr, videogameGenreArr } from "./genreConstantsArrays";
 import parseGenres from "./parseGenres";
 
 describe('Parse genres from userVector to enhance response', () => {
@@ -25,6 +25,11 @@ describe('Parse genres from userVector to enhance response', () => {
     it("enchances jazz genre with more options when Jazz is searched", () => {
         const parsedResults = parseGenres(["Jazz"]);
         expect(parsedResults).toStrictEqual(jazzGenreArr);
+    });
+
+    it("enchances videogame music genre with more options when 'Videogame Music' is searched", () => {
+        const parsedResults = parseGenres(["Videogame Music"]);
+        expect(parsedResults).toStrictEqual(videogameGenreArr);
     });
 
     it("returns the same array if no genre matches the enhanced option", () => {
