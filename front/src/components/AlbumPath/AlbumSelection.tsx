@@ -7,6 +7,7 @@ import LoadingBeat from "../Utils/LoadingBeat";
 import { AlbumResponse } from "@/types/albumTypes";
 import AlbumCard from "./AlbumCard";
 import { PATH_CARD_SIZES } from "../constants/PathC";
+import ScrollUpArrow from "../Utils/ScrollUpArrow";
 
 const AlbumSelection = () => {
     const { data, onLoadMore } = useGetAlbumCards();
@@ -33,6 +34,7 @@ const AlbumSelection = () => {
                     )}
                 </SimpleGrid>
             </InfiniteScroll>
+            <ScrollUpArrow />
         </Box>
     )
 };
