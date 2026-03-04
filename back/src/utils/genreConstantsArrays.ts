@@ -23,8 +23,8 @@ export const popGenreArr = [
 ];
 
 export const electroGenreArr = [
-  'Electronic',
   'Electro',
+  'Electronic',
   'House',
   'Techno',
   'J Pop',
