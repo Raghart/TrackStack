@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AlbumsService } from './albums.service';
 import { getModelToken } from '@nestjs/sequelize';
 import {
+  BadRequestException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
@@ -82,6 +83,12 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
     await expect(service.fetchAlbumSongs('noAlbum')).rejects.toThrow(
       `Album: noAlbum couldn't be found!`,
     );
+  });
+
+  it("fetchAlbums thows an error when the seed is not a valid number", async () => {
+    await expect(service.fetchAlbums("abc", 1, 1)).rejects.toThrow(BadRequestException);
+    await expect(service.fetchAlbums("abc", 1, 1)).rejects.toThrow(
+      "The seed must be a valid string of numbers.");
   });
 });
 
