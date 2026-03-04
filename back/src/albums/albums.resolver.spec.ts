@@ -6,7 +6,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { albumResSongs } from '../../test/data/albumsModule/AlbumData';
+import { albumResponse, albumResSongs } from '../../test/data/albumsModule/AlbumData';
 import { expectSongProps } from 'src/utils/expectSongs';
 
 describe('AlbumsResolver returns the expected songs from an album', () => {
@@ -21,6 +21,7 @@ describe('AlbumsResolver returns the expected songs from an album', () => {
           provide: AlbumsService,
           useValue: {
             getAllAlbumSongs: jest.fn().mockResolvedValue(albumResSongs),
+            getAlbums: jest.fn().mockResolvedValue(albumResponse)
           },
         },
       ],
@@ -35,6 +36,12 @@ describe('AlbumsResolver returns the expected songs from an album', () => {
     expect(service.getAllAlbumSongs).toHaveBeenCalledWith('testingAlbum');
     expect(results).toHaveLength(5);
     expectSongProps(results);
+  });
+
+  it("getAlbums returns an album array ready to be delivered", async () => {
+    const results = await resolver.getAlbums("1",1,1);
+    expect(service.getAlbums).toHaveBeenCalled();
+    expect(results).toStrictEqual(albumResponse);
   });
 });
 
