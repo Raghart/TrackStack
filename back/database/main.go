@@ -23,6 +23,7 @@ func main() {
 	serviceURI := os.Getenv("dbURI")
 	localURI := os.Getenv("localURI")
 	fmt.Println(serviceURI)
+	fmt.Println(localURI)
 
 	if len(os.Args) != 2 {
 		printHelp()
@@ -80,13 +81,13 @@ func main() {
 		{
 			databaseConfig.AddToDatabase(paths.SongDetailsPath, dbCfg.AddSongDetailsDatabase)
 		}
-	case "addVectors":
+	case "addVectorsFromLocal":
 		{
 			dbCfg.AddVectorsFromLocal()
 		}
-	case "updateVectors":
+	case "updateLocalVectors":
 		{
-			dbCfg.UpdateVectors()
+			dbCfg.UpdateLocalVectors()
 		}
 	default:
 		{
