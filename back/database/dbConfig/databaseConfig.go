@@ -450,7 +450,7 @@ func (cfg *DbConfig) AddVectorsFromLocal() {
 		log.Fatalf("there was a problem while trying to get the songs details: %v", err)
 	}
 
-	localSongSlice := songDetails[:1000]
+	localSongSlice := songDetails[50000:]
 
 	for _, song := range localSongSlice {
 		danceabilityNor := minMaxScaling(song.Danceability, danceabilityMin, danceabilityMax)
