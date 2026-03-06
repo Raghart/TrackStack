@@ -46,7 +46,7 @@ I built this project for two main reasons:
 
 ## 📖 Usage
 
-### Track new songs based on your preferences
+### * Track new *songs* based on your preferences
 
 Want to find a new banger?
 
@@ -64,7 +64,7 @@ In a few seconds you'll be redirected to a page showing the tracks that match yo
     <img src="./assets/RecommendationResults.png" alt="Lara's Recommendation Results" />
 </p>
 
-### Track a song, an artist or an album
+### * Track a *song*, an *artist* or an *album*
 
 To search for a specific song, artist, or album, use the search bar in the top navbar and type what you are looking for. The system will load several results that try to match your query. The search is powered by ElasticSearch and its fuzzy search capabilities, using features like **fuzzy search**, **n-grams**, and **edge-ngrams** to increase recall and tolerate typos. Search across more than **28,000** results available to find the specific song you are looking for, as shown in the image below:
 
@@ -72,7 +72,7 @@ To search for a specific song, artist, or album, use the search bar in the top n
     <img src="./assets/songSearch.png" alt="Intelligent Song Search" />
 </p>
 
-### Check out the tracks
+### * Check out the *tracks*
 
 What's a good recommendation system if you can't **listen** to the tracks it suggests?
 
@@ -85,7 +85,7 @@ A **30-second song-preview** will be played automatically. At the bottom of the 
     <img src="./assets/playSong.png" alt="Click the play button" />
 </p>
 
-### Learn more about a track
+### * Learn more about a *track*
 
 Want to know more about a specific track that caught your eye?
 
@@ -97,7 +97,7 @@ You'll be redirected to a page that shows additional information about the track
     <img src="./assets/songDetails.png" alt="Track Details" />
 </p>
 
-### Discover songs by artists
+### * Discover songs by *artists*
 
 Do you want to discover new artists? 
 
@@ -114,7 +114,7 @@ You'll be redirected to a page where you can listen to their songs:
     <img src="./assets/artistPage.png" alt="Music Artists Songs" />
 </p>
 
-### Discover songs by genre
+### * Discover songs by *genre*
 
 Explore over **100 genres** and find your next favorite song based on your tastes. 
 
