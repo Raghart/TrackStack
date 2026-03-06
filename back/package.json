@@ -20,7 +20,8 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@apollo/server": "^4.12.1",
+    "@apollo/server": "^5.4.0",
+    "@as-integrations/express5": "^1.1.2",
     "@elastic/elasticsearch": "^7.17.14",
     "@nestjs/apollo": "^13.1.0",
     "@nestjs/common": "^11.0.1",
@@ -58,7 +59,7 @@
     "@types/jest": "^29.5.14",
     "@types/node": "^22.10.7",
     "@types/supertest": "^6.0.2",
-    "eslint": "^9.18.0",
+    "eslint": "^9.39.3",
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.2",
     "globals": "^16.0.0",

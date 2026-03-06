@@ -2,20 +2,23 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AlbumsService } from './albums.service';
 import { getModelToken } from '@nestjs/sequelize';
 import {
+  BadRequestException,
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import {
   albumParsedSongs,
+  albumResponse,
   albumSongs,
 } from '../../test/data/albumsModule/AlbumData';
 import { expectSongData, expectSongProps } from 'src/utils/expectSongs';
 import { SequelizeTimeoutError } from 'src/utils/mockErrors';
 import { AlbumsModel } from '../../models/albums/albums.model';
+import { InvalidPaginationException } from 'src/utils/PaginationError';
 
 describe('AlbumsService retrieves and parses all the songs of an album', () => {
   let service: AlbumsService;
-  let albumModel: { findOne: jest.Mock };
+  let albumModel: { findOne: jest.Mock; findAll: jest.Mock };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,6 +28,7 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
           provide: getModelToken(AlbumsModel),
           useValue: {
             findOne: jest.fn(),
+            findAll: jest.fn(),
           },
         },
       ],
@@ -36,6 +40,7 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
 
   beforeEach(() => {
     albumModel.findOne.mockResolvedValue({ get: () => albumSongs });
+    albumModel.findAll.mockResolvedValue([{ get: () => albumSongs }]);
   });
 
   it('parseAlbumSongs parses the raw songs data of an album', () => {
@@ -48,6 +53,21 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
   it('fetchAlbumSongs retrieves all the songs of an album from the database', async () => {
     const results = await service.fetchAlbumSongs('Nirvana');
     expect(results).toStrictEqual(albumSongs);
+  });
+
+  it('fetchAlbums retrieves the albums from the database', async () => {
+    const results = await service.fetchAlbums('1', 1, 1);
+    expect(results).toStrictEqual([albumSongs]);
+  });
+
+  it('parseAlbums parses the data into the expected format', () => {
+    const results = service.parseAlbums([albumSongs]);
+    expect(results).toStrictEqual(albumResponse);
+  });
+
+  it('getAlbums recieves expected album results', async () => {
+    const results = await service.getAlbums('1');
+    expect(results).toStrictEqual(albumResponse);
   });
 
   it('getAllAlbumSongs returns a song array of an album ready to be delivered', async () => {
@@ -65,6 +85,27 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
       `Album: noAlbum couldn't be found!`,
     );
   });
+
+  it('fetchAlbums throws an error when the seed is not a valid number', async () => {
+    await expect(service.fetchAlbums('abc', 1, 1)).rejects.toThrow(
+      BadRequestException,
+    );
+    await expect(service.fetchAlbums('abc', 1, 1)).rejects.toThrow(
+      'The seed must be a valid string of numbers.',
+    );
+  });
+
+  it('fetchAlbums throws an error when page is not a valid number', async () => {
+    await expect(service.fetchAlbums('1', -500, 1)).rejects.toThrow(
+      InvalidPaginationException,
+    );
+  });
+
+  it('fetchAlbums throws an error when limit is not a valid number', async () => {
+    await expect(service.fetchAlbums('1', 1, -500)).rejects.toThrow(
+      InvalidPaginationException,
+    );
+  });
 });
 
 describe("AlbumsService throws errors if it couldn't retrieve the data from the database", () => {
@@ -78,6 +119,7 @@ describe("AlbumsService throws errors if it couldn't retrieve the data from the 
           provide: getModelToken(AlbumsModel),
           useValue: {
             findOne: SequelizeTimeoutError(),
+            findAll: SequelizeTimeoutError(),
           },
         },
       ],
@@ -91,6 +133,16 @@ describe("AlbumsService throws errors if it couldn't retrieve the data from the 
       InternalServerErrorException,
     );
     await expect(service.fetchAlbumSongs('Duck')).rejects.toThrow(
+      'Database Error: SequelizeTimeoutError: Query timed out',
+    );
+  });
+
+  it("fetchAlbums throws InternalServerErrorException when it could't connect with the database", async () => {
+    await expect(service.fetchAlbums('1', 1, 1)).rejects.toThrow(
+      InternalServerErrorException,
+    );
+
+    await expect(service.fetchAlbums('1', 1, 1)).rejects.toThrow(
       'Database Error: SequelizeTimeoutError: Query timed out',
     );
   });

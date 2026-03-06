@@ -33,7 +33,7 @@
     "react-spinners": "^0.17.0",
     "redux": "^5.0.1",
     "spotify-preview-finder": "^1.1.1",
-    "swiper": "^11.2.6"
+    "swiper": "^12.1.2"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

@@ -1,4 +1,4 @@
-import { setEnergy, setDanceability, setDuration, setSentiment } from "@/reducers/recommendReducer";
+import { setEnergy, setDanceability, setTempo, setSentiment } from "@/reducers/recommendReducer";
 import { SlidersDataTypes } from "@/types/RecDataTypes";
 
 export const SliderOptions: SlidersDataTypes[] = [
@@ -11,8 +11,8 @@ export const SliderOptions: SlidersDataTypes[] = [
         min: 0, default: 0.5, max: 1 
     },
     { 
-        title: "Duration", setValue: setDuration, step:0.01, labels: ["30 Seg", "2.5 Min", "5 Min"], 
-        min: 0.30, default: 2.6, max: 5
+        title: "Tempo", setValue: setTempo, step:1, labels: ["70 BPM", "120 BPM", "230 BPM"], 
+        min: 0, default: 120, max: 238
     },
     { 
         title: "Sentiment", setValue: setSentiment, step: 0.01, labels: ["😌", "🙂", "😝"], 

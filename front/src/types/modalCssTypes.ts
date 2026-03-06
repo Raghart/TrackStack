@@ -37,7 +37,7 @@ interface SliderStylesProps {
 export interface SliderStylesOptions {
     Energy: SliderStylesProps;
     Danceability: SliderStylesProps;
-    Duration: SliderStylesProps;
+    Tempo: SliderStylesProps;
     Sentiment: SliderStylesProps;
 };
 
@@ -48,9 +48,9 @@ export interface SliderTagsOptions {
     Calm: SliderTagsProps;
     Rhythmic: SliderTagsProps;
     Energetic: SliderTagsProps;
-    "30 Seg": SliderTagsProps;
-    "2.5 Min": SliderTagsProps;
-    "5 Min": SliderTagsProps;
+    "70 BPM": SliderTagsProps;
+    "120 BPM": SliderTagsProps;
+    "230 BPM": SliderTagsProps;
     "😌": SliderTagsProps;
     "🙂": SliderTagsProps;
     "😝": SliderTagsProps;

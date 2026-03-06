@@ -10,11 +10,20 @@ import (
 	"scripts/internal/database"
 	paths "scripts/pathConstants"
 
+	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("error while trying to load the env: %v", err)
+	}
+
 	serviceURI := os.Getenv("dbURI")
+	localURI := os.Getenv("localURI")
+	fmt.Println(serviceURI)
+	fmt.Println(localURI)
 
 	if len(os.Args) != 2 {
 		printHelp()
@@ -29,10 +38,18 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	localConn, _ := url.Parse(localURI)
+	localDB, err := sql.Open("postgres", localConn.String())
+	if err != nil {
+		log.Fatal(err)
+	}
 	defer db.Close()
+	defer localDB.Close()
 
 	dbCfg := &databaseConfig.DbConfig{
-		Queries: database.New(db),
+		Queries:      database.New(db),
+		LocalQueries: database.New(localDB),
 	}
 
 	switch os.Args[1] {
@@ -64,9 +81,13 @@ func main() {
 		{
 			databaseConfig.AddToDatabase(paths.SongDetailsPath, dbCfg.AddSongDetailsDatabase)
 		}
-	case "vectors":
+	case "addVectorsFromLocal":
 		{
-			dbCfg.AddVectorsDatabase()
+			dbCfg.AddVectorsFromLocal()
+		}
+	case "updateLocalVectors":
+		{
+			dbCfg.UpdateLocalVectors()
 		}
 	default:
 		{

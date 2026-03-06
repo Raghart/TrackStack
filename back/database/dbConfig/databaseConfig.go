@@ -13,7 +13,8 @@ import (
 )
 
 type DbConfig struct {
-	Queries *database.Queries
+	Queries      *database.Queries
+	LocalQueries *database.Queries
 }
 
 func AddToDatabase(path string, databaseMethod func([][]string)) {
@@ -38,7 +39,7 @@ func (cfg *DbConfig) AddArtistsDatabase(records [][]string) {
 		}
 
 		name := record[1]
-		artist, err := cfg.Queries.CreateArtist(context.Background(), database.CreateArtistParams{
+		artist, err := cfg.LocalQueries.CreateArtist(context.Background(), database.CreateArtistParams{
 			ID:   int32(id),
 			Name: name,
 		})
@@ -67,7 +68,7 @@ func (cfg *DbConfig) AddGenresDatabase(records [][]string) {
 			log.Fatal(err)
 		}
 
-		genreAdded, err := cfg.Queries.CreateGenre(context.Background(), database.CreateGenreParams{
+		genreAdded, err := cfg.LocalQueries.CreateGenre(context.Background(), database.CreateGenreParams{
 			ID:    int32(genreID),
 			Genre: genreName,
 		})
@@ -97,7 +98,7 @@ func (cfg *DbConfig) AddAlbumsDatabase(records [][]string) {
 			log.Fatalf("%v is not a valid string: %v", albumStrId, err)
 		}
 
-		addedAlbum, err := cfg.Queries.CreateAlbum(context.Background(), database.CreateAlbumParams{
+		addedAlbum, err := cfg.LocalQueries.CreateAlbum(context.Background(), database.CreateAlbumParams{
 			ID:       int32(albumID),
 			Name:     albumName,
 			UrlImage: albumUrlImg,
@@ -132,7 +133,7 @@ func (cfg *DbConfig) AddSongsDatabase(records [][]string) {
 			log.Fatal(err)
 		}
 
-		albumData, err := cfg.Queries.GetAlbumByID(context.Background(), int32(songAlbumID))
+		albumData, err := cfg.LocalQueries.GetAlbumByID(context.Background(), int32(songAlbumID))
 		if err != nil {
 			log.Fatalf("album with the ID: %v not in database: %v", songAlbumID, err)
 		}
@@ -152,7 +153,7 @@ func (cfg *DbConfig) AddSongsDatabase(records [][]string) {
 			log.Fatal(err)
 		}
 
-		addedSong, err := cfg.Queries.CreateSong(context.Background(), database.CreateSongParams{
+		addedSong, err := cfg.LocalQueries.CreateSong(context.Background(), database.CreateSongParams{
 			ID:         int32(songID),
 			Name:       songName,
 			SpotifyID:  songSpotify,
@@ -198,17 +199,17 @@ func (cfg *DbConfig) AddSongsArtistsDatabase(records [][]string) {
 			log.Fatal(err)
 		}
 
-		dbSong, err := cfg.Queries.GetSongByID(context.Background(), int32(songID))
+		dbSong, err := cfg.LocalQueries.GetSongByID(context.Background(), int32(songID))
 		if err != nil {
 			log.Fatalf("error while trying to get the song: %v", err)
 		}
 
-		dbArtist, err := cfg.Queries.GetArtistByID(context.Background(), int32(artistID))
+		dbArtist, err := cfg.LocalQueries.GetArtistByID(context.Background(), int32(artistID))
 		if err != nil {
 			log.Fatalf("error while trying to get the artist: %v", err)
 		}
 
-		addedArtistSong, err := cfg.Queries.CreateSongArtist(context.Background(), database.CreateSongArtistParams{
+		addedArtistSong, err := cfg.LocalQueries.CreateSongArtist(context.Background(), database.CreateSongArtistParams{
 			ID:       int32(songArtistID),
 			SongID:   dbSong.ID,
 			ArtistID: dbArtist.ID,
@@ -249,17 +250,17 @@ func (cfg *DbConfig) AddSongGenresDatabase(records [][]string) {
 			log.Fatal(err)
 		}
 
-		genreDB, err := cfg.Queries.GetGenreByID(context.Background(), int32(genreID))
+		genreDB, err := cfg.LocalQueries.GetGenreByID(context.Background(), int32(genreID))
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		songDB, err := cfg.Queries.GetSongByID(context.Background(), int32(songID))
+		songDB, err := cfg.LocalQueries.GetSongByID(context.Background(), int32(songID))
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		addedSongGenre, err := cfg.Queries.CreateSongGenre(context.Background(), database.CreateSongGenreParams{
+		addedSongGenre, err := cfg.LocalQueries.CreateSongGenre(context.Background(), database.CreateSongGenreParams{
 			ID:      int32(songGenreID),
 			SongID:  songDB.ID,
 			GenreID: genreDB.ID,
@@ -306,7 +307,7 @@ func (cfg *DbConfig) AddSongDetailsDatabase(records [][]string) {
 			log.Fatal(err)
 		}
 
-		dbSong, err := cfg.Queries.GetSongByID(context.Background(), int32(songID))
+		dbSong, err := cfg.LocalQueries.GetSongByID(context.Background(), int32(songID))
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -371,7 +372,7 @@ func (cfg *DbConfig) AddSongDetailsDatabase(records [][]string) {
 			log.Fatal(err)
 		}
 
-		added_details, err := cfg.Queries.CreateSongDetails(context.Background(), database.CreateSongDetailsParams{
+		added_details, err := cfg.LocalQueries.CreateSongDetails(context.Background(), database.CreateSongDetailsParams{
 			ID:               int32(songDetailsID),
 			SongID:           dbSong.ID,
 			Danceability:     float32(danceability),
@@ -397,40 +398,80 @@ func (cfg *DbConfig) AddSongDetailsDatabase(records [][]string) {
 	fmt.Println("Finish processing the song details!")
 }
 
-func (cfg *DbConfig) AddVectorsDatabase() {
-	fmt.Println("Processing vector to the database...")
-	songDetails, err := cfg.Queries.GetSongDetails(context.Background())
+func (cfg *DbConfig) UpdateLocalVectors() {
+	fmt.Println("Processing vector to the local database...")
+	songDetails, err := cfg.LocalQueries.GetSongDetails(context.Background())
 	if err != nil {
 		log.Fatalf("there was a problem while trying to get the songs details: %v", err)
 	}
 
 	for _, song := range songDetails {
-		dbSong, err := cfg.Queries.GetSongByID(context.Background(), song.SongID)
-		if err != nil {
-			log.Fatalf("there was a problem while trying to get the song: %v", err)
-		}
-
-		loudnessNor := minMaxScaling(song.Loudness, float32(minLoudness), float32(maxLoudness))
-		tempoNor := minMaxScaling(song.Tempo, float32(minTempo), float32(maxTempo))
-		timeSigNor := minMaxScaling(float32(song.TimeSignature), float32(minTimeSig),
-			float32(maxTimeSig))
-		trackKeyNor := minMaxScaling(song.TrackKey, float32(minTrackKey), float32(maxTrackKey))
-		durationNor := minMaxScaling(dbSong.Duration, float32(minDuration), float32(maxDuration))
+		danceabilityScaled := minMaxScaling(song.Danceability, danceabilityMin, danceabilityMax)
+		energyScaled := minMaxScaling(song.Energy, energyMIN, energyMAX)
+		modeScaled := minMaxScaling(song.Mode, modeMin, modeMax)
+		speechinessScaled := minMaxScaling(song.Speechiness, speechinessMIN, speechinessMAX)
+		acousticnessScaled := minMaxScaling(float32(song.Acousticness), acousticnessMIN, acousticnessMAX)
+		instrumentalnessScaled := minMaxScaling(float32(song.Instrumentalness),
+			instrumentalnessMIN, instrumentalnessMAX)
+		valenceScaled := minMaxScaling(song.Valence, valenceMIN, valenceMAX)
+		tempoScaled := minMaxScaling(song.Tempo, tempoMIN, tempoMAX)
 
 		songParams := []float32{
-			durationNor,
-			song.Danceability,
-			song.Energy,
-			trackKeyNor,
-			loudnessNor,
-			song.Mode,
-			song.Speechiness,
-			float32(song.Acousticness),
-			float32(song.Instrumentalness),
-			song.Liveness,
-			song.Valence,
+			danceabilityScaled,
+			energyScaled,
+			modeScaled,
+			speechinessScaled,
+			acousticnessScaled,
+			instrumentalnessScaled,
+			valenceScaled,
+			tempoScaled,
+		}
+
+		embedding := pgvector.NewVector(songParams)
+
+		vectorAdded, err := cfg.LocalQueries.CreateVector(context.Background(), database.CreateVectorParams{
+			Vectors: embedding,
+			SongID:  song.SongID,
+		})
+
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		fmt.Println(vectorAdded)
+	}
+	fmt.Println("Finish processing the vectors!")
+}
+
+func (cfg *DbConfig) AddVectorsFromLocal() {
+	fmt.Println("Processing vector to the database...")
+	songDetails, err := cfg.LocalQueries.GetSongDetails(context.Background())
+	if err != nil {
+		log.Fatalf("there was a problem while trying to get the songs details: %v", err)
+	}
+
+	localSongSlice := songDetails[50000:]
+
+	for _, song := range localSongSlice {
+		danceabilityNor := minMaxScaling(song.Danceability, danceabilityMin, danceabilityMax)
+		energyNor := minMaxScaling(song.Energy, energyMIN, energyMAX)
+		modeNor := minMaxScaling(song.Mode, modeMin, modeMax)
+		speechinesNor := minMaxScaling(song.Speechiness, speechinessMIN, speechinessMAX)
+		acousticnessNor := minMaxScaling(float32(song.Acousticness), acousticnessMIN, acousticnessMAX)
+		instrumentalnessNor := minMaxScaling(float32(song.Instrumentalness),
+			instrumentalnessMIN, instrumentalnessMAX)
+		valenceNor := minMaxScaling(song.Valence, valenceMIN, valenceMAX)
+		tempoNor := minMaxScaling(song.Tempo, float32(tempoMIN), float32(tempoMAX))
+
+		songParams := []float32{
+			danceabilityNor,
+			energyNor,
+			modeNor,
+			speechinesNor,
+			acousticnessNor,
+			instrumentalnessNor,
+			valenceNor,
 			tempoNor,
-			timeSigNor,
 		}
 
 		embedding := pgvector.NewVector(songParams)

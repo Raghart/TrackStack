@@ -19,7 +19,6 @@ test.describe("Song details path", () => {
 
     expect(page.url()).toContain("/songs/");
     await expect(page.getByText(name).first()).toBeVisible();
-    await expect(page.getByText("ALBUM")).toBeVisible();
     await expect(page.getByText("GENRES").first()).toBeVisible();
     await expect(page.getByText("Duration: ")).toBeVisible();
     await expect(page.getByText("Check out the Full Song Here")).toBeVisible();

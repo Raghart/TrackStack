@@ -1,12 +1,10 @@
-import { BsClockFill, BsFire } from "react-icons/bs";
+import { BsFire } from "react-icons/bs";
 import { BiSolidHappyBeaming } from "react-icons/bi";
 import { RiEmotionHappyFill, RiFlashlightFill } from "react-icons/ri";
-import { FaLeaf } from "react-icons/fa";
-import { MdTimer } from "react-icons/md";
-import { FaCloud } from "react-icons/fa6";
-import { HiMiniClock } from "react-icons/hi2";
+import { FaWind, FaLeaf } from "react-icons/fa";
+import { FaHeartCircleBolt, FaCloud } from "react-icons/fa6";
 import { AiFillThunderbolt } from "react-icons/ai";
-import { GiHeartBeats, GiLotus } from "react-icons/gi";
+import { GiGuitarHead, GiHeartBeats, GiLotus } from "react-icons/gi";
 import { SliderStylesOptions } from "@/types/modalCssTypes";
 
 export const SliderStyles: SliderStylesOptions = {
@@ -28,10 +26,10 @@ export const SliderStyles: SliderStylesOptions = {
         shadow: ["0 0 8px var(--chakra-colors-blue-500)", "0 0 8px var(--chakra-colors-teal-500)",
           "0 0 8px var(--chakra-colors-red-600)" ]
     },
-    Duration: {
-        threshold: [1.71, 3.60],
+    Tempo: {
+        threshold: [75, 160],
         SliderBg: ["yellow.600", "green.500", "purple.500"],
-        Icon: [MdTimer, HiMiniClock, BsClockFill],
+        Icon: [FaWind, GiGuitarHead, FaHeartCircleBolt],
         IconColor: ["orange.300", "green.400", "purple.400"],
         IconBorder: ["orange.500", "teal.500", "purple.600"],
         shadow: ["0 0 8px var(--chakra-colors-yellow-600)", "0 0 8px var(--chakra-colors-green-500)",

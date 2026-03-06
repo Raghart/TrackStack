@@ -7,7 +7,7 @@ const initialState: RecommendData = {
     energy: 0.5,
     speechLevel: 0.165,
     danceability: 0.5,
-    duration: 2.5,
+    tempo: 120,
     sentiment: 0.5,
     voiceType: 0.05,
     mood: 1,
@@ -34,8 +34,8 @@ const recommendSlice = createSlice({
         setDanceability(state, action: PayloadAction<number>) {
             state.danceability = action.payload;
         },
-        setDuration(state, action: PayloadAction<number>) {
-            state.duration = action.payload;
+        setTempo(state, action: PayloadAction<number>) {
+            state.tempo = action.payload;
         },
         setSentiment(state, action: PayloadAction<number>) {
             state.sentiment = action.payload;
@@ -55,7 +55,7 @@ const recommendSlice = createSlice({
     }
 });
 
-export const { setRecommendedGenres, setEnergy, setSpeechLevel, setDuration, setSentiment, setVoiceType, setMood,
+export const { setRecommendedGenres, setEnergy, setSpeechLevel, setTempo, setSentiment, setVoiceType, setMood,
     setDanceability, setAcousticness, setLaraRecommendations, deleteLastGenre } = recommendSlice.actions;
 
 export default recommendSlice.reducer;
