@@ -82,7 +82,7 @@ What's a good recommendation system if you can't **listen** to the tracks it sug
 A **30-second song-preview** will be played automatically. At the bottom of the page, you can see more information about the currently playing track, such as its elapsed time and artists. The player also includes extra controls, like a button to play a random song, buttons to play the previous and next tracks by ID, and a slider to control the volume:
 
 <p align="center">
-    <img src="./assets/play_song.png" alt="Click the play button" />
+    <img src="./assets/playSong.png" alt="Click the play button" />
 </p>
 
 ### Learn more about a track
@@ -94,7 +94,7 @@ Want to know more about a specific track that caught your eye?
 You'll be redirected to a page that shows additional information about the track, including its genres, duration, release date, album, and even a link to Spotify if you want to hear the full version:
 
 <p align="center">
-    <img src="./assets/song_details.png" alt="Track Details" />
+    <img src="./assets/songDetails.png" alt="Track Details" />
 </p>
 
 ### Discover songs by artists
@@ -111,7 +111,7 @@ You'll be redirected to a page where you can listen to their songs:
 </p>
 
 <p align="center">
-    <img src="./assets/artist_page.png" alt="Music Artists Songs" />
+    <img src="./assets/artistPage.png" alt="Music Artists Songs" />
 </p>
 
 ### Discover songs by genre
