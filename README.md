@@ -125,6 +125,23 @@ Explore over **100 genres** and find your next favorite song based on your taste
     <img src="./assets/Genres.png" alt="Music Genres Options" />
 </p>
 
+### * Discover songs by *albums*
+
+Do you want to hear more song from an album?
+
+1. Click the **Albums** section in the left sidebar.
+2. Click on the image of any album that catches your attention.
+
+You'll be redirected to a page where you can listen to their songs:
+
+<p align="center">
+    <img src="./assets/albums.png" alt="Music album page"/>
+</p>
+
+<p align="center">
+    <img src="./assets/albumSongs.png" alt="Songs from an album" />
+</p>
+
 ---
 
 ## 🖥️ Frontend Technologies
