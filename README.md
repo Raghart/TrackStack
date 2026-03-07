@@ -1,6 +1,6 @@
 # 🎵 TrackStack
 
-Do you want to find a new **banger**? Try out this **music recommendation web app** that uses an algorithm based on **song metadata** (genre, energy, danceability, and more) to recommend **tracks** based on the parameters you choose. Discover new tracks from a database of over **50,000 tracks**!
+Do you want to find a new **banger**? Try out this **music recommendation web app** that uses vectors based on **song metadata** (genre, energy, danceability, and more) enhanced by a weighted system to recommend **tracks** based on the weights you assign to each feature. Discover new tracks from a database of over **50,000 tracks**!
 
 Check out the live version in Render:
 
@@ -164,7 +164,7 @@ You'll be redirected to a page where you can listen to their songs:
 
 - **Sequelize**: An Object-Relational Mapping (ORM) for managing relational data models and interacting with the PostgreSQL database in a structured way. It retrieves dozens of songs, artists and albums in seconds, and by using a randomly generated seed in queries, delivers semi-random results that keep the experience fresh, letting users discover a new song or artist every time they visit.
 
-- **PostgreSQL**: Primary Database, storing over **300k records** with high reliability and performance. 
+- **PostgreSQL**: Primary Database, storing over **300k records** with high reliability and performance. In addition with the PostgreSQL vectors extension to store a vector for each song stored in the database.
 
 - **ElasticSearch**: High-performance search engine used to execute complex queries, with over **30k indexed documents** for lightning-fast retrieval. Designed to be flexible, being able to return the exact song, artist or album that you're looking for, or provide approximate matches by doing a **fuzzy search**, **n-grams**, and **edge-ngrams**, offering users a fast and modern search experience.
 
