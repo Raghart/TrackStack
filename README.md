@@ -1,6 +1,6 @@
 # 🎵 TrackStack
 
-Do you want to find a new **banger**? Try out this **music recommendation web app** that uses an algorithm based on **song metadata** (genre, energy, danceability, and more) to recommend **tracks** based on the parameters you choose. Discover new tracks from a database of over **50,000 tracks**!
+Do you want to find a new **banger**? Try out this **music recommendation web app** that uses vectors based on **song metadata** (genre, energy, danceability, and more) enhanced by a weighted system to recommend **tracks** based on the weights you assign to each feature. Discover new tracks from a database of over **50,000 tracks**!
 
 Check out the live version in Render:
 
@@ -46,7 +46,7 @@ I built this project for two main reasons:
 
 ## 📖 Usage
 
-### Track new songs based on your preferences
+### * Track new *songs* based on your preferences
 
 Want to find a new banger?
 
@@ -64,7 +64,7 @@ In a few seconds you'll be redirected to a page showing the tracks that match yo
     <img src="./assets/RecommendationResults.png" alt="Lara's Recommendation Results" />
 </p>
 
-### Track a song, an artist or an album
+### * Track a *song*, an *artist* or an *album*
 
 To search for a specific song, artist, or album, use the search bar in the top navbar and type what you are looking for. The system will load several results that try to match your query. The search is powered by ElasticSearch and its fuzzy search capabilities, using features like **fuzzy search**, **n-grams**, and **edge-ngrams** to increase recall and tolerate typos. Search across more than **28,000** results available to find the specific song you are looking for, as shown in the image below:
 
@@ -72,7 +72,7 @@ To search for a specific song, artist, or album, use the search bar in the top n
     <img src="./assets/songSearch.png" alt="Intelligent Song Search" />
 </p>
 
-### Check out the tracks
+### * Check out the *tracks*
 
 What's a good recommendation system if you can't **listen** to the tracks it suggests?
 
@@ -82,10 +82,10 @@ What's a good recommendation system if you can't **listen** to the tracks it sug
 A **30-second song-preview** will be played automatically. At the bottom of the page, you can see more information about the currently playing track, such as its elapsed time and artists. The player also includes extra controls, like a button to play a random song, buttons to play the previous and next tracks by ID, and a slider to control the volume:
 
 <p align="center">
-    <img src="./assets/play_song.png" alt="Click the play button" />
+    <img src="./assets/playSong.png" alt="Click the play button" />
 </p>
 
-### Learn more about a track
+### * Learn more about a *track*
 
 Want to know more about a specific track that caught your eye?
 
@@ -94,10 +94,10 @@ Want to know more about a specific track that caught your eye?
 You'll be redirected to a page that shows additional information about the track, including its genres, duration, release date, album, and even a link to Spotify if you want to hear the full version:
 
 <p align="center">
-    <img src="./assets/song_details.png" alt="Track Details" />
+    <img src="./assets/songDetails.png" alt="Track Details" />
 </p>
 
-### Discover songs by artists
+### * Discover songs by *artists*
 
 Do you want to discover new artists? 
 
@@ -111,10 +111,10 @@ You'll be redirected to a page where you can listen to their songs:
 </p>
 
 <p align="center">
-    <img src="./assets/artist_page.png" alt="Music Artists Songs" />
+    <img src="./assets/artistPage.png" alt="Music Artists Songs" />
 </p>
 
-### Discover songs by genre
+### * Discover songs by *genre*
 
 Explore over **100 genres** and find your next favorite song based on your tastes. 
 
@@ -123,6 +123,23 @@ Explore over **100 genres** and find your next favorite song based on your taste
 
 <p align="center">
     <img src="./assets/Genres.png" alt="Music Genres Options" />
+</p>
+
+### * Discover songs by *albums*
+
+Do you want to hear more song from an album?
+
+1. Click the **Albums** section in the left sidebar.
+2. Click on the image of any album that catches your attention.
+
+You'll be redirected to a page where you can listen to their songs:
+
+<p align="center">
+    <img src="./assets/albums.png" alt="Music album page"/>
+</p>
+
+<p align="center">
+    <img src="./assets/albumSongs.png" alt="Songs from an album" />
 </p>
 
 ---
@@ -147,7 +164,7 @@ Explore over **100 genres** and find your next favorite song based on your taste
 
 - **Sequelize**: An Object-Relational Mapping (ORM) for managing relational data models and interacting with the PostgreSQL database in a structured way. It retrieves dozens of songs, artists and albums in seconds, and by using a randomly generated seed in queries, delivers semi-random results that keep the experience fresh, letting users discover a new song or artist every time they visit.
 
-- **PostgreSQL**: Primary Database, storing over **300k records** with high reliability and performance. 
+- **PostgreSQL**: Primary Database, storing over **300k records** with high reliability and performance. In addition with the PostgreSQL vectors extension to store a vector for each song stored in the database.
 
 - **ElasticSearch**: High-performance search engine used to execute complex queries, with over **30k indexed documents** for lightning-fast retrieval. Designed to be flexible, being able to return the exact song, artist or album that you're looking for, or provide approximate matches by doing a **fuzzy search**, **n-grams**, and **edge-ngrams**, offering users a fast and modern search experience.
 
