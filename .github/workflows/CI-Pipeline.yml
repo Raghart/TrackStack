@@ -1,4 +1,4 @@
-name: FullStack Deployment Pipeline
+name: TrackStack Continuous Deployment Pipeline
 
 on:    
   pull_request:
