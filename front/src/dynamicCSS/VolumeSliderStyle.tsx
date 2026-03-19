@@ -7,10 +7,6 @@ const MapVolumeStyle = new Map<number, IconType> ([
     [2, PiSpeakerHighBold]
 ]);
 
-const VolumeStyle = {
-    Icon: [PiSpeakerSlashBold, PiSpeakerLowBold, PiSpeakerHighBold ]
-};
-
 export const getVolumeIconStyle = (value: number) => {
     const idx = value === 0 ? 0 : value < 0.5 ? 1 : 2;
     return MapVolumeStyle.get(idx) ?? PiSpeakerHighBold;
