@@ -1,5 +1,5 @@
 import { SLIDER_TAGS_GAP_SIZES, SLIDER_TAGS_PX_SIZES } from "@/components/constants/TopBarC";
-import { MapSliderStyles, TagSliderStyles } from "@/dynamicCSS/TagsSliderStyles";
+import { MapSliderStyles } from "@/dynamicCSS/TagsSliderStyles";
 import { SliderLabels } from "@/types/RecDataTypes";
 import { Flex, For, Tag } from "@chakra-ui/react";
 

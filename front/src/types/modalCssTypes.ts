@@ -40,18 +40,3 @@ export interface SliderStylesOptions {
     Tempo: SliderStylesProps;
     Sentiment: SliderStylesProps;
 };
-
-export interface SliderTagsOptions {
-    Relaxed: SliderTagsProps;
-    Active: SliderTagsProps;
-    Intense: SliderTagsProps;
-    Calm: SliderTagsProps;
-    Rhythmic: SliderTagsProps;
-    Energetic: SliderTagsProps;
-    "70 BPM": SliderTagsProps;
-    "120 BPM": SliderTagsProps;
-    "230 BPM": SliderTagsProps;
-    "😌": SliderTagsProps;
-    "🙂": SliderTagsProps;
-    "😝": SliderTagsProps;
-};
