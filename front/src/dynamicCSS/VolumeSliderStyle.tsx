@@ -1,7 +1,14 @@
+import { IconType } from "react-icons/lib";
 import { PiSpeakerHighBold, PiSpeakerSlashBold, PiSpeakerLowBold } from "react-icons/pi";
 
+const MapVolumeStyle = new Map<string, 0.5 | IconType> ([
+    ["threshold", 0.5],
+    ["0", PiSpeakerSlashBold],
+    ["1", PiSpeakerLowBold],
+    ["2", PiSpeakerHighBold]
+]);
+
 const VolumeStyle = {
-    threshold: 0.5,
     Icon: [PiSpeakerSlashBold, PiSpeakerLowBold, PiSpeakerHighBold ]
 };
 
