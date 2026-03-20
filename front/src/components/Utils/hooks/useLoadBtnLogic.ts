@@ -3,16 +3,17 @@ import { useAppDispatch } from "../redux-hooks";
 import { setActiveAudio } from "@/reducers/songReducer";
 import { SongResponse } from "@/types/songTypes";
 import { getNextSong, getPreviousSong } from "@/queries/MusicPlayerQueries";
+import { useEffect } from "react";
 
 const useLoadBtnLogic = (activeSong: SongResponse | null) => {
     const dispatch = useAppDispatch();
-    const [getPriorSong] = useLazyQuery(getPreviousSong, {
-            onCompleted: (data) => {
-                if (data.getPreviousSong) {
-                    dispatch(setActiveAudio(data.getPreviousSong));
-                };
-            }
-        });
+    const [getPriorSong, { data }] = useLazyQuery(getPreviousSong);
+    
+        useEffect(() => {
+            if (data?.getPreviousSong) {
+                dispatch(setActiveAudio(data.getPreviousSong));
+            };
+        }, [data, dispatch])
         
     const [getFollowingSong] = useLazyQuery(getNextSong, {
         onCompleted: (data) => {
