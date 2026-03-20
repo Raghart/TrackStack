@@ -14,8 +14,8 @@ const SwitchButton = <SwitchLabel extends SwitchLabelType>({ params }:{ params: 
     
     const leftSwitchStyle = MapSwitchStyles.get(params.labels[0].label) || defaultSwitchStyle;
     const rightSwitchStyle = MapSwitchStyles.get(params.labels[1].label) || defaultSwitchStyle;
-    
     const dispatch = useAppDispatch();
+    
     return(
         <Box p={5} bg="gray.800" borderRadius="full" border="1px solid" textAlign="center" flexDirection="column"
             borderColor="gray.600" boxShadow="lg" display="flex" justifyContent="space-between" w="full" h="120px" 

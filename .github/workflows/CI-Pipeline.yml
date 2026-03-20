@@ -24,6 +24,9 @@ jobs:
       - name: Check style
         run: npm run lint
 
+      - name: Check Security
+        run: npx eslint .
+
   Backend-Pipeline:
     runs-on: ubuntu-latest
     defaults:
