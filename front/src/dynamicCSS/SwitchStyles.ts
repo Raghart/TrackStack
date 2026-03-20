@@ -1,7 +1,7 @@
 import { SwitchStyle, SwitchTagsStyles, SwitchType } from "@/types/modalCssTypes";
 import { FaMicrophoneAlt, FaGuitar, FaSmile, FaSadTear, FaMicrophone, FaHeadphones } from "react-icons/fa";
 
-const MapSwitchStyles = new Map<SwitchType, SwitchStyle>([
+export const MapSwitchStyles = new Map<SwitchType, SwitchStyle>([
     ["Vocals", {
         tagBg: "pink.400",
         ThumbBg: "pink.200",
@@ -63,6 +63,17 @@ const MapSwitchStyles = new Map<SwitchType, SwitchStyle>([
         border: "0 0 0 2px var(--chakra-colors-orange-500), 0 0 8px var(--chakra-colors-orange-500)"
     }]
 ]);
+
+export const defaultSwitchStyle = {
+    tagBg: "gray.500",
+    ThumbBg: "gray.200",
+    ThumbBackgroundBg: "gray.400",
+    ThumbIcon: FaMicrophoneAlt,
+    IconColor: "gray.500",
+    ThumbBackgroundIcon: FaGuitar,
+    BackgroundIconColor: "cyan.500",
+    border: "0 0 0 2px var(--chakra-colors-gray-500), 0 0 8px var(--chakra-colors-gray-500)"
+}
 
 export const SwitchStyles: SwitchTagsStyles = {
     Vocals: {
