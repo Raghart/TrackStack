@@ -1,16 +1,20 @@
 import { Box, Heading, Flex, Switch } from "@chakra-ui/react";
 import { useAppDispatch } from "@/components/Utils/redux-hooks";
-import { SwitchStyles } from "@/dynamicCSS/SwitchStyles";
 import { SwitchOptionsType, SwitchLabelType } from "@/types/RecDataTypes";
 import LeftSwitchTag from "./LeftSwitchTag";
 import RightSwitchTag from "./RightSwitchTag";
 import ControlSwitchStyle from "./ControlSwitchStyle";
 import useSwitchValue from "@/components/Utils/hooks/useSwitchValue";
 import { BLUE_SHADOW_MODAL, LARA_OPT_SIZES, SWITCH_BTN_TRANSITION } from "@/components/constants/TopBarC";
+import { defaultSwitchStyle, MapSwitchStyles } from "@/dynamicCSS/SwitchStyles";
 
 const SwitchButton = <SwitchLabel extends SwitchLabelType>({ params }:{ params: SwitchOptionsType<SwitchLabel> }) => {
     const { switchTagValue, toggleSwitchValue } = useSwitchValue(params.title, params.labels[0].label,
         params.labels[1].label, params.setValue);
+    
+    const leftSwitchStyle = MapSwitchStyles.get(params.labels[0].label) || defaultSwitchStyle;
+    const rightSwitchStyle = MapSwitchStyles.get(params.labels[1].label) || defaultSwitchStyle;
+    
     const dispatch = useAppDispatch();
     return(
         <Box p={5} bg="gray.800" borderRadius="full" border="1px solid" textAlign="center" flexDirection="column"
@@ -29,8 +33,8 @@ const SwitchButton = <SwitchLabel extends SwitchLabelType>({ params }:{ params: 
                 <Switch.Root size="lg" position="relative" display="flex" alignItems="center" w="75px" h="32px"
                     onChange={() => dispatch(toggleSwitchValue())}>
                     <Switch.HiddenInput />
-                    <ControlSwitchStyle switchValue={switchTagValue} leftTag={SwitchStyles[params.labels[0].label]} 
-                        rightTag={SwitchStyles[params.labels[1].label]} />
+                    <ControlSwitchStyle switchValue={switchTagValue} leftTag={leftSwitchStyle} 
+                        rightTag={rightSwitchStyle} />
                     <Switch.Label />
                 </Switch.Root>   
 
