@@ -11,6 +11,8 @@ export interface SwitchStyle {
     border: string;
 };
 
+export type SwitchType = "Vocals" | "Instrumental" | "Happy" | "Sad" | "Acoustic" | "Electronic";
+
 export interface SwitchTagsStyles {
     Vocals: SwitchStyle;
     Instrumental: SwitchStyle;
