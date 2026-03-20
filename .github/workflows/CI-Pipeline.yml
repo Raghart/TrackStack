@@ -45,6 +45,9 @@ jobs:
       - name: Check style
         run: npm run lint
 
+      - name: Check security
+        run: npx eslint .
+
       - name: Run tests
         run: npm run test
 
