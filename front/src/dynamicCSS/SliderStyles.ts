@@ -46,6 +46,16 @@ export const MapSliderStyles = new Map<SliderType, SliderStylesProps> ([
     }]
 ]);
 
+export const defaultSliderStyle = {
+    threshold: [0.30, 0.70],
+    SliderBg: ["green.500", "yellow.600", "red.600"],
+    Icon: [FaCloud, BsFire, AiFillThunderbolt],
+    IconColor: ["green.400", "red.500", "yellow.500"],
+    IconBorder: ["cyan.600", "orange.600", "yellow.600"],
+    shadow: ["0 0 8px var(--chakra-colors-green-500)", "0 0 8px var(--chakra-colors-yellow-600)",
+        "0 0 8px var(--chakra-colors-red-600)" ]
+}
+
 export const SliderStyles: SliderStylesOptions = {
     Energy: {
         threshold: [0.30, 0.70],
