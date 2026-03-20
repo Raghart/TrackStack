@@ -1,5 +1,5 @@
 import { SliderTitles } from "@/types/RecDataTypes";
-import { SliderStyles } from "./SliderStyles";
+import { MapSliderStyles, SliderStyles } from "./SliderStyles";
 import { Icon } from "@chakra-ui/react";
 
 export const getSliderStyle = (title: SliderTitles, value: number) => {

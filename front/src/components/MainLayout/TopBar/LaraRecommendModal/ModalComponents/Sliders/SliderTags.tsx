@@ -1,5 +1,5 @@
 import { SLIDER_TAGS_GAP_SIZES, SLIDER_TAGS_PX_SIZES } from "@/components/constants/TopBarC";
-import { MapSliderStyles } from "@/dynamicCSS/TagsSliderStyles";
+import { MapSliderTagStyles } from "@/dynamicCSS/TagsSliderStyles";
 import { SliderLabels } from "@/types/RecDataTypes";
 import { Flex, For, Tag } from "@chakra-ui/react";
 
@@ -8,7 +8,7 @@ const SliderTags = ({ labels } : { labels: SliderLabels[] }) => {
         <Flex mt={3} gap={SLIDER_TAGS_GAP_SIZES}>
             <For each={labels}>
                 {(label) => {
-                    let labelStyle = MapSliderStyles.get(label);
+                    let labelStyle = MapSliderTagStyles.get(label);
                     if (labelStyle === undefined) {
                         labelStyle = {
                             bg: "gray.500", 

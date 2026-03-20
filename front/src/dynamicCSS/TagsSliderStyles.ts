@@ -1,7 +1,7 @@
 import { SliderTagsProps } from "@/types/modalCssTypes";
 import { SliderLabels } from "@/types/RecDataTypes";
 
-export const MapSliderStyles = new Map<SliderLabels, SliderTagsProps> ([
+export const MapSliderTagStyles = new Map<SliderLabels, SliderTagsProps> ([
     ["Relaxed", {
         bg: "green.600",
         border: "0 0 0 2px var(--chakra-colors-cyan-600), 0 0 8px var(--chakra-colors-cyan-600)",

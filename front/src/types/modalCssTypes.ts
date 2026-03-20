@@ -25,7 +25,7 @@ export interface SliderTagsProps {
     border: string;
 };
 
-interface SliderStylesProps {
+export interface SliderStylesProps {
     threshold: number[];
     SliderBg: string[];
     Icon: IconType[];
@@ -33,6 +33,8 @@ interface SliderStylesProps {
     IconBorder: string[];
     shadow: string[];
 };
+
+export type SliderType = "Energy" | "Danceability" | "Tempo" | "Sentiment";
 
 export interface SliderStylesOptions {
     Energy: SliderStylesProps;
