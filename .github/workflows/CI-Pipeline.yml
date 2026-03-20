@@ -1,10 +1,6 @@
-name: FullStack Deployment Pipeline
+name: Continuous Integration Pipeline
 
-on:
-  push:
-    branches:
-      - main
-      
+on:    
   pull_request:
     branches: [main]
     types: [opened, synchronize]
@@ -28,6 +24,9 @@ jobs:
       - name: Check style
         run: npm run lint
 
+      - name: Check Security
+        run: npx eslint .
+
   Backend-Pipeline:
     runs-on: ubuntu-latest
     defaults:
@@ -45,6 +44,9 @@ jobs:
         
       - name: Check style
         run: npm run lint
+
+      - name: Check security
+        run: npx eslint .
 
       - name: Run tests
         run: npm run test
@@ -101,11 +103,3 @@ jobs:
           name: playwright-report
           path: playwright-report/
           retention-days: 30
-
-  Web_Deploy:
-    runs-on: ubuntu-latest
-    needs: [Frontend-Pipeline,Backend-Pipeline,Playwright-E2E-Tests]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Trigger Deployment
-        run: curl https://api.render.com/deploy/srv-${{ secrets.RENDER_SERVICE_ID }}?key=${{ secrets.RENDER_API_KEY }}

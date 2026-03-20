@@ -11,21 +11,14 @@ export interface SwitchStyle {
     border: string;
 };
 
-export interface SwitchTagsStyles {
-    Vocals: SwitchStyle;
-    Instrumental: SwitchStyle;
-    Happy: SwitchStyle;
-    Sad: SwitchStyle;
-    Acoustic: SwitchStyle;
-    Electronic: SwitchStyle;
-};
+export type SwitchType = "Vocals" | "Instrumental" | "Happy" | "Sad" | "Acoustic" | "Electronic";
 
 export interface SliderTagsProps {
     bg: string;
     border: string;
 };
 
-interface SliderStylesProps {
+export interface SliderStylesProps {
     threshold: number[];
     SliderBg: string[];
     Icon: IconType[];
@@ -34,24 +27,4 @@ interface SliderStylesProps {
     shadow: string[];
 };
 
-export interface SliderStylesOptions {
-    Energy: SliderStylesProps;
-    Danceability: SliderStylesProps;
-    Tempo: SliderStylesProps;
-    Sentiment: SliderStylesProps;
-};
-
-export interface SliderTagsOptions {
-    Relaxed: SliderTagsProps;
-    Active: SliderTagsProps;
-    Intense: SliderTagsProps;
-    Calm: SliderTagsProps;
-    Rhythmic: SliderTagsProps;
-    Energetic: SliderTagsProps;
-    "70 BPM": SliderTagsProps;
-    "120 BPM": SliderTagsProps;
-    "230 BPM": SliderTagsProps;
-    "😌": SliderTagsProps;
-    "🙂": SliderTagsProps;
-    "😝": SliderTagsProps;
-};
+export type SliderType = "Energy" | "Danceability" | "Tempo" | "Sentiment";

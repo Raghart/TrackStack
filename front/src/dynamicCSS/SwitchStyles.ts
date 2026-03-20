@@ -1,8 +1,8 @@
-import { SwitchTagsStyles } from "@/types/modalCssTypes";
+import { SwitchStyle, SwitchType } from "@/types/modalCssTypes";
 import { FaMicrophoneAlt, FaGuitar, FaSmile, FaSadTear, FaMicrophone, FaHeadphones } from "react-icons/fa";
 
-export const SwitchStyles: SwitchTagsStyles = {
-    Vocals: {
+export const MapSwitchStyles = new Map<SwitchType, SwitchStyle>([
+    ["Vocals", {
         tagBg: "pink.400",
         ThumbBg: "pink.200",
         ThumbBackgroundBg: "pink.400",
@@ -11,8 +11,8 @@ export const SwitchStyles: SwitchTagsStyles = {
         ThumbBackgroundIcon: FaGuitar,
         BackgroundIconColor: "cyan.500",
         border: "0 0 0 2px var(--chakra-colors-pink-500), 0 0 8px var(--chakra-colors-pink-500)",
-    }, 
-    Instrumental: {
+    }],
+    ["Instrumental", {
         tagBg: "cyan.500",
         ThumbBg: "cyan.200",
         ThumbBackgroundBg: "cyan.400",
@@ -21,8 +21,8 @@ export const SwitchStyles: SwitchTagsStyles = {
         ThumbBackgroundIcon: FaMicrophone,
         BackgroundIconColor: "pink.400",
         border: "0 0 0 2px var(--chakra-colors-cyan-600), 0 0 8px var(--chakra-colors-cyan-600)"
-    },
-    Happy: {
+    }],
+    ["Happy", {
         tagBg: "purple.400",
         ThumbBg: "purple.200",
         ThumbBackgroundBg: "purple.400",
@@ -31,8 +31,8 @@ export const SwitchStyles: SwitchTagsStyles = {
         ThumbBackgroundIcon: FaSadTear,
         BackgroundIconColor: "blue.500",
         border: "0 0 0 2px var(--chakra-colors-purple-500), 0 0 8px var(--chakra-colors-purple-500)"
-    }, 
-    Sad: {
+    }],
+    ["Sad", {
         tagBg: "blue.500",
         ThumbBg: "blue.500",
         ThumbBackgroundBg: "blue.400",
@@ -41,8 +41,8 @@ export const SwitchStyles: SwitchTagsStyles = {
         ThumbBackgroundIcon: FaSmile,
         BackgroundIconColor: "yellow.500",
         border: "0 0 0 2px var(--chakra-colors-blue-600), 0 0 8px var(--chakra-colors-blue-600)"
-    }, 
-    Acoustic: {
+    }],
+    ["Acoustic", {
         tagBg: "green.500",
         ThumbBg: "green.200",
         ThumbBackgroundBg: "green.500",
@@ -51,8 +51,8 @@ export const SwitchStyles: SwitchTagsStyles = {
         ThumbBackgroundIcon: FaHeadphones,
         BackgroundIconColor: "orange.300",
         border: "0 0 0 2px var(--chakra-colors-green-600), 0 0 8px var(--chakra-colors-green-600)"
-    },
-    Electronic: {
+    }],
+    ["Electronic", {
         tagBg: "orange.400",
         ThumbBg: "orange.200",
         ThumbBackgroundBg: "orange.400",
@@ -61,5 +61,16 @@ export const SwitchStyles: SwitchTagsStyles = {
         ThumbBackgroundIcon: FaGuitar,
         BackgroundIconColor: "green.600",
         border: "0 0 0 2px var(--chakra-colors-orange-500), 0 0 8px var(--chakra-colors-orange-500)"
-    },
-};
+    }]
+]);
+
+export const defaultSwitchStyle = {
+    tagBg: "gray.500",
+    ThumbBg: "gray.200",
+    ThumbBackgroundBg: "gray.400",
+    ThumbIcon: FaMicrophoneAlt,
+    IconColor: "gray.500",
+    ThumbBackgroundIcon: FaGuitar,
+    BackgroundIconColor: "cyan.500",
+    border: "0 0 0 2px var(--chakra-colors-gray-500), 0 0 8px var(--chakra-colors-gray-500)"
+}
