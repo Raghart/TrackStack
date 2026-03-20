@@ -1,5 +1,5 @@
 import { SliderTitles } from "@/types/RecDataTypes";
-import { defaultSliderStyle, MapSliderStyles, SliderStyles } from "./SliderStyles";
+import { defaultSliderStyle, MapSliderStyles } from "./SliderStyles";
 import { Icon } from "@chakra-ui/react";
 
 export const getSliderStyle = (title: SliderTitles, value: number) => {
@@ -9,7 +9,6 @@ export const getSliderStyle = (title: SliderTitles, value: number) => {
     const [lowIconCol, midIconCol, HighIconCol] = style.IconColor;
     const [lowBorder, midBorder, HighBorder] = style.IconBorder;
     const [lowShadow, midShadow, HighShadow] = style.shadow;
-    const idx = value < style.threshold[0] ? 0 : value < style.threshold[1] ? 1 : 2;
     
     switch (true) {
         case value < style.threshold[0]: {

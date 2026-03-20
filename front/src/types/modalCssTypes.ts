@@ -35,10 +35,3 @@ export interface SliderStylesProps {
 };
 
 export type SliderType = "Energy" | "Danceability" | "Tempo" | "Sentiment";
-
-export interface SliderStylesOptions {
-    Energy: SliderStylesProps;
-    Danceability: SliderStylesProps;
-    Tempo: SliderStylesProps;
-    Sentiment: SliderStylesProps;
-};
