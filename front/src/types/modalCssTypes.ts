@@ -13,15 +13,6 @@ export interface SwitchStyle {
 
 export type SwitchType = "Vocals" | "Instrumental" | "Happy" | "Sad" | "Acoustic" | "Electronic";
 
-export interface SwitchTagsStyles {
-    Vocals: SwitchStyle;
-    Instrumental: SwitchStyle;
-    Happy: SwitchStyle;
-    Sad: SwitchStyle;
-    Acoustic: SwitchStyle;
-    Electronic: SwitchStyle;
-};
-
 export interface SliderTagsProps {
     bg: string;
     border: string;

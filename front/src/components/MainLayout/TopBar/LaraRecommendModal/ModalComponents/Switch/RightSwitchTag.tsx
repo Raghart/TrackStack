@@ -1,7 +1,7 @@
 import { Tag } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import { SwitchLabelType } from "@/types/RecDataTypes";
-import { defaultSwitchStyle, MapSwitchStyles, SwitchStyles } from "@/dynamicCSS/SwitchStyles";
+import { defaultSwitchStyle, MapSwitchStyles } from "@/dynamicCSS/SwitchStyles";
 import { RIGHT_SWITCH_PX, tagRBG } from "@/components/constants/TopBarC";
 
 const RightSwitchTag = ({ label, description } : { label: SwitchLabelType, description: string }) => {
