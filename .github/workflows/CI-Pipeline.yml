@@ -1,4 +1,4 @@
-name: TrackStack Continuous Deployment Pipeline
+name: TrackStack Continuous Integration Pipeline
 
 on:    
   pull_request:
