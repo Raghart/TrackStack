@@ -1,3 +1,4 @@
+process.loadEnvFile();
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -14,9 +15,7 @@ import { SongGenresModule } from './song_genres/song_genres.module';
 import { SearchModule } from './search/search.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import dotenv from 'dotenv';
 import { join } from 'path';
-dotenv.config();
 
 @Module({
   imports: [

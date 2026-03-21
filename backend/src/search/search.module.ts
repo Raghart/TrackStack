@@ -1,3 +1,4 @@
+process.loadEnvFile();
 import { Module } from '@nestjs/common';
 import { SearchService } from './search.service';
 import { SearchResolver } from './search.resolver';
@@ -11,8 +12,6 @@ import { ArtistsModel } from '../../models/artists/artists.model';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import { Client } from 'elasticsearch';
-import dotenv from 'dotenv';
-dotenv.config();
 
 @Module({
   imports: [
