@@ -3,8 +3,7 @@
   "version": "1.0",
   "description": "",
   "author": "Rafael Alejandro Rojas Diaz",
-  "private": true,
-  "license": "UNLICENSED",
+  "license": "MIT License",
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
