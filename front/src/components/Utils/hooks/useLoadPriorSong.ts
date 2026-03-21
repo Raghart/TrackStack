@@ -5,7 +5,7 @@ import { getPreviousSong } from "@/queries/MusicPlayerQueries";
 import { useEffect } from "react";
 import { setActiveAudio } from "@/reducers/songReducer";
 
-const usePriorSong = (activeSong: SongResponse | null) => {
+const useLoadPriorSong = (activeSong: SongResponse | null) => {
     const dispatch = useAppDispatch();
     const [getPriorSong, { data }] = useLazyQuery(getPreviousSong);
         
@@ -23,4 +23,4 @@ const usePriorSong = (activeSong: SongResponse | null) => {
     return loadPrevSong;
 };
 
-export default usePriorSong;
+export default useLoadPriorSong;

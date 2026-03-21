@@ -5,16 +5,10 @@ import { SongResponse } from "@/types/songTypes";
 import { getNextSong } from "@/queries/MusicPlayerQueries";
 import { useEffect } from "react";
 
-const useLoadBtnLogic = (activeSong: SongResponse | null) => {
+const useLoadNextSong = (activeSong: SongResponse | null) => {
     const dispatch = useAppDispatch();
         
-    const [getFollowingSong, { data }] = useLazyQuery(getNextSong, {
-        onCompleted: (data) => {
-            if (data.getNextSong) {
-                dispatch(setActiveAudio(data.getNextSong));
-            };
-        }
-    });
+    const [getFollowingSong, { data }] = useLazyQuery(getNextSong);
 
     useEffect(() => {
         if (data?.getNextSong) {
@@ -30,4 +24,4 @@ const useLoadBtnLogic = (activeSong: SongResponse | null) => {
     return loadNextSong
 };
 
-export default useLoadBtnLogic;
+export default useLoadNextSong;
