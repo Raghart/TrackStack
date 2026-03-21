@@ -2,17 +2,19 @@ import { useLazyQuery } from "@apollo/client";
 import { useAppDispatch } from "../redux-hooks";
 import { setActiveAudio } from "@/reducers/songReducer";
 import { getRandomSong } from "@/queries/MusicPlayerQueries";
+import { useEffect } from "react";
 
 const useStraySong = () => {
     const dispatch = useAppDispatch();
-    const [getStraySong] = useLazyQuery(getRandomSong, {
+    const [getStraySong, { data }] = useLazyQuery(getRandomSong, {
         fetchPolicy: "network-only",
-        onCompleted: (data) => {
-            if (data.getRandomSong) {
-                dispatch(setActiveAudio(data.getRandomSong));
-            };
-        }
     });
+
+    useEffect(() => {
+        if (data?.getRandomSong) {
+            dispatch(setActiveAudio(data.getRandomSong))
+        }
+    }, [data, dispatch])
 
     return getStraySong;
 };
