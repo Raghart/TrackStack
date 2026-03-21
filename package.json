@@ -1,0 +1,16 @@
+{
+  "name": "trackstack",
+  "author": "Rafael Alejandro Rojas Diaz",
+  "version": "1.2.0",
+  "description": "Do you want to find a new **banger**? Try out this **music recommendation web app** that uses vectors based on **song metadata** (genre, energy, danceability, and more) enhanced by a weighted system to recommend **tracks** based on the weights you assign to each feature. Discover new tracks from a database of over **50,000 tracks**!",
+  "main": "index.js",
+  "workspaces":[
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "license": "MIT"
+}
