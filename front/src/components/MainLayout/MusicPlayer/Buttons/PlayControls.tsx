@@ -1,5 +1,5 @@
 import { ButtonGroup } from "@chakra-ui/react";
-import useLoadBtnLogic from "@/components/Utils/hooks/useLoadBtnLogic";
+import useLoadBtnLogic from "@/components/Utils/hooks/useLoadNextSong";
 import BtnPrevSong from "./BtnPrevSong";
 import BtnNextSong from "./BtnNextSong";
 import BtnPlaySong from "./BtnPlaySong";
