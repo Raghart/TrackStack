@@ -159,7 +159,7 @@ export class SongsService {
     return userVectorFormatted;
   }
 
-  async getAIResponse(genres: string[], userVector: number[]) {
+  async getAIResponse(genres: string[], userVector: number[]) : Promise<string> {
     const ai = new GoogleGenAI({
       apiKey: process.env.API_KEY
     });
@@ -168,7 +168,7 @@ export class SongsService {
 
     try {
       const response = await ai.models.generateContent({
-        model: process.env.AI_MODEL ?? "",
+        model: parseString(process.env.AI_MODEL),
         contents: [
           "Generate a message for an user who wants to listen to songs with the following metadata:",
           `Genres: ${genres.join(",")}`,
@@ -186,13 +186,12 @@ export class SongsService {
           ].join("\n"),
         }
       });
-      console.log(response.text)
-
+      
+      return parseString(response.text);
     } catch (error) {
       console.error(`error while trying to get the answer`, error)
+      return "Unable to get an answer from the model";
     }
-
-    return "ok"
   };
 
   async getSongRecommendations(
