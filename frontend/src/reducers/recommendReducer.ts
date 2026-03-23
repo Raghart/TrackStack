@@ -4,6 +4,7 @@ import { SongResponse } from "@/types/songTypes";
 
 const initialState: RecommendData = {
     genres: [],
+    message: "",
     energy: 0.5,
     speechLevel: 0.165,
     danceability: 0.5,
@@ -52,10 +53,14 @@ const recommendSlice = createSlice({
         setLaraRecommendations(state, action: PayloadAction<SongResponse[]>) {
             state.results = action.payload;
         },
+        setMessage(state, action: PayloadAction<string>) {
+            state.message = action.payload;
+        }
     }
 });
 
 export const { setRecommendedGenres, setEnergy, setSpeechLevel, setTempo, setSentiment, setVoiceType, setMood,
-    setDanceability, setAcousticness, setLaraRecommendations, deleteLastGenre } = recommendSlice.actions;
+    setDanceability, setAcousticness, setLaraRecommendations, setMessage, 
+    deleteLastGenre } = recommendSlice.actions;
 
 export default recommendSlice.reducer;

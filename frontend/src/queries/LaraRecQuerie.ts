@@ -11,3 +11,9 @@ query getRecommendedSongs ($genres: [String!], $userVector: [Float!], $limit: In
   }
 }
 `;
+
+export const getAIResponse = gql`
+query getAISongResponse($genres: [String!], $userVector: [Float!]) {
+  getAIResponse (genres: $genres, userVector: $userVector)
+}
+`;
