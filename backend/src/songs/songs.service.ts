@@ -135,6 +135,30 @@ export class SongsService {
     const songData = await this.fetchFullSongData(songID);
     return this.parseFullSong(songData);
   }
+
+  buildUVString(userVector: number[]) : string[] {
+    const userDataTitle = [
+      "Danceability",
+      "Energy",
+      "Mode",
+      "Speechiness",
+      "Acousticness",
+      "Instrumentalness",
+      "Valence",
+      "Tempo",
+    ];
+
+    if (userVector.length != userDataTitle.length) {
+      return [];
+    };
+    const userVectorFormatted: string[] = [];
+    for (let idx = 0; idx < userVector.length; idx++) {
+      userVectorFormatted.push(`${userDataTitle[idx]}: ${userVector[idx]}`);
+    };
+    
+    return userVectorFormatted;
+  }
+  
   async getAIResponse(genres: string[], userVector: number[]) {
     const ai = new GoogleGenAI({
       apiKey: process.env.API_KEY
