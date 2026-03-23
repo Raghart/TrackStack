@@ -135,16 +135,31 @@ export class SongsService {
     const songData = await this.fetchFullSongData(songID);
     return this.parseFullSong(songData);
   }
-
-  async getAIResponse() {
+  async getAIResponse(genres: string[], userVector: number[]) {
     const ai = new GoogleGenAI({
       apiKey: process.env.API_KEY
     });
+
     try {
       const response = await ai.models.generateContent({
         model: process.env.AI_MODEL ?? "",
-        contents: "just say hello",
-      })
+        contents: [
+          "Generate a message for an user who wants to listen to songs with the following metadata:",
+          `Genres: ${genres.join(",")}`,
+          `UserVector:`
+        ].join("\n"),
+        config: {
+          systemInstruction: [
+            "You are a professional AI music expert",
+            "I'm passing you the genres and song characteristics a user wants to listen",
+            "Be enthusiastic, professional and brief.",
+            "Your answers must be no more than 3 lines",
+            "Don't use emojis and focus on the provided data",
+            "The userVector that has the provided data will be in a 0 to 1 scale",
+            "With 0 being the lowest to 1 being the highest"
+          ].join("\n"),
+        }
+      });
       console.log(response.text)
 
     } catch (error) {
