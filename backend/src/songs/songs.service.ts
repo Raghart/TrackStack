@@ -158,11 +158,13 @@ export class SongsService {
     
     return userVectorFormatted;
   }
-  
+
   async getAIResponse(genres: string[], userVector: number[]) {
     const ai = new GoogleGenAI({
       apiKey: process.env.API_KEY
     });
+
+    const formattedUV = this.buildUVString(userVector);
 
     try {
       const response = await ai.models.generateContent({
@@ -170,7 +172,7 @@ export class SongsService {
         contents: [
           "Generate a message for an user who wants to listen to songs with the following metadata:",
           `Genres: ${genres.join(",")}`,
-          `UserVector:`
+          `UserVector: ${formattedUV.join(", ")}`
         ].join("\n"),
         config: {
           systemInstruction: [
