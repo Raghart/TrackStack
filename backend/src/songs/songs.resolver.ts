@@ -3,6 +3,7 @@ import { SongsService } from './songs.service';
 import { USER_VECTOR } from '../../test/constants/constants';
 import { FullSongResponseDto } from './dto/FullSongResponse.dto';
 import { SongResponseDto } from './dto/SongResponse.dto';
+import { GraphQLString } from 'graphql';
 
 @Resolver()
 export class SongsResolver {
@@ -25,6 +26,11 @@ export class SongsResolver {
     @Args('SongID', { type: () => Int }) songID: number,
   ): Promise<FullSongResponseDto> {
     return this.songsService.getSongData(songID);
+  }
+
+  @Query(() => GraphQLString, { name: "getAIResponse" })
+  async getAIResponse() : Promise<string> {
+    return this.songsService.getAIResponse();
   }
 
   @Query(() => [SongResponseDto], { name: 'getSongRecommendations' })

@@ -1,3 +1,4 @@
+process.loadEnvFile()
 import {
   BadRequestException,
   Injectable,
@@ -26,6 +27,8 @@ import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import parseGenres from 'src/utils/parseGenres';
+import { generateText } from 'ai';
+import { GoogleGenAI } from '@google/genai';
 
 @Injectable()
 export class SongsService {
@@ -132,6 +135,24 @@ export class SongsService {
     const songData = await this.fetchFullSongData(songID);
     return this.parseFullSong(songData);
   }
+
+  async getAIResponse() {
+    const ai = new GoogleGenAI({
+      apiKey: process.env.API_KEY
+    });
+    try {
+      const response = await ai.models.generateContent({
+        model: process.env.AI_MODEL ?? "",
+        contents: "just say hello",
+      })
+      console.log(response.text)
+
+    } catch (error) {
+      console.error(`error while trying to get the answer`, error)
+    }
+
+    return "ok"
+  };
 
   async getSongRecommendations(
     genres: string[],
