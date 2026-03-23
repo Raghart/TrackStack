@@ -29,8 +29,13 @@ export class SongsResolver {
   }
 
   @Query(() => GraphQLString, { name: "getAIResponse" })
-  async getAIResponse() : Promise<string> {
-    return this.songsService.getAIResponse();
+  async getAIResponse(
+    @Args('genres', { type: () => [String], defaultValue: ['Rock'] })
+    genres: string[],
+    @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR })
+    userVector: number[],
+  ) : Promise<string> {
+    return this.songsService.getAIResponse(genres, userVector);
   }
 
   @Query(() => [SongResponseDto], { name: 'getSongRecommendations' })
