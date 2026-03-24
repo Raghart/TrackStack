@@ -40,6 +40,9 @@ import { join } from 'path';
       driver: ApolloDriver,
       autoSchemaFile: true,
       playground: true,
+      subscriptions: {
+        "graphql-ws": true
+      }
     }),
     SongsModule,
     AlbumsModule,

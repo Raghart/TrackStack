@@ -4,10 +4,14 @@ import { USER_VECTOR } from '../../test/constants/constants';
 import { FullSongResponseDto } from './dto/FullSongResponse.dto';
 import { SongResponseDto } from './dto/SongResponse.dto';
 import { GraphQLString } from 'graphql';
+import { Inject } from '@nestjs/common';
+import { PubSub } from 'graphql-subscriptions';
 
 @Resolver()
 export class SongsResolver {
-  constructor(private readonly songsService: SongsService) {}
+  constructor(private readonly songsService: SongsService,
+    @Inject('PUB_SUB') private readonly pubSub: PubSub
+  ) {}
 
   @Query(() => Int, { name: 'getDBLength' })
   async getDBLength(): Promise<number> {

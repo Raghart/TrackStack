@@ -15,6 +15,7 @@
   "keywords": [],
   "license": "MIT",
   "dependencies": {
+    "graphql-subscriptions": "^3.0.0",
     "react-markdown": "^10.1.0"
   }
 }
