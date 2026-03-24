@@ -1,20 +1,20 @@
-import { Box, Text } from "@chakra-ui/react"
+import { Box } from "@chakra-ui/react"
 import LoadingBeat from "../Utils/LoadingBeat"
+import Markdown from "react-markdown"
 
-const ResponseBox = ({ aiResponse } : { aiResponse: string }) => {
+const AIResponse = ({ message } : { message: string }) => {
     return(
-        <Box>
-            {!aiResponse && (
+        <Box color="white" userSelect="all" fontFamily="'Barlow', sans-serif"
+            fontWeight="medium" fontSize={{ lg: "xl" }} fontStyle="italic">
+            {!message && (
                 <LoadingBeat />
             )}
 
-            {aiResponse && (
-                <Text color="white" userSelect="none" fontFamily="'Barlow Condensed', sans-serif">
-                    {aiResponse }
-                </Text>
+            {message && (
+                <Markdown skipHtml>{message}</Markdown>
             )}
         </Box>
     );
 };
 
-export default ResponseBox;
+export default AIResponse;

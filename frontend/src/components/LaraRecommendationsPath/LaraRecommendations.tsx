@@ -9,7 +9,7 @@ import { Zoom } from "react-awesome-reveal";
 import { SongResponse } from "@/types/songTypes";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
-import ResponseBox from "./ResponseBox";
+import AIResponse from "./ResponseBox";
 
 const LaraRecommendations = () => {
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
@@ -23,7 +23,7 @@ const LaraRecommendations = () => {
             </Zoom>
 
             <Zoom triggerOnce direction="right" delay={100} style={{ paddingBottom: 10 }}>
-                <ResponseBox aiResponse={aiResponse} />
+                <AIResponse message={aiResponse} />
             </Zoom>
 
             <Zoom triggerOnce direction="up" delay={100}>

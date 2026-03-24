@@ -4,7 +4,7 @@
   "version": "1.2.0",
   "description": "Do you want to find a new **banger**? Try out this **music recommendation web app** that uses vectors based on **song metadata** (genre, energy, danceability, and more) enhanced by a weighted system to recommend **tracks** based on the weights you assign to each feature. Discover new tracks from a database of over **50,000 tracks**!",
   "main": "index.js",
-  "workspaces":[
+  "workspaces": [
     "backend",
     "frontend"
   ],
@@ -13,5 +13,8 @@
     "dev:frontend": "npm run dev --workspace=frontend"
   },
   "keywords": [],
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "react-markdown": "^10.1.0"
+  }
 }
