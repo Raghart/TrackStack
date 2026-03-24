@@ -4,8 +4,7 @@ import { useAppSelector } from "../redux-hooks";
 const useSongRec = () => {
     const [visibleCount, setVisibleCount] = useState<number>(20);
     const recommendations = useAppSelector(state => state.songData.results);
-    const message = useAppSelector(state => state.songData.message);
-    console.log(message)
+    const aiResponse = useAppSelector(state => state.songData.message);
     const visibleSongs = recommendations.slice(0, visibleCount);
 
     const loadMoreSongs = () => {
@@ -14,7 +13,7 @@ const useSongRec = () => {
         };
     };
 
-    return { visibleSongs, recommendations, loadMoreSongs };
+    return { visibleSongs, recommendations, loadMoreSongs, aiResponse };
 };
 
 export default useSongRec;

@@ -9,9 +9,10 @@ import { Zoom } from "react-awesome-reveal";
 import { SongResponse } from "@/types/songTypes";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
+import ResponseBox from "./ResponseBox";
 
 const LaraRecommendations = () => {
-    const { visibleSongs, recommendations, loadMoreSongs } = useSongRec();
+    const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
     if (visibleSongs.length === 0) return <Navigate to="/" replace />
     
@@ -19,6 +20,10 @@ const LaraRecommendations = () => {
         <Box direction="column" pt={7} pb={24} gap={7}>
             <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 20 }}>
                 <LaraHeader />
+            </Zoom>
+
+            <Zoom triggerOnce direction="right" delay={100} style={{ paddingBottom: 10 }}>
+                <ResponseBox aiResponse={aiResponse} />
             </Zoom>
 
             <Zoom triggerOnce direction="up" delay={100}>
