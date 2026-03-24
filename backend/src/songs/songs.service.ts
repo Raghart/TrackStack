@@ -159,6 +159,47 @@ export class SongsService {
     return userVectorFormatted;
   }
 
+  async streamAIResponse(genres: string[], userVector: number[]) {
+    const ai = new GoogleGenAI({
+      apiKey: process.env.API_KEY
+    });
+
+    const formattedUV = this.buildUVString(userVector);
+
+    try {
+      const streamResponse = await ai.models.generateContentStream({
+        model: parseString(process.env.AI_MODEL),
+        contents: [
+          "Generate a message for an user who wants to listen to songs with the following metadata:",
+          `Genres: ${genres.join(",")}`,
+          `UserVector: ${formattedUV.join(", ")}`
+        ].join("\n"),
+        config: {
+          systemInstruction: [
+            "You are a professional AI music expert",
+            "I'm passing you the genres and song characteristics a user wants to listen",
+            "Be enthusiastic, professional and brief.",
+            "Your answers must be no more than 3 lines",
+            "Don't use emojis and focus on the provided data",
+            "Always answer using the Markdown format. Use bold to enhance important words",
+            "Replace technical music terms with more friendly user terms",
+            "Add just 1 technical music term to let the user know you selected these tracks because of this value",
+            "Never include headers, lists, links or image",
+            "The userVector data will be in a 0 to 1 scale",
+            "With 0 being the lowest to 1 being the highest",
+          ].join("\n"),
+        }
+      });
+
+      for await (const chunk of streamResponse) {
+        return parseString(chunk.text)
+      }
+    } catch (error) {
+      console.error(`error while trying to get the answer`, error)
+      return "Unable to get an answer from the model";
+    }
+  }
+
   async getAIResponse(genres: string[], userVector: number[]) : Promise<string> {
     const ai = new GoogleGenAI({
       apiKey: process.env.API_KEY
