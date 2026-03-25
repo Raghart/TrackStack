@@ -42,6 +42,7 @@ import { join } from 'path';
       playground: true,
       subscriptions: {
         "subscriptions-transport-ws": true,
+        "graphql-ws": true,
       }
     }),
     SongsModule,

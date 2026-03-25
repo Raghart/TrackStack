@@ -10,9 +10,26 @@ import { SongResponse } from "@/types/songTypes";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
 import AIResponse from "./ResponseBox";
+import { useSubscription } from "@apollo/client";
+import { aiSubscription } from "@/queries/LaraRecQuerie";
+import { useEffect, useState } from "react";
 
 const LaraRecommendations = () => {
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
+    const [aiMessage, setAIMessage] = useState("");
+    const { data, error, loading } = useSubscription(aiSubscription, {
+        onData: ({ data }) => {
+            const newChunk = data.data.aiResponse;
+            setAIMessage(prev => prev + newChunk);
+        }
+    });
+
+    useEffect(() => {
+        console.log(`Data: ${data}`);
+        console.log(`Loading: ${loading}`);
+        console.error(`Error: ${error}`)
+    }, [data, loading]);
+
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
     if (visibleSongs.length === 0) return <Navigate to="/" replace />
     

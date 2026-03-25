@@ -3,6 +3,10 @@ import { SongResponse } from "./types/songTypes";
 import { ArtistResponse } from "./types/artistTypes";
 import { AlbumResponse } from "./types/albumTypes";
 
+const httpLink = new HttpLink({
+  uri: import.meta.env.VITE_GRAPHQL_URI,
+});
+
 export const client = new ApolloClient({
   cache: new InMemoryCache({
     typePolicies: {
