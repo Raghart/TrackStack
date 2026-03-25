@@ -160,6 +160,7 @@ export class SongsService {
   }
 
   async streamAIResponse(genres: string[], userVector: number[]) {
+    return "testing"
     const ai = new GoogleGenAI({
       apiKey: process.env.API_KEY
     });

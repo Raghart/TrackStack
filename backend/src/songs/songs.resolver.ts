@@ -1,4 +1,4 @@
-import { Args, Float, Int, Query, Resolver, Subscription } from '@nestjs/graphql';
+import { Args, Float, Int, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { SongsService } from './songs.service';
 import { USER_VECTOR } from '../../test/constants/constants';
 import { FullSongResponseDto } from './dto/FullSongResponse.dto';
@@ -33,8 +33,18 @@ export class SongsResolver {
   }
 
   @Subscription(() => String)
-  async streamingAIResponse() {
+  async aiResponse() {
     return this.pubSub.asyncIterableIterator('AI_RESPONSE')
+  }
+
+  @Mutation(() => String)
+  async streamAIResponse(
+    @Args('genres', { type: () => [String], defaultValue: ['Rock'] }) genres: string[],
+    @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR }) userVector: number[],
+  ) {
+    const streamedResponse = await this.songsService.streamAIResponse(genres, userVector);
+    this.pubSub.publish('AI_RESPONSE', { aiResponse: streamedResponse })
+    return streamedResponse
   }
 
   @Query(() => GraphQLString, { name: "getAIResponse" })
