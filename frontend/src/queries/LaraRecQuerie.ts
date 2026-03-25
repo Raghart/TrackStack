@@ -18,6 +18,12 @@ subscription {
 }
 `;
 
+export const streamAIAnswer = gql`
+mutation streamResponse($genres: [String!], $userVector: [Float!]) {
+  streamAIResponse(genres: $genres, userVector: $userVector) 
+}
+`;
+
 export const getAIResponse = gql`
 query getAISongResponse($genres: [String!], $userVector: [Float!]) {
   getAIResponse (genres: $genres, userVector: $userVector)
