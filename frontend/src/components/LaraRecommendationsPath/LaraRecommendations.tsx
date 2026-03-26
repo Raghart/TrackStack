@@ -23,7 +23,7 @@ const LaraRecommendations = () => {
             setAIMessage(prev => prev + newChunk);
         }
     });
-
+    
     useEffect(() => {
         console.log(`Data: ${data}`);
         console.log(`Loading: ${loading}`);
@@ -40,7 +40,7 @@ const LaraRecommendations = () => {
             </Zoom>
 
             <Zoom triggerOnce direction="right" delay={100} style={{ paddingBottom: 10 }}>
-                <AIResponse message={aiResponse} />
+                
             </Zoom>
 
             <Zoom triggerOnce direction="up" delay={100}>

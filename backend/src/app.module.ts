@@ -41,8 +41,9 @@ import { join } from 'path';
       autoSchemaFile: true,
       playground: true,
       subscriptions: {
-        "subscriptions-transport-ws": true,
-        "graphql-ws": true,
+        "subscriptions-transport-ws": {
+          path: "/graphql"
+        }
       }
     }),
     SongsModule,

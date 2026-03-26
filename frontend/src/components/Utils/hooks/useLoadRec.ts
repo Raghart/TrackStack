@@ -14,7 +14,6 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
             mood, acousticness } = useAppSelector(state => state.songData);
     const dispatch = useAppDispatch();
     const [getIASongs] = useLazyQuery(getSongRecommendations);
-    const [getResponse] = useLazyQuery(getAIResponse);
     const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel,
         acousticness, voiceType, sentiment);
 
@@ -33,15 +32,6 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
                 };
             },
         });
-
-        getResponse({ variables: { genres, userVector },
-            fetchPolicy: 'no-cache',
-            onCompleted: (data) => {
-                if (data.getAIResponse) {
-                    dispatch(setMessage(data.getAIResponse))
-                }
-            }
-        })
     };
 
     return { loadRecommendations, loading }

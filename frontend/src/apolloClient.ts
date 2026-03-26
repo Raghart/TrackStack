@@ -1,11 +1,30 @@
-import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
 import { SongResponse } from "./types/songTypes";
 import { ArtistResponse } from "./types/artistTypes";
 import { AlbumResponse } from "./types/albumTypes";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { createClient } from "graphql-ws";
+import { getMainDefinition } from "@apollo/client/utilities";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI,
 });
+
+const wsLink = new GraphQLWsLink(createClient({
+  url: "ws://localhost:3000/graphql",
+}));
+
+const splitLink = split(
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    )
+  },
+  wsLink,
+  httpLink
+)
 
 export const client = new ApolloClient({
   cache: new InMemoryCache({
@@ -49,7 +68,5 @@ export const client = new ApolloClient({
       }
     }
   }),
-  link: new HttpLink({
-    uri: import.meta.env.VITE_GRAPHQL_URI,
-  })
+  link: splitLink,
 });
