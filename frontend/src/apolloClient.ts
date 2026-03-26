@@ -11,7 +11,7 @@ const httpLink = new HttpLink({
 });
 
 const wsLink = new GraphQLWsLink(createClient({
-  url: "ws://localhost:3000/graphql",
+  url: import.meta.env.VITE_SUBSCRIPTION_URI,
 }));
 
 const splitLink = split(

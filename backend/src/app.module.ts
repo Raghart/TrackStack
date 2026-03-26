@@ -41,7 +41,7 @@ import { join } from 'path';
       autoSchemaFile: true,
       playground: true,
       subscriptions: {
-        "subscriptions-transport-ws": {
+        "graphql-ws": {
           path: "/graphql"
         }
       }

@@ -15,25 +15,16 @@ import { aiSubscription } from "@/queries/LaraRecQuerie";
 import { useEffect, useState } from "react";
 import useAIMutation from "../Utils/hooks/useAIMutation";
 import generateUserVector from "../Utils/generateUserVector";
+import useTestMutation from "../Utils/hooks/useTestMutation";
 
 const LaraRecommendations = () => {
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
     const [aiMessage, setAIMessage] = useState("");
-    const { data, error, loading } = useSubscription(aiSubscription, {
-        onData: ({ data }) => {
-            const newChunk = data.data.aiResponse;
-            setAIMessage(prev => prev + newChunk);
-        }
-    });
-    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
-            mood, acousticness } = useAppSelector(state => state.songData);
-    const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel,
-        acousticness, voiceType, sentiment);
-    useAIMutation(genres, userVector);
+    const { data, error, loading } = useSubscription(aiSubscription);
     useEffect(() => {
         console.log(`Data: ${data}`);
         console.log(`Loading: ${loading}`);
-        console.error(`Error: ${error}`)
+        console.log(`Error: ${error}`)
     }, [data, loading]);
 
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);

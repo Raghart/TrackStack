@@ -18,6 +18,12 @@ subscription {
 }
 `;
 
+export const testStream = gql`
+mutation {
+  testStream
+}
+`;
+
 export const streamAIAnswer = gql`
 mutation streamResponse($genres: [String!], $userVector: [Float!]) {
   streamAIResponse(genres: $genres, userVector: $userVector) 
