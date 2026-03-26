@@ -10,6 +10,7 @@ import { SongDetailsModel } from '../../models/song_details/SongDetails.model';
 import { SongArtistsModel } from '../../models/song_artists/songArtists.model';
 import { SongGenresModel } from '../../models/song_genres/SongGenres.model';
 import { PubSub } from 'graphql-subscriptions';
+import { GoogleGenAI } from '@google/genai';
 
 @Module({
   imports: [
@@ -26,6 +27,11 @@ import { PubSub } from 'graphql-subscriptions';
   providers: [SongsResolver, SongsService, {
     provide: 'PUB_SUB',
     useValue: new PubSub(),
+  }, {
+    provide: 'AI',
+    useValue: new GoogleGenAI({
+      apiKey: process.env.API_KEY,
+    }),
   }],
   exports: [SongsService],
 })

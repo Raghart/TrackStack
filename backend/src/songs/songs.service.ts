@@ -1,6 +1,7 @@
 process.loadEnvFile()
 import {
   BadRequestException,
+  Inject,
   Injectable,
   NotFoundException,
   ServiceUnavailableException,
@@ -32,7 +33,8 @@ import { GoogleGenAI } from '@google/genai';
 
 @Injectable()
 export class SongsService {
-  constructor(@InjectModel(SongsModel) private songModel: typeof SongsModel) {}
+  constructor(@InjectModel(SongsModel) private songModel: typeof SongsModel,
+  @Inject('AI') private readonly genai: GoogleGenAI) {}
 
   async getDBLength(): Promise<number> {
     return await safeQuery(() => this.songModel.count());
@@ -160,14 +162,10 @@ export class SongsService {
   }
 
   async getAIStream(genres: string[], userVector: number[]) {
-    const ai = new GoogleGenAI({
-      apiKey: process.env.API_KEY
-    });
-
     const formattedUV = this.buildUVString(userVector);
 
     try {
-      const streamResponse = await ai.models.generateContentStream({
+      const streamResponse = await this.genai.models.generateContentStream({
         model: parseString(process.env.AI_MODEL),
         contents: [
           "Generate a message for an user who wants to listen to songs with the following metadata:",

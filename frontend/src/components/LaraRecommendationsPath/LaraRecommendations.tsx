@@ -13,6 +13,8 @@ import AIResponse from "./ResponseBox";
 import { useSubscription } from "@apollo/client";
 import { aiSubscription } from "@/queries/LaraRecQuerie";
 import { useEffect, useState } from "react";
+import useAIMutation from "../Utils/hooks/useAIMutation";
+import generateUserVector from "../Utils/generateUserVector";
 
 const LaraRecommendations = () => {
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
@@ -23,7 +25,11 @@ const LaraRecommendations = () => {
             setAIMessage(prev => prev + newChunk);
         }
     });
-    
+    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
+            mood, acousticness } = useAppSelector(state => state.songData);
+    const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel,
+        acousticness, voiceType, sentiment);
+    useAIMutation(genres, userVector);
     useEffect(() => {
         console.log(`Data: ${data}`);
         console.log(`Loading: ${loading}`);
