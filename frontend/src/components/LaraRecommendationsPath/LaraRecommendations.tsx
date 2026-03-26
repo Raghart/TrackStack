@@ -9,7 +9,7 @@ import { Zoom } from "react-awesome-reveal";
 import { SongResponse } from "@/types/songTypes";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
-import AIResponse from "./ResponseBox";
+import AIResponse from "./AIResponse";
 import { useSubscription } from "@apollo/client";
 import { aiSubscription } from "@/queries/LaraRecQuerie";
 import { useEffect, useState } from "react";
@@ -20,7 +20,13 @@ import useTestMutation from "../Utils/hooks/useTestMutation";
 const LaraRecommendations = () => {
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
     const [aiMessage, setAIMessage] = useState("");
-    const { data, error, loading } = useSubscription(aiSubscription);
+    const { data, error, loading } = useSubscription(aiSubscription, {
+        onData({ data }) {
+            const chunkText = data.data.aiResponse;
+            setAIMessage(prev => prev + chunkText)
+        }
+    });
+
     useEffect(() => {
         console.log(`Data: ${data}`);
         console.log(`Loading: ${loading}`);
@@ -37,7 +43,7 @@ const LaraRecommendations = () => {
             </Zoom>
 
             <Zoom triggerOnce direction="right" delay={100} style={{ paddingBottom: 10 }}>
-                
+                <AIResponse message={aiMessage} />
             </Zoom>
 
             <Zoom triggerOnce direction="up" delay={100}>
