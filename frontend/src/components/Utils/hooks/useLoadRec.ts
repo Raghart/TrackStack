@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux-hooks";
-import { ApolloCache, DefaultContext, FetchResult, MutationFunctionOptions, OperationVariables, useLazyQuery, useMutation, useSubscription } from "@apollo/client";
+import { ApolloCache, DefaultContext, FetchResult, MutationFunctionOptions, OperationVariables, 
+    useLazyQuery, useSubscription } from "@apollo/client";
 import { cleanMessage, setLaraRecommendations, setMessage } from "@/reducers/recommendReducer";
-import { aiSubscription, getAIResponse, getSongRecommendations, testStream } from "@/queries/LaraRecQuerie";
+import { aiSubscription, getSongRecommendations, testStream } from "@/queries/LaraRecQuerie";
 import generateUserVector from "../generateUserVector";
 
 const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
