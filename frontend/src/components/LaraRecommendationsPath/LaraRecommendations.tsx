@@ -10,23 +10,10 @@ import { SongResponse } from "@/types/songTypes";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
 import AIResponse from "./AIResponse";
-import { useSubscription } from "@apollo/client";
-import { aiSubscription } from "@/queries/LaraRecQuerie";
-import { useEffect, useRef, useState } from "react";
-import useAIMutation from "../Utils/hooks/useAIMutation";
-import generateUserVector from "../Utils/generateUserVector";
-import useTestMutation from "../Utils/hooks/useTestMutation";
 
 const LaraRecommendations = () => {
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
-    const [aiMessage, setAIMessage] = useState("");
     const message  = useAppSelector(state => state.songData.message);
-    
-    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
-            mood, acousticness } = useAppSelector(state => state.songData);
-    const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
-        acousticness, voiceType, sentiment);
-
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
     if (visibleSongs.length === 0) return <Navigate to="/" replace />
     
