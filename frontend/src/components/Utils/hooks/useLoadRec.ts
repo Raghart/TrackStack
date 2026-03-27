@@ -5,7 +5,6 @@ import { ApolloCache, DefaultContext, FetchResult, MutationFunctionOptions, Oper
 import { setLaraRecommendations, setMessage } from "@/reducers/recommendReducer";
 import { aiSubscription, getAIResponse, getSongRecommendations, testStream } from "@/queries/LaraRecQuerie";
 import generateUserVector from "../generateUserVector";
-import useTestMutation from "./useTestMutation";
 
 const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     streamAnswer: (options?: MutationFunctionOptions<any, OperationVariables, DefaultContext, 
