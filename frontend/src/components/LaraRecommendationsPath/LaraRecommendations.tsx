@@ -13,7 +13,6 @@ import AIResponse from "./AIResponse";
 
 const LaraRecommendations = () => {
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
-    const message  = useAppSelector(state => state.songData.message);
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
     if (visibleSongs.length === 0) return <Navigate to="/" replace />
     
@@ -24,7 +23,7 @@ const LaraRecommendations = () => {
             </Zoom>
 
             <Zoom triggerOnce direction="right" delay={100} style={{ paddingBottom: 10 }}>
-                <AIResponse message={message} />
+                <AIResponse message={aiResponse} />
             </Zoom>
 
             <Zoom triggerOnce direction="up" delay={100}>

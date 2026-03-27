@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux-hooks";
 import { ApolloCache, DefaultContext, FetchResult, MutationFunctionOptions, OperationVariables, 
     useLazyQuery, useSubscription } from "@apollo/client";
 import { cleanMessage, setLaraRecommendations, setMessage } from "@/reducers/recommendReducer";
-import { aiSubscription, getSongRecommendations, testStream } from "@/queries/LaraRecQuerie";
+import { aiSubscription, getSongRecommendations } from "@/queries/LaraRecQuerie";
 import generateUserVector from "../generateUserVector";
 
 const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
@@ -12,7 +12,10 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
         ApolloCache<any>> | undefined) => Promise<FetchResult<any>>
 ) => {
     const [loading, setLoading] = useState<boolean>(false);
+    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
+            mood, acousticness } = useAppSelector(state => state.songData);
     const navigate = useNavigate();
+    const dispatch = useAppDispatch();
     useSubscription(aiSubscription, {
         onData({ data }) {
             const chunkText = data.data.aiResponse;
@@ -20,13 +23,9 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
         }
     });
     
-    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
-            mood, acousticness } = useAppSelector(state => state.songData);
-    const dispatch = useAppDispatch();
     const [getIASongs] = useLazyQuery(getSongRecommendations);
     const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel,
         acousticness, voiceType, sentiment);
-
     const limit = 40;
     
     const loadRecommendations = async () => {
@@ -35,9 +34,7 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
         const { data } = await getIASongs({ variables: { genres, userVector, limit } });
         
         if (data?.getSongRecommendations) {
-            await streamAnswer({
-                variables: { genres, userVector }
-            });
+            await streamAnswer({ variables: { genres, userVector } });
             dispatch(setLaraRecommendations(data.getSongRecommendations));
             navigate("/recommendations");
             setLoading(false);
