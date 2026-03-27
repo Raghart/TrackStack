@@ -12,7 +12,7 @@ import LoadingBeat from "../Utils/LoadingBeat";
 import AIResponse from "./AIResponse";
 import { useSubscription } from "@apollo/client";
 import { aiSubscription } from "@/queries/LaraRecQuerie";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useAIMutation from "../Utils/hooks/useAIMutation";
 import generateUserVector from "../Utils/generateUserVector";
 import useTestMutation from "../Utils/hooks/useTestMutation";
@@ -20,18 +20,12 @@ import useTestMutation from "../Utils/hooks/useTestMutation";
 const LaraRecommendations = () => {
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
     const [aiMessage, setAIMessage] = useState("");
-    const { data, error, loading } = useSubscription(aiSubscription, {
-        onData({ data }) {
-            const chunkText = data.data.aiResponse;
-            setAIMessage(prev => prev + chunkText)
-        }
-    });
-
-    useEffect(() => {
-        console.log(`Data: ${data}`);
-        console.log(`Loading: ${loading}`);
-        console.log(`Error: ${error}`)
-    }, [data, loading]);
+    const message  = useAppSelector(state => state.songData.message);
+    
+    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
+            mood, acousticness } = useAppSelector(state => state.songData);
+    const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
+        acousticness, voiceType, sentiment);
 
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
     if (visibleSongs.length === 0) return <Navigate to="/" replace />
@@ -43,7 +37,7 @@ const LaraRecommendations = () => {
             </Zoom>
 
             <Zoom triggerOnce direction="right" delay={100} style={{ paddingBottom: 10 }}>
-                <AIResponse message={aiMessage} />
+                <AIResponse message={message} />
             </Zoom>
 
             <Zoom triggerOnce direction="up" delay={100}>

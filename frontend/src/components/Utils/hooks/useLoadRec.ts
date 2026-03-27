@@ -1,14 +1,24 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux-hooks";
-import { useLazyQuery } from "@apollo/client";
+import { ApolloCache, DefaultContext, FetchResult, MutationFunctionOptions, OperationVariables, useLazyQuery, useMutation, useSubscription } from "@apollo/client";
 import { setLaraRecommendations, setMessage } from "@/reducers/recommendReducer";
-import { getAIResponse, getSongRecommendations } from "@/queries/LaraRecQuerie";
+import { aiSubscription, getAIResponse, getSongRecommendations, testStream } from "@/queries/LaraRecQuerie";
 import generateUserVector from "../generateUserVector";
+import useTestMutation from "./useTestMutation";
 
-const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
+const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+    streamAnswer: (options?: MutationFunctionOptions<any, OperationVariables, DefaultContext, 
+        ApolloCache<any>> | undefined) => Promise<FetchResult<any>>
+) => {
     const [loading, setLoading] = useState<boolean>(false);
     const navigate = useNavigate();
+    useSubscription(aiSubscription, {
+        onData({ data }) {
+            const chunkText = data.data.aiResponse;
+            dispatch(setMessage(chunkText))
+        }
+    });
     
     const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
             mood, acousticness } = useAppSelector(state => state.songData);
@@ -31,6 +41,9 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
                     setOpen(false);
                 };
             },
+        });
+        streamAnswer({
+            variables: { genres, userVector }
         });
     };
 

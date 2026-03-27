@@ -1,13 +1,15 @@
 import { testStream } from "@/queries/LaraRecQuerie";
 import { useMutation } from "@apollo/client";
-import { useEffect } from "react";
+import { RefObject, useEffect } from "react";
 
-const useTestMutation = () => {
+const useTestMutation = (refSend: RefObject<boolean>) => {
     const [streamAnswer, { data }] = useMutation(testStream);
-    streamAnswer()
     useEffect(() => {
-        console.log(data)
-    }, [data])
+        if (!refSend.current) {
+            streamAnswer();
+            refSend.current = true;
+        };
+    }, [])
 };
 
 export default useTestMutation;

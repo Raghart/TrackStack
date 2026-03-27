@@ -54,7 +54,7 @@ const recommendSlice = createSlice({
             state.results = action.payload;
         },
         setMessage(state, action: PayloadAction<string>) {
-            state.message = action.payload;
+            state.message += action.payload;
         }
     }
 });

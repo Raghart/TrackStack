@@ -2,9 +2,12 @@ import { Button, useBreakpointValue } from "@chakra-ui/react";
 import { BeatLoader } from "react-spinners"
 import useLoadRec from "@/components/Utils/hooks/useLoadRec";
 import { DATA_BTN_FONTSIZES, DATA_BTN_PX, DATA_BTN_SHADOW, DATA_BTN_TRANS } from "@/components/constants/TopBarC";
+import { useMutation } from "@apollo/client";
+import { streamAIAnswer, testStream } from "@/queries/LaraRecQuerie";
 
 const SendDataButton = ({ setOpen } : { setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
-    const { loadRecommendations, loading } = useLoadRec(setOpen);
+    const [streamAnswer, { data }] = useMutation(streamAIAnswer);
+    const { loadRecommendations, loading } = useLoadRec(setOpen, streamAnswer);
     const DATA_BTN_LOADER = useBreakpointValue({base: 12, sm: 15, md: 15, lg: 15 });
     return(
         <Button px={DATA_BTN_PX} py={2} fontSize={DATA_BTN_FONTSIZES} loading={loading} border="1px solid"
