@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux-hooks";
 import { ApolloCache, DefaultContext, FetchResult, MutationFunctionOptions, OperationVariables, 
@@ -29,23 +29,20 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
 
     const limit = 40;
     
-    const loadRecommendations = () => {
+    const loadRecommendations = async () => {
         setLoading(true);
         dispatch(cleanMessage())
-        getIASongs({ variables: { genres, userVector, limit }, 
-            fetchPolicy: 'no-cache',
-            onCompleted: (data) => {
-                if (data.getSongRecommendations) {
-                    dispatch(setLaraRecommendations(data.getSongRecommendations));
-                    navigate("/recommendations");
-                    setLoading(false);
-                    setOpen(false);
-                };
-            },
-        });
-        streamAnswer({
-            variables: { genres, userVector }
-        });
+        const { data } = await getIASongs({ variables: { genres, userVector, limit } });
+        
+        if (data?.getSongRecommendations) {
+            await streamAnswer({
+                variables: { genres, userVector }
+            });
+            dispatch(setLaraRecommendations(data.getSongRecommendations));
+            navigate("/recommendations");
+            setLoading(false);
+            setOpen(false);
+        };
     };
 
     return { loadRecommendations, loading }
