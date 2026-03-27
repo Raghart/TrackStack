@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux-hooks";
 import { ApolloCache, DefaultContext, FetchResult, MutationFunctionOptions, OperationVariables, useLazyQuery, useMutation, useSubscription } from "@apollo/client";
-import { setLaraRecommendations, setMessage } from "@/reducers/recommendReducer";
+import { cleanMessage, setLaraRecommendations, setMessage } from "@/reducers/recommendReducer";
 import { aiSubscription, getAIResponse, getSongRecommendations, testStream } from "@/queries/LaraRecQuerie";
 import generateUserVector from "../generateUserVector";
 
@@ -30,6 +30,7 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     
     const loadRecommendations = () => {
         setLoading(true);
+        dispatch(cleanMessage())
         getIASongs({ variables: { genres, userVector, limit }, 
             fetchPolicy: 'no-cache',
             onCompleted: (data) => {

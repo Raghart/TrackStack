@@ -55,12 +55,15 @@ const recommendSlice = createSlice({
         },
         setMessage(state, action: PayloadAction<string>) {
             state.message += action.payload;
+        },
+        cleanMessage(state) {
+            state.message = "";
         }
     }
 });
 
 export const { setRecommendedGenres, setEnergy, setSpeechLevel, setTempo, setSentiment, setVoiceType, setMood,
-    setDanceability, setAcousticness, setLaraRecommendations, setMessage, 
+    setDanceability, setAcousticness, setLaraRecommendations, setMessage, cleanMessage,
     deleteLastGenre } = recommendSlice.actions;
 
 export default recommendSlice.reducer;
