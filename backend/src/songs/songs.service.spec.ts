@@ -297,6 +297,19 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
       expect(songRecommendations).toHaveLength(5);
       expect(songRecommendations).toStrictEqual(songRecommendResponses);
     });
+
+    it("buildUVString return the expected string array", () => {
+      const vectorString = service.buildUVString(USER_VECTOR);
+      expect(vectorString).toHaveLength(8);
+      expect(vectorString.some(data => data.includes("Danceability:"))).toBeTruthy();
+      expect(vectorString.some(data => data.includes("Energy:"))).toBeTruthy();
+      expect(vectorString.some(data => data.includes("Mode:"))).toBeTruthy();
+      expect(vectorString.some(data => data.includes("Speechiness:"))).toBeTruthy();
+      expect(vectorString.some(data => data.includes("Acousticness:"))).toBeTruthy();
+      expect(vectorString.some(data => data.includes("Instrumentalness:"))).toBeTruthy();
+      expect(vectorString.some(data => data.includes("Valence:"))).toBeTruthy();
+      expect(vectorString.some(data => data.includes("Tempo:"))).toBeTruthy();
+    });
   });
 });
 
