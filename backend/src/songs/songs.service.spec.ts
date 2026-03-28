@@ -399,8 +399,11 @@ describe("SongsService throws an error if it couldn't retrieve the data from the
     );
   });
 
-  it("getAIStream throws an error if it was not possible to return an answer", () => {
-    expect(service.getAIStream(["Rock"], USER_VECTOR)).rejects.toThrow(
+  it("getAIStream throws an error if it was not possible to return an answer", async () => {
+    await expect(service.getAIStream(["Rock"], USER_VECTOR)).rejects.toThrow(
+      ServiceUnavailableException
+    );
+    await expect(service.getAIStream(["Rock"], USER_VECTOR)).rejects.toThrow(
       "Unable to get an answer from the model"
     );
   });
