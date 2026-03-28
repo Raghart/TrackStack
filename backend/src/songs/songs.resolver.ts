@@ -3,7 +3,6 @@ import { SongsService } from './songs.service';
 import { USER_VECTOR } from '../../test/constants/constants';
 import { FullSongResponseDto } from './dto/FullSongResponse.dto';
 import { SongResponseDto } from './dto/SongResponse.dto';
-import { GraphQLString } from 'graphql';
 import { Inject } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
 
@@ -33,7 +32,7 @@ export class SongsResolver {
   }
 
   @Subscription(() => String)
-  async aiResponse() {
+  aiResponse() {
     return this.pubSub.asyncIterableIterator('AI_RESPONSE')
   }
 

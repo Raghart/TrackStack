@@ -36,6 +36,9 @@ import { join } from 'path';
       synchronize: true,
       logging: false,
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', '..', 'public'),
+    }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
@@ -59,9 +62,3 @@ import { join } from 'path';
   providers: [AppService],
 })
 export class AppModule {}
-
-/*
-ServeStaticModule.forRoot({
-      rootPath: join(__dirname, '..', '..', 'public'),
-    }),
-*/

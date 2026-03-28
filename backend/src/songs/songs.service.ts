@@ -189,7 +189,7 @@ export class SongsService {
         }
       });
     } catch (error) {
-      console.error(`error while trying to get the answer`, error)
+      console.error(`error while trying to get the answer: ${error}`)
       throw new Error("Unable to get an answer from the model");
     }
   }
