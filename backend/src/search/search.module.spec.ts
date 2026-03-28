@@ -1,3 +1,4 @@
+process.env.API_KEY = 'dummy';
 import { SearchModule } from './search.module';
 
 describe('SearchModule direct coverage', () => {

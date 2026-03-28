@@ -29,7 +29,9 @@ describe('SongsResolver receives the expected songs array from the service', () 
         },
         {
           provide: 'AI',
-          useValue: "",
+          useValue: new GoogleGenAI({
+            apiKey: "testing",
+          }),
         },
         {
           provide: SongsService,
@@ -125,7 +127,9 @@ describe('SongsResolver is able to communicate the error from the service to hel
         },
         {
           provide: 'AI',
-          useValue: "",
+          useValue: new GoogleGenAI({
+            apiKey: "testing",
+          }),
         },
         {
           provide: SongsService,

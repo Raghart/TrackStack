@@ -1,3 +1,4 @@
+process.env.API_KEY = 'dummy';
 import { AppModule } from './app.module';
 
 describe('AppModule direct coverage', () => {

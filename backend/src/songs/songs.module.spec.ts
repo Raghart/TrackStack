@@ -1,3 +1,4 @@
+process.env.API_KEY = 'dummy';
 import { SongsModule } from './songs.module';
 
 describe('SongsModule direct coverage', () => {

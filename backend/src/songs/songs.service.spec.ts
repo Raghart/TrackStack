@@ -28,6 +28,7 @@ import {
 } from '../../test/data/songsModule/resSongData';
 import { USER_VECTOR } from '../../test/constants/constants';
 import { PubSub } from 'graphql-subscriptions';
+import { GoogleGenAI } from '@google/genai';
 
 describe('SongsService retrieves, evaluates and parses songs data from the database', () => {
   let service: SongsService;
@@ -51,7 +52,9 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
         },
         {
           provide: 'AI',
-          useValue: "",
+          useValue: new GoogleGenAI({
+            apiKey: "testing",
+          }),
         },
         {
           provide: getModelToken(SongsModel),
@@ -310,7 +313,9 @@ describe("SongsService throws an error if it couldn't retrieve the data from the
         },
         {
           provide: 'AI',
-          useValue: "",
+          useValue: new GoogleGenAI({
+            apiKey: "testing",
+          }),
         },
         {
           provide: getModelToken(SongsModel),
