@@ -43,7 +43,7 @@ export class SongsResolver {
   ) {
       const streamResponse = await this.songsService.getAIStream(genres, userVector);
       for await (const chunk of streamResponse) {
-        this.pubSub.publish('AI_RESPONSE', { aiResponse: chunk.text });
+        await this.pubSub.publish('AI_RESPONSE', { aiResponse: chunk.text });
       }
       return true;
   }

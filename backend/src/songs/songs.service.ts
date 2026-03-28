@@ -28,7 +28,6 @@ import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import parseGenres from 'src/utils/parseGenres';
-import { generateText } from 'ai';
 import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
 
 @Injectable()
@@ -139,26 +138,18 @@ export class SongsService {
   }
 
   buildUVString(userVector: number[]) : string[] {
-    const userDataTitle = [
-      "Danceability",
-      "Energy",
-      "Mode",
-      "Speechiness",
-      "Acousticness",
-      "Instrumentalness",
-      "Valence",
-      "Tempo",
-    ];
+    const userDataTitle = new Map<number, string>([
+      [0, "Danceability"],
+      [1, "Energy"],
+      [2, "Mode"],
+      [3, "Speechiness"],
+      [4, "Acousticness"],
+      [5, "Instrumentalness"],
+      [6, "Valence"],
+      [7, "Tempo"],
+    ]);
 
-    if (userVector.length != userDataTitle.length) {
-      return [];
-    };
-    const userVectorFormatted: string[] = [];
-    for (let idx = 0; idx < userVector.length; idx++) {
-      userVectorFormatted.push(`${userDataTitle[idx]}: ${userVector[idx]}`);
-    };
-    
-    return userVectorFormatted;
+    return userVector.map((value, idx) => `${userDataTitle.get(idx)}: ${value}`);
   }
 
   getAIStream(genres: string[], userVector: number[]) : Promise<AsyncGenerator<GenerateContentResponse>> {
