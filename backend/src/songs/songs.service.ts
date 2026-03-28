@@ -1,4 +1,3 @@
-process.loadEnvFile()
 import {
   BadRequestException,
   Inject,
@@ -29,6 +28,8 @@ import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import parseGenres from 'src/utils/parseGenres';
 import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
+import { existsSync } from 'node:fs';
+if (existsSync(".env")) process.loadEnvFile();
 
 @Injectable()
 export class SongsService {
