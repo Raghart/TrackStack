@@ -6,8 +6,6 @@ import { SongResponseDto } from './dto/SongResponse.dto';
 import { GraphQLString } from 'graphql';
 import { Inject } from '@nestjs/common';
 import { PubSub } from 'graphql-subscriptions';
-import { GoogleGenAI } from '@google/genai';
-import { parseString } from 'src/types/parses';
 
 @Resolver()
 export class SongsResolver {
@@ -55,16 +53,6 @@ export class SongsResolver {
         this.pubSub.publish('AI_RESPONSE', { aiResponse: chunk.text });
       }
       return true;
-  }
-
-  @Query(() => GraphQLString, { name: "getAIResponse" })
-  async getAIResponse(
-    @Args('genres', { type: () => [String], defaultValue: ['Rock'] })
-    genres: string[],
-    @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR })
-    userVector: number[],
-  ) : Promise<string> {
-    return this.songsService.getAIResponse(genres, userVector);
   }
 
   @Query(() => [SongResponseDto], { name: 'getSongRecommendations' })
