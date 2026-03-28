@@ -38,12 +38,6 @@ export class SongsResolver {
   }
 
   @Mutation(() => Boolean)
-  async testStream() {
-    this.pubSub.publish('AI_RESPONSE', { aiResponse: "TESTING" });
-    return true;
-  }
-
-  @Mutation(() => Boolean)
   async streamAIResponse(
     @Args('genres', { type: () => [String], defaultValue: ['Rock'] }) genres: string[],
     @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR }) userVector: number[],

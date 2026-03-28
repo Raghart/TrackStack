@@ -29,7 +29,7 @@ import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import parseGenres from 'src/utils/parseGenres';
 import { generateText } from 'ai';
-import { GoogleGenAI } from '@google/genai';
+import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
 
 @Injectable()
 export class SongsService {
@@ -161,11 +161,11 @@ export class SongsService {
     return userVectorFormatted;
   }
 
-  async getAIStream(genres: string[], userVector: number[]) {
+  getAIStream(genres: string[], userVector: number[]) : Promise<AsyncGenerator<GenerateContentResponse>> {
     const formattedUV = this.buildUVString(userVector);
 
     try {
-      const streamResponse = await this.genai.models.generateContentStream({
+      return this.genai.models.generateContentStream({
         model: parseString(process.env.AI_MODEL),
         contents: [
           "Generate a message for an user who wants to listen to songs with the following metadata:",
@@ -188,7 +188,6 @@ export class SongsService {
           ].join("\n"),
         }
       });
-      return streamResponse;
     } catch (error) {
       console.error(`error while trying to get the answer`, error)
       throw new Error("Unable to get an answer from the model");
