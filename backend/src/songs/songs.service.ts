@@ -152,11 +152,11 @@ export class SongsService {
     return userVector.map((value, idx) => `${userDataTitle.get(idx)}: ${value}`);
   }
 
-  getAIStream(genres: string[], userVector: number[]) : Promise<AsyncGenerator<GenerateContentResponse>> {
+  async getAIStream(genres: string[], userVector: number[]) : Promise<AsyncGenerator<GenerateContentResponse>> {
     const formattedUV = this.buildUVString(userVector);
 
     try {
-      return this.genai.models.generateContentStream({
+      return await this.genai.models.generateContentStream({
         model: parseString(process.env.AI_MODEL),
         contents: [
           "Generate a message for an user who wants to listen to songs with the following metadata:",

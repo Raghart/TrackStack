@@ -398,4 +398,10 @@ describe("SongsService throws an error if it couldn't retrieve the data from the
       'Database Error: SequelizeTimeoutError: Connection refused',
     );
   });
+
+  it("getAIStream throws an error if it was not possible to return an answer", () => {
+    expect(service.getAIStream(["Rock"], USER_VECTOR)).rejects.toThrow(
+      "Unable to get an answer from the model"
+    );
+  });
 });
