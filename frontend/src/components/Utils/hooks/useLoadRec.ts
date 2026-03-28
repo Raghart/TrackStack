@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../redux-hooks";
-import { ApolloCache, DefaultContext, FetchResult, MutationFunctionOptions, OperationVariables, 
+import { DefaultContext, FetchResult, MutationFunctionOptions, OperationVariables, 
     useLazyQuery, useSubscription } from "@apollo/client";
 import { cleanMessage, setLaraRecommendations, setMessage } from "@/reducers/recommendReducer";
 import { aiSubscription, getSongRecommendations } from "@/queries/LaraRecQuerie";
 import generateUserVector from "../generateUserVector";
 
 const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
-    streamAnswer: (options?: MutationFunctionOptions<any, OperationVariables, DefaultContext, 
-        ApolloCache<any>> | undefined) => Promise<FetchResult<any>>
+    streamAnswer: (options?: MutationFunctionOptions<OperationVariables, DefaultContext> 
+        | undefined) => Promise<FetchResult>
 ) => {
     const [loading, setLoading] = useState<boolean>(false);
     const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
