@@ -7,7 +7,7 @@ export default defineConfig({
   base: '/', 
   plugins: [react(), tsconfigPaths()],
   build: {
-    outDir: resolve(__dirname, "../back/public"),
+    outDir: resolve(__dirname, "../backend/public"),
     emptyOutDir: true,
   },
   server: {
