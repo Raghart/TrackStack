@@ -27,6 +27,7 @@ import {
   songTestResponses,
 } from '../../test/data/songsModule/resSongData';
 import { USER_VECTOR } from '../../test/constants/constants';
+import { PubSub } from 'graphql-subscriptions';
 
 describe('SongsService retrieves, evaluates and parses songs data from the database', () => {
   let service: SongsService;
@@ -44,6 +45,14 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SongsService,
+        {
+          provide: 'PUB_SUB',
+          useValue: new PubSub(),
+        },
+        {
+          provide: 'AI',
+          useValue: "",
+        },
         {
           provide: getModelToken(SongsModel),
           useValue: {
@@ -295,6 +304,14 @@ describe("SongsService throws an error if it couldn't retrieve the data from the
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SongsService,
+        {
+          provide: 'PUB_SUB',
+          useValue: new PubSub(),
+        },
+        {
+          provide: 'AI',
+          useValue: "",
+        },
         {
           provide: getModelToken(SongsModel),
           useValue: {

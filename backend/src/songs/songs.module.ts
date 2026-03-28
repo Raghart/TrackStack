@@ -27,7 +27,8 @@ import { GoogleGenAI } from '@google/genai';
   providers: [SongsResolver, SongsService, {
     provide: 'PUB_SUB',
     useValue: new PubSub(),
-  }, {
+  }, 
+  {
     provide: 'AI',
     useValue: new GoogleGenAI({
       apiKey: process.env.API_KEY,
