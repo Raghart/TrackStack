@@ -61,7 +61,7 @@ jobs:
           node-version: "20"
 
       - name: Installing Frontend and Backend dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build Frontend
         run: npm run build

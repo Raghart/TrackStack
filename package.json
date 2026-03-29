@@ -15,6 +15,14 @@
   "keywords": [],
   "license": "MIT",
   "dependencies": {
+    "@apollo/server": "^5.5.0",
+    "@nestjs/apollo": "^13.2.4",
+    "@nestjs/cli": "^11.0.16",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/graphql": "^13.2.4",
+    "@nestjs/schematics": "^11.0.9",
+    "@nestjs/serve-static": "^5.0.4",
+    "@nestjs/testing": "^11.0.00",
     "graphql-subscriptions": "^3.0.0",
     "graphql-ws": "^6.0.7",
     "react-markdown": "^10.1.0"
