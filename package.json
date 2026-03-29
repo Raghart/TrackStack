@@ -1,0 +1,30 @@
+{
+  "name": "trackstack",
+  "author": "Rafael Alejandro Rojas Diaz",
+  "version": "1.2.0",
+  "description": "Do you want to find a new **banger**? Try out this **music recommendation web app** that uses vectors based on **song metadata** (genre, energy, danceability, and more) enhanced by a weighted system to recommend **tracks** based on the weights you assign to each feature. Discover new tracks from a database of over **50,000 tracks**!",
+  "main": "index.js",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend"
+  },
+  "keywords": [],
+  "license": "MIT",
+  "dependencies": {
+    "@apollo/server": "^5.5.0",
+    "@nestjs/apollo": "^13.2.4",
+    "@nestjs/cli": "^11.0.16",
+    "@nestjs/core": "^11.0.0",
+    "@nestjs/graphql": "^13.2.4",
+    "@nestjs/schematics": "^11.0.9",
+    "@nestjs/serve-static": "^5.0.4",
+    "@nestjs/testing": "^11.0.00",
+    "graphql-subscriptions": "^3.0.0",
+    "graphql-ws": "^6.0.7",
+    "react-markdown": "^10.1.0"
+  }
+}

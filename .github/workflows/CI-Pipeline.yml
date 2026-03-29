@@ -8,9 +8,6 @@ on:
 jobs:
   Frontend-Pipeline:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./front
         
     steps:
       - uses: actions/checkout@v4
@@ -23,15 +20,14 @@ jobs:
 
       - name: Check style
         run: npm run lint
+        working-directory: ./frontend
 
       - name: Check Security
         run: npx eslint .
+        working-directory: ./frontend
 
   Backend-Pipeline:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./back
         
     steps:
       - uses: actions/checkout@v4
@@ -44,19 +40,19 @@ jobs:
         
       - name: Check style
         run: npm run lint
+        working-directory: ./backend
 
       - name: Check security
         run: npx eslint .
+        working-directory: ./backend
 
       - name: Run tests
         run: npm run test
+        working-directory: ./backend
 
   Playwright-E2E-Tests:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./e2e
         
     steps:
       - uses: actions/checkout@v4
@@ -64,31 +60,28 @@ jobs:
         with:
           node-version: "20"
 
-      - name: Install Frontend dependencies
+      - name: Installing Frontend and Backend dependencies
         run: npm ci
-        working-directory: ./front
 
       - name: Build Frontend
         run: npm run build
-        working-directory: ./front
-
-      - name: Install Backend dependencies
-        run: npm ci
-        working-directory: ./back
+        working-directory: ./frontend
 
       - name: Build Backend
         run: npm run build
-        working-directory: ./back
+        working-directory: ./backend
 
       - name: Install Playwright dependencies
         run: npm ci
+        working-directory: ./e2e
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
+        working-directory: ./e2e
 
       - name: Run Server
         run: npm run start:prod &
-        working-directory: ./back
+        working-directory: ./backend
         env:
           DB_URL: ${{ secrets.DB_URL }}
           DB_PORT: ${{ secrets.DB_PORT }}
@@ -96,6 +89,7 @@ jobs:
 
       - name: Running Playwright tests
         run: npm run test
+        working-directory: ./e2e
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}
