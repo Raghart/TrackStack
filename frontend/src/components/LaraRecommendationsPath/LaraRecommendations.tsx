@@ -10,15 +10,13 @@ import { SongResponse } from "@/types/songTypes";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
 import AIResponse from "./AIResponse";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { aiSubscription, streamAIAnswer } from "@/queries/LaraRecQuerie";
 import { useMutation, useSubscription } from "@apollo/client";
-import { setIsLoading } from "@/reducers/searchReducer";
 import generateUserVector from "../Utils/generateUserVector";
 
 const LaraRecommendations = () => {
     const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(true);
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
     const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
@@ -31,16 +29,16 @@ const LaraRecommendations = () => {
         }
     });
     const [streamAnswer] = useMutation(streamAIAnswer);
+    const hasFetched = useRef(false);
 
     useEffect(() => {
-        setLoading(true);
+        if (hasFetched.current) return;
+        hasFetched.current = true;
 
-        if (loading) {
-            const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
-                acousticness, voiceType, sentiment);
-            streamAnswer({ variables: { genres, userVector } });
-            setIsLoading(false);
-        }
+        setMessage("");
+        const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
+            acousticness, voiceType, sentiment);
+        streamAnswer({ variables: { genres, userVector } });
     }, []);
     
     return(
