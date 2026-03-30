@@ -5,32 +5,31 @@ import { useMutation, useSubscription } from "@apollo/client";
 import generateUserVector from "../generateUserVector";
 
 const useSongRec = () => {
+    const hasFetched = useRef(false);
     const [visibleCount, setVisibleCount] = useState<number>(20);
+    const [aiResponse, setAIResponse] = useState<string>("");
     const [streamAnswer] = useMutation(streamAIAnswer);
-    const [message, setMessage] = useState("");
     const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
             mood, acousticness } = useAppSelector(state => state.songData);
+    const recommendations = useAppSelector(state => state.songData.results);
+    const visibleSongs = recommendations.slice(0, visibleCount);
+
     useSubscription(aiSubscription, {
         onData({ data }) {
             const chunkText = data.data.aiResponse;
-            setMessage(prev => prev + chunkText)
+            setAIResponse(prev => prev + chunkText)
         }
     });
-
-    const hasFetched = useRef(false);
 
     useEffect(() => {
         if (hasFetched.current) return;
         hasFetched.current = true;
 
-        setMessage("");
+        setAIResponse("");
         const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
             acousticness, voiceType, sentiment);
         streamAnswer({ variables: { genres, userVector } });
     }, []);
-    const recommendations = useAppSelector(state => state.songData.results);
-    const aiResponse = useAppSelector(state => state.songData.message);
-    const visibleSongs = recommendations.slice(0, visibleCount);
 
     const loadMoreSongs = () => {
         if (visibleSongs.length < recommendations.length) {
@@ -38,7 +37,7 @@ const useSongRec = () => {
         };
     };
 
-    return { visibleSongs, recommendations, loadMoreSongs, message };
+    return { visibleSongs, recommendations, loadMoreSongs, aiResponse };
 };
 
 export default useSongRec;
