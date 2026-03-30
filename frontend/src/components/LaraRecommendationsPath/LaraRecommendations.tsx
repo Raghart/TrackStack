@@ -16,30 +16,11 @@ import { useMutation, useSubscription } from "@apollo/client";
 import generateUserVector from "../Utils/generateUserVector";
 
 const LaraRecommendations = () => {
-    const [message, setMessage] = useState("");
-    const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
+    const { visibleSongs, recommendations, loadMoreSongs, message } = useSongRec();
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
-    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
-            mood, acousticness } = useAppSelector(state => state.songData);
+    
     if (visibleSongs.length === 0) return <Navigate to="/" replace />
-    useSubscription(aiSubscription, {
-        onData({ data }) {
-            const chunkText = data.data.aiResponse;
-            setMessage(prev => prev + chunkText)
-        }
-    });
-    const [streamAnswer] = useMutation(streamAIAnswer);
-    const hasFetched = useRef(false);
-
-    useEffect(() => {
-        if (hasFetched.current) return;
-        hasFetched.current = true;
-
-        setMessage("");
-        const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
-            acousticness, voiceType, sentiment);
-        streamAnswer({ variables: { genres, userVector } });
-    }, []);
+    
     
     return(
         <Box direction="column" pt={7} pb={24} gap={7}>
