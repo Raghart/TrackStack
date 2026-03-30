@@ -10,11 +10,38 @@ import { SongResponse } from "@/types/songTypes";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
 import AIResponse from "./AIResponse";
+import { useEffect, useState } from "react";
+import { aiSubscription, streamAIAnswer } from "@/queries/LaraRecQuerie";
+import { useMutation, useSubscription } from "@apollo/client";
+import { setIsLoading } from "@/reducers/searchReducer";
+import generateUserVector from "../Utils/generateUserVector";
 
 const LaraRecommendations = () => {
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(true);
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
+    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
+            mood, acousticness } = useAppSelector(state => state.songData);
     if (visibleSongs.length === 0) return <Navigate to="/" replace />
+    useSubscription(aiSubscription, {
+        onData({ data }) {
+            const chunkText = data.data.aiResponse;
+            setMessage(prev => prev + chunkText)
+        }
+    });
+    const [streamAnswer] = useMutation(streamAIAnswer);
+
+    useEffect(() => {
+        setLoading(true);
+
+        if (loading) {
+            const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
+                acousticness, voiceType, sentiment);
+            streamAnswer({ variables: { genres, userVector } });
+            setIsLoading(false);
+        }
+    }, []);
     
     return(
         <Box direction="column" pt={7} pb={24} gap={7}>
@@ -23,7 +50,7 @@ const LaraRecommendations = () => {
             </Zoom>
 
             <Zoom triggerOnce direction="right" delay={100} style={{ paddingBottom: 10 }}>
-                <AIResponse message={aiResponse} />
+                <AIResponse message={message} />
             </Zoom>
 
             <Zoom triggerOnce direction="up" delay={100}>

@@ -16,12 +16,14 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
             mood, acousticness } = useAppSelector(state => state.songData);
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    /*
     useSubscription(aiSubscription, {
         onData({ data }) {
             const chunkText = data.data.aiResponse;
             dispatch(setMessage(chunkText))
         }
     });
+    */
     
     const [getIASongs] = useLazyQuery(getSongRecommendations);
     const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel,
@@ -30,11 +32,11 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>,
     
     const loadRecommendations = async () => {
         setLoading(true);
-        dispatch(cleanMessage())
+        //dispatch(cleanMessage())
         const { data } = await getIASongs({ variables: { genres, userVector, limit } });
         
         if (data?.getSongRecommendations) {
-            await streamAnswer({ variables: { genres, userVector } });
+            // await streamAnswer({ variables: { genres, userVector } });
             dispatch(setLaraRecommendations(data.getSongRecommendations));
             navigate("/recommendations");
             setLoading(false);
