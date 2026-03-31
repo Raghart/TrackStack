@@ -37,7 +37,6 @@
     "elasticsearch": "^16.7.2",
     "express": "^5.1.0",
     "graphql": "^16.11.0",
-    "openai": "^6.32.0",
     "pg": "^8.16.0",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.2.2",
