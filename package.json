@@ -16,7 +16,7 @@
     "start:prod": "npm run start:prod --workspace=backend"
   },
   "keywords": [],
-  "license": "MIT",
+  "license": "MIT License",
   "dependencies": {
     "@apollo/server": "^5.5.0",
     "@nestjs/apollo": "^13.2.4",
