@@ -1,15 +1,16 @@
 echo "Build TrackStack script"
 
-echo "Install Backend dependencies"
+cd ..
+
+echo "Installing Backend and Frontend dependencies"
 npm install
+
+cd backend/
 
 echo "Build Backend"
 npm run build
 
-cd ../front
-
-echo "Install Frontend dependencies"
-npm install
+cd ../frontend
 
 echo "Build Frontend"
 npm run build
