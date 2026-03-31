@@ -10,10 +10,13 @@
   ],
   "scripts": {
     "dev:backend": "npm run dev --workspace=backend",
-    "dev:frontend": "npm run dev --workspace=frontend"
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "build:frontend": "npm run build --workspace=frontend",
+    "build:backend": "npm run build --workspace=backend",
+    "start:prod": "npm run start:prod --workspace=backend"
   },
   "keywords": [],
-  "license": "MIT",
+  "license": "MIT License",
   "dependencies": {
     "@apollo/server": "^5.5.0",
     "@nestjs/apollo": "^13.2.4",
