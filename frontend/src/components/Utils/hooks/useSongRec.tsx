@@ -1,11 +1,34 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../redux-hooks";
+import { aiSubscription, streamAIAnswer } from "@/queries/LaraRecQuerie";
+import { useMutation, useSubscription } from "@apollo/client";
+import generateUserVector from "../generateUserVector";
 
 const useSongRec = () => {
+    const hasFetched = useRef(false);
     const [visibleCount, setVisibleCount] = useState<number>(20);
+    const [aiResponse, setAIResponse] = useState<string>("");
+    const [streamAnswer] = useMutation(streamAIAnswer);
+    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
+            mood, acousticness } = useAppSelector(state => state.songData);
     const recommendations = useAppSelector(state => state.songData.results);
-    const aiResponse = useAppSelector(state => state.songData.message);
     const visibleSongs = recommendations.slice(0, visibleCount);
+    const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
+            acousticness, voiceType, sentiment);
+
+    useSubscription(aiSubscription, {
+        onData({ data }) {
+            const chunkText = data.data.aiResponse;
+            setAIResponse(prev => prev + chunkText)
+        }
+    });
+
+    useEffect(() => {
+        if (hasFetched.current) return;
+        hasFetched.current = true;
+        setAIResponse("");
+        streamAnswer({ variables: { genres, userVector } });
+    }, [genres, userVector, streamAnswer]);
 
     const loadMoreSongs = () => {
         if (visibleSongs.length < recommendations.length) {

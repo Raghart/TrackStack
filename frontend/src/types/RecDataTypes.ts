@@ -29,7 +29,6 @@ export interface SlidersDataTypes {
 
 export interface RecommendData {
     genres: string[];
-    message: string;
     energy: number;
     speechLevel: number;
     danceability: number;

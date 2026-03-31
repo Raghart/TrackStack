@@ -13,7 +13,7 @@ import AIResponse from "./AIResponse";
 
 const LaraRecommendations = () => {
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
-    const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
+    const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);    
     if (visibleSongs.length === 0) return <Navigate to="/" replace />
     
     return(
