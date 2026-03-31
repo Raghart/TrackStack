@@ -4,7 +4,7 @@ import Markdown from "react-markdown"
 
 const AIResponse = ({ message } : { message: string }) => {
     return(
-        <Box color="white" userSelect="all" fontFamily="'Barlow', sans-serif" fontWeight="medium" 
+        <Box color="white" userSelect="none" fontFamily="'Barlow', sans-serif" fontWeight="medium" 
             fontSize={{ base: "md", sm: "lg", md: "xl", lg: "xl" }} fontStyle="italic">
             {!message && (
                 <LoadingBeat />
