@@ -13,6 +13,8 @@ const useSongRec = () => {
             mood, acousticness } = useAppSelector(state => state.songData);
     const recommendations = useAppSelector(state => state.songData.results);
     const visibleSongs = recommendations.slice(0, visibleCount);
+    const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
+            acousticness, voiceType, sentiment);
 
     useSubscription(aiSubscription, {
         onData({ data }) {
@@ -24,12 +26,9 @@ const useSongRec = () => {
     useEffect(() => {
         if (hasFetched.current) return;
         hasFetched.current = true;
-
         setAIResponse("");
-        const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
-            acousticness, voiceType, sentiment);
         streamAnswer({ variables: { genres, userVector } });
-    }, []);
+    }, [genres, userVector, streamAnswer]);
 
     const loadMoreSongs = () => {
         if (visibleSongs.length < recommendations.length) {

@@ -10,7 +10,7 @@ const AIResponse = ({ message } : { message: string }) => {
                 <Center>
                     <LoadingBeat />
                 </Center>
-                )}
+            )}
         </Box>
     );
 };
