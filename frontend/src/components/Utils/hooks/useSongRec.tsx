@@ -19,6 +19,7 @@ const useSongRec = () => {
     useSubscription(aiSubscription, {
         onData({ data }) {
             const chunkText = data.data.aiResponse;
+            console.log(chunkText);
             setAIResponse(prev => prev + chunkText)
         }
     });
@@ -27,6 +28,7 @@ const useSongRec = () => {
         if (hasFetched.current) return;
         hasFetched.current = true;
         setAIResponse("");
+        console.log("using stream answer!")
         streamAnswer({ variables: { genres, userVector } });
     }, [genres, userVector, streamAnswer]);
 
