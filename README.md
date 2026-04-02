@@ -1,6 +1,8 @@
+![CI-Pipeline Status](https://github.com/Raghart/TrackStack/actions/workflows/CI-Pipeline.yml/badge.svg)
+![CD-Pipeline Status](https://github.com/Raghart/TrackStack/actions/workflows/CD-Pipeline.yml/badge.svg)
 # 🎵 TrackStack
 
-Do you want to find a new **banger**? Try out this **music recommendation web app** that uses vectors based on **song metadata** (genre, energy, danceability, and more) enhanced by a weighted system to recommend **tracks** based on the weights you assign to each feature. Discover new tracks from a database of over **50,000 tracks**!
+Do you want to find a new **banger**? Try out this **AI-powered music recommendation web app** that uses vector embeddings based on **song metadata** (genre, energy, danceability, and more) enhanced by a weighted system to provide personalized suggestions. Tune your recommendations by assigning custom weights to the features you care about most and discover new tracks from a database of over **50,000 tracks**!
 
 Check out the live version in Render:
 
