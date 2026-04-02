@@ -11,11 +11,10 @@ const useSongRec = () => {
             mood, acousticness } = useAppSelector(state => state.songData);
     const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
             acousticness, voiceType, sentiment);
-
+    
     useSubscription(responseSub, {
         variables: { genres, userVector },
         onData({ data }) {
-            console.log(data)
             const chunkText = data.data.responseSub;
             setAIResponse(prev => prev + chunkText);
         }
