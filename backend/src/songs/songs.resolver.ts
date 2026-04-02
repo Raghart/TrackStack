@@ -32,7 +32,7 @@ export class SongsResolver {
   }
 
   @Subscription(() => String, { resolve: (payload: { aiResponse: string | undefined }) => payload.aiResponse, })
-  async *responseSub(
+  async *aiResponse(
     @Args('genres', { type: () => [String], defaultValue: ["Rock"] } ) genres: string[],
     @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR }) userVector: number[],
   ) : AsyncGenerator<{ aiResponse: string | undefined }> {
@@ -40,23 +40,6 @@ export class SongsResolver {
     for await (const chunk of aiStream) {
       yield { aiResponse: chunk.text };
     }
-  }
-
-  @Subscription(() => String)
-  aiResponse() {
-    return this.pubSub.asyncIterableIterator('AI_RESPONSE')
-  }
-
-  @Mutation(() => Boolean)
-  async streamAIResponse(
-    @Args('genres', { type: () => [String], defaultValue: ['Rock'] }) genres: string[],
-    @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR }) userVector: number[],
-  ) {
-      const streamResponse = await this.songsService.getAIStream(genres, userVector);
-      for await (const chunk of streamResponse) {
-        await this.pubSub.publish('AI_RESPONSE', { aiResponse: chunk.text });
-      }
-      return true;
   }
 
   @Query(() => [SongResponseDto], { name: 'getSongRecommendations' })
