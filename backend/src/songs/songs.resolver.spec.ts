@@ -24,10 +24,6 @@ describe('SongsResolver receives the expected songs array from the service', () 
       providers: [
         SongsResolver,
         {
-          provide: 'PUB_SUB',
-          useValue: new PubSub(),
-        },
-        {
           provide: 'AI',
           useValue: new GoogleGenAI({
             apiKey: "testing",
@@ -121,10 +117,6 @@ describe('SongsResolver is able to communicate the error from the service to hel
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SongsResolver,
-        {
-          provide: 'PUB_SUB',
-          useValue: new PubSub(),
-        },
         {
           provide: 'AI',
           useValue: new GoogleGenAI({

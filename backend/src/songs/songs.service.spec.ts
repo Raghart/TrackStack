@@ -47,10 +47,6 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
       providers: [
         SongsService,
         {
-          provide: 'PUB_SUB',
-          useValue: new PubSub(),
-        },
-        {
           provide: 'AI',
           useValue: new GoogleGenAI({
             apiKey: "testing",
