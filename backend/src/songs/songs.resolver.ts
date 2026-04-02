@@ -42,8 +42,11 @@ export class SongsResolver {
     @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR }) userVector: number[],
   ) {
       const streamResponse = await this.songsService.getAIStream(genres, userVector);
+      console.log(`Got the stream response: ${streamResponse}`)
       for await (const chunk of streamResponse) {
+        console.log(`loading chunk: ${chunk.text}`)
         await this.pubSub.publish('AI_RESPONSE', { aiResponse: chunk.text });
+        console.log("response published!")
       }
       return true;
   }
