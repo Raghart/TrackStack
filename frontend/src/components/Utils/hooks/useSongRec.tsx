@@ -16,21 +16,21 @@ const useSongRec = () => {
     const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
             acousticness, voiceType, sentiment);
 
-    useSubscription(aiSubscription, {
+    const { loading } = useSubscription(aiSubscription, {
         onData({ data }) {
             const chunkText = data.data.aiResponse;
             console.log(chunkText);
             setAIResponse(prev => prev + chunkText)
-        }
+        },
     });
 
     useEffect(() => {
-        if (hasFetched.current) return;
+        if (hasFetched.current || !loading) return;
         hasFetched.current = true;
         setAIResponse("");
         console.log("using stream answer!")
         streamAnswer({ variables: { genres, userVector } });
-    }, [genres, userVector, streamAnswer]);
+    }, [genres, userVector, streamAnswer, loading]);
 
     const loadMoreSongs = () => {
         if (visibleSongs.length < recommendations.length) {
