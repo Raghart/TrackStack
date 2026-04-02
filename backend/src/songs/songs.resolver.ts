@@ -1,16 +1,12 @@
-import { Args, Float, Int, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import { Args, Float, Int, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { SongsService } from './songs.service';
 import { USER_VECTOR } from '../../test/constants/constants';
 import { FullSongResponseDto } from './dto/FullSongResponse.dto';
 import { SongResponseDto } from './dto/SongResponse.dto';
-import { Inject } from '@nestjs/common';
-import { PubSub } from 'graphql-subscriptions';
 
 @Resolver()
 export class SongsResolver {
-  constructor(private readonly songsService: SongsService,
-    @Inject('PUB_SUB') private readonly pubSub: PubSub
-  ) {}
+  constructor(private readonly songsService: SongsService, ) {}
 
   @Query(() => Int, { name: 'getDBLength' })
   async getDBLength(): Promise<number> {
@@ -31,8 +27,8 @@ export class SongsResolver {
     return this.songsService.getSongData(songID);
   }
 
-  @Subscription(() => String, { resolve: (payload: { aiResponse: string | undefined }) => payload.aiResponse, })
-  async *responseSub(
+  @Subscription(() => String)
+  async *aiResponse(
     @Args('genres', { type: () => [String], defaultValue: ["Rock"] } ) genres: string[],
     @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR }) userVector: number[],
   ) : AsyncGenerator<{ aiResponse: string | undefined }> {
@@ -40,27 +36,6 @@ export class SongsResolver {
     for await (const chunk of aiStream) {
       yield { aiResponse: chunk.text };
     }
-  }
-
-  @Subscription(() => String)
-  aiResponse() {
-    return this.pubSub.asyncIterableIterator('AI_RESPONSE')
-  }
-
-  @Mutation(() => Boolean)
-  async streamAIResponse(
-    @Args('genres', { type: () => [String], defaultValue: ['Rock'] }) genres: string[],
-    @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR }) userVector: number[],
-  ) {
-      const streamResponse = await this.songsService.getAIStream(genres, userVector);
-      console.log(`Got the stream response:`)
-      console.log(streamResponse)
-      for await (const chunk of streamResponse) {
-        console.log(`loading chunk: ${chunk.text}`)
-        await this.pubSub.publish('AI_RESPONSE', { aiResponse: chunk.text });
-        console.log("response published!")
-      }
-      return true;
   }
 
   @Query(() => [SongResponseDto], { name: 'getSongRecommendations' })

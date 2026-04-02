@@ -13,19 +13,7 @@ query getRecommendedSongs ($genres: [String!], $userVector: [Float!], $limit: In
 `;
 
 export const aiSubscription = gql`
-subscription {
-  aiResponse
-}
-`;
-
-export const responseSub = gql`
 subscription GetAIResponse($genres: [String!], $userVector: [Float!]) {
-  responseSub(genres: $genres, userVector: $userVector)
-}
-`;
-
-export const streamAIAnswer = gql`
-mutation streamResponse($genres: [String!], $userVector: [Float!]) {
-  streamAIResponse(genres: $genres, userVector: $userVector) 
+  aiResponse(genres: $genres, userVector: $userVector)
 }
 `;

@@ -12,7 +12,6 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { ConnectionResError, TimeoutResError } from 'src/utils/mockErrors';
 import { USER_VECTOR } from '../../test/constants/constants';
 import { expectSongProps } from 'src/utils/expectSongs';
-import { PubSub } from 'graphql-subscriptions';
 import { GoogleGenAI } from '@google/genai';
 
 describe('SongsResolver receives the expected songs array from the service', () => {
@@ -23,10 +22,6 @@ describe('SongsResolver receives the expected songs array from the service', () 
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SongsResolver,
-        {
-          provide: 'PUB_SUB',
-          useValue: new PubSub(),
-        },
         {
           provide: 'AI',
           useValue: new GoogleGenAI({
@@ -121,10 +116,6 @@ describe('SongsResolver is able to communicate the error from the service to hel
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SongsResolver,
-        {
-          provide: 'PUB_SUB',
-          useValue: new PubSub(),
-        },
         {
           provide: 'AI',
           useValue: new GoogleGenAI({

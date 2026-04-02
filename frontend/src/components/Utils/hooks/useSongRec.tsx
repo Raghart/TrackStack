@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useAppSelector } from "../redux-hooks";
-import { responseSub } from "@/queries/LaraRecQuerie";
 import { useSubscription } from "@apollo/client";
 import generateUserVector from "../generateUserVector";
+import { aiSubscription } from "@/queries/LaraRecQuerie";
 
 const useSongRec = () => {
     const [visibleCount, setVisibleCount] = useState<number>(20);
@@ -11,12 +11,11 @@ const useSongRec = () => {
             mood, acousticness } = useAppSelector(state => state.songData);
     const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
             acousticness, voiceType, sentiment);
-
-    useSubscription(responseSub, {
+    
+    useSubscription(aiSubscription, {
         variables: { genres, userVector },
         onData({ data }) {
-            console.log(data)
-            const chunkText = data.data.responseSub;
+            const chunkText = data.data.aiResponse;
             setAIResponse(prev => prev + chunkText);
         }
     });
