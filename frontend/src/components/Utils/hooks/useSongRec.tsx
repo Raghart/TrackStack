@@ -8,15 +8,11 @@ const useSongRec = () => {
     const hasFetched = useRef(false);
     const [visibleCount, setVisibleCount] = useState<number>(20);
     const [aiResponse, setAIResponse] = useState<string>("");
-    const [isSub, setIsSub] = useState(false);
-    const [streamAnswer] = useMutation(streamAIAnswer);
-    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
-            mood, acousticness } = useAppSelector(state => state.songData);
-    const recommendations = useAppSelector(state => state.songData.results);
-    const visibleSongs = recommendations.slice(0, visibleCount);
-    const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
-            acousticness, voiceType, sentiment);
-
+    const [streamAnswer, { called }] = useMutation(streamAIAnswer, {
+        onCompleted() {
+            console.log("mutation completed!")
+        }
+    });
     const { loading } = useSubscription(aiSubscription, {
         onData({ data }) {
             const chunkText = data.data.aiResponse;
@@ -24,19 +20,21 @@ const useSongRec = () => {
             setAIResponse(prev => prev + chunkText)
         },
     });
+    
+    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
+            mood, acousticness } = useAppSelector(state => state.songData);
+    const recommendations = useAppSelector(state => state.songData.results);
+    const visibleSongs = recommendations.slice(0, visibleCount);
+    const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
+            acousticness, voiceType, sentiment);
 
     useEffect(() => {
-        const timer = setTimeout(() => setIsSub(false), 500);
-        return () => clearTimeout(timer)
-    }, [])
-
-    useEffect(() => {
-        if (hasFetched.current || !loading || !isSub) return;
+        if (hasFetched.current || !loading || called) return;
         hasFetched.current = true;
         setAIResponse("");
         console.log("using stream answer!")
         streamAnswer({ variables: { genres, userVector } });
-    }, [genres, userVector, streamAnswer, loading, isSub]);
+    }, [genres, userVector, streamAnswer, loading]);
 
     const loadMoreSongs = () => {
         if (visibleSongs.length < recommendations.length) {
