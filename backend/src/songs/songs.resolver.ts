@@ -31,7 +31,7 @@ export class SongsResolver {
     return this.songsService.getSongData(songID);
   }
 
-  @Subscription(() => String, { resolve: (payload: { aiResponse: string | undefined }) => payload.aiResponse, })
+  @Subscription(() => String)
   async *aiResponse(
     @Args('genres', { type: () => [String], defaultValue: ["Rock"] } ) genres: string[],
     @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR }) userVector: number[],
