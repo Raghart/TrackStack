@@ -31,6 +31,17 @@ export class SongsResolver {
     return this.songsService.getSongData(songID);
   }
 
+  @Subscription(() => String, { resolve: (payload: { aiResponse: string | undefined }) => payload.aiResponse, })
+  async *responseSub(
+    @Args('genres', { type: () => [String], defaultValue: ["Rock"] } ) genres: string[],
+    @Args('userVector', { type: () => [Float], defaultValue: USER_VECTOR }) userVector: number[],
+  ) : AsyncGenerator<{ aiResponse: string | undefined }> {
+    const aiStream = await this.songsService.getAIStream(genres, userVector);
+    for await (const chunk of aiStream) {
+      yield { aiResponse: chunk.text };
+    }
+  }
+
   @Subscription(() => String)
   aiResponse() {
     return this.pubSub.asyncIterableIterator('AI_RESPONSE')
