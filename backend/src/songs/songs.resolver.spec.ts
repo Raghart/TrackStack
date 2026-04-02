@@ -12,7 +12,6 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { ConnectionResError, TimeoutResError } from 'src/utils/mockErrors';
 import { USER_VECTOR } from '../../test/constants/constants';
 import { expectSongProps } from 'src/utils/expectSongs';
-import { PubSub } from 'graphql-subscriptions';
 import { GoogleGenAI } from '@google/genai';
 
 describe('SongsResolver receives the expected songs array from the service', () => {
