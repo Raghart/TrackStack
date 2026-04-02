@@ -8,6 +8,7 @@ const useSongRec = () => {
     const hasFetched = useRef(false);
     const [visibleCount, setVisibleCount] = useState<number>(20);
     const [aiResponse, setAIResponse] = useState<string>("");
+    const [isSub, setIsSub] = useState(false);
     const [streamAnswer] = useMutation(streamAIAnswer);
     const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
             mood, acousticness } = useAppSelector(state => state.songData);
@@ -25,12 +26,17 @@ const useSongRec = () => {
     });
 
     useEffect(() => {
-        if (hasFetched.current || !loading) return;
+        const timer = setTimeout(() => setIsSub(false), 500);
+        return () => clearTimeout(timer)
+    }, [])
+
+    useEffect(() => {
+        if (hasFetched.current || !loading || !isSub) return;
         hasFetched.current = true;
         setAIResponse("");
         console.log("using stream answer!")
         streamAnswer({ variables: { genres, userVector } });
-    }, [genres, userVector, streamAnswer, loading]);
+    }, [genres, userVector, streamAnswer, loading, isSub]);
 
     const loadMoreSongs = () => {
         if (visibleSongs.length < recommendations.length) {
