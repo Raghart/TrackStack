@@ -1,16 +1,12 @@
-import { Args, Float, Int, Mutation, Query, Resolver, Subscription } from '@nestjs/graphql';
+import { Args, Float, Int, Query, Resolver, Subscription } from '@nestjs/graphql';
 import { SongsService } from './songs.service';
 import { USER_VECTOR } from '../../test/constants/constants';
 import { FullSongResponseDto } from './dto/FullSongResponse.dto';
 import { SongResponseDto } from './dto/SongResponse.dto';
-import { Inject } from '@nestjs/common';
-import { PubSub } from 'graphql-subscriptions';
 
 @Resolver()
 export class SongsResolver {
-  constructor(private readonly songsService: SongsService,
-    @Inject('PUB_SUB') private readonly pubSub: PubSub
-  ) {}
+  constructor(private readonly songsService: SongsService, ) {}
 
   @Query(() => Int, { name: 'getDBLength' })
   async getDBLength(): Promise<number> {
