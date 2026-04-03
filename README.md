@@ -16,9 +16,9 @@ Check out the live version in Render:
 
 ## Description
 
-TrackStack is a **music recommendation web app** that combines an Elasticsearch-powered advanced search, an integrated **track player**, and a **recommendation system** based on song metadata over a catalog of **50,000+ tracks** stored in a **PostgreSQL database**.
+TrackStack is a **music recommendation web app** that combines an Elasticsearch-powered advanced search, an integrated **track player**, an **AI response system** built on **RAG principles** to significantly enhance model accuracy, and a **recommendation system** that uses vector embeddings made with song metadata over a catalog of **50,000+ tracks** stored in **PostgreSQL**.
 
-To deliver the best possible user experience, the frontend is built with **React**, **React Router DOM**, and **Chakra UI** for a responsive and smooth interface, while a **NestJS** backend with **GraphQL** efficiently serves songs, artists, genres, and albums. Delivered by a **CI/CD pipeline** that automates Jest unit tests, end-to-end testing, health checks, and deployments to ensure reliability and smooth delivery of new versions.
+To deliver a premium user experience, the frontend is built with **React**, **React Router DOM**, and **Chakra UI** for a responsive and smooth interface, supported with a **NestJS** backend with **GraphQL** efficiently serves songs, artists, genres, and albums queries, while **streaming AI responses** are delivered via **Websocket Subscriptions** to deliver it ASAP. Delivered by a **CI/CD pipeline** that automates Jest unit tests, end-to-end testing, and health checks to ensure reliable and smooth deployments.
 
 ---
 
