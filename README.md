@@ -197,17 +197,9 @@ git clone https://github.com/Raghart/TrackStack.git
 cd TrackStack
 ```
 
-### Install Frontend dependencies
+### Install Frontend and Backend dependencies
 
 ```bash
-cd front
-npm install
-```
-
-### Install Backend dependencies
-
-```bash
-cd ../back
 npm install
 ```
 
@@ -219,10 +211,13 @@ To configure the Elasticsearch service, setup your node URL using the **ELASTICS
 
 Optionally, want can configure a custom port for the backend using the **PORT** variable.
 
-### Run the web app locally from the back directory
+### Run the web app locally
 
 Keep in mind that running the app locally requires all the **.env** variables from the previous step to connect to the external services that provide the data shown to the users:
 
 ```bash
-npm run dev
+npm run dev:backend
+```
+```bash
+npm run dev:frontend
 ```
