@@ -162,7 +162,7 @@ You'll be redirected to a page where you can listen to their songs:
 ## Backend Technologies
 - **NestJS**: Primary framework used to build a modular, scalable, and maintainable backend architecture.
 
-- **Apollo Server (GraphQL)**: Handles the client requests using the GraphQL query language, enabling flexible and efficient data fetching.
+- **Apollo Server (GraphQL)**: Handles the client requests using the GraphQL query language, enabling flexible and efficient data fetching. Also enables the use of Websockets by using the GraphQL Subscriptions to the quickly deliver messages.
 
 - **Sequelize**: An Object-Relational Mapping (ORM) for managing relational data models and interacting with the PostgreSQL database in a structured way. It retrieves dozens of songs, artists and albums in seconds, and by using a randomly generated seed in queries, delivers semi-random results that keep the experience fresh, letting users discover a new song or artist every time they visit.
 
