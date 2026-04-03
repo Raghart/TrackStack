@@ -1,6 +1,8 @@
+![CI-Pipeline Status](https://github.com/Raghart/TrackStack/actions/workflows/CI-Pipeline.yml/badge.svg)
+![CD-Pipeline Status](https://github.com/Raghart/TrackStack/actions/workflows/CD-Pipeline.yml/badge.svg)
 # 🎵 TrackStack
 
-Do you want to find a new **banger**? Try out this **music recommendation web app** that uses vectors based on **song metadata** (genre, energy, danceability, and more) enhanced by a weighted system to recommend **tracks** based on the weights you assign to each feature. Discover new tracks from a database of over **50,000 tracks**!
+Do you want to find a new **banger**? Try out this **AI-powered music recommendation web app** that uses vector embeddings based on **song metadata** (genre, energy, danceability, and more) enhanced by a weighted system to provide personalized suggestions. Tune your recommendations by assigning custom weights to the features you care about most and discover new tracks from a database of over **50,000 tracks**!
 
 Check out the live version in Render:
 
@@ -14,9 +16,9 @@ Check out the live version in Render:
 
 ## Description
 
-TrackStack is a **music recommendation web app** that combines an Elasticsearch-powered advanced search, an integrated **track player**, and a **recommendation system** based on song metadata over a catalog of **50,000+ tracks** stored in a **PostgreSQL database**.
+TrackStack is a **music recommendation web app** that combines an Elasticsearch-powered advanced search, an integrated **track player**, an **AI response system** built on **RAG principles** to significantly enhance model accuracy, and a **recommendation system** that uses vector embeddings made with song metadata over a catalog of **50,000+ tracks** stored in **PostgreSQL**.
 
-To deliver the best possible user experience, the frontend is built with **React**, **React Router DOM**, and **Chakra UI** for a responsive and smooth interface, while a **NestJS** backend with **GraphQL** efficiently serves songs, artists, genres, and albums. Delivered by a **CI/CD pipeline** that automates Jest unit tests, end-to-end testing, health checks, and deployments to ensure reliability and smooth delivery of new versions.
+To deliver a premium user experience, the frontend is built with **React**, **React Router DOM**, and **Chakra UI** for a responsive and smooth interface, supported with a **NestJS** backend with **GraphQL** efficiently serves songs, artists, genres, and albums queries, while **streaming AI responses** are delivered via **Websocket Subscriptions** to deliver it ASAP. Delivered by a **CI/CD pipeline** that automates Jest unit tests, end-to-end testing, and health checks to ensure reliable and smooth deployments.
 
 ---
 
@@ -160,7 +162,7 @@ You'll be redirected to a page where you can listen to their songs:
 ## Backend Technologies
 - **NestJS**: Primary framework used to build a modular, scalable, and maintainable backend architecture.
 
-- **Apollo Server (GraphQL)**: Handles the client requests using the GraphQL query language, enabling flexible and efficient data fetching.
+- **Apollo Server (GraphQL)**: Handles the client requests using the GraphQL query language, enabling flexible and efficient data fetching. Also enables the use of Websockets by using the GraphQL Subscriptions to the quickly deliver messages.
 
 - **Sequelize**: An Object-Relational Mapping (ORM) for managing relational data models and interacting with the PostgreSQL database in a structured way. It retrieves dozens of songs, artists and albums in seconds, and by using a randomly generated seed in queries, delivers semi-random results that keep the experience fresh, letting users discover a new song or artist every time they visit.
 
@@ -195,17 +197,9 @@ git clone https://github.com/Raghart/TrackStack.git
 cd TrackStack
 ```
 
-### Install Frontend dependencies
+### Install Frontend and Backend dependencies
 
 ```bash
-cd front
-npm install
-```
-
-### Install Backend dependencies
-
-```bash
-cd ../back
 npm install
 ```
 
@@ -217,10 +211,13 @@ To configure the Elasticsearch service, setup your node URL using the **ELASTICS
 
 Optionally, want can configure a custom port for the backend using the **PORT** variable.
 
-### Run the web app locally from the back directory
+### Run the web app locally
 
 Keep in mind that running the app locally requires all the **.env** variables from the previous step to connect to the external services that provide the data shown to the users:
 
 ```bash
-npm run dev
+npm run dev:backend
+```
+```bash
+npm run dev:frontend
 ```
