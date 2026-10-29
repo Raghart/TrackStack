@@ -1,4 +1,5 @@
 # TODO-List
+- Pass the agent this TODO list (Boot.dev or opencode) to have a short list of the things to do to drastically improve the project.
 
 - Change the DB schema from Goose to Prisma.
 - Change ElasticSearch search system for one that uses PostgreSQL.
