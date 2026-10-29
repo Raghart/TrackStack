@@ -9,6 +9,8 @@ packages:
 allowBuilds:
   '@swc/core': true
   esbuild: true
+  '@prisma/engines': true
+  prisma: true
   '@apollo/protobufjs': false
   '@google/genai': false
   '@nestjs/core': false

@@ -46,6 +46,7 @@ Cada dominio sigue el mismo patrón: `module` + `resolver` + `service`, con spec
 - DTOs GraphQL con decoradores y nombres de campo en `snake_case` cuando el contrato ya los usa; no renombres campos existentes (rompe el cliente).
 - Imports con `src/*` en `src/`; los specs importan fixtures con rutas relativas a `test/`.
 - No edites `dist/`, `coverage/`, `public/`, `pnpm-lock.yaml` ni `package-lock.json` (salvo cambio intencional de dependencias).
+- No agregues mas de lo que te pidan.
 
 ## Tests
 
