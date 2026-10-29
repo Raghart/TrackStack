@@ -1,0 +1,114 @@
+# AGENTS.md — TrackStack
+
+Guía de contexto y convenciones para agentes de código que trabajen en este repositorio.
+
+## Descripción del proyecto
+
+**TrackStack** es una aplicación web de recomendación musical. Combina:
+
+- Búsqueda avanzada con **Elasticsearch** (fuzzy search, n-grams, edge-ngrams).
+- Reproductor de previews de 30 s.
+- Recomendaciones personalizadas mediante **vectores construidos con metadata de canciones** (energía, danceability, mood, etc.) y pesos ajustables por el usuario.
+- Respuestas de IA en streaming vía **GraphQL Subscriptions** (WebSocket), con un sistema basado en principios **RAG** sobre un catálogo de +50 000 canciones.
+- Catálogo persistido en **PostgreSQL** (modelos **Sequelize**) y +30 000 documentos indexados en Elasticsearch.
+
+Arquitectura general: monorepo **npm workspaces** con un backend **NestJS + GraphQL (Apollo)** que también sirve el build estático del frontend, un frontend **React 19 + Vite + Chakra UI + Redux Toolkit + Apollo Client**, y un paquete compartido de **schemas Zod**. Los tests E2E viven en un paquete **Playwright** independiente.
+
+## Project layout (breve)
+
+```text
+TrackStack/
+├── backend/                  # API NestJS + GraphQL
+│   ├── src/                  # código de la aplicación
+│   │   ├── <dominio>/        # songs, albums, artists, genres,
+│   │   │                     # song_artists, song_genres, song_details, search
+│   │   │   ├── *.module.ts
+│   │   │   ├── *.resolver.ts # queries/subscriptions GraphQL
+│   │   │   ├── *.service.ts  # lógica de negocio y acceso a datos
+│   │   │   ├── *.spec.ts     # tests unitarios junto al código
+│   │   │   └── dto/          # @ObjectType / @Field (contratos GraphQL)
+│   │   ├── types/            # tipos de atributos, guards y parsers
+│   │   ├── utils/            # helpers (safeQuery, safeSearch, paginación…)
+│   │   ├── app.module.ts     # wiring global (Sequelize, GraphQL, estáticos)
+│   │   └── main.ts           # bootstrap, CORS, puerto
+│   ├── models/               # modelos Sequelize (uno por dominio)
+│   ├── test/                 # fixtures/datos compartidos por los tests
+│   ├── database/             # SQL, configuración y utilidades de BD
+│   └── public/               # build del frontend servido por el backend (generado)
+├── frontend/                 # SPA React + Vite
+│   └── src/
+│       ├── components/       # componentes agrupados por feature/ruta
+│       │   └── Utils/hooks/  # custom hooks reutilizables
+│       ├── queries/          # documentos GraphQL (gql)
+│       ├── reducers/         # slices de Redux Toolkit
+│       ├── types/            # tipos y validadores del cliente
+│       ├── dynamicCSS/       # estilos dinámicos
+│       ├── apolloClient.ts   # split HTTP/WebSocket para subscriptions
+│       ├── store.ts          # configuración de Redux
+│       └── App.tsx           # rutas de React Router
+├── schemas/                  # @trackstack/schemas — Zod compartido (en migración)
+├── e2e/                      # Playwright (paquete aparte, fuera de workspaces)
+├── .github/workflows/        # CI, CD y health check
+├── assets/                   # imágenes usadas por el README
+├── PLAN_MEJORAS.md           # notas personales del autor (ver nota)
+└── TODO.md                   # notas personales del autor (ver nota)
+```
+
+### Nota sobre documentación de planificación
+
+`PLAN_MEJORAS.md` y `TODO.md` son **notas personales del autor** sobre trabajo futuro. No son especificaciones ni fuentes de verdad para el agente: no deben editarse, ni usarse para decidir cambios, ni asumirse como requisitos salvo que el usuario lo pida explícitamente.
+
+## Comandos
+
+Desde la raíz del repo:
+
+```bash
+npm install                 # instala workspaces (backend, frontend, schemas)
+
+npm run dev:backend         # NestJS en modo watch
+npm run dev:frontend        # Vite dev server
+npm run build:frontend      # build del frontend -> backend/public
+npm run build:backend       # compila NestJS -> backend/dist
+npm run start:prod          # ejecuta backend compilado
+```
+
+Por paquete:
+
+```bash
+# backend
+npm run lint --workspace=backend
+npm run test --workspace=backend          # Jest
+npm run test:cov --workspace=backend
+npm run format --workspace=backend        # Prettier
+
+# frontend
+npm run lint --workspace=frontend
+npm run build --workspace=frontend        # tsc -b && vite build
+```
+
+E2E (instalar dependencias dentro de `e2e/`):
+
+```bash
+cd e2e
+npm ci
+npm run test
+npm run test:report
+```
+
+> Los tests E2E y parte de los tests de integración requieren servicios externos (PostgreSQL, Elasticsearch) y variables de entorno. No los ejecutes asumiendo que existen: comprueba primero y reporta si faltan.
+
+## Pautas generales
+
+### Alcance y cambios
+
+- Haz cambios **mínimos y enfocados** al objetivo. Evita refactors amplios, renombrados masivos o reformateos de archivos no relacionados.
+- Respeta el estilo existente aunque no sea perfecto: nombres, estructura de carpetas, `snake_case` en campos de API/DTOs, mayúsculas irregulares en algunos archivos. No "corrijas" convenciones existentes sin pedirlo.
+- No modifiques archivos generados ni artefactos: `backend/dist/`, `backend/coverage/`, `backend/public/`, `node_modules/`, `package-lock.json` (salvo que cambien dependencias de forma intencional).
+- No borres ni reescribas trabajo del usuario que no entiendas. Investiga antes de tocar archivos ajenos al cambio.
+- Si un cambio afecta el contrato GraphQL, la estructura de la base de datos o la API pública, explícalo y confírmalo antes de aplicarlo.
+
+### Dependencias
+
+- Instala en la raíz para los workspaces (`backend`, `frontend`, `schemas`).
+- `e2e/` **no** es un workspace: sus dependencias se instalan dentro de `e2e/`.
+- Justifica cualquier dependencia nueva y evita duplicar librerías que ya cubran la necesidad.
