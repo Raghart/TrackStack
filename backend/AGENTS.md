@@ -45,7 +45,7 @@ Cada dominio sigue el mismo patrón: `module` + `resolver` + `service`, con spec
 - Paginación inválida: `InvalidPaginationException` (`src/utils/PaginationError.ts`).
 - DTOs GraphQL con decoradores y nombres de campo en `snake_case` cuando el contrato ya los usa; no renombres campos existentes (rompe el cliente).
 - Imports con `src/*` en `src/`; los specs importan fixtures con rutas relativas a `test/`.
-- No edites `dist/`, `coverage/`, `public/` ni `package-lock.json` (salvo cambio intencional de dependencias).
+- No edites `dist/`, `coverage/`, `public/`, `pnpm-lock.yaml` ni `package-lock.json` (salvo cambio intencional de dependencias).
 
 ## Tests
 
@@ -77,34 +77,34 @@ Reglas para estos tests:
 Desde la raíz del repo:
 
 ```bash
-npm run dev:backend                  # Nest en watch
-npm run build:backend                # nest build -> backend/dist
-npm run start:prod                   # ejecuta el build compilado
+pnpm run dev:backend                 # Nest en watch
+pnpm run build:backend               # nest build -> backend/dist
+pnpm run start:prod                  # ejecuta el build compilado
 ```
 
-Dentro de `backend/` (o con `--workspace=backend` desde la raíz):
+Dentro de `backend/` (o con `pnpm --filter ./backend run <script>` desde la raíz):
 
 ```bash
-npm run lint                         # ESLint sobre src, test, apps, libs
-npx eslint .                         # mismo lint + reglas de seguridad (lo que corre la CI)
-npm run test                         # Jest (unit specs de src/)
-npm run test -- src/songs/songs.service.spec.ts   # un spec concreto
-npm run test:watch                   # Jest en watch
-npm run test:cov                     # cobertura -> backend/coverage/
-npm run build                        # compila con Nest
-npm run format                       # Prettier sobre src/ y test/
-npm run test:e2e                     # config test/jest-e2e.json (sin specs actualmente)
+pnpm run lint                        # ESLint sobre src, test, apps, libs
+pnpm exec eslint .                   # mismo lint + reglas de seguridad (lo que corre la CI)
+pnpm run test                        # Jest (unit specs de src/)
+pnpm run test -- src/songs/songs.service.spec.ts   # un spec concreto
+pnpm run test:watch                  # Jest en watch
+pnpm run test:cov                    # cobertura -> backend/coverage/
+pnpm run build                       # compila con Nest
+pnpm run format                      # Prettier sobre src/ y test/
+pnpm run test:e2e                    # config test/jest-e2e.json (sin specs actualmente)
 ```
 
 Orden recomendado antes de dar un cambio por terminado:
 
-1. `npm run lint --workspace=backend`
-2. `npm run test --workspace=backend` (o el spec afectado durante el desarrollo)
-3. `npm run build --workspace=backend`
-4. Si tocaste lógica sensible, `npm run test:cov --workspace=backend` y revisa que no baje la cobertura.
+1. `pnpm --filter ./backend run lint`
+2. `pnpm --filter ./backend run test` (o el spec afectado durante el desarrollo)
+3. `pnpm --filter ./backend run build`
+4. Si tocaste lógica sensible, `pnpm --filter ./backend run test:cov` y revisa que no baje la cobertura.
 
 Notas:
 
 - No hay umbral de cobertura configurado en Jest, pero el proyecto mantiene métricas altas; evita bajar la cobertura del archivo que tocas.
-- `npm run test` no requiere `.env` ni servicios externos. `start:prod`, los E2E y cualquier prueba de integración sí necesitan `DB_URL`, `DB_PORT`, `ELASTICSEARCH_NODE` y, para la IA, `API_KEY`. Si faltan, dilo explícitamente en el resumen en lugar de asumir que pasan.
-- La CI ejecuta lint, `npx eslint .` (seguridad) y `npm run test` en cada PR, así que esos tres deben pasar.
+- `pnpm run test` no requiere `.env` ni servicios externos. `start:prod`, los E2E y cualquier prueba de integración sí necesitan `DB_URL`, `DB_PORT`, `ELASTICSEARCH_NODE` y, para la IA, `API_KEY`. Si faltan, dilo explícitamente en el resumen en lugar de asumir que pasan.
+- La CI ejecuta lint, `eslint .` (seguridad) y los tests en cada PR, así que esos tres deben pasar.

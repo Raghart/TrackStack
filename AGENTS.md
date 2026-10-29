@@ -10,7 +10,7 @@
 - Respuestas de IA en streaming vía **GraphQL Subscriptions** (WebSocket), con un sistema basado en principios **RAG** sobre un catálogo de +50 000 canciones.
 - Catálogo persistido en **PostgreSQL** (modelos **Sequelize**) y +30 000 documentos indexados en Elasticsearch.
 
-Arquitectura general: monorepo **npm workspaces** con un backend **NestJS + GraphQL (Apollo)** que también sirve el build estático del frontend, un frontend **React 19 + Vite + Chakra UI + Redux Toolkit + Apollo Client**, y un paquete compartido de **schemas Zod**. Los tests E2E viven en un paquete **Playwright** independiente.
+Arquitectura general: monorepo **pnpm workspaces** con un backend **NestJS + GraphQL (Apollo)** que también sirve el build estático del frontend, un frontend **React 19 + Vite + Chakra UI + Redux Toolkit + Apollo Client**, y un paquete compartido de **schemas Zod**. Los tests E2E viven en un paquete **Playwright** independiente.
 
 ## Project layout
 
@@ -54,33 +54,35 @@ TrackStack/
 
 ## Comandos
 
+El gestor es **pnpm** (versión fijada en `packageManager` de `package.json`). El workspace está definido en `pnpm-workspace.yaml` (`backend`, `frontend`, `schemas`) y las dependencias se resuelven desde `pnpm-lock.yaml`.
+
 Desde la raíz del repo:
 
 ```bash
-npm install                 # instala workspaces (backend, frontend, schemas)
+pnpm install                # instala los workspaces (backend, frontend, schemas)
 
-npm run dev:backend         # NestJS en modo watch
-npm run dev:frontend        # Vite dev server
-npm run build:frontend      # build del frontend -> backend/public
-npm run build:backend       # compila NestJS -> backend/dist
-npm run start:prod          # ejecuta backend compilado
+pnpm run dev:backend        # NestJS en modo watch
+pnpm run dev:frontend       # Vite dev server
+pnpm run build:frontend     # build del frontend -> backend/public
+pnpm run build:backend      # compila NestJS -> backend/dist
+pnpm run start:prod         # ejecuta backend compilado
 ```
 
 Por paquete:
 
 ```bash
 # backend
-npm run lint --workspace=backend
-npm run test --workspace=backend          # Jest
-npm run test:cov --workspace=backend
-npm run format --workspace=backend        # Prettier
+pnpm --filter ./backend run lint
+pnpm --filter ./backend run test          # Jest
+pnpm --filter ./backend run test:cov
+pnpm --filter ./backend run format        # Prettier
 
 # frontend
-npm run lint --workspace=frontend
-npm run build --workspace=frontend        # tsc -b && vite build
+pnpm --filter ./frontend run lint
+pnpm --filter ./frontend run build        # tsc -b && vite build
 ```
 
-E2E (instalar dependencias dentro de `e2e/`):
+E2E (paquete aparte, **fuera** del workspace de pnpm; instalar dependencias dentro de `e2e/`):
 
 ```bash
 cd e2e
@@ -97,15 +99,17 @@ npm run test:report
 
 - Haz cambios **mínimos y enfocados** al objetivo. Evita refactors amplios, renombrados masivos o reformateos de archivos no relacionados.
 - Respeta el estilo existente aunque no sea perfecto: nombres, estructura de carpetas, `snake_case` en campos de API/DTOs, mayúsculas irregulares en algunos archivos. No "corrijas" convenciones existentes sin pedirlo.
-- No modifiques archivos generados ni artefactos: `backend/dist/`, `backend/coverage/`, `backend/public/`, `node_modules/`, `package-lock.json` (salvo que cambien dependencias de forma intencional).
+- No modifiques archivos generados ni artefactos: `backend/dist/`, `backend/coverage/`, `backend/public/`, `node_modules/`, `pnpm-lock.yaml` ni `package-lock.json` (salvo que cambien dependencias de forma intencional). El lockfile canónico es `pnpm-lock.yaml`; reglénalo con `pnpm` y no a mano.
 - No borres ni reescribas trabajo del usuario que no entiendas. Investiga antes de tocar archivos ajenos al cambio.
 - Si un cambio afecta el contrato GraphQL, la estructura de la base de datos o la API pública, explícalo y confírmalo antes de aplicarlo.
 
 ### Dependencias
 
-- Instala en la raíz para los workspaces (`backend`, `frontend`, `schemas`).
-- `e2e/` **no** es un workspace: sus dependencias se instalan dentro de `e2e/`.
+- Instala en la raíz con pnpm para los workspaces (`backend`, `frontend`, `schemas`): `pnpm add <paquete>` (o `pnpm add -D <paquete>`), y para un paquete concreto `pnpm --filter ./backend add <paquete>`.
+- No uses `npm install` en la raíz: npm y pnpm comparten `node_modules` y mezclar ambos deja el árbol inconsistente.
+- `e2e/` **no** es un workspace: sus dependencias se instalan dentro de `e2e/` (con npm y su propio lockfile).
 - Justifica cualquier dependencia nueva y evita duplicar librerías que ya cubran la necesidad.
+- Los scripts de instalación (`postinstall`…) están bloqueados por defecto en `pnpm-workspace.yaml` (`allowBuilds`). Si una dependencia legítima necesita compilar binarios, añádela con `pnpm approve-builds` y justifícalo.
 
 ### Nota sobre documentación de planificación
 

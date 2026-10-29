@@ -9,12 +9,13 @@
     "frontend",
     "schemas"
   ],
+  "packageManager": "pnpm@11.8.0",
   "scripts": {
-    "dev:backend": "npm run dev --workspace=backend",
-    "dev:frontend": "npm run dev --workspace=frontend",
-    "build:frontend": "npm run build --workspace=frontend",
-    "build:backend": "npm run build --workspace=backend",
-    "start:prod": "npm run start:prod --workspace=backend"
+    "dev:backend": "pnpm --filter ./backend run dev",
+    "dev:frontend": "pnpm --filter ./frontend run dev",
+    "build:frontend": "pnpm --filter ./frontend run build",
+    "build:backend": "pnpm --filter ./backend run build",
+    "start:prod": "pnpm --filter ./backend run start:prod"
   },
   "keywords": [],
   "license": "MIT License",

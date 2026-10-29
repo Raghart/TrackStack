@@ -1,7 +1,8 @@
 # TODO-List
-- Pass the agent this TODO list (Boot.dev or opencode) to have a short list of the things to do to drastically improve the project.
 
-- Change the DB schema from Goose to Prisma.
-- Change ElasticSearch search system for one that uses PostgreSQL.
-- Use Zod (that Lane uses) to typeCheck the code instead of manual checking.
-- Change the project to use Bun instead of the insecure npm.
+1. Migrate from npm to pnpm (stricter dependency resolution, workspace support).
+2. Change the DB schema/migrations from Goose to Prisma.
+3. Replace Elasticsearch search with PostgreSQL full-text search.
+4. Adopt Zod for runtime validation at system boundaries (replacing manual checks).
+5. Update AGENTS.md (root + backend) to reflect the new stack.
+6. Make the project runnable via Docker (Dockerfile + docker-compose).
