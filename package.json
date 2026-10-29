@@ -9,7 +9,7 @@
     "frontend",
     "schemas"
   ],
-  "packageManager": "pnpm@11.8.0",
+  "packageManager": "pnpm@12.16.1",
   "scripts": {
     "dev:backend": "pnpm --filter ./backend run dev",
     "dev:frontend": "pnpm --filter ./frontend run dev",
