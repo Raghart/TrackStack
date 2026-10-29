@@ -1,7 +1,5 @@
 # AGENTS.md — TrackStack
 
-Guía de contexto y convenciones para agentes de código que trabajen en este repositorio.
-
 ## Descripción del proyecto
 
 **TrackStack** es una aplicación web de recomendación musical. Combina:
@@ -14,7 +12,7 @@ Guía de contexto y convenciones para agentes de código que trabajen en este re
 
 Arquitectura general: monorepo **npm workspaces** con un backend **NestJS + GraphQL (Apollo)** que también sirve el build estático del frontend, un frontend **React 19 + Vite + Chakra UI + Redux Toolkit + Apollo Client**, y un paquete compartido de **schemas Zod**. Los tests E2E viven en un paquete **Playwright** independiente.
 
-## Project layout (breve)
+## Project layout
 
 ```text
 TrackStack/
@@ -53,10 +51,6 @@ TrackStack/
 ├── PLAN_MEJORAS.md           # notas personales del autor (ver nota)
 └── TODO.md                   # notas personales del autor (ver nota)
 ```
-
-### Nota sobre documentación de planificación
-
-`PLAN_MEJORAS.md` y `TODO.md` son **notas personales del autor** sobre trabajo futuro. No son especificaciones ni fuentes de verdad para el agente: no deben editarse, ni usarse para decidir cambios, ni asumirse como requisitos salvo que el usuario lo pida explícitamente.
 
 ## Comandos
 
@@ -112,3 +106,7 @@ npm run test:report
 - Instala en la raíz para los workspaces (`backend`, `frontend`, `schemas`).
 - `e2e/` **no** es un workspace: sus dependencias se instalan dentro de `e2e/`.
 - Justifica cualquier dependencia nueva y evita duplicar librerías que ya cubran la necesidad.
+
+### Nota sobre documentación de planificación
+
+`PLAN_MEJORAS.md` y `TODO.md` son **notas personales del autor** sobre trabajo futuro. No son especificaciones ni fuentes de verdad para el agente: no deben editarse, ni usarse para decidir cambios, ni asumirse como requisitos salvo que el usuario lo pida explícitamente.
