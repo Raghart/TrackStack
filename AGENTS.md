@@ -111,6 +111,15 @@ npm run test:report
 - Justifica cualquier dependencia nueva y evita duplicar librerías que ya cubran la necesidad.
 - Los scripts de instalación (`postinstall`…) están bloqueados por defecto en `pnpm-workspace.yaml` (`allowBuilds`). Si una dependencia legítima necesita compilar binarios, añádela con `pnpm approve-builds` y justifícalo.
 
+### Schemas compartidos (`schemas/`)
+
+- Los contratos de datos que cruzan la API se declaran en `schemas/zod.schemas.ts` (paquete `@trackstack/schemas`) y se importan como `import { songResponseSchema } from '@trackstack/schemas'` desde backend y frontend.
+- Ese archivo contiene los schemas Zod de las funciones `parse*` de `backend/src/types/parses.ts` (y los primitivos/entidades que usan). Se migrará a ellos por partes: mientras la migración no se complete, los parsers siguen siendo la implementación activa.
+- Usa Zod 4 (ya instalado en los tres workspaces) y `z.looseObject` para no descartar campos extra que los parsers actuales devuelven tal cual.
+- `schemas/tsconfig.json` tiene `strict: true`, por lo que `noImplicitAny` está habilitado. Tipa **explícitamente** los parámetros de callbacks como `.refine`, `.transform`, `.superRefine`, etc. (por ejemplo, `(value: string) => ...` o `(value: number | string) => ...`); no dejes que el tipo se infiera a `any` y evita anotar `unknown` si luego necesitas el tipo real en la transformación.
+- Al añadir o cambiar un parser o un contrato GraphQL, actualiza también su schema en `schemas/`; no dupliques validaciones nuevas en `backend/src/types` ni en `frontend/src/types`.
+- Antes de dar por terminado un cambio en `schemas/`, comprueba los tipos con `pnpm --filter ./schemas exec tsc -p tsconfig.json --noEmit`.
+
 ### Nota sobre documentación de planificación
 
 `PLAN_MEJORAS.md` y `TODO.md` son **notas personales del autor** sobre trabajo futuro. No son especificaciones ni fuentes de verdad para el agente: no deben editarse, ni usarse para decidir cambios, ni asumirse como requisitos salvo que el usuario lo pida explícitamente.
