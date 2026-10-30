@@ -110,7 +110,9 @@ export const fullSongResponseSchema = z.looseObject({
   artists: z.array(artistReferenceSchema),
   album: albumReferenceSchema,
   genres: z.array(genreReferenceSchema),
-});
+}).required();
+
+export type FullSongResponseData = z.infer<typeof fullSongResponseSchema>;
 
 export const songRecommendationSchema = z.looseObject({
   id: z.number(),
