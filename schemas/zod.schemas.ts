@@ -114,7 +114,7 @@ export const fullSongResponseSchema = z.looseObject({
 
 export type FullSongResponseData = z.infer<typeof fullSongResponseSchema>;
 
-export const songRecommendationSchema = z.looseObject({
+export const songRecommendationSchema = z.object({
   id: z.number(),
   name: stringSchema,
   artists: stringSchema,

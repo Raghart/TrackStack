@@ -8,7 +8,6 @@ import {
 import { InjectModel } from '@nestjs/sequelize';
 import { QueryTypes, Sequelize } from 'sequelize';
 import {
-  parseSongRecommendations,
   parseSongResponse,
   parseString,
   parseStringArray,
@@ -27,7 +26,11 @@ import { GenresModel } from '../../models/genres/genres.model';
 import parseGenres from 'src/utils/parseGenres';
 import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
 import { existsSync } from 'node:fs';
-import { FullSongResponseData, fullSongResponseSchema } from '@trackstack/schemas';
+import {
+  FullSongResponseData,
+  fullSongResponseSchema,
+  songRecommendationsSchema,
+} from '@trackstack/schemas';
 if (existsSync('.env')) process.loadEnvFile();
 
 @Injectable()
@@ -214,7 +217,7 @@ export class SongsService {
       },
     );
 
-    const parsedData = parseSongRecommendations(rawSongData);
+    const parsedData = songRecommendationsSchema.parse(rawSongData);
 
     return parsedData.map((songData) => ({
       id: songData.id,
