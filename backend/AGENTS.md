@@ -48,11 +48,20 @@ Cada dominio sigue el mismo patrón: `module` + `resolver` + `service`, con spec
 - No edites `dist/`, `coverage/`, `public/`, `pnpm-lock.yaml` ni `package-lock.json` (salvo cambio intencional de dependencias).
 - No agregues mas de lo que te pidan.
 
+## Tipos
+
+- **No declares `interface`, `type` ni aliases de tipos dentro de archivos de dominio, services, resolvers, utils, controladores ni specs.** Todos los tipos del backend viven en `src/types/*.ts` (`songAttributes.ts`, `searchTypes.ts`, `albumAttributes.ts`, etc.) y se importan desde ahí con el alias `src/types/...`.
+- **Antes de crear un tipo, busca en `src/types/` uno que ya sirva.** Reutilízalo o extiéndelo (`extends`, `Pick`, `Omit`, etc.) en lugar de duplicarlo o declarar una versión local. Si de verdad no existe nada equivalente, añade el tipo al archivo de `src/types/` que corresponda al dominio (o crea uno nuevo ahí, siguiendo el patrón existente).
+- Única excepción: los DTOs GraphQL (`@ObjectType` / `@Field`) siguen en `src/<dominio>/dto/` porque los exige el enfoque code-first. Los tipos de atributos, respuestas de servicio o estructuras internas que esos DTOs consuman sí van en `src/types/`.
+- Respeta los nombres y el estilo ya usados (p. ej. `snake_case` en campos que reflejan el contrato de la API) y no dupliques el mismo tipo en dos sitios.
+
 ## Tests
 
 - Los unit tests **no necesitan PostgreSQL ni Elasticsearch**: los modelos se mockean con `getModelToken(...)` y los providers externos (`BonsaiClient`, `AI`) con `useValue`.
 - Fixtures compartidos en `test/data/<dominio>/`; constantes (URLs, errores, `USER_VECTOR`) en `test/constants/constants.ts`; assertions reutilizables en `src/utils/expect*.ts`.
 - Coloca el spec junto al archivo afectado (`src/<dominio>/<archivo>.spec.ts`). Usa los fixtures en vez de inventar datos inline.
+- **Ejecuta solo los specs afectados por tu cambio** (`pnpm run test -- src/<dominio>/<archivo>.spec.ts`). La suite completa es lenta y costosa: no la corras por defecto. Resérvala para cuando el usuario la pida explícitamente o cuando el cambio toque algo global (configuración de Jest/tsconfig, `app.module.ts`, o tipos/helpers compartidos de `src/types` y `src/utils`).
+- Si el cambio afecta a varios dominios, ejecuta el spec de cada archivo tocado; si creas un spec nuevo, ejecuta ese archivo concreto.
 - `test:e2e` existe pero apunta a `test/*.e2e-spec.ts`, que hoy no hay; los E2E reales están en `../e2e` (Playwright) y requieren servicios.
 
 ### Cuándo agregar un test de regresión
@@ -100,12 +109,13 @@ pnpm run test:e2e                    # config test/jest-e2e.json (sin specs actu
 Orden recomendado antes de dar un cambio por terminado:
 
 1. `pnpm --filter ./backend run lint`
-2. `pnpm --filter ./backend run test` (o el spec afectado durante el desarrollo)
+2. Ejecuta **solo los specs afectados** con `pnpm --filter ./backend run test -- src/<dominio>/<archivo>.spec.ts` (evita `pnpm run test` completo salvo que se pida o el cambio sea global).
 3. `pnpm --filter ./backend run build`
-4. Si tocaste lógica sensible, `pnpm --filter ./backend run test:cov` y revisa que no baje la cobertura.
+4. `pnpm --filter ./backend run test:cov` solo si el usuario lo pide o si tocaste lógica sensible y necesitas revisar la cobertura; también es costoso.
 
 Notas:
 
+- La suite completa es lenta; la CI la ejecuta en cada PR. En local basta con validar los specs directamente relacionados con el cambio.
 - No hay umbral de cobertura configurado en Jest, pero el proyecto mantiene métricas altas; evita bajar la cobertura del archivo que tocas.
 - `pnpm run test` no requiere `.env` ni servicios externos. `start:prod`, los E2E y cualquier prueba de integración sí necesitan `DB_URL`, `DB_PORT`, `ELASTICSEARCH_NODE` y, para la IA, `API_KEY`. Si faltan, dilo explícitamente en el resumen en lugar de asumir que pasan.
 - La CI ejecuta lint, `eslint .` (seguridad) y los tests en cada PR, así que esos tres deben pasar.

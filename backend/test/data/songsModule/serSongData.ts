@@ -3,6 +3,7 @@ import {
   SongResponseAttributes,
 } from 'src/types/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
+import { FullSongResponseData } from '@trackstack/schemas';
 
 export const songTestData = [
   {
