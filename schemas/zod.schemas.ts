@@ -24,11 +24,6 @@ export const stringArraySchema = z.array(stringSchema);
 
 export const numberArraySchema = z.array(floatNumberSchema);
 
-/* -------------------------------------------------------------------------- */
-/* Entidades anidadas                                                          */
-/* -------------------------------------------------------------------------- */
-
-/** `SongDetailsModel` tal y como se expone en las respuestas. */
 export const songDetailsSchema = z.looseObject({
   id: z.number(),
   song_id: z.number(),
@@ -46,26 +41,22 @@ export const songDetailsSchema = z.looseObject({
   time_signature: z.number(),
 });
 
-/** `AlbumsModel` cuando se incluye dentro de una canción (solo `url_image` garantizado). */
 export const albumReferenceSchema = z.looseObject({
   id: z.number().optional(),
   name: stringSchema.optional(),
   url_image: stringSchema,
 });
 
-/** `ArtistsModel` cuando se incluye dentro de una canción (solo `name` garantizado). */
 export const artistReferenceSchema = z.looseObject({
   id: z.number().optional(),
   name: stringSchema,
 });
 
-/** `GenresModel` cuando se incluye dentro de una canción (solo `genre` garantizado). */
 export const genreReferenceSchema = z.looseObject({
   id: z.number().optional(),
   genre: stringSchema,
 });
 
-/** `SongsModel` con las relaciones que pueden venir precargadas. */
 export const songSchema = z.looseObject({
   id: z.number(),
   name: stringSchema,
@@ -80,11 +71,6 @@ export const songSchema = z.looseObject({
   songDetails: songDetailsSchema.optional(),
 });
 
-/* -------------------------------------------------------------------------- */
-/* Schemas de las funciones `parse*`                                           */
-/* -------------------------------------------------------------------------- */
-
-/** Equivale a `parseAlbumSong`: álbum con al menos una canción. */
 export const albumWithSongsSchema = z.looseObject({
   id: z.number(),
   name: stringSchema,
@@ -92,14 +78,12 @@ export const albumWithSongsSchema = z.looseObject({
   songs: z.array(songSchema).min(1),
 });
 
-/** Equivale a `parseArtistSongs`: artista con al menos una canción. */
 export const artistWithSongsSchema = z.looseObject({
   id: z.number(),
   name: stringSchema,
   songs: z.array(songSchema).min(1),
 });
 
-/** Equivale a `parseSongGenres`: fila `song_genres` con `song` y `genre` precargados. */
 export const songGenresWithSongsSchema = z.looseObject({
   id: z.number(),
   song_id: z.number(),
@@ -108,7 +92,6 @@ export const songGenresWithSongsSchema = z.looseObject({
   genre: genreReferenceSchema,
 });
 
-/** Equivale a `parseSongResponse`: canción con artistas y álbum. */
 export const songResponseSchema = z.looseObject({
   id: z.number(),
   name: stringSchema,
@@ -117,10 +100,6 @@ export const songResponseSchema = z.looseObject({
   album: albumReferenceSchema,
 });
 
-/**
- * Equivale a `parseFullSongResponse`: canción completa con artistas, álbum y
- * géneros. `id` es opcional porque el guard actual no lo exige.
- */
 export const fullSongResponseSchema = z.looseObject({
   id: z.number().optional(),
   name: stringSchema,
@@ -133,7 +112,6 @@ export const fullSongResponseSchema = z.looseObject({
   genres: z.array(genreReferenceSchema),
 });
 
-/** Elemento de `parseSongRecommendations` (`SongRecResponse`). */
 export const songRecommendationSchema = z.looseObject({
   id: z.number(),
   name: stringSchema,
@@ -143,10 +121,8 @@ export const songRecommendationSchema = z.looseObject({
   cos_sim: z.number(),
 });
 
-/** Equivale a `parseSongRecommendations`: lista de recomendaciones. */
 export const songRecommendationsSchema = z.array(songRecommendationSchema);
 
-/** Equivale a `parseArtistSearchData` (`artistSearchResults`). */
 export const artistSearchResultSchema = z.looseObject({
   id: z.number(),
   name: stringSchema,
@@ -154,7 +130,6 @@ export const artistSearchResultSchema = z.looseObject({
   type: z.literal('artist'),
 });
 
-/** Equivale a `parseAlbumSearchData` (`albumSearchResults`). */
 export const albumSearchResultSchema = z.looseObject({
   id: z.number(),
   name: stringSchema,
@@ -163,7 +138,6 @@ export const albumSearchResultSchema = z.looseObject({
   type: z.literal('album'),
 });
 
-/** Equivale a `parseSongSearchData` (`songSearchResults`). */
 export const songSearchResultSchema = z.looseObject({
   id: z.number(),
   name: stringSchema,
