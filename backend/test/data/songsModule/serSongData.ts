@@ -1,5 +1,4 @@
 import {
-  FullSongResponseAttributes,
   SongRecResponse,
   SongResponseAttributes,
 } from 'src/types/songAttributes';
@@ -96,7 +95,7 @@ export const songFullRawResponse = {
     { genre: 'Grunge' },
     { genre: '90s' },
   ],
-} as unknown as FullSongResponseAttributes;
+} as unknown as FullSongResponseData;
 
 export const songRecRawResponse = [
   {

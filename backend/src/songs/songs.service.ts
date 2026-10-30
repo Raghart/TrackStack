@@ -9,14 +9,12 @@ import { InjectModel } from '@nestjs/sequelize';
 import { QueryTypes, Sequelize } from 'sequelize';
 import {
   parseSongRecommendations,
-  parseFullSongResponse,
   parseSongResponse,
   parseString,
   parseStringArray,
 } from 'src/types/parses';
 import {
   FullSongResponse,
-  FullSongResponseAttributes,
   SongResponse,
   SongResponseAttributes,
 } from 'src/types/songAttributes';
@@ -29,6 +27,7 @@ import { GenresModel } from '../../models/genres/genres.model';
 import parseGenres from 'src/utils/parseGenres';
 import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
 import { existsSync } from 'node:fs';
+import { FullSongResponseData, fullSongResponseSchema } from '@trackstack/schemas';
 if (existsSync('.env')) process.loadEnvFile();
 
 @Injectable()
@@ -80,7 +79,7 @@ export class SongsService {
     }));
   }
 
-  async fetchFullSongData(songID: number): Promise<FullSongResponseAttributes> {
+  async fetchFullSongData(songID: number): Promise<FullSongResponseData> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -117,10 +116,10 @@ export class SongsService {
         `The song with the ID: '${songID}' doesn't exist in the database!`,
       );
 
-    return parseFullSongResponse(rawData.get({ plain: true }));
+    return fullSongResponseSchema.parse(rawData.get({ plain: true }));
   }
 
-  parseFullSong(songData: FullSongResponseAttributes): FullSongResponse {
+  parseFullSong(songData: FullSongResponseData): FullSongResponse {
     return {
       id: songData.id,
       name: songData.name,

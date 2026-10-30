@@ -33,6 +33,7 @@
     "@nestjs/sequelize": "^11.0.0",
     "@nestjs/serve-static": "^5.0.4",
     "@prisma/client": "^7.10.1",
+    "@trackstack/schemas": "workspace:*",
     "cors": "^2.8.5",
     "coverage": "^0.0.0",
     "elasticsearch": "^16.7.2",

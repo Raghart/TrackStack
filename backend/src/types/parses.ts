@@ -18,7 +18,6 @@ import {
   isArtistSearchData,
   isArtistSongs,
   isFullSongResponse,
-  isNumberArray,
   isSongGenres,
   isSongResponse,
   isSongSearchData,
@@ -39,13 +38,6 @@ export const parseStringArray = (array: unknown): string[] => {
   if (isStringArray(array)) return array;
   throw new BadRequestException(
     'The data recieved is not an array of strings.',
-  );
-};
-
-export const parseNumberArray = (array: unknown): number[] => {
-  if (isNumberArray(array)) return array;
-  throw new BadRequestException(
-    `Error: the data is neither an array or a number: "${String(array)}"`,
   );
 };
 

@@ -6,7 +6,6 @@ import {
   parseFloatNum,
   parseFullSongResponse,
   parseSongRecommendations,
-  parseNumberArray,
   parseSongGenres,
   parseSongResponse,
   parseSongSearchData,
@@ -62,24 +61,6 @@ describe('parses return the data with the expected type', () => {
     it('parseStringArray returns a typeGuarded array of strings if arg is an array string', () => {
       const strArray = [['hello'], ['     how are you?       ', 'helloooo']];
       strArray.forEach((strArray) => expectParse(parseStringArray, strArray));
-    });
-  });
-
-  describe('parseNumberArray', () => {
-    it('parseNumberArray returns an error when the parse is not an array of numbers', () => {
-      const errArray = [123456, ['testing'], null, undefined];
-      errArray.forEach((err) =>
-        expectParseError(
-          parseNumberArray,
-          err,
-          `Error: the data is neither an array or a number: "${String(err)}"`,
-        ),
-      );
-    });
-
-    it('parseNumberArray returns a typeGuarded array of numbers if arg is an array of numbers', () => {
-      const numArray = [[123456], [5984352, 456789]];
-      numArray.forEach((num) => expectParse(parseNumberArray, num));
     });
   });
 
