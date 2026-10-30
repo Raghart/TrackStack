@@ -29,12 +29,14 @@ import { GenresModel } from '../../models/genres/genres.model';
 import parseGenres from 'src/utils/parseGenres';
 import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
 import { existsSync } from 'node:fs';
-if (existsSync(".env")) process.loadEnvFile();
+if (existsSync('.env')) process.loadEnvFile();
 
 @Injectable()
 export class SongsService {
-  constructor(@InjectModel(SongsModel) private songModel: typeof SongsModel,
-  @Inject('AI') private readonly genai: GoogleGenAI) {}
+  constructor(
+    @InjectModel(SongsModel) private songModel: typeof SongsModel,
+    @Inject('AI') private readonly genai: GoogleGenAI,
+  ) {}
 
   async getDBLength(): Promise<number> {
     return await safeQuery(() => this.songModel.count());
@@ -138,51 +140,58 @@ export class SongsService {
     return this.parseFullSong(songData);
   }
 
-  buildUVString(userVector: number[]) : string[] {
+  buildUVString(userVector: number[]): string[] {
     const userDataTitle = new Map<number, string>([
-      [0, "Danceability"],
-      [1, "Energy"],
-      [2, "Mode"],
-      [3, "Speechiness"],
-      [4, "Acousticness"],
-      [5, "Instrumentalness"],
-      [6, "Valence"],
-      [7, "Tempo"],
+      [0, 'Danceability'],
+      [1, 'Energy'],
+      [2, 'Mode'],
+      [3, 'Speechiness'],
+      [4, 'Acousticness'],
+      [5, 'Instrumentalness'],
+      [6, 'Valence'],
+      [7, 'Tempo'],
     ]);
 
-    return userVector.map((value, idx) => `${userDataTitle.get(idx)}: ${value}`);
+    return userVector.map(
+      (value, idx) => `${userDataTitle.get(idx)}: ${value}`,
+    );
   }
 
-  async getAIStream(genres: string[], userVector: number[]) : Promise<AsyncGenerator<GenerateContentResponse>> {
+  async getAIStream(
+    genres: string[],
+    userVector: number[],
+  ): Promise<AsyncGenerator<GenerateContentResponse>> {
     const formattedUV = this.buildUVString(userVector);
 
     try {
       return await this.genai.models.generateContentStream({
         model: parseString(process.env.AI_MODEL),
         contents: [
-          "Generate a message for an user who wants to listen to songs with the following metadata:",
-          `Genres: ${genres.join(",")}`,
-          `UserVector: ${formattedUV.join(", ")}`
-        ].join("\n"),
+          'Generate a message for an user who wants to listen to songs with the following metadata:',
+          `Genres: ${genres.join(',')}`,
+          `UserVector: ${formattedUV.join(', ')}`,
+        ].join('\n'),
         config: {
           systemInstruction: [
-            "You are a professional AI music expert",
+            'You are a professional AI music expert',
             "I'm passing you the genres and song characteristics a user wants to listen",
-            "Be enthusiastic, professional and brief.",
-            "Your answers must be no more than 3 lines",
+            'Be enthusiastic, professional and brief.',
+            'Your answers must be no more than 3 lines',
             "Don't use emojis and focus on the provided data",
-            "Always answer using the Markdown format. Use bold to enhance important words",
-            "Replace technical music terms with more friendly user terms",
-            "Add just 1 technical music term to let the user know you selected these tracks because of this value",
-            "Never include headers, lists, links or image",
-            "The userVector data will be in a 0 to 1 scale",
-            "With 0 being the lowest to 1 being the highest",
-          ].join("\n"),
-        }
+            'Always answer using the Markdown format. Use bold to enhance important words',
+            'Replace technical music terms with more friendly user terms',
+            'Add just 1 technical music term to let the user know you selected these tracks because of this value',
+            'Never include headers, lists, links or image',
+            'The userVector data will be in a 0 to 1 scale',
+            'With 0 being the lowest to 1 being the highest',
+          ].join('\n'),
+        },
       });
     } catch (error) {
       console.error(`error while trying to get the answer: ${error}`);
-      throw new ServiceUnavailableException("Unable to get an answer from the model");
+      throw new ServiceUnavailableException(
+        'Unable to get an answer from the model',
+      );
     }
   }
 

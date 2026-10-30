@@ -16,7 +16,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { existsSync } from 'node:fs';
-if (existsSync(".env")) process.loadEnvFile();
+if (existsSync('.env')) process.loadEnvFile();
 
 @Module({
   imports: [
@@ -45,10 +45,10 @@ if (existsSync(".env")) process.loadEnvFile();
       autoSchemaFile: true,
       playground: true,
       subscriptions: {
-        "graphql-ws": {
-          path: "/graphql"
-        }
-      }
+        'graphql-ws': {
+          path: '/graphql',
+        },
+      },
     }),
     SongsModule,
     AlbumsModule,

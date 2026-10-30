@@ -49,7 +49,7 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
         {
           provide: 'AI',
           useValue: new GoogleGenAI({
-            apiKey: "testing",
+            apiKey: 'testing',
           }),
         },
         {
@@ -294,17 +294,29 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
       expect(songRecommendations).toStrictEqual(songRecommendResponses);
     });
 
-    it("buildUVString return the expected string array", () => {
+    it('buildUVString return the expected string array', () => {
       const vectorString = service.buildUVString(USER_VECTOR);
       expect(vectorString).toHaveLength(8);
-      expect(vectorString.some(data => data.includes("Danceability:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Energy:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Mode:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Speechiness:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Acousticness:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Instrumentalness:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Valence:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Tempo:"))).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Danceability:')),
+      ).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Energy:')),
+      ).toBeTruthy();
+      expect(vectorString.some((data) => data.includes('Mode:'))).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Speechiness:')),
+      ).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Acousticness:')),
+      ).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Instrumentalness:')),
+      ).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Valence:')),
+      ).toBeTruthy();
+      expect(vectorString.some((data) => data.includes('Tempo:'))).toBeTruthy();
     });
   });
 });
@@ -323,7 +335,7 @@ describe("SongsService throws an error if it couldn't retrieve the data from the
         {
           provide: 'AI',
           useValue: new GoogleGenAI({
-            apiKey: "testing",
+            apiKey: 'testing',
           }),
         },
         {
@@ -395,12 +407,12 @@ describe("SongsService throws an error if it couldn't retrieve the data from the
     );
   });
 
-  it("getAIStream throws an error if it was not possible to return an answer", async () => {
-    await expect(service.getAIStream(["Rock"], USER_VECTOR)).rejects.toThrow(
-      ServiceUnavailableException
+  it('getAIStream throws an error if it was not possible to return an answer', async () => {
+    await expect(service.getAIStream(['Rock'], USER_VECTOR)).rejects.toThrow(
+      ServiceUnavailableException,
     );
-    await expect(service.getAIStream(["Rock"], USER_VECTOR)).rejects.toThrow(
-      "Unable to get an answer from the model"
+    await expect(service.getAIStream(['Rock'], USER_VECTOR)).rejects.toThrow(
+      'Unable to get an answer from the model',
     );
   });
 });

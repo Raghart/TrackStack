@@ -18,7 +18,7 @@ export const isString = (text: unknown): text is string => {
 };
 
 export const isNumber = (value: unknown): value is number => {
-  if (typeof value === 'string') 
+  if (typeof value === 'string')
     return value.trim() !== '' && !isNaN(Number(value.trim()));
   return (
     value !== null &&
