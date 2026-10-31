@@ -7,16 +7,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { QueryTypes, Sequelize } from 'sequelize';
-import {
-  parseSongResponse,
-  parseString,
-  parseStringArray,
-} from 'src/types/parses';
-import {
-  FullSongResponse,
-  SongResponse,
-  SongResponseAttributes,
-} from 'src/types/songAttributes';
+import { parseString, parseStringArray } from 'src/types/parses';
+import { FullSongResponse, SongResponse } from 'src/types/songAttributes';
 import safeQuery from 'src/utils/safeQuery';
 import { InvalidPaginationException } from 'src/utils/PaginationError';
 import { AlbumsModel } from '../../models/albums/albums.model';
@@ -29,6 +21,8 @@ import { existsSync } from 'node:fs';
 import {
   FullSongResponseData,
   fullSongResponseSchema,
+  SongResponseData,
+  songResponseSchema,
   songRecommendationsSchema,
 } from '@trackstack/schemas';
 if (existsSync('.env')) process.loadEnvFile();
@@ -44,7 +38,7 @@ export class SongsService {
     return await safeQuery(() => this.songModel.count());
   }
 
-  async fetchLandpageSongs(limit = 20): Promise<SongResponseAttributes[]> {
+  async fetchLandpageSongs(limit = 20): Promise<SongResponseData[]> {
     if (limit < 1) throw new InvalidPaginationException('limit', limit);
 
     const rawData = await safeQuery(() =>
@@ -63,7 +57,7 @@ export class SongsService {
       }),
     );
     return rawData.map((entry) =>
-      parseSongResponse(entry.get({ plain: true })),
+      songResponseSchema.parse(entry.get({ plain: true })),
     );
   }
 
@@ -72,7 +66,7 @@ export class SongsService {
     return this.parseSongList(songData);
   }
 
-  parseSongList(songData: SongResponseAttributes[]): SongResponse[] {
+  parseSongList(songData: SongResponseData[]): SongResponse[] {
     return songData.map((song) => ({
       id: song.id,
       name: song.name,
@@ -228,7 +222,7 @@ export class SongsService {
     }));
   }
 
-  async fetchRandomSong(): Promise<SongResponseAttributes> {
+  async fetchRandomSong(): Promise<SongResponseData> {
     const result = await safeQuery(() =>
       this.songModel.findOne({
         order: Sequelize.literal('RANDOM()'),
@@ -242,7 +236,7 @@ export class SongsService {
         ],
       }),
     );
-    return parseSongResponse(result?.get({ plain: true }));
+    return songResponseSchema.parse(result?.get({ plain: true }));
   }
 
   async getRandomSong() {
@@ -250,7 +244,7 @@ export class SongsService {
     return this.parseSongData(randomSong);
   }
 
-  parseSongData(songData: SongResponseAttributes): SongResponse {
+  parseSongData(songData: SongResponseData): SongResponse {
     return {
       id: songData.id,
       name: songData.name,
@@ -260,7 +254,7 @@ export class SongsService {
     };
   }
 
-  async fetchNextSong(songID: number): Promise<SongResponseAttributes> {
+  async fetchNextSong(songID: number): Promise<SongResponseData> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -298,7 +292,7 @@ export class SongsService {
         "It couldn't retrieve the song from the database",
       );
 
-    return parseSongResponse(rawData.get({ plain: true }));
+    return songResponseSchema.parse(rawData.get({ plain: true }));
   }
 
   async getNextSong(songId: number): Promise<SongResponse> {
@@ -306,7 +300,7 @@ export class SongsService {
     return this.parseSongData(songData);
   }
 
-  async fetchPreviousSong(songID: number): Promise<SongResponseAttributes> {
+  async fetchPreviousSong(songID: number): Promise<SongResponseData> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -344,7 +338,7 @@ export class SongsService {
         "It couldn't retrieve the song from the database",
       );
 
-    return parseSongResponse(rawData.get({ plain: true }));
+    return songResponseSchema.parse(rawData.get({ plain: true }));
   }
 
   async getPreviousSong(songID: number) {

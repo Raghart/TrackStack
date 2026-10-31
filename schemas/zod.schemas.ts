@@ -71,6 +71,16 @@ export const songSchema = z.looseObject({
   songDetails: songDetailsSchema.optional(),
 });
 
+export const songResponseSchema = z.looseObject({
+  id: z.number(),
+  name: stringSchema,
+  url_preview: stringSchema,
+  artists: z.array(artistReferenceSchema),
+  album: albumReferenceSchema,
+});
+
+export type SongResponseData = z.infer<typeof songResponseSchema>;
+
 export const albumWithSongsSchema = z.looseObject({
   id: z.number(),
   name: stringSchema,
@@ -90,14 +100,6 @@ export const songGenresWithSongsSchema = z.looseObject({
   genre_id: z.number(),
   song: songSchema,
   genre: genreReferenceSchema,
-});
-
-export const songResponseSchema = z.looseObject({
-  id: z.number(),
-  name: stringSchema,
-  url_preview: stringSchema,
-  artists: z.array(artistReferenceSchema),
-  album: albumReferenceSchema,
 });
 
 export const fullSongResponseSchema = z.looseObject({
