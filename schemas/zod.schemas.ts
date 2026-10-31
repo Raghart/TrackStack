@@ -96,6 +96,8 @@ export const artistWithSongsSchema = z.looseObject({
   songs: z.array(songSchema).min(1),
 });
 
+export type ArtistWithSongsData = z.infer<typeof artistWithSongsSchema>;
+
 export const songGenresWithSongsSchema = z.looseObject({
   id: z.number(),
   song_id: z.number(),
