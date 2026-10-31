@@ -24,7 +24,7 @@ export const stringArraySchema = z.array(stringSchema);
 
 export const numberArraySchema = z.array(floatNumberSchema);
 
-export const songDetailsSchema = z.looseObject({
+export const songDetailsSchema = z.object({
   id: z.number(),
   song_id: z.number(),
   danceability: z.number(),
@@ -122,7 +122,7 @@ export const fullSongResponseSchema = z.looseObject({
 
 export type FullSongResponseData = z.infer<typeof fullSongResponseSchema>;
 
-export const songRecommendationSchema = z.object({
+const songRecommendationSchema = z.object({
   id: z.number(),
   name: stringSchema,
   artists: stringSchema,
@@ -132,28 +132,3 @@ export const songRecommendationSchema = z.object({
 });
 
 export const songRecommendationsSchema = z.array(songRecommendationSchema);
-
-export const artistSearchResultSchema = z.looseObject({
-  id: z.number(),
-  name: stringSchema,
-  album_cover: stringSchema,
-  type: z.literal('artist'),
-});
-
-export const albumSearchResultSchema = z.looseObject({
-  id: z.number(),
-  name: stringSchema,
-  artists: z.array(stringSchema),
-  album_cover: stringSchema,
-  type: z.literal('album'),
-});
-
-export const songSearchResultSchema = z.looseObject({
-  id: z.number(),
-  name: stringSchema,
-  artists: z.array(stringSchema),
-  album: stringSchema,
-  album_cover: stringSchema,
-  url_preview: stringSchema,
-  type: z.literal('song'),
-});

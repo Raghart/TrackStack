@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
 import { parseFloatNum, parseString } from '@/types/parses';
 import { SongResponse } from '@/types/songAttributes';
-import { ArtistResponse, ArtistWithSongs } from '@/types/artistAttributes';
+import { ArtistResponse } from '@/types/artistAttributes';
 import {
   ArtistWithSongsData,
   artistWithSongsSchema,

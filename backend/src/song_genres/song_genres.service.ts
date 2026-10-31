@@ -7,7 +7,6 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
 import {
   parseFloatNum,
-  parseSongGenres,
   parseString,
   parseStringArray,
 } from '@/types/parses';
