@@ -6,3 +6,4 @@
 5. Adopt Zod for runtime validation at system boundaries (replacing manual checks) (Backend semi Done).
 6. ~~Update AGENTS.md (root + backend) to reflect the new stack.~~
 7. Make the project runnable via Docker (Dockerfile + docker-compose).
+8. Verificar si vale la pena cifrar la conexion a la base de datos en Aiven.

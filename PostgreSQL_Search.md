@@ -9,3 +9,5 @@ n-grams / edge-ngrams	trigramas de pg_trgm y LIKE 'term%'
 name^3	prioridad en CASE: exacto > prefijo > contiene > fuzzy
 índice de Elasticsearch	índice GIN sobre lower(unaccent(name))
 El estado actual: SearchService devuelve arrays vacíos y todos sus specs están en describe.skip. O sea, ahora mismo la búsqueda no funciona; no es que haya que “migrar” una implementación activa, hay que construirla.
+
+Mi recomendación: pg_trgm + unaccent, campos exact* nullable, y mantener el alcance de búsqueda actual (solo nombres) en una primera iteración. Con eso el resultado será muy parecido a lo que tenías en Elasticsearch, sin infraestructura extra.

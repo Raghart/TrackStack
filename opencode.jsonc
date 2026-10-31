@@ -7,6 +7,17 @@
         "type": "remote",
         "url": "https://mcp.context7.com/mcp",
         "oauth": false
+      },
+      "postgres": {
+        "type": "local",
+        "command": [
+          "bash",
+          "-lc",
+          "url=$(sed -n 's/^DB_URL=//p' ./backend/.env | head -n 1); case \"$url\" in *\\?*) url=\"$url&sslmode=no-verify\" ;; *) url=\"$url?sslmode=no-verify\" ;; esac; exec npx -y @modelcontextprotocol/server-postgres \"$url\""
+        ],
+        "timeout": {
+          "startup": 60000
+        }
       }
     }
   }
