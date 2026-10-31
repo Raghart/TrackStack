@@ -4,11 +4,11 @@
 
 **TrackStack** es una aplicación web de recomendación musical. Combina:
 
-- Búsqueda avanzada con **Elasticsearch** (fuzzy search, n-grams, edge-ngrams).
+- Búsqueda de canciones, artistas y álbumes directamente sobre **PostgreSQL** (implementación en curso; sin motor de búsqueda externo).
 - Reproductor de previews de 30 s.
 - Recomendaciones personalizadas mediante **vectores construidos con metadata de canciones** (energía, danceability, mood, etc.) y pesos ajustables por el usuario.
 - Respuestas de IA en streaming vía **GraphQL Subscriptions** (WebSocket), con un sistema basado en principios **RAG** sobre un catálogo de +50 000 canciones.
-- Catálogo persistido en **PostgreSQL** (modelos **Sequelize**) y +30 000 documentos indexados en Elasticsearch.
+- Catálogo de +50 000 canciones persistido en **PostgreSQL** con modelos **Sequelize**.
 
 Arquitectura general: monorepo **pnpm workspaces** con un backend **NestJS + GraphQL (Apollo)** que también sirve el build estático del frontend, un frontend **React 19 + Vite + Chakra UI + Redux Toolkit + Apollo Client**, y un paquete compartido de **schemas Zod**. Los tests E2E viven en un paquete **Playwright** independiente.
 
@@ -26,7 +26,7 @@ TrackStack/
 │   │   │   ├── *.spec.ts     # tests unitarios junto al código
 │   │   │   └── dto/          # @ObjectType / @Field (contratos GraphQL)
 │   │   ├── types/            # tipos de atributos, guards y parsers
-│   │   ├── utils/            # helpers (safeQuery, safeSearch, paginación…)
+│   │   ├── utils/            # helpers (safeQuery, paginación…)
 │   │   ├── app.module.ts     # wiring global (Sequelize, GraphQL, estáticos)
 │   │   └── main.ts           # bootstrap, CORS, puerto
 │   ├── models/               # modelos Sequelize (uno por dominio)
@@ -91,7 +91,7 @@ npm run test
 npm run test:report
 ```
 
-> Los tests E2E y parte de los tests de integración requieren servicios externos (PostgreSQL, Elasticsearch) y variables de entorno. No los ejecutes asumiendo que existen: comprueba primero y reporta si faltan.
+> Los tests E2E y parte de los tests de integración requieren servicios externos (PostgreSQL) y variables de entorno. No los ejecutes asumiendo que existen: comprueba primero y reporta si faltan.
 
 ## Pautas generales
 

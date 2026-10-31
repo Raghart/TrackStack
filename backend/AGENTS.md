@@ -8,7 +8,7 @@ Contexto específico del paquete `backend/`. Las reglas generales del monorepo e
 - **GraphQL code-first** con Apollo Server 5 (`@nestjs/graphql`): el schema se genera en memoria (`autoSchemaFile: true`), no hay archivo `.graphql` versionado.
 - **Subscriptions** por WebSocket (`graphql-ws`) para el streaming de la IA.
 - **Sequelize 6** (`@nestjs/sequelize`) sobre **PostgreSQL**; `autoLoadModels: true` y `synchronize: true`. Existe además `database/` con SQL y utilidades **Go/sqlc** para generar queries, no es código Nest.
-- **Elasticsearch 7** vía cliente `elasticsearch` (inyectado como `BonsaiClient`). La búsqueda usa fuzzy, n-grams y edge-ngrams.
+- **Búsqueda sobre PostgreSQL** mediante Sequelize en `src/search` (implementación en curso, sin servicio externo de búsqueda).
 - **Google GenAI (Gemini)** inyectado como provider `AI`, usado para las recomendaciones/RAG en streaming.
 - **Jest 29 + ts-jest** para unit tests; **ESLint 9** (flat config) con `typescript-eslint` y `eslint-plugin-security`; **Prettier** (`singleQuote`, `trailingComma: all`).
 - Alias de imports `src/*` (configurado en `tsconfig.json` y en `moduleNameMapper` de Jest).
@@ -26,7 +26,7 @@ backend/
 │   │   ├── *.spec.ts         # module / resolver / service specs
 │   │   └── dto/              # @ObjectType / @Field
 │   ├── types/                # atributos, guards (verify.ts) y parsers (parses.ts)
-│   ├── utils/                # safeQuery, safeSearch, paginación, helpers de test
+│   ├── utils/                # safeQuery, paginación, helpers de test
 │   ├── app.module.ts         # Sequelize, GraphQL, ServeStatic
 │   └── main.ts               # bootstrap, CORS, puerto
 ├── models/<dominio>/         # modelos Sequelize
@@ -41,7 +41,7 @@ Cada dominio sigue el mismo patrón: `module` + `resolver` + `service`, con spec
 ## Convenciones clave
 
 - Valida/parsea con `src/types/verify.ts` (guards) + `src/types/parses.ts` (funciones `parse*` que lanzan `BadRequestException`). No devuelvas datos crudos si existe un parser.
-- Envuelve acceso a PostgreSQL con `safeQuery` (`InternalServerErrorException`) y a Elasticsearch con `safeSearch` (`ServiceUnavailableException`).
+- Envuelve acceso a PostgreSQL con `safeQuery` (`InternalServerErrorException`).
 - Paginación inválida: `InvalidPaginationException` (`src/utils/PaginationError.ts`).
 - DTOs GraphQL con decoradores y nombres de campo en `snake_case` cuando el contrato ya los usa; no renombres campos existentes (rompe el cliente).
 - Imports con `src/*` en `src/`; los specs importan fixtures con rutas relativas a `test/`.
@@ -57,7 +57,7 @@ Cada dominio sigue el mismo patrón: `module` + `resolver` + `service`, con spec
 
 ## Tests
 
-- Los unit tests **no necesitan PostgreSQL ni Elasticsearch**: los modelos se mockean con `getModelToken(...)` y los providers externos (`BonsaiClient`, `AI`) con `useValue`.
+- Los unit tests **no necesitan PostgreSQL**: los modelos se mockean con `getModelToken(...)` y los providers externos (`AI`) con `useValue`.
 - Fixtures compartidos en `test/data/<dominio>/`; constantes (URLs, errores, `USER_VECTOR`) en `test/constants/constants.ts`; assertions reutilizables en `src/utils/expect*.ts`.
 - Coloca el spec junto al archivo afectado (`src/<dominio>/<archivo>.spec.ts`). Usa los fixtures en vez de inventar datos inline.
 - **Ejecuta solo los specs afectados por tu cambio** (`pnpm run test -- src/<dominio>/<archivo>.spec.ts`). La suite completa es lenta y costosa: no la corras por defecto. Resérvala para cuando el usuario la pida explícitamente o cuando el cambio toque algo global (configuración de Jest/tsconfig, `app.module.ts`, o tipos/helpers compartidos de `src/types` y `src/utils`).
@@ -70,7 +70,7 @@ Añade un test de regresión siempre que:
 
 - Corrijas un **bug**: debe existir un caso que falle con el código anterior y pase con el fix. Si es posible, añádelo antes de corregir para comprobar que reproduce el fallo.
 - Cambies un **parser/guard** (`parses.ts`, `verify.ts`): cubre la entrada que antes se aceptaba/rechazaba mal.
-- Toques **manejo de errores**: `safeQuery`, `safeSearch`, paginación inválida, recurso no encontrado (`NotFoundException`), timeouts de Sequelize/Elasticsearch.
+- Toques **manejo de errores**: `safeQuery`, paginación inválida, recurso no encontrado (`NotFoundException`), timeouts de Sequelize.
 - Modifiques el **contrato GraphQL** (query, mutation, subscription o DTO): añade/actualiza el spec del resolver y verifica forma y tipos de la respuesta.
 - Cambies lógica de **recomendaciones/vector**, búsqueda o normalización de texto: cubre el caso límite que motivó el cambio (array vacío, valores fuera de rango, query con typo, etc.).
 - Arregles un **edge case** reportado en producción o en un PR.
@@ -117,5 +117,5 @@ Notas:
 
 - La suite completa es lenta; la CI la ejecuta en cada PR. En local basta con validar los specs directamente relacionados con el cambio.
 - No hay umbral de cobertura configurado en Jest, pero el proyecto mantiene métricas altas; evita bajar la cobertura del archivo que tocas.
-- `pnpm run test` no requiere `.env` ni servicios externos. `start:prod`, los E2E y cualquier prueba de integración sí necesitan `DB_URL`, `DB_PORT`, `ELASTICSEARCH_NODE` y, para la IA, `API_KEY`. Si faltan, dilo explícitamente en el resumen en lugar de asumir que pasan.
+- `pnpm run test` no requiere `.env` ni servicios externos. `start:prod`, los E2E y cualquier prueba de integración sí necesitan `DB_URL`, `DB_PORT` y, para la IA, `API_KEY`. Si faltan, dilo explícitamente en el resumen en lugar de asumir que pasan.
 - La CI ejecuta lint, `eslint .` (seguridad) y los tests en cada PR, así que esos tres deben pasar.

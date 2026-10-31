@@ -11,7 +11,6 @@ import {
   songSearchResults,
 } from '@/types/searchTypes';
 import { normalizeText } from '@/search/utils/normalizeText';
-import { safeSearch } from '@/utils/safeSearch';
 
 @Injectable()
 export class SearchService {
