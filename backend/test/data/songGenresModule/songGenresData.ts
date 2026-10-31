@@ -1,8 +1,8 @@
 import { SongResponse } from '@/types/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
-import { SongGenresRPWithSongs } from '@/types/songGenresAttributes';
+import { songGenresData } from '@trackstack/schemas';
 
-export const songGenresData = [
+export const songGenresTestData = [
   {
     id: 1,
     song_id: 1,
@@ -54,7 +54,7 @@ export const songGenresData = [
       album: { url_image: TESTING_IMG },
     },
   },
-] as unknown as SongGenresRPWithSongs[];
+] as unknown as songGenresData[];
 
 export const songGenresResponses: SongResponse[] = [
   {

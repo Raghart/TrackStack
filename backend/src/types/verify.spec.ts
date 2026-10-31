@@ -14,7 +14,7 @@ import {
   isStringArray,
 } from './verify';
 import { albumSongs } from '../../test/data/albumsModule/AlbumData';
-import { songGenresData } from '../../test/data/songGenresModule/songGenresData';
+import { songGenresTestData } from '../../test/data/songGenresModule/songGenresData';
 import {
   songFullRawResponse,
   songRecRawResponse,
@@ -148,7 +148,7 @@ describe('Verify value Types', () => {
     });
 
     it('isSongGenres returns true when it has the correct props', () => {
-      expect(isSongGenres(songGenresData[0])).toBe(true);
+      expect(isSongGenres(songGenresTestData[0])).toBe(true);
     });
   });
 

@@ -98,13 +98,15 @@ export const artistWithSongsSchema = z.looseObject({
 
 export type ArtistWithSongsData = z.infer<typeof artistWithSongsSchema>;
 
-export const songGenresWithSongsSchema = z.looseObject({
+export const songGenresSchema = z.looseObject({
   id: z.number(),
   song_id: z.number(),
   genre_id: z.number(),
   song: songSchema,
   genre: genreReferenceSchema,
 });
+
+export type songGenresData = z.infer<typeof songGenresSchema>;
 
 export const fullSongResponseSchema = z.looseObject({
   id: z.number().optional(),

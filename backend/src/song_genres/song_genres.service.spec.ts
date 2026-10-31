@@ -10,12 +10,12 @@ import { expectSongProps } from '@/utils/expectSongs';
 import { InvalidPaginationException } from '@/utils/PaginationError';
 import { SequelizeConnectionError } from '@/utils/mockErrors';
 import { SongGenresModel } from '../../models/song_genres/SongGenres.model';
-import { songGenresData } from '../../test/data/songGenresModule/songGenresData';
+import { songGenresTestData } from '../../test/data/songGenresModule/songGenresData';
 
 describe('SongGenresService retrieves and parses songs of a genre from the database', () => {
   let service: SongGenresService;
   let songGenresModel: { findAll: jest.Mock };
-  const songGenresRawData = songGenresData.map((entry) => ({
+  const songGenresRawData = songGenresTestData.map((entry) => ({
     get: () => entry,
   }));
 
@@ -42,7 +42,7 @@ describe('SongGenresService retrieves and parses songs of a genre from the datab
     });
 
     it('parseGenreSongs parses songs of a genre with the expected properties', () => {
-      const results = service.parseGenreSongs(songGenresData);
+      const results = service.parseGenreSongs(songGenresTestData);
       expect(results.length).toBeGreaterThan(0);
       expectSongProps(results);
     });
@@ -50,7 +50,7 @@ describe('SongGenresService retrieves and parses songs of a genre from the datab
     it('fetchSongGenres returns the expected list of songs from the database', async () => {
       const results = await service.fetchSongGenres('1', 'Rock');
       expect(results).toHaveLength(3);
-      expect(results).toStrictEqual(songGenresData);
+      expect(results).toStrictEqual(songGenresTestData);
     });
 
     it('getAllGenreSongs returns an array of songs of a specific genre ready to deliver', async () => {

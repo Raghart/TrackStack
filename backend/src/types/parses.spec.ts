@@ -13,7 +13,7 @@ import {
   parseStringArray,
 } from './parses';
 import { albumSongs } from '../../test/data/albumsModule/AlbumData';
-import { songGenresData } from '../../test/data/songGenresModule/songGenresData';
+import { songGenresTestData } from '../../test/data/songGenresModule/songGenresData';
 import {
   songFullRawResponse,
   songRecRawResponse,
@@ -141,7 +141,7 @@ describe('parses return the data with the expected type', () => {
     });
 
     it('parseSongGenres ensure that the songs match the correct genreSongs object structure', () => {
-      songGenresData.forEach((song) =>
+      songGenresTestData.forEach((song) =>
         expect(parseSongGenres(song)).toBe(song),
       );
     });
