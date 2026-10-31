@@ -20,10 +20,6 @@ export const floatNumberSchema = z
   )
   .describe('number or numeric string, parsed to number');
 
-export const stringArraySchema = z.array(stringSchema);
-
-export const numberArraySchema = z.array(floatNumberSchema);
-
 export const songDetailsSchema = z.object({
   id: z.number(),
   song_id: z.number(),
