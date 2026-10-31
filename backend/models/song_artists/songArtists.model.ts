@@ -2,7 +2,7 @@ import { ArtistsModel } from "../artists/artists.model";
 import { SongsModel } from "../songs/song.model";
 import { AllowNull, AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } 
     from "sequelize-typescript";
-import { SongArtistsAttributes, SongArtistsCreationAttributes } from "src/types/songArtistsAttributes";
+import { SongArtistsAttributes, SongArtistsCreationAttributes } from "@/types/songArtistsAttributes";
 
 @Table({
     tableName: "song_artists",

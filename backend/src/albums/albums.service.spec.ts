@@ -11,10 +11,10 @@ import {
   albumResponse,
   albumSongs,
 } from '../../test/data/albumsModule/AlbumData';
-import { expectSongData, expectSongProps } from 'src/utils/expectSongs';
-import { SequelizeTimeoutError } from 'src/utils/mockErrors';
+import { expectSongData, expectSongProps } from '@/utils/expectSongs';
+import { SequelizeTimeoutError } from '@/utils/mockErrors';
 import { AlbumsModel } from '../../models/albums/albums.model';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+import { InvalidPaginationException } from '@/utils/PaginationError';
 
 describe('AlbumsService retrieves and parses all the songs of an album', () => {
   let service: AlbumsService;

@@ -12,12 +12,12 @@ import {
   artistTestResponses,
   artistTestSongs,
 } from '../../test/data/artistsModule/artistData';
-import { expectSongProps } from 'src/utils/expectSongs';
+import { expectSongProps } from '@/utils/expectSongs';
 import {
   SequelizeConnectionError,
   SequelizeTimeoutError,
-} from 'src/utils/mockErrors';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+} from '@/utils/mockErrors';
+import { InvalidPaginationException } from '@/utils/PaginationError';
 import { ArtistsModel } from '../../models/artists/artists.model';
 
 describe("ArtistsService retrieves and parses the artist's data from the database", () => {

@@ -8,7 +8,7 @@ import {
 } from '@nestjs/common';
 import { songGenresResponses } from '../../test/data/songGenresModule/songGenresData';
 import { NOGENRE_ERROR } from '../../test/constants/constants';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+import { InvalidPaginationException } from '@/utils/PaginationError';
 
 describe('SongGenresResolver recieves and deliver the songs from a genre from the service', () => {
   let resolver: SongGenresResolver;

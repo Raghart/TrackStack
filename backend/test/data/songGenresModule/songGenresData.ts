@@ -1,6 +1,6 @@
-import { SongResponse } from 'src/types/songAttributes';
+import { SongResponse } from '@/types/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
-import { SongGenresRPWithSongs } from 'src/types/songGenresAttributes';
+import { SongGenresRPWithSongs } from '@/types/songGenresAttributes';
 
 export const songGenresData = [
   {

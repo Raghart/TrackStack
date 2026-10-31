@@ -5,20 +5,16 @@ import {
   ServiceUnavailableException,
 } from '@nestjs/common';
 import {
-  parseAlbumSearchData,
-  parseArtistSearchData,
-  parseSongSearchData,
-} from 'src/types/parses';
-import {
   albumSearchResults,
   artistSearchResults,
   multipleSearchResults,
   searchResultType,
   songSearchResults,
-} from 'src/types/searchTypes';
+} from '@/types/searchTypes';
 import { Client } from 'elasticsearch';
-import { normalizeText } from 'src/search/utils/normalizeText';
-import { safeSearch } from 'src/utils/safeSearch';
+import { normalizeText } from '@/search/utils/normalizeText';
+import { safeSearch } from '@/utils/safeSearch';
+import { parseAlbumSearchData, parseArtistSearchData, parseSongSearchData } from '@/types/parses';
 
 @Injectable()
 export class SearchService {

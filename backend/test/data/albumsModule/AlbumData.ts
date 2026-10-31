@@ -1,5 +1,5 @@
-import { AlbumResponse, AlbumWithSongs } from 'src/types/albumAttributes';
-import { SongResponse } from 'src/types/songAttributes';
+import { AlbumResponse, AlbumWithSongs } from '@/types/albumAttributes';
+import { SongResponse } from '@/types/songAttributes';
 
 export const albumSongs = {
   id: 549818,

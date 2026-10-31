@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { multipleSearchResults } from 'src/types/searchTypes';
+import { multipleSearchResults } from '@/types/searchTypes';
 
 export const expectSearchProps = (result: multipleSearchResults) => {
   expect(result).toMatchObject({

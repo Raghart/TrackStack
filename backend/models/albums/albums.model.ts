@@ -1,6 +1,6 @@
 import { SongsModel } from "../songs/song.model";
 import { AllowNull, AutoIncrement, Column, DataType, HasMany, Model, PrimaryKey, Table, Unique } from "sequelize-typescript";
-import { AlbumAttributes, AlbumCreationAttributes } from "src/types/albumAttributes";
+import { AlbumAttributes, AlbumCreationAttributes } from "@/types/albumAttributes";
 
 @Table({
     tableName: "albums",

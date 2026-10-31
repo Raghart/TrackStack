@@ -7,7 +7,7 @@ import {
   searchSongs,
 } from '../../test/data/searchModule/searchData';
 import { ServiceUnavailableException } from '@nestjs/common';
-import { expectSearchProps } from 'src/utils/expectSearch';
+import { expectSearchProps } from '@/utils/expectSearch';
 import { Client, SearchResponse } from 'elasticsearch';
 import {
   albumSearchResults,
@@ -16,7 +16,7 @@ import {
   artistSearchResults,
   songSearchResults,
   songsHitStructure,
-} from 'src/types/searchTypes';
+} from '@/types/searchTypes';
 
 describe('SearchService retrieves and sort the data incoming from the elasticSearch server', () => {
   let service: SearchService;

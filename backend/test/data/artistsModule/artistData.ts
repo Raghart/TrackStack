@@ -1,5 +1,5 @@
-import { ArtistResponse, ArtistWithSongs } from 'src/types/artistAttributes';
-import { SongResponse } from 'src/types/songAttributes';
+import { ArtistResponse, ArtistWithSongs } from '@/types/artistAttributes';
+import { SongResponse } from '@/types/songAttributes';
 
 export const artistData = [
   {

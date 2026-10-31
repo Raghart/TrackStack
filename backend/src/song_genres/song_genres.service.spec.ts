@@ -6,9 +6,9 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { expectSongProps } from 'src/utils/expectSongs';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
-import { SequelizeConnectionError } from 'src/utils/mockErrors';
+import { expectSongProps } from '@/utils/expectSongs';
+import { InvalidPaginationException } from '@/utils/PaginationError';
+import { SequelizeConnectionError } from '@/utils/mockErrors';
 import { SongGenresModel } from '../../models/song_genres/SongGenres.model';
 import { songGenresData } from '../../test/data/songGenresModule/songGenresData';
 

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { GenresModel } from '../../models/genres/genres.model';
-import { parseStringArray } from 'src/types/parses';
-import safeQuery from 'src/utils/safeQuery';
+import { parseStringArray } from '@/types/parses';
+import safeQuery from '@/utils/safeQuery';
 
 @Injectable()
 export class GenresService {

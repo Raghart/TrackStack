@@ -10,7 +10,7 @@ import {
   albumResponse,
   albumResSongs,
 } from '../../test/data/albumsModule/AlbumData';
-import { expectSongProps } from 'src/utils/expectSongs';
+import { expectSongProps } from '@/utils/expectSongs';
 
 describe('AlbumsResolver returns the expected songs from an album', () => {
   let resolver: AlbumsResolver;

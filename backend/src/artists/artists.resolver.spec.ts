@@ -7,7 +7,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { NOTFOUND_ERROR } from '../../test/constants/constants';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+import { InvalidPaginationException } from '@/utils/PaginationError';
 import {
   artistTestResponses,
   artistTestSongs,

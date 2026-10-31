@@ -5,15 +5,15 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import { parseArtistSongs, parseFloatNum, parseString } from 'src/types/parses';
-import { SongResponse } from 'src/types/songAttributes';
-import { ArtistResponse, ArtistWithSongs } from 'src/types/artistAttributes';
-import safeQuery from 'src/utils/safeQuery';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+import { parseArtistSongs, parseFloatNum, parseString } from '@/types/parses';
+import { SongResponse } from '@/types/songAttributes';
+import { ArtistResponse, ArtistWithSongs } from '@/types/artistAttributes';
+import safeQuery from '@/utils/safeQuery';
+import { InvalidPaginationException } from '@/utils/PaginationError';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { SongsModel } from '../../models/songs/song.model';
-import { isNumber } from 'src/types/verify';
+import { isNumber } from '@/types/verify';
 
 @Injectable()
 export class ArtistsService {

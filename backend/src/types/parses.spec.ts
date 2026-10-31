@@ -24,7 +24,7 @@ import {
   searchArtists,
   searchSongs,
 } from '../../test/data/searchModule/searchData';
-import { expectParse, expectParseError } from 'src/utils/expectParse';
+import { expectParse, expectParseError } from '@/utils/expectParse';
 import { artistSongsData } from '../../test/data/artistsModule/artistData';
 
 describe('parses return the data with the expected type', () => {

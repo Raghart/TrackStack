@@ -10,17 +10,17 @@ import {
   parseSongGenres,
   parseString,
   parseStringArray,
-} from 'src/types/parses';
-import { SongResponse } from 'src/types/songAttributes';
-import safeQuery from 'src/utils/safeQuery';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+} from '@/types/parses';
+import { SongResponse } from '@/types/songAttributes';
+import safeQuery from '@/utils/safeQuery';
+import { InvalidPaginationException } from '@/utils/PaginationError';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongGenresModel } from '../../models/song_genres/SongGenres.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
-import { SongGenresRPWithSongs } from 'src/types/songGenresAttributes';
-import { isNumber } from 'src/types/verify';
+import { SongGenresRPWithSongs } from '@/types/songGenresAttributes';
+import { isNumber } from '@/types/verify';
 
 @Injectable()
 export class SongGenresService {

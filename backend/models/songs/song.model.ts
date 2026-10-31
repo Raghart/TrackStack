@@ -1,6 +1,6 @@
 import { Table, Column, Model, PrimaryKey, AutoIncrement, DataType, AllowNull, Unique, ForeignKey, 
     BelongsTo, HasOne, BelongsToMany } from "sequelize-typescript";
-import { SongAttributes, SongCreationAttributes } from "src/types/songAttributes";
+import { SongAttributes, SongCreationAttributes } from "@/types/songAttributes";
 import { SongArtistsModel } from "../song_artists/songArtists.model";
 import { AlbumsModel } from "../albums/albums.model";
 import { ArtistsModel } from "../artists/artists.model";

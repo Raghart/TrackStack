@@ -13,12 +13,6 @@ import {
   songFullRawResponse,
   songRecRawResponse,
 } from '../../test/data/songsModule/serSongData';
-import { expectFullSongProps, expectSongProps } from 'src/utils/expectSongs';
-import {
-  SequelizeConnectionError,
-  SequelizeTimeoutError,
-} from 'src/utils/mockErrors';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
 import { SongsModel } from '../../models/songs/song.model';
 import {
   singleSongData,
@@ -29,6 +23,9 @@ import {
 import { USER_VECTOR } from '../../test/constants/constants';
 import { PubSub } from 'graphql-subscriptions';
 import { GoogleGenAI } from '@google/genai';
+import { expectFullSongProps, expectSongProps } from '@/utils/expectSongs';
+import { InvalidPaginationException } from '@/utils/PaginationError';
+import { SequelizeConnectionError, SequelizeTimeoutError } from '@/utils/mockErrors';
 
 describe('SongsService retrieves, evaluates and parses songs data from the database', () => {
   let service: SongsService;

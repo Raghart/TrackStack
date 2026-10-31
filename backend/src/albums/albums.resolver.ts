@@ -1,7 +1,7 @@
 import { Args, Int, Query, Resolver } from '@nestjs/graphql';
 import { AlbumsService } from './albums.service';
 import { GraphQLString } from 'graphql';
-import { SongResponseDto } from 'src/songs/dto/SongResponse.dto';
+import { SongResponseDto } from '@/songs/dto/SongResponse.dto';
 import { AlbumsResultsDto } from './dto/AlbumResultsDto';
 
 @Resolver()

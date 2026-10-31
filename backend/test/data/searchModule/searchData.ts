@@ -2,7 +2,7 @@ import {
   albumSearchResults,
   artistSearchResults,
   songSearchResults,
-} from 'src/types/searchTypes';
+} from '@/types/searchTypes';
 
 export const searchArtists: artistSearchResults[] = [
   { id: 1, name: 'Nirvana', album_cover: 'url1', type: 'artist' },

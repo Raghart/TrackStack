@@ -1,6 +1,6 @@
 import {
   SongRecResponse,
-} from 'src/types/songAttributes';
+} from '@/types/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
 import { FullSongResponseData, SongResponseData } from '@trackstack/schemas';
 

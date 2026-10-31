@@ -7,15 +7,10 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { QueryTypes, Sequelize } from 'sequelize';
-import { parseString, parseStringArray } from 'src/types/parses';
-import { FullSongResponse, SongResponse } from 'src/types/songAttributes';
-import safeQuery from 'src/utils/safeQuery';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
-import parseGenres from 'src/utils/parseGenres';
 import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
 import { existsSync } from 'node:fs';
 import {
@@ -25,6 +20,11 @@ import {
   songResponseSchema,
   songRecommendationsSchema,
 } from '@trackstack/schemas';
+import safeQuery from '@/utils/safeQuery';
+import { InvalidPaginationException } from '@/utils/PaginationError';
+import { FullSongResponse, SongResponse } from '@/types/songAttributes';
+import { parseString, parseStringArray } from '@/types/parses';
+import parseGenres from '@/utils/parseGenres';
 if (existsSync('.env')) process.loadEnvFile();
 
 @Injectable()

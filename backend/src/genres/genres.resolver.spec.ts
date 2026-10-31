@@ -4,7 +4,7 @@ import { GenresResolver } from './genres.resolver';
 import { GenresService } from './genres.service';
 import { InternalServerErrorException } from '@nestjs/common';
 import { genreResData } from '../../test/data/genres/genresData';
-import { TimeoutResError } from 'src/utils/mockErrors';
+import { TimeoutResError } from '@/utils/mockErrors';
 
 describe('GenresResolver retrieves a genres array from the service', () => {
   let resolver: GenresResolver;
