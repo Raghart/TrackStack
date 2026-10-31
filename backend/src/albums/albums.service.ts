@@ -13,7 +13,11 @@ import { ArtistsModel } from '../../models/artists/artists.model';
 import { AlbumResponse, AlbumWithSongs } from '@/types/albumAttributes';
 import { isNumber } from '@/types/verify';
 import { InvalidPaginationException } from '@/utils/PaginationError';
-import { parseAlbumSong, parseStringArray } from '@/types/parses';
+import { parseStringArray } from '@/types/parses';
+import {
+  AlbumWithSongsData,
+  albumWithSongsSchema,
+} from '@trackstack/schemas';
 
 @Injectable()
 export class AlbumsService {
@@ -25,7 +29,7 @@ export class AlbumsService {
     seed: string,
     page: number,
     limit: number,
-  ): Promise<AlbumWithSongs[]> {
+  ): Promise<AlbumWithSongsData[]> {
     if (!isNumber(seed))
       throw new BadRequestException(
         'The seed must be a valid string of numbers.',
@@ -49,15 +53,19 @@ export class AlbumsService {
         ],
       }),
     );
-    return rawData.map((entry) => parseAlbumSong(entry.get({ plain: true })));
+    return rawData.map((entry) =>
+      albumWithSongsSchema.parse(entry.get({ plain: true })),
+    );
   }
 
-  parseAlbums(albumData: AlbumWithSongs[]): AlbumResponse[] {
+  parseAlbums(
+    albumData: AlbumWithSongsData[],
+  ): AlbumResponse[] {
     return albumData.map((data) => ({
       id: data.id,
       name: data.name,
       album_cover: data.url_image,
-      artists: data.songs[0].artists.map((artist) => artist.name),
+      artists: data.songs[0].artists?.map((artist) => artist.name) ?? [],
     }));
   }
 
@@ -70,7 +78,7 @@ export class AlbumsService {
     return this.parseAlbums(albumResults);
   }
 
-  async fetchAlbumSongs(album: string): Promise<AlbumWithSongs> {
+  async fetchAlbumSongs(album: string): Promise<AlbumWithSongsData> {
     const rawData = await safeQuery(() =>
       this.albumModel.findOne({
         where: { name: { [Op.iLike]: `${album}` } },
@@ -92,16 +100,21 @@ export class AlbumsService {
 
     if (!rawData)
       throw new NotFoundException(`Album: ${album} couldn't be found!`);
-    return parseAlbumSong(rawData.get({ plain: true }));
+    return albumWithSongsSchema.parse(rawData.get({ plain: true }));
   }
 
-  parseAlbumSongs(albumSongs: AlbumWithSongs): SongResponse[] {
-    return albumSongs.songs.map((song) => ({
+  parseAlbumSongs(
+    albumSongs: AlbumWithSongsData | AlbumWithSongs,
+  ): SongResponse[] {
+    const album = albumSongs as AlbumWithSongsData;
+    return album.songs.map((song) => ({
       id: song.id,
       name: song.name,
-      artists: parseStringArray(song.artists.map((artist) => artist.name)),
+      artists: parseStringArray(
+        song.artists?.map((artist) => artist.name) ?? [],
+      ),
       url_preview: song.url_preview,
-      album_cover: albumSongs.url_image,
+      album_cover: album.url_image,
     }));
   }
 

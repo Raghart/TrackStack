@@ -81,12 +81,14 @@ export const songResponseSchema = z.looseObject({
 
 export type SongResponseData = z.infer<typeof songResponseSchema>;
 
-export const albumWithSongsSchema = z.looseObject({
+export const albumWithSongsSchema = z.object({
   id: z.number(),
   name: stringSchema,
   url_image: stringSchema,
   songs: z.array(songSchema).min(1),
 });
+
+export type AlbumWithSongsData = z.infer<typeof albumWithSongsSchema>;
 
 export const artistWithSongsSchema = z.looseObject({
   id: z.number(),
