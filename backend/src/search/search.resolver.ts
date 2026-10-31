@@ -6,12 +6,6 @@ import { multipleSearchResultsDto } from './dto/multipleSearchDto';
 export class SearchResolver {
   constructor(private readonly searchService: SearchService) {}
 
-  @Query(() => String, { name: 'ping' })
-  async ping() {
-    await this.searchService.ping();
-    return 'Elastic Search is working!';
-  }
-
   @Query(() => multipleSearchResultsDto, { name: 'multipleSearch' })
   async multipleSearch(
     @Args('query', { type: () => String }) query: string,

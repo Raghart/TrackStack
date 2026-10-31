@@ -10,7 +10,6 @@ import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { GenresModel } from '../../models/genres/genres.model';
-import { Client } from 'elasticsearch';
 import { existsSync } from 'node:fs';
 if (existsSync('.env')) process.loadEnvFile();
 
@@ -28,16 +27,6 @@ if (existsSync('.env')) process.loadEnvFile();
     ]),
   ],
   providers: [
-    {
-      provide: 'BonsaiClient',
-      useFactory: () => {
-        return new Client({
-          host: process.env.ELASTICSEARCH_NODE,
-          log: 'error',
-          ssl: { rejectUnauthorized: false },
-        });
-      },
-    },
     SearchService,
     SearchResolver,
   ],

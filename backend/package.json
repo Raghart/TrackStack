@@ -21,13 +21,11 @@
   "dependencies": {
     "@apollo/server": "^5.5.0",
     "@as-integrations/express5": "^1.1.2",
-    "@elastic/elasticsearch": "^7.17.14",
     "@google/genai": "^1.46.0",
     "@nestjs/apollo": "^13.2.4",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.0",
-    "@nestjs/elasticsearch": "^11.1.0",
     "@nestjs/graphql": "^13.2.4",
     "@nestjs/platform-express": "^11.0.1",
     "@nestjs/sequelize": "^11.0.0",
@@ -36,7 +34,6 @@
     "@trackstack/schemas": "workspace:*",
     "cors": "^2.8.5",
     "coverage": "^0.0.0",
-    "elasticsearch": "^16.7.2",
     "express": "^5.1.0",
     "graphql": "^16.11.0",
     "pg": "^8.16.0",
@@ -57,7 +54,6 @@
     "@nestjs/testing": "^11.0.0",
     "@swc/cli": "^0.5.0",
     "@swc/core": "^1.10.7",
-    "@types/elasticsearch": "^5.0.43",
     "@types/express": "^5.0.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.19.15",
@@ -80,13 +76,19 @@
     "typescript-eslint": "^8.20.0"
   },
   "jest": {
-    "moduleFileExtensions": ["js", "json", "ts"],
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
-    "collectCoverageFrom": ["**/*.(t|j)s"],
+    "collectCoverageFrom": [
+      "**/*.(t|j)s"
+    ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "moduleNameMapper": {

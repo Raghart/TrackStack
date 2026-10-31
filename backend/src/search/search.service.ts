@@ -1,4 +1,3 @@
-import { SearchResponse } from '@elastic/elasticsearch/api/types';
 import {
   Inject,
   Injectable,
@@ -11,33 +10,16 @@ import {
   searchResultType,
   songSearchResults,
 } from '@/types/searchTypes';
-import { Client } from 'elasticsearch';
 import { normalizeText } from '@/search/utils/normalizeText';
 import { safeSearch } from '@/utils/safeSearch';
-import { parseAlbumSearchData, parseArtistSearchData, parseSongSearchData } from '@/types/parses';
 
 @Injectable()
 export class SearchService {
-  constructor(@Inject('BonsaiClient') private readonly esClient: Client) {}
-
-  async ping(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      this.esClient.ping({}, (err) => {
-        if (err) {
-          const message = (err as Error).message;
-          reject(
-            new ServiceUnavailableException(
-              'ElasticSearch is not responding: ' + message,
-            ),
-          );
-        } else {
-          resolve(true);
-        }
-      });
-    });
-  }
+  constructor() {}
 
   async searchArtists(query: string): Promise<artistSearchResults[]> {
+    const artistSearchResults: artistSearchResults[] = [];
+    /*
     const results = await safeSearch(() =>
       this.esClient.search<SearchResponse<artistSearchResults>>({
         index: 'artists',
@@ -54,13 +36,13 @@ export class SearchService {
         },
       }),
     );
-
-    return results.hits.hits.map((artist) =>
-      parseArtistSearchData(artist._source),
-    );
+    */
+    return artistSearchResults;
   }
 
   async searchAlbums(query: string): Promise<albumSearchResults[]> {
+    const albumSearchResults: albumSearchResults[] = [];
+    /*
     const results = await safeSearch(() =>
       this.esClient.search<SearchResponse<albumSearchResults>>({
         index: 'albums',
@@ -77,12 +59,13 @@ export class SearchService {
         },
       }),
     );
-    return results.hits.hits.map((album) =>
-      parseAlbumSearchData(album._source),
-    );
+    */
+    return albumSearchResults;
   }
 
   async seachSongs(query: string): Promise<songSearchResults[]> {
+    const songSearches: songSearchResults[] = [];
+    /*
     const results = await safeSearch(() =>
       this.esClient.search<SearchResponse<songSearchResults>>({
         index: 'songs',
@@ -98,7 +81,8 @@ export class SearchService {
         },
       }),
     );
-    return results.hits.hits.map((song) => parseSongSearchData(song._source));
+    */
+    return songSearches;
   }
 
   sortResults<searchType extends searchResultType>(
