@@ -12,15 +12,11 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
-    "test": "jest",
+    "test": "vitest run",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:vitest": "vitest run",
-    "test:artists": "vitest run src/artists",
-    "test:albums": "vitest run src/albums",
-    "test:genres": "vitest run src/genres"
+    "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@apollo/server": "^5.5.0",

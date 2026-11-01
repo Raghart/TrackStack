@@ -26,16 +26,17 @@ import { GoogleGenAI } from '@google/genai';
 import { expectFullSongProps, expectSongProps } from '@/utils/expectSongs';
 import { InvalidPaginationException } from '@/utils/PaginationError';
 import { SequelizeConnectionError, SequelizeTimeoutError } from '@/utils/mockErrors';
+import { vi, type Mock } from 'vitest';
 
 describe('SongsService retrieves, evaluates and parses songs data from the database', () => {
   let service: SongsService;
   let songModel: {
-    count: jest.Mock;
-    findAll: jest.Mock;
-    findByPk: jest.Mock;
-    findOne: jest.Mock;
+    count: Mock;
+    findAll: Mock;
+    findByPk: Mock;
+    findOne: Mock;
     sequelize: {
-      query: jest.Mock;
+      query: Mock;
     };
   };
 
@@ -52,12 +53,12 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
         {
           provide: getModelToken(SongsModel),
           useValue: {
-            count: jest.fn(),
-            findAll: jest.fn(),
-            findByPk: jest.fn(),
-            findOne: jest.fn(),
+            count: vi.fn(),
+            findAll: vi.fn(),
+            findByPk: vi.fn(),
+            findOne: vi.fn(),
             sequelize: {
-              query: jest.fn(),
+              query: vi.fn(),
             },
           },
         },
@@ -122,12 +123,10 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
       expectSongProps(results);
     });
     
-    /*
     it('parseFullSong returns a full song response with the expected properties', () => {
       const song = service.parseFullSong(songFullRawResponse);
       expectFullSongProps(song);
-    });
-    */
+    });   
   });
 
   describe('getRandomSong returns a random song from the database', () => {

@@ -13,6 +13,7 @@ import { USER_VECTOR } from '../../test/constants/constants';
 import { GoogleGenAI } from '@google/genai';
 import { expectSongProps } from '@/utils/expectSongs';
 import { ConnectionResError, TimeoutResError } from '@/utils/mockErrors';
+import { vi } from 'vitest';
 
 describe('SongsResolver receives the expected songs array from the service', () => {
   let service: SongsService;
@@ -31,15 +32,15 @@ describe('SongsResolver receives the expected songs array from the service', () 
         {
           provide: SongsService,
           useValue: {
-            getLandpageSongs: jest.fn().mockResolvedValue(songTestResponses),
-            getDBLength: jest.fn().mockResolvedValue(songTestResponses.length),
-            getSongData: jest.fn().mockResolvedValue(songFullTestResponse),
-            getSongRecommendations: jest
+            getLandpageSongs: vi.fn().mockResolvedValue(songTestResponses),
+            getDBLength: vi.fn().mockResolvedValue(songTestResponses.length),
+            getSongData: vi.fn().mockResolvedValue(songFullTestResponse),
+            getSongRecommendations: vi
               .fn()
               .mockReturnValue(songRecommendResponses),
-            getRandomSong: jest.fn().mockResolvedValue(singleSongData),
-            getNextSong: jest.fn().mockResolvedValue(singleSongData),
-            getPreviousSong: jest.fn().mockResolvedValue(singleSongData),
+            getRandomSong: vi.fn().mockResolvedValue(singleSongData),
+            getNextSong: vi.fn().mockResolvedValue(singleSongData),
+            getPreviousSong: vi.fn().mockResolvedValue(singleSongData),
           },
         },
       ],
