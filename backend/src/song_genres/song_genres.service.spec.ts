@@ -11,10 +11,11 @@ import { InvalidPaginationException } from '@/utils/PaginationError';
 import { SequelizeConnectionError } from '@/utils/mockErrors';
 import { SongGenresModel } from '../../models/song_genres/SongGenres.model';
 import { songGenresTestData } from '../../test/data/songGenresModule/songGenresData';
+import { vi, type Mock } from 'vitest';
 
 describe('SongGenresService retrieves and parses songs of a genre from the database', () => {
   let service: SongGenresService;
-  let songGenresModel: { findAll: jest.Mock };
+  let songGenresModel: { findAll: Mock };
   const songGenresRawData = songGenresTestData.map((entry) => ({
     get: () => entry,
   }));
@@ -26,7 +27,7 @@ describe('SongGenresService retrieves and parses songs of a genre from the datab
         {
           provide: getModelToken(SongGenresModel),
           useValue: {
-            findAll: jest.fn(),
+            findAll: vi.fn(),
           },
         },
       ],
@@ -74,7 +75,7 @@ describe('SongGenresService retrieves and parses songs of a genre from the datab
 
 describe("SongGenresService throws an error if it couldn't retrieve the data from the database", () => {
   let service: SongGenresService;
-  let songGenresModel: { findAll: jest.Mock };
+  let songGenresModel: { findAll: Mock };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
