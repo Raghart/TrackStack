@@ -16,7 +16,7 @@ describe('GenresService retrieves and parses all the avaibles genres from the da
         {
           provide: getModelToken(GenresModel),
           useValue: {
-            findAll: jest.fn().mockResolvedValue(genreData),
+            findAll: vi.fn().mockResolvedValue(genreData),
           },
         },
       ],

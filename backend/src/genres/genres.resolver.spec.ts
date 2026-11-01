@@ -17,7 +17,7 @@ describe('GenresResolver retrieves a genres array from the service', () => {
         {
           provide: GenresService,
           useValue: {
-            getAllGenres: jest.fn().mockResolvedValue(genreResData),
+            getAllGenres: vi.fn().mockResolvedValue(genreResData),
           },
         },
       ],

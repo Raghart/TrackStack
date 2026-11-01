@@ -17,14 +17,15 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "test:vitest": "vitest run"
+    "test:vitest": "vitest run",
+    "test:genres": "vitest run src/genres"
   },
   "dependencies": {
     "@apollo/server": "^5.5.0",
     "@as-integrations/express5": "^1.1.2",
     "@google/genai": "^1.46.0",
     "@nestjs/apollo": "^13.2.4",
-    "@nestjs/common": "^11.0.1",
+    "@nestjs/common": "11.2.8",
     "@nestjs/config": "^4.0.2",
     "@nestjs/core": "^11.0.0",
     "@nestjs/graphql": "^13.2.4",
@@ -72,6 +73,7 @@
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.20.0",
+    "unplugin-swc": "2.0.0",
     "vitest": "^5.0.5"
   },
   "jest": {
