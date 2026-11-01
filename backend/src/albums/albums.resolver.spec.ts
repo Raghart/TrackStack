@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
 import { AlbumsResolver } from './albums.resolver';
@@ -23,8 +24,8 @@ describe('AlbumsResolver returns the expected songs from an album', () => {
         {
           provide: AlbumsService,
           useValue: {
-            getAllAlbumSongs: jest.fn().mockResolvedValue(albumResSongs),
-            getAlbums: jest.fn().mockResolvedValue(albumResponse),
+            getAllAlbumSongs: vi.fn().mockResolvedValue(albumResSongs),
+            getAlbums: vi.fn().mockResolvedValue(albumResponse),
           },
         },
       ],
@@ -59,8 +60,8 @@ describe('AlbumsResolver retrieves the errors thrown by the service to detect in
         {
           provide: AlbumsService,
           useValue: {
-            fetchDBAlbumSongs: jest.fn(),
-            getAllAlbumSongs: jest.fn(),
+            fetchDBAlbumSongs: vi.fn(),
+            getAllAlbumSongs: vi.fn(),
           },
         },
       ],
@@ -71,7 +72,7 @@ describe('AlbumsResolver retrieves the errors thrown by the service to detect in
   });
 
   it('getAllAlbumSongs throws an error when no songs are found for an album', async () => {
-    (service.getAllAlbumSongs as jest.Mock).mockRejectedValue(
+    (service.getAllAlbumSongs as Mock).mockRejectedValue(
       new NotFoundException("Album: noAlbum couldn't be found!"),
     );
     await expect(resolver.getAllAlbumSongs('noAlbum')).rejects.toThrow(
@@ -84,7 +85,7 @@ describe('AlbumsResolver retrieves the errors thrown by the service to detect in
   });
 
   it("getAllAlbumSongs throws an error when it couldn't retrieve the data from the database", async () => {
-    (service.getAllAlbumSongs as jest.Mock).mockRejectedValue(
+    (service.getAllAlbumSongs as Mock).mockRejectedValue(
       new InternalServerErrorException(
         new Error('Database Error: SequelizeTimeoutError: Connection refused'),
       ),

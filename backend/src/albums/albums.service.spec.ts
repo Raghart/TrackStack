@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AlbumsService } from './albums.service';
 import { getModelToken } from '@nestjs/sequelize';
@@ -18,7 +19,7 @@ import { InvalidPaginationException } from '@/utils/PaginationError';
 
 describe('AlbumsService retrieves and parses all the songs of an album', () => {
   let service: AlbumsService;
-  let albumModel: { findOne: jest.Mock; findAll: jest.Mock };
+  let albumModel: { findOne: Mock; findAll: Mock };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -27,8 +28,8 @@ describe('AlbumsService retrieves and parses all the songs of an album', () => {
         {
           provide: getModelToken(AlbumsModel),
           useValue: {
-            findOne: jest.fn(),
-            findAll: jest.fn(),
+            findOne: vi.fn(),
+            findAll: vi.fn(),
           },
         },
       ],

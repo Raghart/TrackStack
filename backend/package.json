@@ -19,6 +19,7 @@
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "test:vitest": "vitest run",
     "test:artists": "vitest run src/artists",
+    "test:albums": "vitest run src/albums",
     "test:genres": "vitest run src/genres"
   },
   "dependencies": {
