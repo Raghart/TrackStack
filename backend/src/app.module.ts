@@ -34,7 +34,7 @@ if (existsSync('.env')) process.loadEnvFile();
         },
       },
       autoLoadModels: true,
-      synchronize: true,
+      synchronize: false,
       logging: false,
     }),
     ServeStaticModule.forRoot({

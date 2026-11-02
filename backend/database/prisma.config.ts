@@ -2,7 +2,6 @@ import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { defineConfig } from 'prisma/config';
 
-// Prisma 7 ya no carga .env automáticamente.
 for (const envFile of [
   resolve(process.cwd(), '.env'),
   resolve(process.cwd(), 'backend/.env'),

@@ -7,8 +7,8 @@ Contexto específico del paquete `backend/`. Las reglas generales del monorepo e
 - **NestJS 11** con Express 5.
 - **GraphQL code-first** con Apollo Server 5 (`@nestjs/graphql`): el schema se genera en memoria (`autoSchemaFile: true`), no hay archivo `.graphql` versionado.
 - **Subscriptions** por WebSocket (`graphql-ws`) para el streaming de la IA.
-- **Sequelize 6** (`@nestjs/sequelize`) sobre **PostgreSQL**; `autoLoadModels: true` y `synchronize: true`. Las **migraciones** se gestionan con **Prisma 7** en `database/` (`schema.prisma` + historial migrado 1:1 desde Goose). `oldDatabase/` conserva el legado Go (Goose + sqlc) como referencia y no se debe modificar sin motivo.
-- **Búsqueda sobre PostgreSQL** mediante Sequelize en `src/search` (implementación en curso, sin servicio externo de búsqueda).
+- **Sequelize 6** (`@nestjs/sequelize`) sobre **PostgreSQL**; `autoLoadModels: true` y `synchronize: true`. Las **migraciones** se gestionan con **Prisma 7** en `database/` (`schema.prisma` + historial migrado 1:1 desde Goose, ya marcado como aplicado en la BD real).
+- **Búsqueda sobre PostgreSQL** mediante Sequelize en `src/search` (implementación en curso, sin servicio externo de búsqueda). La BD tiene `pg_trgm` + `unaccent`, índices GIN de trigramas y las funciones `search_songs`, `search_artists` y `search_albums` (ver `database/README.md`).
 - **Google GenAI (Gemini)** inyectado como provider `AI`, usado para las recomendaciones/RAG en streaming.
 - **Vitest 5 + unplugin-swc** para unit tests; **ESLint 9** (flat config) con `typescript-eslint` y `eslint-plugin-security`; **Prettier** (`singleQuote`, `trailingComma: all`).
 - Alias de imports `src/*` (configurado en `tsconfig.json` y en `vitest.config.ts`).
@@ -32,7 +32,6 @@ backend/
 ├── models/<dominio>/         # modelos Sequelize
 ├── test/                     # fixtures (data/) y constantes (constants/)
 ├── database/                 # Prisma: schema, migraciones y configuración
-├── oldDatabase/              # legado Go (Goose + sqlc), solo referencia
 ├── dist/ coverage/ public/   # artefactos generados (no editar)
 └── eslint.config.mjs / tsconfig*.json / nest-cli.json
 ```
@@ -128,7 +127,7 @@ pnpm run db:migrate                  # solo local: crea/aplica migraciones
 pnpm run db:generate                 # genera el cliente Prisma
 ```
 
-No ejecutes `db:deploy` ni `db:baseline` contra la BD real sin confirmarlo: producción ya funciona con el esquema de Goose y no debe alterarse. Las migraciones se documentan en `database/README.md`.
+No ejecutes `db:deploy` ni crees migraciones nuevas contra la BD real sin confirmarlo. La BD ya tiene el baseline de Prisma aplicado; las migraciones se documentan en `database/README.md`.
 
 Orden recomendado antes de dar un cambio por terminado:
 
