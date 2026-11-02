@@ -1,8 +1,3 @@
-// Esquema equivalente al estado final de las migraciones Goose de
-// backend/oldDatabase/sql/schema. No añadir @default(autoincrement()):
-// Goose creó los ids como INTEGER PRIMARY KEY sin secuencia y los CSV
-// insertan los ids explícitamente.
-
 generator client {
   provider        = "prisma-client"
   output          = "../generated/prisma"

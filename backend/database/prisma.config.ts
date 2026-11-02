@@ -13,12 +13,11 @@ for (const envFile of [
   }
 }
 
-// Reutiliza las mismas variables que el backend (Nest/Sequelize).
-const datasourceUrl = process.env.DATABASE_URL ?? process.env.DB_URL;
+const datasourceUrl = process.env.DB_URL;
 
 if (!datasourceUrl) {
   throw new Error(
-    'Falta DATABASE_URL o DB_URL. Añádela al .env de backend o expórtala en el entorno.',
+    'Falta DB_URL. Añádela al .env de backend o expórtala en el entorno.',
   );
 }
 
