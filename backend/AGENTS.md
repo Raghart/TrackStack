@@ -10,8 +10,8 @@ Contexto específico del paquete `backend/`. Las reglas generales del monorepo e
 - **Sequelize 6** (`@nestjs/sequelize`) sobre **PostgreSQL**; `autoLoadModels: true` y `synchronize: true`. Existe además `database/` con SQL y utilidades **Go/sqlc** para generar queries, no es código Nest.
 - **Búsqueda sobre PostgreSQL** mediante Sequelize en `src/search` (implementación en curso, sin servicio externo de búsqueda).
 - **Google GenAI (Gemini)** inyectado como provider `AI`, usado para las recomendaciones/RAG en streaming.
-- **Jest 29 + ts-jest** para unit tests; **ESLint 9** (flat config) con `typescript-eslint` y `eslint-plugin-security`; **Prettier** (`singleQuote`, `trailingComma: all`).
-- Alias de imports `src/*` (configurado en `tsconfig.json` y en `moduleNameMapper` de Jest).
+- **Vitest 5 + unplugin-swc** para unit tests; **ESLint 9** (flat config) con `typescript-eslint` y `eslint-plugin-security`; **Prettier** (`singleQuote`, `trailingComma: all`).
+- Alias de imports `src/*` (configurado en `tsconfig.json` y en `vitest.config.ts`).
 
 ## Layout (breve)
 
@@ -60,9 +60,9 @@ Cada dominio sigue el mismo patrón: `module` + `resolver` + `service`, con spec
 - Los unit tests **no necesitan PostgreSQL**: los modelos se mockean con `getModelToken(...)` y los providers externos (`AI`) con `useValue`.
 - Fixtures compartidos en `test/data/<dominio>/`; constantes (URLs, errores, `USER_VECTOR`) en `test/constants/constants.ts`; assertions reutilizables en `src/utils/expect*.ts`.
 - Coloca el spec junto al archivo afectado (`src/<dominio>/<archivo>.spec.ts`). Usa los fixtures en vez de inventar datos inline.
-- **Ejecuta solo los specs afectados por tu cambio** (`pnpm run test -- src/<dominio>/<archivo>.spec.ts`). La suite completa es lenta y costosa: no la corras por defecto. Resérvala para cuando el usuario la pida explícitamente o cuando el cambio toque algo global (configuración de Jest/tsconfig, `app.module.ts`, o tipos/helpers compartidos de `src/types` y `src/utils`).
+- **Ejecuta solo los specs afectados por tu cambio** (`pnpm run test -- src/<dominio>/<archivo>.spec.ts`). La suite completa es lenta y costosa: no la corras por defecto. Resérvala para cuando el usuario la pida explícitamente o cuando el cambio toque algo global (configuración de Vitest/tsconfig, `app.module.ts`, o tipos/helpers compartidos de `src/types` y `src/utils`).
 - Si el cambio afecta a varios dominios, ejecuta el spec de cada archivo tocado; si creas un spec nuevo, ejecuta ese archivo concreto.
-- `test:e2e` existe pero apunta a `test/*.e2e-spec.ts`, que hoy no hay; los E2E reales están en `../e2e` (Playwright) y requieren servicios.
+- Los E2E reales están en `../e2e` (Playwright) y requieren servicios; no hay runner de E2E dentro de `backend/`.
 
 ### Cuándo agregar un test de regresión
 
@@ -97,13 +97,12 @@ Dentro de `backend/` (o con `pnpm --filter ./backend run <script>` desde la raí
 ```bash
 pnpm run lint                        # ESLint sobre src, test, apps, libs
 pnpm exec eslint .                   # mismo lint + reglas de seguridad (lo que corre la CI)
-pnpm run test                        # Jest (unit specs de src/)
+pnpm run test                        # Vitest (unit specs de src/)
 pnpm run test -- src/songs/songs.service.spec.ts   # un spec concreto
-pnpm run test:watch                  # Jest en watch
+pnpm run test:watch                  # Vitest en watch
 pnpm run test:cov                    # cobertura -> backend/coverage/
 pnpm run build                       # compila con Nest
 pnpm run format                      # Prettier sobre src/ y test/
-pnpm run test:e2e                    # config test/jest-e2e.json (sin specs actualmente)
 ```
 
 Orden recomendado antes de dar un cambio por terminado:
@@ -116,6 +115,6 @@ Orden recomendado antes de dar un cambio por terminado:
 Notas:
 
 - La suite completa es lenta; la CI la ejecuta en cada PR. En local basta con validar los specs directamente relacionados con el cambio.
-- No hay umbral de cobertura configurado en Jest, pero el proyecto mantiene métricas altas; evita bajar la cobertura del archivo que tocas.
+- No hay umbral de cobertura configurado en Vitest, pero el proyecto mantiene métricas altas; evita bajar la cobertura del archivo que tocas.
 - `pnpm run test` no requiere `.env` ni servicios externos. `start:prod`, los E2E y cualquier prueba de integración sí necesitan `DB_URL`, `DB_PORT` y, para la IA, `API_KEY`. Si faltan, dilo explícitamente en el resumen en lugar de asumir que pasan.
 - La CI ejecuta lint, `eslint .` (seguridad) y los tests en cada PR, así que esos tres deben pasar.

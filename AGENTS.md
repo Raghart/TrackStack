@@ -66,6 +66,7 @@ pnpm run dev:frontend       # Vite dev server
 pnpm run build:frontend     # build del frontend -> backend/public
 pnpm run build:backend      # compila NestJS -> backend/dist
 pnpm run start:prod         # ejecuta backend compilado
+pnpm run test:backend       # tests del backend (Vitest)
 ```
 
 Por paquete:
@@ -73,7 +74,7 @@ Por paquete:
 ```bash
 # backend
 pnpm --filter ./backend run lint
-pnpm --filter ./backend run test          # Jest
+pnpm --filter ./backend run test          # Vitest
 pnpm --filter ./backend run test:cov
 pnpm --filter ./backend run format        # Prettier
 
