@@ -21,6 +21,11 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "modelsapts/migration/migrations.ts", "scripts/dto", "scripts/dto/artistsResults.dto.ts",
-    "models"]
+  "include": ["src", 
+  "modelsapts/migration/migrations.ts", 
+  "scripts/dto", 
+  "database",
+  "scripts/dto/artistsResults.dto.ts",
+    "models"
+  ]
 }
