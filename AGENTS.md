@@ -104,6 +104,25 @@ npm run test:report
 - No borres ni reescribas trabajo del usuario que no entiendas. Investiga antes de tocar archivos ajenos al cambio.
 - Si un cambio afecta el contrato GraphQL, la estructura de la base de datos o la API pública, explícalo y confírmalo antes de aplicarlo.
 
+### Mantenimiento de este AGENTS.md
+
+Estos archivos son documentación viva: si se quedan obsoletos, las siguientes sesiones trabajan con información incorrecta. **No esperes a que el usuario te pida actualizarlos.**
+
+- Al terminar un cambio **relevante**, revisa si `AGENTS.md` (raíz) y `backend/AGENTS.md` siguen describiendo la realidad del repo. Actualiza lo que haya quedado desfasado como parte del mismo cambio, no en una tarea aparte.
+- Actualiza la documentación cuando el cambio:
+  - añade, elimina o mueve un dominio, paquete o carpeta importante del layout;
+  - añade o cambia scripts/comandos, el gestor de paquetes o el flujo de verificación;
+  - introduce o cambia una dependencia relevante del stack, configuración global (lint, Vitest, tsconfig, CI) o el modo de arrancar/buildear;
+  - establece o modifica una convención que el agente deba seguir (estructura de archivos, dónde viven los tipos, manejo de errores, patrones de tests);
+  - cambia el contrato GraphQL, el esquema de la base de datos o la forma de consumir la API de un modo que afecte a cómo se trabaja en el repo.
+- Cómo hacerlo:
+  - Edita **solo las secciones afectadas**, con cambios mínimos y en el mismo idioma/estilo/tono que el resto del archivo.
+  - Mantén la separación: las reglas del monorepo van en `AGENTS.md`; lo específico del paquete va en `backend/AGENTS.md`. No dupliques una regla en ambos.
+  - Corrige o elimina la información obsoleta en lugar de añadir una nota que la contradiga.
+  - No reescribas ni reorganices el archivo completo sin necesidad.
+- **No** hace falta actualizarlos por cambios triviales ni por refactors internos que no cambian cómo se trabaja en el repo (p. ej. un fix de bug que no altera convenciones ni comandos).
+- Si no está claro si el cambio merece una actualización, decide con criterio y **indícalo en el resumen final**: qué revisaste y por qué no lo actualizaste.
+
 ### Dependencias
 
 - Instala en la raíz con pnpm para los workspaces (`backend`, `frontend`, `schemas`): `pnpm add <paquete>` (o `pnpm add -D <paquete>`), y para un paquete concreto `pnpm --filter ./backend add <paquete>`.

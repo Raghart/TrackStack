@@ -48,6 +48,24 @@ Cada dominio sigue el mismo patrón: `module` + `resolver` + `service`, con spec
 - No edites `dist/`, `coverage/`, `public/`, `pnpm-lock.yaml` ni `package-lock.json` (salvo cambio intencional de dependencias).
 - No agregues mas de lo que te pidan.
 
+## Mantenimiento de este AGENTS.md
+
+Este archivo refleja cómo está montado `backend/`. Si cambia el código y el archivo se queda atrás, la siguiente sesión trabajará con supuestos falsos. **Actualízalo tú mismo cuando corresponda; no esperes a que el usuario lo pida.**
+
+- Tras un cambio **relevante** en `backend/`, revisa si este archivo (y `../AGENTS.md` si el cambio es de alcance general) sigue siendo correcto, y actualiza la parte desfasada en el mismo cambio.
+- Actualiza este archivo cuando el cambio:
+  - añade, elimina o renombra un dominio en `src/`, un modelo en `models/`, o mueve código entre `src/`, `models/` y `database/`;
+  - cambia el tech stack o configuración del paquete (Nest, Apollo/graphql-ws, Sequelize, GenAI, Vitest, ESLint, tsconfig, alias `src/*`);
+  - añade o modifica scripts de `package.json` o el orden de verificación (lint/tests/build);
+  - establece una convención nueva de estructura (p. ej. dónde van los tipos, DTOs, guards, parsers, fixtures o specs) o cambia la forma de testear;
+  - cambia el contrato GraphQL, el patrón resolver/service, `safeQuery`, paginación o el manejo de errores de un modo que afecte al trabajo diario.
+- Cómo hacerlo:
+  - Edita solo las secciones afectadas, con cambios mínimos y el mismo estilo/tono del archivo.
+  - Lo general del monorepo va en `../AGENTS.md`; lo específico del paquete, aquí. No dupliques reglas en ambos.
+  - Si algo deja de ser cierto, corrígelo o elimínalo; no acumules notas contradictorias.
+- **No** actualices este archivo por cambios triviales, refactors internos que no alteran cómo se trabaja, ni por fixes que no cambian convenciones, comandos ni patrones.
+- Si dudas de si merece actualización, decide con criterio y dilo en el resumen final (qué revisaste y por qué no cambiaste nada).
+
 ## Tipos
 
 - **No declares `interface`, `type` ni aliases de tipos dentro de archivos de dominio, services, resolvers, utils, controladores ni specs.** Todos los tipos del backend viven en `src/types/*.ts` (`songAttributes.ts`, `searchTypes.ts`, `albumAttributes.ts`, etc.) y se importan desde ahí con el alias `src/types/...`.
