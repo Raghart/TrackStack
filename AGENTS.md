@@ -31,7 +31,8 @@ TrackStack/
 │   │   └── main.ts           # bootstrap, CORS, puerto
 │   ├── models/               # modelos Sequelize (uno por dominio)
 │   ├── test/                 # fixtures/datos compartidos por los tests
-│   ├── database/             # SQL, configuración y utilidades de BD
+│   ├── database/             # Prisma: schema, migraciones y configuración
+│   ├── oldDatabase/          # legado Go (Goose + sqlc), solo referencia
 │   └── public/               # build del frontend servido por el backend (generado)
 ├── frontend/                 # SPA React + Vite
 │   └── src/

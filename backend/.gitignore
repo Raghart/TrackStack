@@ -4,6 +4,9 @@
 /build
 public/assets/
 
+# generated prisma client
+/database/generated/
+
 # Logs
 logs
 *.log

@@ -7,7 +7,7 @@ README.md (se queda corto, ~1 scroll de pantalla):
 
 - 1 screenshot principal
 
-- Stack técnico en bullets cortos, no párrafos (NestJS, GraphQL, PostgreSQL+pgvector, Elasticsearch, Jest (196 tests, 90% coverage), Playwright E2E)
+- Stack técnico en bullets cortos, no párrafos (NestJS, GraphQL, PostgreSQL+pgvector, Elasticsearch, Vitest (196 tests, 90% coverage), Playwright E2E)
 
 - Quick Start / instalación
 

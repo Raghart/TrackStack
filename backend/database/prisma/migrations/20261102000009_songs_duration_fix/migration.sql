@@ -1,0 +1,3 @@
+ALTER TABLE songs
+ALTER COLUMN duration TYPE REAL;
+

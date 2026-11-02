@@ -1,0 +1,83 @@
+// Esquema equivalente al estado final de las migraciones Goose de
+// backend/oldDatabase/sql/schema. No añadir @default(autoincrement()):
+// Goose creó los ids como INTEGER PRIMARY KEY sin secuencia y los CSV
+// insertan los ids explícitamente.
+
+generator client {
+  provider        = "prisma-client"
+  output          = "../generated/prisma"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  extensions = [vector]
+}
+
+model artists {
+  id           Int            @id
+  name         String         @unique
+  song_artists song_artists[]
+}
+
+model albums {
+  id        Int     @id
+  name      String  @unique
+  url_image String
+  songs     songs[]
+}
+
+model genres {
+  id          Int           @id
+  genre       String        @unique
+  song_genres song_genres[]
+}
+
+model songs {
+  id           Int            @id
+  name         String         @unique
+  spotify_id   String
+  url_preview  String
+  duration     Float          @db.Real
+  year         Int
+  album_id     Int
+  album        albums         @relation(fields: [album_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  song_artists song_artists[]
+  song_genres  song_genres[]
+  song_details song_details[]
+}
+
+model song_artists {
+  id        Int     @id
+  song_id   Int
+  artist_id Int
+  song      songs   @relation(fields: [song_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  artist    artists @relation(fields: [artist_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model song_genres {
+  id       Int    @id
+  song_id  Int
+  genre_id Int
+  song     songs  @relation(fields: [song_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  genre    genres @relation(fields: [genre_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model song_details {
+  id               Int                       @id
+  song_id          Int
+  danceability     Float                     @db.Real
+  energy           Float                     @db.Real
+  track_key        Float                     @db.Real
+  loudness         Float                     @db.Real
+  mode             Float                     @db.Real
+  speechiness      Float                     @db.Real
+  acousticness     Float                     @db.DoublePrecision
+  instrumentalness Float                     @db.DoublePrecision
+  liveness         Float                     @db.Real
+  valence          Float                     @db.Real
+  tempo            Float                     @db.Real
+  time_signature   Int
+  vectors          Unsupported("vector(8)")?
+  song             songs                     @relation(fields: [song_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}

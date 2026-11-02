@@ -14,7 +14,14 @@
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:cov": "vitest run --coverage"
+    "test:cov": "vitest run --coverage",
+    "db:validate": "prisma validate --config database/prisma.config.ts",
+    "db:generate": "prisma generate --config database/prisma.config.ts",
+    "db:status": "prisma migrate status --config database/prisma.config.ts",
+    "db:migrate": "prisma migrate dev --config database/prisma.config.ts",
+    "db:deploy": "prisma migrate deploy --config database/prisma.config.ts",
+    "db:baseline": "bash database/baseline-existing-db.sh",
+    "db:studio": "prisma studio --config database/prisma.config.ts"
   },
   "dependencies": {
     "@apollo/server": "^5.5.0",

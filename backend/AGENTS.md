@@ -7,7 +7,7 @@ Contexto específico del paquete `backend/`. Las reglas generales del monorepo e
 - **NestJS 11** con Express 5.
 - **GraphQL code-first** con Apollo Server 5 (`@nestjs/graphql`): el schema se genera en memoria (`autoSchemaFile: true`), no hay archivo `.graphql` versionado.
 - **Subscriptions** por WebSocket (`graphql-ws`) para el streaming de la IA.
-- **Sequelize 6** (`@nestjs/sequelize`) sobre **PostgreSQL**; `autoLoadModels: true` y `synchronize: true`. Existe además `database/` con SQL y utilidades **Go/sqlc** para generar queries, no es código Nest.
+- **Sequelize 6** (`@nestjs/sequelize`) sobre **PostgreSQL**; `autoLoadModels: true` y `synchronize: true`. Las **migraciones** se gestionan con **Prisma 7** en `database/` (`schema.prisma` + historial migrado 1:1 desde Goose). `oldDatabase/` conserva el legado Go (Goose + sqlc) como referencia y no se debe modificar sin motivo.
 - **Búsqueda sobre PostgreSQL** mediante Sequelize en `src/search` (implementación en curso, sin servicio externo de búsqueda).
 - **Google GenAI (Gemini)** inyectado como provider `AI`, usado para las recomendaciones/RAG en streaming.
 - **Vitest 5 + unplugin-swc** para unit tests; **ESLint 9** (flat config) con `typescript-eslint` y `eslint-plugin-security`; **Prettier** (`singleQuote`, `trailingComma: all`).
@@ -31,7 +31,8 @@ backend/
 │   └── main.ts               # bootstrap, CORS, puerto
 ├── models/<dominio>/         # modelos Sequelize
 ├── test/                     # fixtures (data/) y constantes (constants/)
-├── database/                 # SQL + tooling Go/sqlc (no tocar sin motivo)
+├── database/                 # Prisma: schema, migraciones y configuración
+├── oldDatabase/              # legado Go (Goose + sqlc), solo referencia
 ├── dist/ coverage/ public/   # artefactos generados (no editar)
 └── eslint.config.mjs / tsconfig*.json / nest-cli.json
 ```
@@ -121,7 +122,13 @@ pnpm run test:watch                  # Vitest en watch
 pnpm run test:cov                    # cobertura -> backend/coverage/
 pnpm run build                       # compila con Nest
 pnpm run format                      # Prettier sobre src/ y test/
+pnpm run db:validate                 # valida database/prisma/schema.prisma (sin conectar)
+pnpm run db:status                   # estado de migraciones Prisma frente a la BD
+pnpm run db:migrate                  # solo local: crea/aplica migraciones
+pnpm run db:generate                 # genera el cliente Prisma
 ```
+
+No ejecutes `db:deploy` ni `db:baseline` contra la BD real sin confirmarlo: producción ya funciona con el esquema de Goose y no debe alterarse. Las migraciones se documentan en `database/README.md`.
 
 Orden recomendado antes de dar un cambio por terminado:
 
