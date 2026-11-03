@@ -16,7 +16,8 @@ Arquitectura general: monorepo **pnpm workspaces** con un backend **NestJS + Gra
 
 ```text
 TrackStack/
-├── backend/                  # API NestJS + GraphQL
+├── README.md                 # introducción del proyecto (enlaza a backend/frontend)
+├── backend/                  # API NestJS + GraphQL (tiene README.md propio)
 │   ├── src/                  # código de la aplicación
 │   │   ├── <dominio>/        # songs, albums, artists, genres,
 │   │   │                     # song_artists, song_genres, song_details, search
@@ -33,7 +34,7 @@ TrackStack/
 │   ├── test/                 # fixtures/datos compartidos por los tests
 │   ├── database/             # Prisma: schema, migraciones y configuración
 │   └── public/               # build del frontend servido por el backend (generado)
-├── frontend/                 # SPA React + Vite
+├── frontend/                 # SPA React + Vite (tiene README.md propio)
 │   └── src/
 │       ├── components/       # componentes agrupados por feature/ruta
 │       │   └── Utils/hooks/  # custom hooks reutilizables
@@ -103,6 +104,21 @@ npm run test:report
 - No modifiques archivos generados ni artefactos: `backend/dist/`, `backend/coverage/`, `backend/public/`, `node_modules/`, `pnpm-lock.yaml` ni `package-lock.json` (salvo que cambien dependencias de forma intencional). El lockfile canónico es `pnpm-lock.yaml`; reglénalo con `pnpm` y no a mano.
 - No borres ni reescribas trabajo del usuario que no entiendas. Investiga antes de tocar archivos ajenos al cambio.
 - Si un cambio afecta el contrato GraphQL, la estructura de la base de datos o la API pública, explícalo y confírmalo antes de aplicarlo.
+
+### Documentación (READMEs)
+
+La documentación pública se reparte en **exactamente tres** `README.md`:
+
+- `README.md` (raíz): introducción del proyecto, demo, stack, quick start y enlaces a los READMEs de los paquetes.
+- `backend/README.md`: arquitectura, API GraphQL, base de datos, variables de entorno y comandos del backend.
+- `frontend/README.md`: features, rutas, estado, Apollo, variables de entorno y comandos del frontend.
+
+Reglas:
+
+- **No crees `README.md` en subcarpetas** (`backend/database/`, `backend/src/utils/`, etc.). Los únicos tres permitidos son los de arriba.
+- La documentación detallada de una subcarpeta va en `backend/docs/<tema>.md` o `frontend/docs/<tema>.md`. Si un subdirectorio necesita documentación, añade una sección al README de su paquete o un archivo en su `docs/`, nunca un `README.md` nuevo.
+- Mantén los tres READMEs enlazados entre sí y actualiza el del paquete correspondiente cuando cambien comandos, variables de entorno, contrato GraphQL, rutas o estructura.
+- No repitas contenido en los READMEs, si una seccion se ve demasiado grande seria mejor solo colocar una breve introduccion de ese campo y dejar un link para una seccion con mas informacion en docs/*.md.
 
 ### Mantenimiento de este AGENTS.md
 
