@@ -52,6 +52,8 @@ pnpm run dev:backend
 # Frontend (Vite) on http://localhost:5173
 pnpm run dev:frontend
 ```
+-- Mention to E2E should be in the main README instead of the Back README.
+The end-to-end suite is a separate package in [`../e2e`](../e2e), driven by Playwright against the built app. It requires a running backend and database.
 
 The full variable list and every available command live in the backend README:
 
