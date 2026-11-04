@@ -23,10 +23,14 @@ Do you want to find a new **banger**? TrackStack is an **AI-powered music recomm
 
 ## Stack
 
-- **Backend:** NestJS 11, GraphQL code-first with Apollo Server 5, `graphql-ws` subscriptions, Sequelize 6, PostgreSQL + `pgvector`, Prisma 7 for migrations, Google GenAI (Gemini).
-- **Frontend:** React 19, Vite 6, TypeScript, Chakra UI 3, Redux Toolkit, Apollo Client 3, React Router 7, Zod 4.
-- **Testing:** Vitest unit tests (backend), Playwright E2E across Chromium, Firefox, and WebKit.
-- **Delivery:** GitHub Actions CI, Render CD, and a scheduled health check.
+| Workspace | Stack | Docs |
+|-----------|-------|------|
+| **Backend** | NestJS 11, GraphQL code-first with Apollo Server 5, `graphql-ws` subscriptions, Sequelize 6, PostgreSQL + `pgvector`, Prisma 7 for migrations, Google GenAI (Gemini) | [backend/README.md](./backend/README.md) |
+| **Frontend** | React 19, Vite 6, TypeScript, Chakra UI 3, Redux Toolkit, Apollo Client 3, React Router 7, Zod 4 | [frontend/README.md](./frontend/README.md) |
+| **Schemas** | Shared Zod 4 contracts (`@trackstack/schemas`) | — |
+| **E2E** | Playwright across Chromium, Firefox, and WebKit | — |
+
+Unit tests for the backend run with Vitest. Delivery is handled by GitHub Actions CI, Render CD, and a scheduled health check.
 
 ## Quick start
 
@@ -52,8 +56,8 @@ pnpm run dev:backend
 # Frontend (Vite) on http://localhost:5173
 pnpm run dev:frontend
 ```
--- Mention to E2E should be in the main README instead of the Back README.
-The end-to-end suite is a separate package in [`../e2e`](../e2e), driven by Playwright against the built app. It requires a running backend and database.
+
+The end-to-end suite is a separate package in [`./e2e`](./e2e), driven by Playwright against the built app. It requires a running backend and database.
 
 The full variable list and every available command live in the backend README:
 
