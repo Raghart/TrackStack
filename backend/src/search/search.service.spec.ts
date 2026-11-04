@@ -24,7 +24,7 @@ describe.skip('SearchService retrieves and sort the data incoming from the elast
         {
           provide: 'PostgreSQL',
           useValue: {
-            search: jest.fn(),
+            search: vi.fn(),
           },
         },
       ],
