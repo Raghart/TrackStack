@@ -1,8 +1,6 @@
-import {
-  Inject,
-  Injectable,
-  ServiceUnavailableException,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { QueryTypes } from 'sequelize';
 import {
   albumSearchResults,
   artistSearchResults,
@@ -10,33 +8,30 @@ import {
   searchResultType,
   songSearchResults,
 } from '@/types/searchTypes';
+import { parseArtistSearchData } from '@/types/parses';
 import { normalizeText } from '@/search/utils/normalizeText';
+import safeQuery from '@/utils/safeQuery';
+import { ArtistsModel } from '../../models/artists/artists.model';
 
 @Injectable()
 export class SearchService {
-  constructor() {}
+  constructor(
+    @InjectModel(ArtistsModel) private artistModel: typeof ArtistsModel,
+  ) {}
 
   async searchArtists(query: string): Promise<artistSearchResults[]> {
-    const artistSearchResults: artistSearchResults[] = [];
-    /*
-    const results = await safeSearch(() =>
-      this.esClient.search<SearchResponse<artistSearchResults>>({
-        index: 'artists',
-        size: 11,
-        body: {
-          query: {
-            multi_match: {
-              query,
-              type: 'best_fields',
-              fuzziness: 'AUTO',
-              fields: ['name^3', 'name.edge^2', 'name.ngram'],
-            },
-          },
-        },
+    const results = await safeQuery(() =>
+      this.artistModel.sequelize!.query<
+        Pick<artistSearchResults, 'id' | 'name' | 'album_cover'>
+      >(`SELECT id, name, album_cover FROM search_artists(:query, :limit);`, {
+        type: QueryTypes.SELECT,
+        replacements: { query, limit: 11 },
       }),
     );
-    */
-    return artistSearchResults;
+
+    return results.map((artist) =>
+      parseArtistSearchData({ ...artist, type: 'artist' }),
+    );
   }
 
   async searchAlbums(query: string): Promise<albumSearchResults[]> {
