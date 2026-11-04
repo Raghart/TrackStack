@@ -177,6 +177,21 @@ pnpm --filter ./frontend run preview
 
 The production build is written to `../backend/public` and served by NestJS next to the GraphQL API.
 
+## Environment variables
+
+Create `backend/.env` (the backend loads it on startup). A generated frontend build is served from `public/`, so the same process can host the API and the SPA.
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `DB_URL` | Yes | PostgreSQL connection string |
+| `DB_PORT` | Yes | PostgreSQL port |
+| `API_KEY` | Yes | Google GenAI API key |
+| `AI_MODEL` | Yes | Gemini model name used for streamed messages |
+| `URL_DOMAIN` | Yes | Allowed CORS origin (for local Vite: `http://localhost:5173`) |
+| `PORT` | No | HTTP port (defaults to `3000`) |
+| `LOCAL_PAGE_URL` | No | URL printed on startup |
+| `LOCAL_GRAPHQL` | No | GraphQL URL printed on startup |
+
 ## Tests
 
 There is no frontend unit-test suite yet. End-to-end coverage lives in the separate Playwright package [`../e2e`](../e2e), which exercises the landing page, search, songs, artists, genres, and the recommendation modal in Chromium, Firefox, and WebKit.
