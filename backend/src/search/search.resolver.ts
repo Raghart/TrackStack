@@ -2,6 +2,7 @@ import { Args, Query, Resolver } from '@nestjs/graphql';
 import { SearchService } from './search.service';
 import { multipleSearchResultsDto } from './dto/multipleSearchDto';
 import { artistsSearchDto } from './dto/artistsSearchDto';
+import { albumsSearchDto } from './dto/albumsSearchDto';
 
 @Resolver()
 export class SearchResolver {
@@ -20,4 +21,11 @@ export class SearchResolver {
   ) : Promise<artistsSearchDto[]> {
     return this.searchService.searchArtists(query);
   };
+
+  @Query(() => [albumsSearchDto], { name: "albumsSearch" })
+  async albumSearch(
+    @Args("query", { type: () => String }) query: string,
+  ) : Promise<albumsSearchDto[]> {
+    return this.searchService.searchAlbums(query);
+  }
 }

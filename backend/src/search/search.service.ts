@@ -8,15 +8,17 @@ import {
   searchResultType,
   songSearchResults,
 } from '@/types/searchTypes';
-import { parseArtistSearchData } from '@/types/parses';
+import { parseAlbumSearchData, parseArtistSearchData } from '@/types/parses';
 import { normalizeText } from '@/search/utils/normalizeText';
 import safeQuery from '@/utils/safeQuery';
 import { ArtistsModel } from '../../models/artists/artists.model';
+import { AlbumsModel } from '../../models/albums/albums.model';
 
 @Injectable()
 export class SearchService {
   constructor(
     @InjectModel(ArtistsModel) private artistModel: typeof ArtistsModel,
+    @InjectModel(AlbumsModel) private albumModel: typeof AlbumsModel,
   ) {}
 
   async searchArtists(query: string): Promise<artistSearchResults[]> {
@@ -33,26 +35,16 @@ export class SearchService {
   }
 
   async searchAlbums(query: string): Promise<albumSearchResults[]> {
-    const albumSearchResults: albumSearchResults[] = [];
-    /*
-    const results = await safeSearch(() =>
-      this.esClient.search<SearchResponse<albumSearchResults>>({
-        index: 'albums',
-        size: 11,
-        body: {
-          query: {
-            multi_match: {
-              query,
-              type: 'best_fields',
-              fuzziness: 'AUTO',
-              fields: ['name^3', 'name.edge^2', 'name.ngram'],
-            },
-          },
-        },
-      }),
+    const results = await safeQuery(() => 
+      this.albumModel.sequelize!.query<
+      Pick<albumSearchResults, "id" |"name" | "album_cover" | "artists" | "type">
+    >(`SELECT id, name, album_cover, artists FROM search_albums(:query, :limit);`, {
+      type: QueryTypes.SELECT,
+      replacements: { query, limit: 11 },
+    })
     );
-    */
-    return albumSearchResults;
+
+    return results.map((album) => parseAlbumSearchData({...album, type: "album"}))
   }
 
   async seachSongs(query: string): Promise<songSearchResults[]> {
