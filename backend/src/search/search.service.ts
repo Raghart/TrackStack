@@ -29,9 +29,7 @@ export class SearchService {
       }),
     );
 
-    return results.map((artist) =>
-      parseArtistSearchData({ ...artist, type: 'artist' }),
-    );
+    return results.map((artist) => parseArtistSearchData({ ...artist, type: 'artist' }));
   }
 
   async searchAlbums(query: string): Promise<albumSearchResults[]> {

@@ -39,6 +39,7 @@ if (existsSync('.env')) process.loadEnvFile();
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
+      exclude: ['/graphql'],
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

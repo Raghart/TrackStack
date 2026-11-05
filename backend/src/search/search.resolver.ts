@@ -14,10 +14,10 @@ export class SearchResolver {
     return this.searchService.multipleSearch(query);
   }
 
-  @Query(() => artistsSearchDto, { name: "artistSearch" })
+  @Query(() => [artistsSearchDto], { name: "artistSearch" })
   async artistSearch(
     @Args('query', { type: () => String }) query: string,
   ) : Promise<artistsSearchDto[]> {
-    return await this.searchService.searchArtists(query);
+    return this.searchService.searchArtists(query);
   };
 }
