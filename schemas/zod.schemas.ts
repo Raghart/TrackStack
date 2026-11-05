@@ -67,6 +67,15 @@ export const songSchema = z.looseObject({
   songDetails: songDetailsSchema.optional(),
 });
 
+export const artistSearchResultSchema = z.looseObject({
+  id: z.number(),
+  name: stringSchema,
+  album_cover: stringSchema,
+  type: z.literal('artist'),
+});
+
+export type ArtistSearchResultData = z.infer<typeof artistSearchResultSchema>;
+
 export const songResponseSchema = z.looseObject({
   id: z.number(),
   name: stringSchema,

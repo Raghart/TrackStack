@@ -10,7 +10,6 @@ import { ServiceUnavailableException } from '@nestjs/common';
 import { expectSearchProps } from '@/utils/expectSearch';
 import {
   albumSearchResults,
-  artistSearchResults,
   songSearchResults,
 } from '@/types/searchTypes';
 

@@ -1,10 +1,10 @@
 import {
   albumSearchResults,
-  artistSearchResults,
   songSearchResults,
 } from '@/types/searchTypes';
+import { ArtistSearchResultData } from '@trackstack/schemas';
 
-export const searchArtists: artistSearchResults[] = [
+export const searchArtists: ArtistSearchResultData[] = [
   { id: 1, name: 'Nirvana', album_cover: 'url1', type: 'artist' },
   { id: 2, name: 'Oasis', album_cover: 'url2', type: 'artist' },
   { id: 3, name: 'Radiohead', album_cover: 'url3', type: 'artist' },
