@@ -3,6 +3,7 @@ import { SearchService } from './search.service';
 import { multipleSearchResultsDto } from './dto/multipleSearchDto';
 import { artistsSearchDto } from './dto/artistsSearchDto';
 import { albumsSearchDto } from './dto/albumsSearchDto';
+import { searchSongsDto } from './dto/songsSearchDto';
 
 @Resolver()
 export class SearchResolver {
@@ -27,5 +28,12 @@ export class SearchResolver {
     @Args("query", { type: () => String }) query: string,
   ) : Promise<albumsSearchDto[]> {
     return this.searchService.searchAlbums(query);
+  }
+
+  @Query(() => [searchSongsDto], { name: "songsSearch" })
+  async songSearch(
+    @Args("query", { type: () => String }) query: string,
+  ) : Promise<searchSongsDto[]> {
+    return this.searchService.seachSongs(query);
   }
 }
