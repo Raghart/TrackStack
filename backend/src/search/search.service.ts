@@ -24,6 +24,8 @@ export class SearchService {
   ) {}
 
   async searchArtists(query: string): Promise<artistSearchResults[]> {
+    // Need to refactor the DB search_artists to make it always return X number of limits
+    // to make sure it works with the current multipleSearch schema.
     const results = await safeQuery(() =>
       this.artistModel.sequelize!.query<
         Pick<artistSearchResults, 'id' | 'name' | 'album_cover'>
@@ -59,26 +61,8 @@ export class SearchService {
       replacements: { query, limit: 11 },
     })
     );
-    return results.map((song) => parseSongSearchData({ ...song, type: "song" }))
-    const songSearches: songSearchResults[] = [];
-    /*
-    const results = await safeSearch(() =>
-      this.esClient.search<SearchResponse<songSearchResults>>({
-        index: 'songs',
-        body: {
-          query: {
-            multi_match: {
-              query,
-              type: 'best_fields',
-              fuzziness: 'AUTO',
-              fields: ['name^3', 'name.edge^2', 'name.ngram'],
-            },
-          },
-        },
-      }),
-    );
-    */
-    return songSearches;
+    
+    return results.map((song) => parseSongSearchData({ ...song, type: "song" }));
   }
 
   sortResults<searchType extends searchResultType>(
