@@ -53,7 +53,19 @@ Cada dominio sigue el mismo patrón: `module` + `resolver` + `service`, con spec
 - DTOs GraphQL con decoradores y nombres de campo en `snake_case` cuando el contrato ya los usa; no renombres campos existentes (rompe el cliente).
 - Imports con `src/*` en `src/`; los specs importan fixtures con rutas relativas a `test/`.
 - No edites `dist/`, `coverage/`, `public/`, `pnpm-lock.yaml` ni `package-lock.json` (salvo cambio intencional de dependencias).
+- **Nunca modifiques la base de datos con SQL/consultas directas** (`psql`, clientes GUI, `query()` sueltos, etc.). Todo cambio de esquema o de datos va por una migración de Prisma (ver "Base de datos y migraciones").
 - No agregues mas de lo que te pidan.
+
+## Base de datos y migraciones
+
+- **Prohibido alterar la BD directamente.** No ejecutes `CREATE`/`ALTER`/`DROP`/`INSERT`/`UPDATE`/`DELETE` a mano ni desde herramientas externas para aplicar un cambio. El único canal es una migración de Prisma versionada en `backend/database/prisma/migrations/`.
+- Todo cambio estructural (tablas, columnas, tipos, índices, constraints, extensiones, funciones SQL) debe ir acompañado de:
+  1. el cambio correspondiente en `backend/database/prisma/schema.prisma`;
+  2. una migración nueva generada con `pnpm run db:migrate` (o `pnpm exec prisma migrate dev --create-only --config database/prisma.config.ts` para revisar el SQL antes de aplicarlo).
+- Si el cambio incluye datos (backfill, normalización, seeds necesarios para la migración), ese SQL también va dentro de la migración, no ejecutado aparte. Así queda registrado y se puede revertir.
+- **No edites migraciones ya aplicadas** ni borres su carpeta: crea una migración nueva que corrija lo anterior. El historial es lo que permite deshacer errores.
+- Revisa siempre el SQL generado antes de aplicarlo. `db:migrate` es solo para local; contra la BD real (`db:deploy`, migraciones nuevas) pide confirmación explícita al usuario.
+- Si una migración falla o deja la BD en un estado incorrecto, corrígela con el flujo de Prisma (nueva migración, o `pnpm exec prisma migrate resolve --config database/prisma.config.ts` si aplica) y no "arreglando" la BD a mano. Documenta el incidente en el resumen final.
 
 ## Mantenimiento de este AGENTS.md
 

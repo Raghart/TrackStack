@@ -7,10 +7,10 @@
 6. ~~Change the DB schema/migrations from Goose to Prisma~~.
 7. ~~Revise the READMEs to make sure it doesn't repeat information and what could go inside the docs folder~~.
 8. Tell the agent that all the changes to the Database must be done through Prisma, never without a direct query.
-8. Replace Elasticsearch search with PostgreSQL full-text search.
-9. Adopt Zod for runtime validation at system boundaries (replacing manual checks) (Backend semi Done).
-10. Check the frontend README to see if it needs some improvements.
-11. Add tests to the Frontend.
-12. Make the agent fix the views in the cellphone because sometime it breaks.
-13. Make the project runnable via Docker (Dockerfile + docker-compose).
-14. Check if it's worthy to cifre the DB conexion to Aiven.
+9. Replace Elasticsearch search with PostgreSQL full-text search.
+10. Adopt Zod for runtime validation at system boundaries (replacing manual checks) (Backend semi Done).
+11. Check the frontend README to see if it needs some improvements.
+12. Add tests to the Frontend.
+13. Make the agent fix the views in the cellphone because sometime it breaks.
+14. Make the project runnable via Docker (Dockerfile + docker-compose).
+15. Check if it's worthy to cifre the DB conexion to Aiven.
