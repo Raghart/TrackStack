@@ -5,11 +5,9 @@ import {
   albumSearchResults,
   artistSearchResults,
   multipleSearchResults,
-  searchResultType,
   songSearchResults,
 } from '@/types/searchTypes';
 import { parseAlbumSearchData, parseArtistSearchData, parseSongSearchData } from '@/types/parses';
-import { normalizeText } from '@/search/utils/normalizeText';
 import safeQuery from '@/utils/safeQuery';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { AlbumsModel } from '../../models/albums/albums.model';
@@ -24,8 +22,6 @@ export class SearchService {
   ) {}
 
   async searchArtists(query: string): Promise<artistSearchResults[]> {
-    // Need to refactor the DB search_artists to make it always return X number of limits
-    // to make sure it works with the current multipleSearch schema.
     const results = await safeQuery(() =>
       this.artistModel.sequelize!.query<
         Pick<artistSearchResults, 'id' | 'name' | 'album_cover'>
@@ -65,44 +61,10 @@ export class SearchService {
     return results.map((song) => parseSongSearchData({ ...song, type: "song" }));
   }
 
-  sortResults<searchType extends searchResultType>(
-    query: string,
-    results: searchType[],
-  ): searchType[] {
-    const norQuery = normalizeText(query);
-    return [...results].sort((a, b) => {
-      const aName = normalizeText(a.name);
-      const bName = normalizeText(b.name);
-
-      const aMatch = aName === norQuery;
-      const bMatch = bName === norQuery;
-      const aIncludes = aName.includes(norQuery);
-      const bIncludes = bName.includes(norQuery);
-
-      if (aMatch && !bMatch) return -1;
-      if (!aMatch && bMatch) return 1;
-      if (aIncludes && !bIncludes) return -1;
-      if (!aIncludes && bIncludes) return 1;
-      return 0;
-    });
-  }
-
   async multipleSearch(query: string): Promise<multipleSearchResults> {
-    const artistSearchResults = await this.searchArtists(query);
-    const [exactArtist, ...artistResults] =
-      this.sortResults<artistSearchResults>(query, artistSearchResults);
-
-    const albumSearchResults = await this.searchAlbums(query);
-    const [exactAlbum, ...albumResults] = this.sortResults<albumSearchResults>(
-      query,
-      albumSearchResults,
-    );
-
-    const songSearchResults = await this.seachSongs(query);
-    const [exactSong, ...songResults] = this.sortResults<songSearchResults>(
-      query,
-      songSearchResults,
-    );
+    const [exactArtist, ...artistResults] = await this.searchArtists(query);
+    const [exactAlbum, ...albumResults] = await this.searchAlbums(query);
+    const [exactSong, ...songResults] = await this.seachSongs(query);
 
     return {
       exactArtist,

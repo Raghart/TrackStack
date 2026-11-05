@@ -23,11 +23,6 @@ export interface albumSearchResults {
   type: 'album';
 }
 
-export type searchResultType =
-  | artistSearchResults
-  | songSearchResults
-  | albumSearchResults;
-
 export interface multipleSearchResults {
   artistResults: artistSearchResults[];
   albumResults: albumSearchResults[];

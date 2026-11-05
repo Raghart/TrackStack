@@ -6,7 +6,7 @@
 5. ~~Refactor the README to make it have 3 READMEs. One for the root project to introduce the project, other for the backend and another for the frontend~~.
 6. ~~Change the DB schema/migrations from Goose to Prisma~~.
 7. ~~Revise the READMEs to make sure it doesn't repeat information and what could go inside the docs folder~~.
-8. Tell the agent that all the changes to the Database must be done through Prisma, never without a direct query.
+8. ~~Tell the agent that all the changes to the Database must be done through Prisma, never without a direct query~~.
 9. Replace Elasticsearch search with PostgreSQL full-text search.
 10. Adopt Zod for runtime validation at system boundaries (replacing manual checks) (Backend semi Done).
 11. Check the frontend README to see if it needs some improvements.

@@ -16,7 +16,7 @@ describe.skip('SearchResolver recieves the expected data from the service', () =
         {
           provide: SearchService,
           useValue: {
-            multipleSearch: jest.fn().mockResolvedValue(mockMultipleSeach),
+            multipleSearch: vi.fn().mockResolvedValue(mockMultipleSeach),
           },
         },
       ],

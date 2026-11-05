@@ -51,68 +51,6 @@ describe.skip('SearchService retrieves and sort the data incoming from the elast
     expect(result).toStrictEqual(searchSongs);
   });
 
-  it('sortResults sorts the list to put in first place the most similar to the query', () => {
-    const sortedResults = service.sortResults<artistSearchResults>(
-      'Mägo de Oz',
-      searchArtists,
-    );
-    expect(sortedResults.length).toBeGreaterThan(0);
-    expect(sortedResults[0]).toStrictEqual({
-      id: 4,
-      name: 'Mägo de Oz',
-      album_cover: 'url3',
-      type: 'artist',
-    });
-  });
-
-  it('sortResults puts in first place the item which name is equal to the query', () => {
-    expect(
-      service.sortResults<artistSearchResults>('nirvana', searchArtists)[0]
-        .name,
-    ).toBe('Nirvana');
-    expect(
-      service.sortResults<albumSearchResults>('pablo honey', searchAlbums)[0]
-        .name,
-    ).toBe('Pablo Honey');
-    expect(
-      service.sortResults<songSearchResults>('creep', searchSongs)[0].name,
-    ).toBe('Creep');
-  });
-
-  it('sortResults sorts correctly even if the first item even has an unique accentuation', () => {
-    expect(
-      service.sortResults<artistSearchResults>('mago de oz', searchArtists)[0]
-        .name,
-    ).toBe('Mägo de Oz');
-  });
-
-  it("sortResults sorts correctly even if the query doesn't have the exact name", () => {
-    expect(
-      service.sortResults<artistSearchResults>('nirv', searchArtists)[0].name,
-    ).toBe('Nirvana');
-    expect(
-      service.sortResults<albumSearchResults>('nevermind', searchAlbums)[0]
-        .name,
-    ).toBe('Nevermind (Remastered)');
-    expect(
-      service.sortResults<songSearchResults>('wonder', searchSongs)[0].name,
-    ).toBe('Wonderwall');
-  });
-
-  it("sortResults leaves the rest of the items as they are if the doesn't match the query", () => {
-    expect(
-      service.sortResults<artistSearchResults>('nirvana', searchArtists)[1]
-        .name,
-    ).not.toBe('Nirvana');
-    expect(
-      service.sortResults<albumSearchResults>('nevermind', searchAlbums)[1]
-        .name,
-    ).not.toBe('Nevermind (Remastered)');
-    expect(
-      service.sortResults<songSearchResults>('come', searchSongs)[1].name,
-    ).not.toBe('Come as You Are');
-  });
-
   it('multipleSearch returns an object containing results from artists, albums and songs', async () => {
     const multipleResults = await service.multipleSearch('Nirvana');
     expectSearchProps(multipleResults);
