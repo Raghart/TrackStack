@@ -1,8 +1,7 @@
 import {
-  albumSearchResults,
   songSearchResults,
 } from '@/types/searchTypes';
-import { ArtistSearchResultData } from '@trackstack/schemas';
+import { AlbumSearchResultData, ArtistSearchResultData } from '@trackstack/schemas';
 
 export const searchArtists: ArtistSearchResultData[] = [
   { id: 1, name: 'Nirvana', album_cover: 'url1', type: 'artist' },
@@ -11,7 +10,7 @@ export const searchArtists: ArtistSearchResultData[] = [
   { id: 4, name: 'Mägo de Oz', album_cover: 'url3', type: 'artist' },
 ];
 
-export const searchAlbums: albumSearchResults[] = [
+export const searchAlbums: AlbumSearchResultData[] = [
   {
     id: 1,
     name: 'Nevermind (Remastered)',

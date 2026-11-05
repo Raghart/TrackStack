@@ -2,12 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { QueryTypes } from 'sequelize';
 import {
-  albumSearchResults,
   multipleSearchResults,
   songSearchResults,
 } from '@/types/searchTypes';
 import { parseAlbumSearchData, parseSongSearchData } from '@/types/parses';
-import { ArtistSearchResultData, artistSearchResultSchema } from '@trackstack/schemas';
+import { AlbumSearchResultData, albumSearchResultSchema, ArtistSearchResultData, artistSearchResultSchema } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { AlbumsModel } from '../../models/albums/albums.model';
@@ -36,17 +35,17 @@ export class SearchService {
     );
   }
 
-  async searchAlbums(query: string): Promise<albumSearchResults[]> {
+  async searchAlbums(query: string): Promise<AlbumSearchResultData[]> {
     const results = await safeQuery(() => 
       this.albumModel.sequelize!.query<
-      Pick<albumSearchResults, "id" |"name" | "album_cover" | "artists" | "type">
+      Pick<AlbumSearchResultData, "id" |"name" | "album_cover" | "artists" | "type">
     >(`SELECT id, name, album_cover, artists FROM search_albums(:query, :limit);`, {
       type: QueryTypes.SELECT,
       replacements: { query, limit: 11 },
     })
     );
 
-    return results.map((album) => parseAlbumSearchData({...album, type: "album"}))
+    return results.map((album) => albumSearchResultSchema.parse({...album, type: "album"}))
   }
 
   async seachSongs(query: string): Promise<songSearchResults[]> {
