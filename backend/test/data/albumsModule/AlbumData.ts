@@ -1,4 +1,4 @@
-import { AlbumResponse, AlbumWithSongs } from '@/types/albumAttributes';
+import { AlbumResponse } from '@/types/albumAttributes';
 import { SongResponse } from '@/types/songAttributes';
 import { AlbumWithSongsData } from '@trackstack/schemas';
 

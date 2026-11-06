@@ -14,3 +14,4 @@
 13. Make the agent fix the views in the cellphone because sometime it breaks.
 14. Make the project runnable via Docker (Dockerfile + docker-compose).
 15. Check if it's worthy to cifre the DB conexion to Aiven.
+16. Would be a good idea to add a note to AGENTS.md to tell that don't change the code when making tests, it will be better to consult with me if it detects a possible security breach before deciding the way to patch it.
