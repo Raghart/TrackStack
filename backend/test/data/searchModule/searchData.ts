@@ -1,7 +1,4 @@
-import {
-  songSearchResults,
-} from '@/types/searchTypes';
-import { AlbumSearchResultData, ArtistSearchResultData } from '@trackstack/schemas';
+import { AlbumSearchResultData, ArtistSearchResultData, SongSearchResultData } from '@trackstack/schemas';
 
 export const searchArtists: ArtistSearchResultData[] = [
   { id: 1, name: 'Nirvana', album_cover: 'url1', type: 'artist' },
@@ -34,7 +31,7 @@ export const searchAlbums: AlbumSearchResultData[] = [
   },
 ];
 
-export const searchSongs: songSearchResults[] = [
+export const searchSongs: SongSearchResultData[] = [
   {
     id: 1,
     name: 'Come as You Are',
