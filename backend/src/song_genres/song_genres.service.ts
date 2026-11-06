@@ -5,9 +5,6 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import {
-  parseFloatNum,
-} from '@/types/parses';
 import { SongResponse } from '@/types/songAttributes';
 import safeQuery from '@/utils/safeQuery';
 import { InvalidPaginationException } from '@/utils/PaginationError';
@@ -17,7 +14,7 @@ import { GenresModel } from '../../models/genres/genres.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { isNumber } from '@/types/verify';
-import { songGenresData, songGenresSchema, stringSchema } from '@trackstack/schemas';
+import { floatNumberSchema, songGenresData, songGenresSchema, stringSchema } from '@trackstack/schemas';
 
 @Injectable()
 export class SongGenresService {
@@ -69,7 +66,7 @@ export class SongGenresService {
 
   parseGenreSongs(data: songGenresData[]): SongResponse[] {
     return data.map((entry) => ({
-      id: parseFloatNum(entry.song.id),
+      id: floatNumberSchema.parse(entry.song.id),
       name: stringSchema.parse(entry.song.name),
       artists: entry.song.artists?.map((artist) => stringSchema.parse(artist.name)) ?? [],
       url_preview: stringSchema.parse(entry.song.url_preview),
