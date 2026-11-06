@@ -7,7 +7,6 @@ import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
 import {
   parseFloatNum,
-  parseStringArray,
 } from '@/types/parses';
 import { SongResponse } from '@/types/songAttributes';
 import safeQuery from '@/utils/safeQuery';
@@ -72,9 +71,7 @@ export class SongGenresService {
     return data.map((entry) => ({
       id: parseFloatNum(entry.song.id),
       name: stringSchema.parse(entry.song.name),
-      artists: parseStringArray(
-        entry.song.artists?.map((artist) => artist.name),
-      ),
+      artists: entry.song.artists?.map((artist) => stringSchema.parse(artist.name)) ?? [],
       url_preview: stringSchema.parse(entry.song.url_preview),
       album_cover: stringSchema.parse(entry.song.album?.url_image),
     }));

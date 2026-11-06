@@ -13,10 +13,10 @@ import { ArtistsModel } from '../../models/artists/artists.model';
 import { AlbumResponse, AlbumWithSongs } from '@/types/albumAttributes';
 import { isNumber } from '@/types/verify';
 import { InvalidPaginationException } from '@/utils/PaginationError';
-import { parseStringArray } from '@/types/parses';
 import {
   AlbumWithSongsData,
   albumWithSongsSchema,
+  stringSchema,
 } from '@trackstack/schemas';
 
 @Injectable()
@@ -110,9 +110,7 @@ export class AlbumsService {
     return album.songs.map((song) => ({
       id: song.id,
       name: song.name,
-      artists: parseStringArray(
-        song.artists?.map((artist) => artist.name) ?? [],
-      ),
+      artists: song.artists?.map((artist) => stringSchema.parse(artist.name)) ?? [],
       url_preview: song.url_preview,
       album_cover: album.url_image,
     }));

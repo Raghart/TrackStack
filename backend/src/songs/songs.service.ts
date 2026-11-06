@@ -24,7 +24,6 @@ import {
 import safeQuery from '@/utils/safeQuery';
 import { InvalidPaginationException } from '@/utils/PaginationError';
 import { FullSongResponse, SongResponse } from '@/types/songAttributes';
-import { parseStringArray } from '@/types/parses';
 import parseGenres from '@/utils/parseGenres';
 if (existsSync('.env')) process.loadEnvFile();
 
@@ -71,7 +70,7 @@ export class SongsService {
     return songData.map((song) => ({
       id: song.id,
       name: song.name,
-      artists: parseStringArray(song.artists.map((a) => a.name)),
+      artists: song.artists.map((a) => stringSchema.parse(a.name)),
       url_preview: song.url_preview,
       album_cover: stringSchema.parse(song.album.url_image),
     }));
@@ -121,8 +120,8 @@ export class SongsService {
     return {
       id: songData.id,
       name: songData.name,
-      artists: parseStringArray(songData.artists.map((artist) => artist.name)),
-      genres: parseStringArray(songData.genres.map((g) => g.genre)),
+      artists: songData.artists.map((artist) => stringSchema.parse(artist.name)),
+      genres: songData.genres.map((g) => stringSchema.parse(g.genre)),
       album: stringSchema.parse(songData.album.name),
       album_cover: stringSchema.parse(songData.album.url_image),
       duration: songData.duration,
@@ -249,7 +248,7 @@ export class SongsService {
     return {
       id: songData.id,
       name: songData.name,
-      artists: parseStringArray(songData.artists.map((artist) => artist.name)),
+      artists: songData.artists.map((artist) => stringSchema.parse(artist.name)),
       album_cover: stringSchema.parse(songData.album.url_image),
       url_preview: songData.url_preview,
     };
