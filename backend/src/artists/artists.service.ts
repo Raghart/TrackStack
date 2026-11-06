@@ -5,12 +5,13 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import { parseFloatNum, parseString } from '@/types/parses';
+import { parseFloatNum } from '@/types/parses';
 import { SongResponse } from '@/types/songAttributes';
 import { ArtistResponse } from '@/types/artistAttributes';
 import {
   ArtistWithSongsData,
   artistWithSongsSchema,
+  stringSchema,
 } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
 import { InvalidPaginationException } from '@/utils/PaginationError';
@@ -64,7 +65,7 @@ export class ArtistsService {
     return artistData.map((artist) => ({
       id: artist.id,
       name: artist.name,
-      album_cover: parseString(artist.songs[0].album?.url_image),
+      album_cover: stringSchema.parse(artist.songs[0].album?.url_image),
     }));
   }
 
@@ -104,10 +105,10 @@ export class ArtistsService {
   ): SongResponse[] {
     return artist.songs.map((song) => ({
       id: parseFloatNum(song.id),
-      name: parseString(song.name),
+      name: stringSchema.parse(song.name),
       artists: [artist.name],
-      url_preview: parseString(song.url_preview),
-      album_cover: parseString(song.album?.url_image),
+      url_preview: stringSchema.parse(song.url_preview),
+      album_cover: stringSchema.parse(song.album?.url_image),
     }));
   }
 

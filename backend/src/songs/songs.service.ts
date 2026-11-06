@@ -19,11 +19,12 @@ import {
   SongResponseData,
   songResponseSchema,
   songRecommendationsSchema,
+  stringSchema,
 } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
 import { InvalidPaginationException } from '@/utils/PaginationError';
 import { FullSongResponse, SongResponse } from '@/types/songAttributes';
-import { parseString, parseStringArray } from '@/types/parses';
+import { parseStringArray } from '@/types/parses';
 import parseGenres from '@/utils/parseGenres';
 if (existsSync('.env')) process.loadEnvFile();
 
@@ -72,7 +73,7 @@ export class SongsService {
       name: song.name,
       artists: parseStringArray(song.artists.map((a) => a.name)),
       url_preview: song.url_preview,
-      album_cover: parseString(song.album.url_image),
+      album_cover: stringSchema.parse(song.album.url_image),
     }));
   }
 
@@ -122,8 +123,8 @@ export class SongsService {
       name: songData.name,
       artists: parseStringArray(songData.artists.map((artist) => artist.name)),
       genres: parseStringArray(songData.genres.map((g) => g.genre)),
-      album: parseString(songData.album.name),
-      album_cover: parseString(songData.album.url_image),
+      album: stringSchema.parse(songData.album.name),
+      album_cover: stringSchema.parse(songData.album.url_image),
       duration: songData.duration,
       year: songData.year,
       spotify_id: songData.spotify_id,
@@ -161,7 +162,7 @@ export class SongsService {
 
     try {
       return await this.genai.models.generateContentStream({
-        model: parseString(process.env.AI_MODEL),
+        model: stringSchema.parse(process.env.AI_MODEL),
         contents: [
           'Generate a message for an user who wants to listen to songs with the following metadata:',
           `Genres: ${genres.join(',')}`,
@@ -249,7 +250,7 @@ export class SongsService {
       id: songData.id,
       name: songData.name,
       artists: parseStringArray(songData.artists.map((artist) => artist.name)),
-      album_cover: parseString(songData.album.url_image),
+      album_cover: stringSchema.parse(songData.album.url_image),
       url_preview: songData.url_preview,
     };
   }
