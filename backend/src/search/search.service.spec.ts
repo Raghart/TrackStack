@@ -8,9 +8,6 @@ import {
 } from '../../test/data/searchModule/searchData';
 import { ServiceUnavailableException } from '@nestjs/common';
 import { expectSearchProps } from '@/utils/expectSearch';
-import {
-  songSearchResults,
-} from '@/types/searchTypes';
 
 describe.skip('SearchService retrieves and sort the data incoming from the elasticSearch server', () => {
   let service: SearchService;

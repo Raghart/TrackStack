@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { multipleSearchResults } from '@/types/searchTypes';
+import { multipleSearchResultsData } from '@trackstack/schemas';
 
-export const expectSearchProps = (result: multipleSearchResults) => {
+export const expectSearchProps = (result: multipleSearchResultsData) => {
   expect(result).toMatchObject({
     exactArtist: {
       id: expect.any(Number),
