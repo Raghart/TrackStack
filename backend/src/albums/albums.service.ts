@@ -11,11 +11,11 @@ import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { AlbumResponse, AlbumWithSongs } from '@/types/albumAttributes';
-import { isNumber } from '@/types/verify';
 import { InvalidPaginationException } from '@/utils/PaginationError';
 import {
   AlbumWithSongsData,
   albumWithSongsSchema,
+  floatNumberSchema,
   stringSchema,
 } from '@trackstack/schemas';
 
@@ -30,7 +30,7 @@ export class AlbumsService {
     page: number,
     limit: number,
   ): Promise<AlbumWithSongsData[]> {
-    if (!isNumber(seed))
+    if (!floatNumberSchema.safeParse(seed).success)
       throw new BadRequestException(
         'The seed must be a valid string of numbers.',
       );
