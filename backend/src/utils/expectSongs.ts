@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { FullSongResponse, SongResponse } from '@/types/songAttributes';
+import { FullSongResponse, SongResponse } from '@/attributes/songAttributes';
 import { TESTING_URL, TESTING_IMG } from '../../test/constants/constants';
 
 export const expectFullSongProps = (song: FullSongResponse) => {

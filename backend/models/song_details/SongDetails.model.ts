@@ -1,7 +1,7 @@
 import { SongsModel } from "../songs/song.model";
 import { AllowNull, AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } 
     from "sequelize-typescript";
-import { SongDetailsAttributes, SongDetailsCreationAttributes } from "@/types/songDetailsAttributes";
+import { SongDetailsAttributes, SongDetailsCreationAttributes } from "@/attributes/songDetailsAttributes";
 
 @Table({
     tableName: "song_details",

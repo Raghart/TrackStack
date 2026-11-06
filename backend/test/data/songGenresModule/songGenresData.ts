@@ -1,4 +1,4 @@
-import { SongResponse } from '@/types/songAttributes';
+import { SongResponse } from '@/attributes/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
 import { songGenresData } from '@trackstack/schemas';
 

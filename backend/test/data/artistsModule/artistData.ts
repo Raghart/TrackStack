@@ -1,5 +1,5 @@
-import { ArtistResponse } from '@/types/artistAttributes';
-import { SongResponse } from '@/types/songAttributes';
+import { ArtistResponse } from '@/attributes/artistAttributes';
+import { SongResponse } from '@/attributes/songAttributes';
 import { ArtistWithSongsData } from '@trackstack/schemas';
 
 export const artistData = [

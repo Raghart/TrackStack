@@ -23,7 +23,7 @@ import {
 } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
 import { InvalidPaginationException } from '@/utils/PaginationError';
-import { FullSongResponse, SongResponse } from '@/types/songAttributes';
+import { FullSongResponse, SongResponse } from '@/attributes/songAttributes';
 import parseGenres from '@/utils/parseGenres';
 if (existsSync('.env')) process.loadEnvFile();
 

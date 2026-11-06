@@ -1,5 +1,5 @@
-import { AlbumResponse } from '@/types/albumAttributes';
-import { SongResponse } from '@/types/songAttributes';
+import { AlbumResponse } from '@/attributes/albumAttributes';
+import { SongResponse } from '@/attributes/songAttributes';
 import { AlbumWithSongsData } from '@trackstack/schemas';
 
 export const albumSongs = {

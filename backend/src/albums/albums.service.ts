@@ -5,12 +5,12 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import { SongResponse } from '@/types/songAttributes';
+import { SongResponse } from '@/attributes/songAttributes';
 import safeQuery from '@/utils/safeQuery';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
-import { AlbumResponse, AlbumWithSongs } from '@/types/albumAttributes';
+import { AlbumResponse, AlbumWithSongs } from '@/attributes/albumAttributes';
 import { InvalidPaginationException } from '@/utils/PaginationError';
 import {
   AlbumWithSongsData,

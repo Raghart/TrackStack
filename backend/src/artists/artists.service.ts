@@ -5,8 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import { SongResponse } from '@/types/songAttributes';
-import { ArtistResponse } from '@/types/artistAttributes';
+import { SongResponse } from '@/attributes/songAttributes';
+import { ArtistResponse } from '@/attributes/artistAttributes';
 import {
   ArtistWithSongsData,
   artistWithSongsSchema,
