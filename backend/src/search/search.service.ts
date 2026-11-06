@@ -6,6 +6,7 @@ import safeQuery from '@/utils/safeQuery';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
+import { SEARCH_ALBUMS_SQL, SEARCH_ARTISTS_SQL, SEARCH_SONGS_SQL } from './utils/contants';
 
 @Injectable()
 export class SearchService {
@@ -19,7 +20,7 @@ export class SearchService {
     const results = await safeQuery(() =>
       this.artistModel.sequelize!.query<
         Pick<ArtistSearchResultData, 'id' | 'name' | 'album_cover'>
-      >(`SELECT id, name, album_cover FROM search_artists(:query, :limit);`, {
+      >(SEARCH_ARTISTS_SQL, {
         type: QueryTypes.SELECT,
         replacements: { query, limit: 11 },
       }),
@@ -34,7 +35,7 @@ export class SearchService {
     const results = await safeQuery(() => 
       this.albumModel.sequelize!.query<
       Pick<AlbumSearchResultData, "id" |"name" | "album_cover" | "artists" | "type">
-    >(`SELECT id, name, album_cover, artists FROM search_albums(:query, :limit);`, {
+    >(SEARCH_ALBUMS_SQL, {
       type: QueryTypes.SELECT,
       replacements: { query, limit: 11 },
     })
@@ -48,7 +49,7 @@ export class SearchService {
       this.songModel.sequelize!.query<
       Pick<SongSearchResultData, "id" | "name" | "album" | "url_preview" | 
         "album_cover" | "artists" | "type">
-    >(`SELECT id, name, album, album_cover, artists, url_preview FROM search_songs(:query, :limit);`, {
+    >(SEARCH_SONGS_SQL, {
       type: QueryTypes.SELECT,
       replacements: { query, limit: 11 },
     })

@@ -15,38 +15,8 @@ import { SequelizeTimeoutError } from '@/utils/mockErrors';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
-
-const SEARCH_ARTISTS_SQL =
-  'SELECT id, name, album_cover FROM search_artists(:query, :limit);';
-const SEARCH_ALBUMS_SQL =
-  'SELECT id, name, album_cover, artists FROM search_albums(:query, :limit);';
-const SEARCH_SONGS_SQL =
-  'SELECT id, name, album, album_cover, artists, url_preview FROM search_songs(:query, :limit);';
-
-// The SQL functions return only the columns they select (no `type`).
-const artistRows = searchArtists.map(({ id, name, album_cover }) => ({
-  id,
-  name,
-  album_cover,
-}));
-
-const albumRows = searchAlbums.map(({ id, name, album_cover, artists }) => ({
-  id,
-  name,
-  album_cover,
-  artists,
-}));
-
-const songRows = searchSongs.map(
-  ({ id, name, album, url_preview, album_cover, artists }) => ({
-    id,
-    name,
-    album,
-    url_preview,
-    album_cover,
-    artists,
-  }),
-);
+import { albumRows, artistRows, songRows } from './utils/testsQueries';
+import { SEARCH_ALBUMS_SQL, SEARCH_ARTISTS_SQL, SEARCH_SONGS_SQL } from './utils/contants';
 
 const createModelMock = () => ({ sequelize: { query: vi.fn() } });
 
