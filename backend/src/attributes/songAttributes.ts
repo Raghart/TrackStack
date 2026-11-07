@@ -42,16 +42,3 @@ export interface SongRecResponse {
   url_preview: string;
   cos_sim: number;
 }
-
-export interface FullSongResponse {
-  id: number;
-  name: string;
-  artists: string[];
-  genres: string[];
-  album: string;
-  album_cover: string;
-  duration: number;
-  year: number;
-  spotify_id: string;
-  url_preview: string;
-}

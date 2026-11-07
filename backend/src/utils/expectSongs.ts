@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { FullSongResponse } from '@/attributes/songAttributes';
 import { TESTING_URL, TESTING_IMG } from '../../test/constants/constants';
-import { SongResponseData } from '@trackstack/schemas';
+import { FullSongResponseData, SongResponseData } from '@trackstack/schemas';
 
-export const expectFullSongProps = (song: FullSongResponse) => {
+export const expectFullSongProps = (song: FullSongResponseData) => {
   expect(song).toMatchObject({
     id: expect.any(Number),
     name: expect.any(String),

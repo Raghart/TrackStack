@@ -14,8 +14,9 @@ import { GenresModel } from '../../models/genres/genres.model';
 import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
 import { existsSync } from 'node:fs';
 import {
+  FullSongRawData,
+  fullSongRawSchema,
   FullSongResponseData,
-  fullSongResponseSchema,
   SongRawData,
   songRawSchema,
   songRecommendationsSchema,
@@ -24,7 +25,6 @@ import {
 } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
 import { InvalidPaginationException } from '@/utils/PaginationError';
-import { FullSongResponse } from '@/attributes/songAttributes';
 import parseGenres from '@/utils/parseGenres';
 if (existsSync('.env')) process.loadEnvFile();
 
@@ -77,7 +77,7 @@ export class SongsService {
     }));
   }
 
-  async fetchFullSongData(songID: number): Promise<FullSongResponseData> {
+  async fetchFullSongData(songID: number): Promise<FullSongRawData> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -114,10 +114,10 @@ export class SongsService {
         `The song with the ID: '${songID}' doesn't exist in the database!`,
       );
 
-    return fullSongResponseSchema.parse(rawData.get({ plain: true }));
+    return fullSongRawSchema.parse(rawData.get({ plain: true }));
   }
 
-  parseFullSong(songData: FullSongResponseData): FullSongResponse {
+  parseFullSong(songData: FullSongRawData): FullSongResponseData {
     return {
       id: songData.id,
       name: songData.name,

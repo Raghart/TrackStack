@@ -2,7 +2,7 @@ import {
   SongRecResponse,
 } from '@/attributes/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
-import { FullSongResponseData, SongResponseData } from '@trackstack/schemas';
+import { FullSongResponseData, SongRawData, SongResponseData } from '@trackstack/schemas';
 
 export const songTestData = [
   {
@@ -60,7 +60,7 @@ export const songTestData = [
         'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
     },
   },
-] as unknown as SongResponseData[];
+] as unknown as SongRawData[];
 
 export const singleSongTestData = {
   id: 2,
