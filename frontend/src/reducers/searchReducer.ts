@@ -1,5 +1,6 @@
-import { MultipleSearchResult, SearchInitialState } from "@/types/searchTypes";
+import { SearchInitialState } from "@/types/searchTypes";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { multipleSearchResults } from "@trackstack/schemas";
 
 const initialState : SearchInitialState = {
     results: null,
@@ -21,7 +22,7 @@ const searchSlice = createSlice({
             state.isLoading = false;
             state.isMobileSearch = false;
         },
-        setQueryResults(state, action : PayloadAction<MultipleSearchResult>) {
+        setQueryResults(state, action : PayloadAction<multipleSearchResults>) {
             state.results = action.payload;
             state.isLoading = false;
         },

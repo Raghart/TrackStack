@@ -2,10 +2,10 @@ import SpotSearch from "./SpotSearch/SpotSearch";
 import ArtistResults from "./ArtistResults/ArtistResults";
 import AlbumResults from "./AlbumResults/AlbumResults";
 import SongResults from "./SongResults/SongResults";
-import { MultipleSearchResult } from "@/types/searchTypes";
+import { multipleSearchResults } from "@trackstack/schemas";
 
 const SearchResults = ({ exactArtist, exactAlbum, exactSong, artistResults, albumResults, songResults  } : 
-    MultipleSearchResult) => {
+    multipleSearchResults) => {
     return(
         <>
             {exactSong && exactAlbum && exactArtist && (

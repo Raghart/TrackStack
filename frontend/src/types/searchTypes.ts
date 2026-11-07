@@ -1,20 +1,10 @@
-import { AlbumResponse, ArtistResponse } from "@trackstack/schemas";
-import { SongResponse } from "./songTypes";
+import { multipleSearchResults } from "@trackstack/schemas";
 
 export interface SearchInitialState {
-    results: MultipleSearchResult | null;
+    results: multipleSearchResults | null;
     query: string;
     isLoading: boolean;
     isMobileSearch: boolean;
-};
-
-export interface MultipleSearchResult {
-    exactArtist: ArtistResponse;
-    exactAlbum: AlbumResponse;
-    exactSong: SongResponse;
-    artistResults: ArtistResponse[];
-    albumResults: AlbumResponse[];
-    songResults: SongResponse[];
 };
 
 export interface searchResultsType {
