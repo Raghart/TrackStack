@@ -104,10 +104,8 @@ export const multipleSearchResultsSchema = z.object({
   exactAlbum: albumSearchResultSchema,
   exactSong: songSearchResultSchema,
 });
-// Delete the data name in the types and check if the rest of the service has an outdated
-// Interface that needs to be replaced with a Zod schema and parser
-// Check for the coverage to see if it can improve more
-export type multipleSearchResultsData = z.infer<typeof multipleSearchResultsSchema>;
+
+export type multipleSearchResults = z.infer<typeof multipleSearchResultsSchema>;
 
 export type SongSearchResultData = z.infer<typeof songSearchResultSchema>;
 

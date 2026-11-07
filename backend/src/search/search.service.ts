@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { QueryTypes } from 'sequelize';
-import { AlbumSearchResultData, albumSearchResultSchema, ArtistSearchResultData, artistSearchResultSchema, multipleSearchResultsData, multipleSearchResultsSchema, SongSearchResultData, songSearchResultSchema } from '@trackstack/schemas';
+import { AlbumSearchResultData, albumSearchResultSchema, 
+  ArtistSearchResultData, artistSearchResultSchema, multipleSearchResults, multipleSearchResultsSchema, SongSearchResultData, songSearchResultSchema } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { AlbumsModel } from '../../models/albums/albums.model';
@@ -58,7 +59,7 @@ export class SearchService {
     return results.map((song) => songSearchResultSchema.parse({ ...song, type: "song" }));
   }
 
-  async multipleSearch(query: string): Promise<multipleSearchResultsData> {
+  async multipleSearch(query: string): Promise<multipleSearchResults> {
     const [exactArtist, ...artistResults] = await this.searchArtists(query);
     const [exactAlbum, ...albumResults] = await this.searchAlbums(query);
     const [exactSong, ...songResults] = await this.seachSongs(query);

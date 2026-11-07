@@ -13,7 +13,6 @@ import {
   floatNumberSchema,
   SongResponse,
   songResponseSchema,
-  stringSchema,
 } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
 import { InvalidPaginationException } from '@/utils/PaginationError';
