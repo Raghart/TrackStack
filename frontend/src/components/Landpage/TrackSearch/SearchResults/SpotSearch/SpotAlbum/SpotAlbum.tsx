@@ -2,7 +2,7 @@ import ArtistLinks from "@/components/Utils/ArtistLinks";
 import { Card, Heading, LinkBox, LinkOverlay, useBreakpointValue } from "@chakra-ui/react";
 import { ALBUM_TITLE_FONTSIZES, SPOT_CARD_SIZES, SPOTALBUM_FONTSIZES } from "@/components/constants/TrackSearchC";
 import SpotAlbumImg from "./SpotAlbumImg";
-import { AlbumResponse } from "@/types/albumTypes";
+import { AlbumResponse } from "@trackstack/schemas";
 
 const SpotAlbum = ({ name, artists, album_cover }: AlbumResponse) => {
     const responsiveSize = useBreakpointValue({ base: "15px", sm: "20px", md: "24px", lg: "24px" });

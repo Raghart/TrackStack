@@ -1,4 +1,4 @@
-import { AlbumResponse } from "./albumTypes";
+import { AlbumResponse } from "@trackstack/schemas";
 import { ArtistResponse } from "./artistTypes";
 import { SongResponse } from "./songTypes";
 

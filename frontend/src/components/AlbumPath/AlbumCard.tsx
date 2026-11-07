@@ -1,4 +1,4 @@
-import { AlbumResponse } from "@/types/albumTypes";
+import type { AlbumResponse } from "@trackstack/schemas";
 import { Image, LinkBox, Skeleton } from "@chakra-ui/react";
 import { useState } from "react";
 import AlbumCardLayer from "./AlbumCardLayer";

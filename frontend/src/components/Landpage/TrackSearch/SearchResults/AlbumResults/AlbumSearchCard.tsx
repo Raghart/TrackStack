@@ -2,7 +2,7 @@ import ArtistLinks from "@/components/Utils/ArtistLinks";
 import { Card, LinkBox, LinkOverlay, useBreakpointValue } from "@chakra-ui/react";
 import { ALB_RESULTS_FONTSIZES, SEARCH_RESULTS_SIZES } from "@/components/constants/TrackSearchC";
 import AlbumSearchImg from "./AlbumSearchImg";
-import { AlbumResponse } from "@/types/albumTypes";
+import { AlbumResponse } from "@trackstack/schemas";
 
 const AlbumSearchCard = ({ name, album_cover, artists } : AlbumResponse) => {
     const fontSize = useBreakpointValue({ base: "14px", sm: "17px", md: "17px", lg: "19px", });

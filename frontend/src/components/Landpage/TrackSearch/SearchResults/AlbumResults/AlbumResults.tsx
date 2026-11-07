@@ -1,7 +1,7 @@
 import { Box, For, Heading, SimpleGrid } from "@chakra-ui/react";
 import AlbumSearchCard from "./AlbumSearchCard";
 import { Zoom, Bounce } from "react-awesome-reveal";
-import { AlbumResponse } from "@/types/albumTypes";
+import { AlbumResponse } from "@trackstack/schemas";
 
 const AlbumResults = ({ albumResults } : { albumResults: AlbumResponse[] }) => {
     return(
