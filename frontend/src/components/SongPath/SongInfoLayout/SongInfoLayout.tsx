@@ -6,7 +6,7 @@ import SpotifyUrl from "./SpotifyUrl";
 import ArtistLinks from "../../Utils/ArtistLinks";
 import { Slide, Zoom, Bounce, Fade } from "react-awesome-reveal";
 import { SONGBOX_SHADOW, SONGBOX_SIZES } from "../../constants/SongDetailsC";
-import { FullSongResponse } from "@/types/songTypes";
+import { FullSongResponse } from "@trackstack/schemas";
 
 const SongInfoLayout = ({ name, artists, year, duration, spotify_id }: FullSongResponse ) => {
     const responsiveSize = useBreakpointValue({ base: "15px", sm: "24px", md: "25px", lg: "3xl" });

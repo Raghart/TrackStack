@@ -2,7 +2,7 @@ import { useAppDispatch } from "../redux-hooks";
 import { useQuery } from "@apollo/client";
 import { loadAudio } from "@/reducers/songReducer";
 import { getSongData } from "@/queries/DetailQueries";
-import { FullSongResponse } from "@/types/songTypes";
+import { FullSongResponse } from "@trackstack/schemas";
 
 const useSongDetails = (songId: string | undefined) => {
     const dispatch = useAppDispatch();
