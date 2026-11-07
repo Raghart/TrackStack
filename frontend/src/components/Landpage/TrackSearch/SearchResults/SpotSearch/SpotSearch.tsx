@@ -4,11 +4,10 @@ import SpotArtist from "./SpotArtist/SpotArtist";
 import SpotAlbum from "./SpotAlbum/SpotAlbum";
 import useSortResults from "@/components/Utils/hooks/useSortResults";
 import { SongResponse } from "@/types/songTypes";
-import { ArtistResponse } from "@/types/artistTypes";
 import { searchResultsType } from "@/types/searchTypes";
 import { normalizeText } from "@/components/Utils/normalizeText";
 import { Zoom } from "react-awesome-reveal";
-import { AlbumResponse } from "@trackstack/schemas";
+import { AlbumResponse, ArtistResponse } from "@trackstack/schemas";
 
 const SpotSearch = ({ song, artist, album } : { 
     song: SongResponse, artist: ArtistResponse, album: AlbumResponse }) => {

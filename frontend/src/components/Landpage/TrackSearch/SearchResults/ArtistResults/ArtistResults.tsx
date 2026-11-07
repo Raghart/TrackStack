@@ -1,7 +1,7 @@
 import { Box, For, Link, SimpleGrid } from "@chakra-ui/react";
 import ArtistSearchCard from "./ArtistSearchCard";
 import { Zoom, Bounce } from "react-awesome-reveal";
-import { ArtistResponse } from "@/types/artistTypes";
+import { ArtistResponse } from "@trackstack/schemas";
 
 const ArtistResults = ({ artistResults }: { artistResults: ArtistResponse[] }) => {
     return(

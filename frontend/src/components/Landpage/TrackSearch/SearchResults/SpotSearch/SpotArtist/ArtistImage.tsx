@@ -1,6 +1,6 @@
 import { ART_IMG_SIZES } from "@/components/constants/TrackSearchC";
-import { ArtistResponse } from "@/types/artistTypes";
 import { Image, LinkOverlay, Skeleton } from "@chakra-ui/react";
+import { ArtistResponse } from "@trackstack/schemas";
 import { useState } from "react";
 
 const ArtistImage = ({ name, album_cover } : ArtistResponse ) => {

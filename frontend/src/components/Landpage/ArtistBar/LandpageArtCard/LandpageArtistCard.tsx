@@ -1,7 +1,7 @@
 import { Box, Image, Skeleton } from "@chakra-ui/react";
 import { useState } from "react";
 import ArtLandInfo from "./ArtLandInfo";
-import { ArtistResponse } from "@/types/artistTypes";
+import { ArtistResponse } from "@trackstack/schemas";
 
 const LandpageArtistCard = ({  name, album_cover } : ArtistResponse) => {
     const [loading, setLoading] = useState<boolean>(true);

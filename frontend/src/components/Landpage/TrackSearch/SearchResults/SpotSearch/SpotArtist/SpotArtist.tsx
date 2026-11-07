@@ -1,16 +1,16 @@
 import { Card, Heading, LinkBox, LinkOverlay } from "@chakra-ui/react";
 import { ART_TITLE_FONTSIZES, SPOT_CARD_SIZES, SPOTARTIST_FONTSIZES } from "@/components/constants/TrackSearchC";
 import ArtistImage from "./ArtistImage";
-import { ArtistResponse } from "@/types/artistTypes";
+import { ArtistResponse } from "@trackstack/schemas";
 
-const SpotArtist = ({ name, album_cover }:  ArtistResponse ) => {
+const SpotArtist = ({ id, name, album_cover }:  ArtistResponse ) => {
     return(
         <LinkBox position="relative" as={Card.Root} flexDirection="row" overflow="hidden" mt={3} bg="transparent" 
             border="transparent" _hover={{ bg: "blue.800", "& .artist-zoom": { transform: "scale(1.1)" } }} 
             transition="background 0.3s ease, transform 0.3s ease" p={2} w="full" maxW={SPOT_CARD_SIZES}
             data-testid="spotArtistCard">
             
-            <ArtistImage name={name} album_cover={album_cover} />
+            <ArtistImage id={id} name={name} album_cover={album_cover} />
 
             <Card.Body gap={{ base: 1, sm: 2, md: 2, lg: 2 }} justifyContent="center" alignItems="center" 
                 className="artist-zoom" transition="transform 0.3s ease" p={3}>

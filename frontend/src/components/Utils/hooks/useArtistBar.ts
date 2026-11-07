@@ -1,7 +1,7 @@
 import { getAllArtists } from "@/queries/DetailQueries";
-import { ArtistResponse } from "@/types/artistTypes";
 import { useQuery } from "@apollo/client";
 import { useBreakpointValue } from "@chakra-ui/react";
+import { ArtistResponse } from "@trackstack/schemas";
 import { useEffect, useState } from "react";
 
 const useArtistBar = () => {

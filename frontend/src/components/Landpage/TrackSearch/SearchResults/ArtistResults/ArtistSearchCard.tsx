@@ -2,7 +2,7 @@ import { Card, Heading, LinkBox, LinkOverlay } from "@chakra-ui/react";
 import { ART_RESULTS_ART_FONTSIZE, ART_RESULTS_FONTSIZE, SEARCH_RESULTS_SIZES } from 
     "@/components/constants/TrackSearchC";
 import ArtistSearchImg from "./ArtistSearchImg";
-import { ArtistResponse } from "@/types/artistTypes";
+import { ArtistResponse } from "@trackstack/schemas";
 
 const ArtistSearchCard = ({ name, album_cover } : ArtistResponse ) => {
     return(

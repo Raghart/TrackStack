@@ -1,5 +1,4 @@
-import { AlbumResponse } from "@trackstack/schemas";
-import { ArtistResponse } from "./artistTypes";
+import { AlbumResponse, ArtistResponse } from "@trackstack/schemas";
 import { SongResponse } from "./songTypes";
 
 export interface SearchInitialState {
