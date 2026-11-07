@@ -2,13 +2,104 @@
 
 React single-page app for [TrackStack](../README.md). It provides the recommendation flow, the music player, and the browsing experience for songs, artists, albums, and genres.
 
-- **React 19** + **TypeScript**
-- **Vite 6** for the dev server and production build
-- **Chakra UI 3** for the component system and responsive layout
-- **Apollo Client 3** for GraphQL queries and WebSocket subscriptions
-- **Redux Toolkit 2** for the player, search, and recommendation state
-- **React Router 7** for client-side routing
-- **Zod 4** for runtime validation
+- **React 19** + **TypeScript**.
+- **Vite 6** for the dev server and production build.
+- **Chakra UI 3** for the component system and responsive layout.
+- **Apollo Client 3** for GraphQL queries and WebSocket subscriptions.
+- **Redux Toolkit 2** for the player, search, and recommendation state.
+- **React Router 7** for client-side routing.
+
+## Project structure
+
+```text
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── Landpage/                 # landing page, search bar, search results
+│   │   ├── SongPath/                 # song details
+│   │   ├── LaraRecommendationsPath/  # recommendation results and AI message
+│   │   ├── GenrePath/GenreDetails/   # genre catalogue and genre songs
+│   │   ├── ArtistPath/               # artist catalogue
+│   │   ├── AlbumPath/DetailsPath/    # album catalogue and detail layout
+│   │   ├── SongCard/                 # song cards and play overlay
+│   │   ├── MainLayout/               # sidebar, top bar, player shell
+│   │   ├── Pagination/               # pagination controls and helpers
+│   │   ├── Utils/                    # hooks, formatting, vector helpers
+│   │   ├── constants/                # labels, modal config, recommendation weights
+│   │   └── ui/                       # Chakra wrappers (color mode, toaster, tooltip)
+│   ├── queries/                      # GraphQL documents (gql)
+│   ├── reducers/                     # Redux slices: songs, songData, search
+│   ├── types/                        # client types
+│   ├── dynamicCSS/                   # dynamic styles
+│   ├── apolloClient.ts               # HTTP/WebSocket split link and cache policies
+│   ├── store.ts                      # Redux store
+│   ├── theme.ts                      # Chakra theme
+│   └── App.tsx                       # route definitions
+├── public/
+└── vite.config.ts                    # build output -> ../backend/public
+```
+
+## Environment variables
+
+Create `frontend/.env` with the backend GraphQL endpoints:
+
+```bash
+VITE_GRAPHQL_URI=http://localhost:3000/graphql
+VITE_SUBSCRIPTION_URI=ws://localhost:3000/graphql
+```
+
+For a deployed environment, point both variables at the public backend URL (use `wss://` for the subscription). The backend must allow the frontend origin through `URL_DOMAIN` (CORS).
+
+## Commands
+
+From the repository root:
+
+```bash
+pnpm run dev:frontend       # Vite dev server
+pnpm run build:frontend     # tsc -b + vite build -> backend/public
+```
+
+Or inside the package:
+
+```bash
+pnpm --filter ./frontend run dev
+pnpm --filter ./frontend run build
+pnpm --filter ./frontend run lint
+pnpm --filter ./frontend run preview
+```
+
+The production build is written to `../backend/public` and served by NestJS next to the GraphQL API.
+
+## Tests
+
+There is no frontend unit-test suite yet. End-to-end coverage lives in the separate Playwright package [`../e2e`](../e2e), which exercises the landing page, search, songs, artists, genres, and the recommendation modal in Chromium, Firefox, and WebKit.
+
+```bash
+cd e2e
+npm ci
+npm run test
+npm run test:report
+```
+
+The E2E suite expects the built app at `http://localhost:3000` (override with `E2ETEST_URL`) and needs a running backend and database.
+
+
+## Routes
+
+| Route | Page |
+| --- | --- |
+| `/` | Landing page with a random song selection |
+| `/songs/:songId` | Song details |
+| `/recommendations` | Recommendation results and streamed AI message |
+| `/artists` | Artist catalogue |
+| `/artists/:artist` | Songs by artist |
+| `/albums` | Album catalogue |
+| `/albums/:album` | Songs in an album |
+| `/genres` | Genre catalogue |
+| `/genres/:genre` | Songs in a genre |
+| `*` | Redirect to `/` |
+
+`MainLayout` keeps the sidebar, search bar, and music player mounted across routes. When the search query is non-empty, it renders the search results instead of the routed page.
 
 ## Features
 
@@ -74,53 +165,6 @@ The left sidebar links to the artist, genre, and album catalogues. Each catalogu
     <img src="../assets/albumSongs.png" alt="Songs in an album" />
 </p>
 
-## Routes
-
-| Route | Page |
-| --- | --- |
-| `/` | Landing page with a random song selection |
-| `/songs/:songId` | Song details |
-| `/recommendations` | Recommendation results and streamed AI message |
-| `/artists` | Artist catalogue |
-| `/artists/:artist` | Songs by artist |
-| `/albums` | Album catalogue |
-| `/albums/:album` | Songs in an album |
-| `/genres` | Genre catalogue |
-| `/genres/:genre` | Songs in a genre |
-| `*` | Redirect to `/` |
-
-`MainLayout` keeps the sidebar, search bar, and music player mounted across routes. When the search query is non-empty, it renders the search results instead of the routed page.
-
-## Project structure
-
-```text
-frontend/
-├── src/
-│   ├── components/
-│   │   ├── Landpage/                 # landing page, search bar, search results
-│   │   ├── SongPath/                 # song details
-│   │   ├── LaraRecommendationsPath/  # recommendation results and AI message
-│   │   ├── GenrePath/GenreDetails/   # genre catalogue and genre songs
-│   │   ├── ArtistPath/               # artist catalogue
-│   │   ├── AlbumPath/DetailsPath/    # album catalogue and detail layout
-│   │   ├── SongCard/                 # song cards and play overlay
-│   │   ├── MainLayout/               # sidebar, top bar, player shell
-│   │   ├── Pagination/               # pagination controls and helpers
-│   │   ├── Utils/                    # hooks, formatting, vector helpers
-│   │   ├── constants/                # labels, modal config, recommendation weights
-│   │   └── ui/                       # Chakra wrappers (color mode, toaster, tooltip)
-│   ├── queries/                      # GraphQL documents (gql)
-│   ├── reducers/                     # Redux slices: songs, songData, search
-│   ├── types/                        # client types
-│   ├── dynamicCSS/                   # dynamic styles
-│   ├── apolloClient.ts               # HTTP/WebSocket split link and cache policies
-│   ├── store.ts                      # Redux store
-│   ├── theme.ts                      # Chakra theme
-│   └── App.tsx                       # route definitions
-├── public/
-└── vite.config.ts                    # build output -> ../backend/public
-```
-
 ## How the recommendation vector is built
 
 `components/Utils/generateUserVector.ts` normalizes each slider with min-max scaling and multiplies it by the weights in `components/constants/WeightData.ts`:
@@ -146,64 +190,6 @@ The resulting 8-value array is sent to `getSongRecommendations` and also passed 
 - Redux Toolkit stores three slices: `songs` (active track and playback state), `songData` (recommendation inputs and results), and `search` (query and results).
 - Page-specific data fetching lives in custom hooks under `components/Utils/hooks/`.
 
-## Environment variables
-
-Create `frontend/.env` with the backend GraphQL endpoints:
-
-```bash
-VITE_GRAPHQL_URI=http://localhost:3000/graphql
-VITE_SUBSCRIPTION_URI=ws://localhost:3000/graphql
-```
-
-For a deployed environment, point both variables at the public backend URL (use `wss://` for the subscription). The backend must allow the frontend origin through `URL_DOMAIN` (CORS).
-
-## Commands
-
-From the repository root:
-
-```bash
-pnpm run dev:frontend       # Vite dev server
-pnpm run build:frontend     # tsc -b + vite build -> backend/public
-```
-
-Or inside the package:
-
-```bash
-pnpm --filter ./frontend run dev
-pnpm --filter ./frontend run build
-pnpm --filter ./frontend run lint
-pnpm --filter ./frontend run preview
-```
-
-The production build is written to `../backend/public` and served by NestJS next to the GraphQL API.
-
-## Environment variables
-
-Create `backend/.env` (the backend loads it on startup). A generated frontend build is served from `public/`, so the same process can host the API and the SPA.
-
-| Variable | Required | Purpose |
-| --- | --- | --- |
-| `DB_URL` | Yes | PostgreSQL connection string |
-| `DB_PORT` | Yes | PostgreSQL port |
-| `API_KEY` | Yes | Google GenAI API key |
-| `AI_MODEL` | Yes | Gemini model name used for streamed messages |
-| `URL_DOMAIN` | Yes | Allowed CORS origin (for local Vite: `http://localhost:5173`) |
-| `PORT` | No | HTTP port (defaults to `3000`) |
-| `LOCAL_PAGE_URL` | No | URL printed on startup |
-| `LOCAL_GRAPHQL` | No | GraphQL URL printed on startup |
-
-## Tests
-
-There is no frontend unit-test suite yet. End-to-end coverage lives in the separate Playwright package [`../e2e`](../e2e), which exercises the landing page, search, songs, artists, genres, and the recommendation modal in Chromium, Firefox, and WebKit.
-
-```bash
-cd e2e
-npm ci
-npm run test
-npm run test:report
-```
-
-The E2E suite expects the built app at `http://localhost:3000` (override with `E2ETEST_URL`) and needs a running backend and database.
 
 ---
 
