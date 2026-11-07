@@ -15,9 +15,3 @@ export type ArtistsCreationAttributtes = Optional<
   ArtistsAttributtes,
   'id' | 'songs'
 >;
-
-export interface ArtistResponse {
-  id: number;
-  name: string;
-  album_cover: string;
-}

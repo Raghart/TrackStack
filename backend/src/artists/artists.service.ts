@@ -5,12 +5,14 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import { ArtistResponse } from '@/attributes/artistAttributes';
 import {
+  ArtistResponse,
+  artistResponseSchema,
   ArtistWithSongsData,
   artistWithSongsSchema,
   floatNumberSchema,
   SongResponse,
+  songResponseSchema,
   stringSchema,
 } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
@@ -61,10 +63,10 @@ export class ArtistsService {
   }
 
   parseArtists(artistData: ArtistWithSongsData[]): ArtistResponse[] {
-    return artistData.map((artist) => ({
+    return artistData.map((artist) => artistResponseSchema.parse({
       id: artist.id,
       name: artist.name,
-      album_cover: stringSchema.parse(artist.songs[0].album?.url_image),
+      album_cover: artist.songs[0].album?.url_image,
     }));
   }
 
@@ -102,12 +104,12 @@ export class ArtistsService {
   parseArtistSongs(
     artist: ArtistWithSongsData,
   ): SongResponse[] {
-    return artist.songs.map((song) => ({
-      id: floatNumberSchema.parse(song.id),
-      name: stringSchema.parse(song.name),
+    return artist.songs.map((song) => songResponseSchema.parse({
+      id: song.id,
+      name: song.name,
       artists: [artist.name],
-      url_preview: stringSchema.parse(song.url_preview),
-      album_cover: stringSchema.parse(song.album?.url_image),
+      url_preview: song.url_preview,
+      album_cover: song.album?.url_image,
     }));
   }
 
