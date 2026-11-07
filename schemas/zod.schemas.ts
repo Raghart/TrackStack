@@ -183,7 +183,7 @@ export const fullSongResponseSchema = z.object({
   url_preview: stringSchema,
 });
 
-export type FullSongResponseData = z.infer<typeof fullSongResponseSchema>;
+export type FullSongResponse = z.infer<typeof fullSongResponseSchema>;
 
 const songRecommendationSchema = z.object({
   id: z.number(),

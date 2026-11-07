@@ -16,11 +16,13 @@ import { existsSync } from 'node:fs';
 import {
   FullRawSong,
   fullRawSongSchema,
-  FullSongResponseData,
+  FullSongResponse,
+  fullSongResponseSchema,
   SongRawData,
   songRawSchema,
   songRecommendationsSchema,
   SongResponse,
+  songResponseSchema,
   stringSchema,
 } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
@@ -68,12 +70,12 @@ export class SongsService {
   }
 
   parseSongList(songData: SongRawData[]): SongResponse[] {
-    return songData.map((song) => ({
+    return songData.map((song) => songResponseSchema.parse({
       id: song.id,
       name: song.name,
-      artists: song.artists.map((a) => stringSchema.parse(a.name)),
+      artists: song.artists.map((a) => a.name),
       url_preview: song.url_preview,
-      album_cover: stringSchema.parse(song.album.url_image),
+      album_cover: song.album.url_image,
     }));
   }
 
@@ -117,19 +119,19 @@ export class SongsService {
     return fullRawSongSchema.parse(rawData.get({ plain: true }));
   }
 
-  parseFullSong(songData: FullRawSong): FullSongResponseData {
-    return {
+  parseFullSong(songData: FullRawSong): FullSongResponse {
+    return fullSongResponseSchema.parse({
       id: songData.id,
       name: songData.name,
-      artists: songData.artists.map((artist) => stringSchema.parse(artist.name)),
-      genres: songData.genres.map((g) => stringSchema.parse(g.genre)),
-      album: stringSchema.parse(songData.album.name),
-      album_cover: stringSchema.parse(songData.album.url_image),
+      artists: songData.artists.map((artist) => artist.name),
+      genres: songData.genres.map((g) => g.genre),
+      album: songData.album.name,
+      album_cover: songData.album.url_image,
       duration: songData.duration,
       year: songData.year,
       spotify_id: songData.spotify_id,
       url_preview: songData.url_preview,
-    };
+    });
   }
 
   async getSongData(songID: number) {
@@ -214,7 +216,7 @@ export class SongsService {
 
     const parsedData = songRecommendationsSchema.parse(rawSongData);
 
-    return parsedData.map((songData) => ({
+    return parsedData.map((songData) => songResponseSchema.parse({
       id: songData.id,
       name: songData.name,
       artists: songData.artists.split(','),
@@ -246,13 +248,13 @@ export class SongsService {
   }
 
   parseSongData(songData: SongRawData): SongResponse {
-    return {
+    return songResponseSchema.parse({
       id: songData.id,
       name: songData.name,
       artists: songData.artists.map((artist) => stringSchema.parse(artist.name)),
       album_cover: stringSchema.parse(songData.album.url_image),
       url_preview: songData.url_preview,
-    };
+    });
   }
 
   async fetchNextSong(songID: number): Promise<SongRawData> {

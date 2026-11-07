@@ -1,5 +1,5 @@
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
-import { FullSongResponseData, SongResponse } from '@trackstack/schemas';
+import { FullSongResponse, SongResponse } from '@trackstack/schemas';
 
 export const songTestResponses: SongResponse[] = [
   {
@@ -59,7 +59,7 @@ export const singleSongData: SongResponse = {
     'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
 };
 
-export const songFullTestResponse: FullSongResponseData = {
+export const songFullTestResponse: FullSongResponse = {
   id: 1,
   name: 'Come as You Are',
   artists: ['Nirvana'],
