@@ -109,7 +109,7 @@ export type multipleSearchResultsData = z.infer<typeof multipleSearchResultsSche
 
 export type SongSearchResultData = z.infer<typeof songSearchResultSchema>;
 
-export const songResponseSchema = z.looseObject({
+export const songRawSchema = z.looseObject({
   id: z.number(),
   name: stringSchema,
   url_preview: stringSchema,
@@ -117,7 +117,7 @@ export const songResponseSchema = z.looseObject({
   album: albumReferenceSchema,
 });
 
-export type SongResponseData = z.infer<typeof songResponseSchema>;
+export type SongRawData = z.infer<typeof songRawSchema>;
 
 export const albumWithSongsSchema = z.object({
   id: z.number(),

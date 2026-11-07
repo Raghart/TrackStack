@@ -16,8 +16,8 @@ import { existsSync } from 'node:fs';
 import {
   FullSongResponseData,
   fullSongResponseSchema,
-  SongResponseData,
-  songResponseSchema,
+  SongRawData,
+  songRawSchema,
   songRecommendationsSchema,
   stringSchema,
 } from '@trackstack/schemas';
@@ -38,7 +38,7 @@ export class SongsService {
     return await safeQuery(() => this.songModel.count());
   }
 
-  async fetchLandpageSongs(limit = 20): Promise<SongResponseData[]> {
+  async fetchLandpageSongs(limit = 20): Promise<SongRawData[]> {
     if (limit < 1) throw new InvalidPaginationException('limit', limit);
 
     const rawData = await safeQuery(() =>
@@ -57,7 +57,7 @@ export class SongsService {
       }),
     );
     return rawData.map((entry) =>
-      songResponseSchema.parse(entry.get({ plain: true })),
+      songRawSchema.parse(entry.get({ plain: true })),
     );
   }
 
@@ -66,7 +66,7 @@ export class SongsService {
     return this.parseSongList(songData);
   }
 
-  parseSongList(songData: SongResponseData[]): SongResponse[] {
+  parseSongList(songData: SongRawData[]): SongResponse[] {
     return songData.map((song) => ({
       id: song.id,
       name: song.name,
@@ -222,7 +222,7 @@ export class SongsService {
     }));
   }
 
-  async fetchRandomSong(): Promise<SongResponseData> {
+  async fetchRandomSong(): Promise<SongRawData> {
     const result = await safeQuery(() =>
       this.songModel.findOne({
         order: Sequelize.literal('RANDOM()'),
@@ -236,7 +236,7 @@ export class SongsService {
         ],
       }),
     );
-    return songResponseSchema.parse(result?.get({ plain: true }));
+    return songRawSchema.parse(result?.get({ plain: true }));
   }
 
   async getRandomSong() {
@@ -244,7 +244,7 @@ export class SongsService {
     return this.parseSongData(randomSong);
   }
 
-  parseSongData(songData: SongResponseData): SongResponse {
+  parseSongData(songData: SongRawData): SongResponse {
     return {
       id: songData.id,
       name: songData.name,
@@ -254,7 +254,7 @@ export class SongsService {
     };
   }
 
-  async fetchNextSong(songID: number): Promise<SongResponseData> {
+  async fetchNextSong(songID: number): Promise<SongRawData> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -292,7 +292,7 @@ export class SongsService {
         "It couldn't retrieve the song from the database",
       );
 
-    return songResponseSchema.parse(rawData.get({ plain: true }));
+    return songRawSchema.parse(rawData.get({ plain: true }));
   }
 
   async getNextSong(songId: number): Promise<SongResponse> {
@@ -300,7 +300,7 @@ export class SongsService {
     return this.parseSongData(songData);
   }
 
-  async fetchPreviousSong(songID: number): Promise<SongResponseData> {
+  async fetchPreviousSong(songID: number): Promise<SongRawData> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -338,7 +338,7 @@ export class SongsService {
         "It couldn't retrieve the song from the database",
       );
 
-    return songResponseSchema.parse(rawData.get({ plain: true }));
+    return songRawSchema.parse(rawData.get({ plain: true }));
   }
 
   async getPreviousSong(songID: number) {

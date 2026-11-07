@@ -23,6 +23,17 @@ export interface SongResponseAttributes extends SongAttributes {
   album: AlbumsModel;
 }
 
+export interface FullSongResponseAttributes extends SongAttributes {
+  artists: ArtistsModel[];
+  album: AlbumsModel;
+  genres: GenresModel[];
+}
+
+export type SongCreationAttributes = Optional<
+  SongAttributes,
+  'id' | 'artists' | 'album' | 'genres' | 'songDetails'
+>;
+
 export interface SongResponse {
   id: number;
   name: string;
@@ -52,14 +63,3 @@ export interface FullSongResponse {
   spotify_id: string;
   url_preview: string;
 }
-
-export interface FullSongResponseAttributes extends SongAttributes {
-  artists: ArtistsModel[];
-  album: AlbumsModel;
-  genres: GenresModel[];
-}
-
-export type SongCreationAttributes = Optional<
-  SongAttributes,
-  'id' | 'artists' | 'album' | 'genres' | 'songDetails'
->;
