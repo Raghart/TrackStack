@@ -16,3 +16,4 @@
 15. Check if it's worthy to cifre the DB conexion to Aiven.
 16. Would be a good idea to add a note to AGENTS.md to tell that don't change the code when making tests, it will be better to consult with me if it detects a possible security breach before deciding the way to patch it.
 17. Update coverage image with one that covers both backend and frontend.
+18. Upgrade the frontend/docs/architecture.md to be better. It feels kinda awkard right now.
