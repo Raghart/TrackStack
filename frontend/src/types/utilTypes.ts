@@ -1,7 +1,6 @@
 import { IconType } from "react-icons/lib"
-import { SongResponse } from "./songTypes";
 import { GenreListFormat } from "./genreTypes";
-import { ArtistResponse } from "@trackstack/schemas";
+import { ArtistResponse, SongResponse } from "@trackstack/schemas";
 
 export interface highlightType {
     title: string;

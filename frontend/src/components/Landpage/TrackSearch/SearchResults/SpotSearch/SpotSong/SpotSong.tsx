@@ -2,7 +2,7 @@ import { Card, Heading, LinkBox, LinkOverlay, useBreakpointValue } from "@chakra
 import ArtistLinks from "@/components/Utils/ArtistLinks";
 import { SONG_TITLE_FONTSIZES, SPOT_CARD_SIZES, SPOTSONG_ARTISTS_FONTSIZES, SPOTSONG_FONTSIZES } from "@/components/constants/TrackSearchC";
 import PlaySongBox from "./PlaySongBox";
-import { SongResponse } from "@/types/songTypes";
+import { SongResponse } from "@trackstack/schemas";
 
 const SpotSong = ({ id, name, artists, album_cover, url_preview } : SongResponse) => {
     const artistFontsize = useBreakpointValue(SPOTSONG_ARTISTS_FONTSIZES);

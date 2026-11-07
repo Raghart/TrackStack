@@ -1,7 +1,7 @@
 import { getAllAlbumSongs, getAllArtistSongs } from "@/queries/DetailQueries";
-import { SongResponse } from "@/types/songTypes";
 import { ValidDetail } from "@/types/utilTypes";
 import { useQuery } from "@apollo/client";
+import { SongResponse } from "@trackstack/schemas";
 
 const useGetDetailSongs = (type: ValidDetail, filterValue: string) => {
     const query = type === "album" ? getAllAlbumSongs : getAllArtistSongs;

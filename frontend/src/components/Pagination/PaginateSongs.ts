@@ -1,4 +1,4 @@
-import { SongResponse } from "@/types/songTypes";
+import { SongResponse } from "@trackstack/schemas";
 import { useState } from "react";
 
 const usePaginateSongs = (songs: SongResponse[]) => {

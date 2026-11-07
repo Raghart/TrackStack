@@ -1,9 +1,8 @@
 import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
-import { SongResponse } from "./types/songTypes";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { getMainDefinition } from "@apollo/client/utilities";
-import { AlbumResponse, ArtistResponse } from "@trackstack/schemas";
+import { AlbumResponse, ArtistResponse, SongResponse } from "@trackstack/schemas";
 
 const httpLink = new HttpLink({
   uri: import.meta.env.VITE_GRAPHQL_URI,

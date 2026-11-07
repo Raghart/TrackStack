@@ -2,7 +2,7 @@ import ArtistLinks from "@/components/Utils/ArtistLinks";
 import { Card, LinkBox, LinkOverlay, useBreakpointValue } from "@chakra-ui/react";
 import BtnPlaySearchSong from "./BtnPlaySearchSong";
 import { SONGSEARCH_FONTSIZES, SONGSEARCH_SIZES } from "@/components/constants/TrackSearchC";
-import { SongResponse } from "@/types/songTypes";
+import { SongResponse } from "@trackstack/schemas";
 
 const SongSearchCard = ({ song, isSongPlaying } : { song: SongResponse, isSongPlaying: boolean }) => {
     const responsiveSize = useBreakpointValue({ base: "15px", sm: "16px", md: "19px", lg: "19px" });

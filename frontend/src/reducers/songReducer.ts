@@ -1,5 +1,6 @@
-import { SongResponse, songStateType } from "@/types/songTypes";
+import { songStateType } from "@/types/songTypes";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { SongResponse } from "@trackstack/schemas";
 
 const initialState: { songState : songStateType } = {
     songState: {

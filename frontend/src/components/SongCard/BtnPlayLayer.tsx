@@ -4,9 +4,9 @@ import handlePlayingSong from "../Utils/handlePlayingSong";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { SONGCARD_BTN_SIZES, SONGCARD_ICON_SIZES } from "../constants/SongCardC";
-import { SongResponse } from "@/types/songTypes";
+import { SongResponse } from "@trackstack/schemas";
 
-const BtnPlayLayer = ({ id, name, album_cover, artists, url_preview, isSongPlaying } : SongResponse 
+const BtnPlayLayer = ({ id, name, album_cover, artists, url_preview, isSongPlaying } : SongResponse
     & { isSongPlaying: boolean }) => {
     const dispatch = useAppDispatch();
     return(

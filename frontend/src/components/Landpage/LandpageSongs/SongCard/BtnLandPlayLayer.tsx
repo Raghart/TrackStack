@@ -3,10 +3,10 @@ import { useAppDispatch } from "../../../Utils/redux-hooks";
 import handlePlayingSong from "../../../Utils/handlePlayingSong";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { motion } from "framer-motion";
-import { SongResponse } from "@/types/songTypes";
+import { SongResponse } from "@trackstack/schemas";
 
-const BtnLandPlayLayer = ({ id, name, album_cover, artists, url_preview, isSongPlaying } : SongResponse & 
-    { isSongPlaying: boolean } ) => {
+const BtnLandPlayLayer = ({ id, name, album_cover, artists, url_preview, isSongPlaying } : 
+    SongResponse & { isSongPlaying: boolean } ) => {
     const dispatch = useAppDispatch();
     return(
         <Box className="hover-overlay" position="absolute" inset={0} w="full" h="full" opacity={0} px={2} py={4} 

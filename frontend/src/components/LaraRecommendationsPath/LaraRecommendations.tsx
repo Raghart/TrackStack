@@ -6,10 +6,10 @@ import ScrollUpArrow from "../Utils/ScrollUpArrow";
 import useSongRec from "../Utils/hooks/useSongRec";
 import { useAppSelector } from "../Utils/redux-hooks";
 import { Zoom } from "react-awesome-reveal";
-import { SongResponse } from "@/types/songTypes";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
 import AIResponse from "./AIResponse";
+import { SongResponse } from "@trackstack/schemas";
 
 const LaraRecommendations = () => {
     const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();

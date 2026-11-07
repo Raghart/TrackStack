@@ -6,10 +6,10 @@ import NotFound from "@/components/Error/NotFound";
 import { Zoom } from "react-awesome-reveal";
 import { SONGCARD_SIZES } from "@/components/constants/SongCardC";
 import GenreDetHeader from "./GenreDetHeader";
-import { SongResponse } from "@/types/songTypes";
 import useGenreSongs from "../Utils/hooks/useGenreSongs";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
+import { SongResponse } from "@trackstack/schemas";
 
 const GenreDetails = () => {
   const { genre } = useParams();

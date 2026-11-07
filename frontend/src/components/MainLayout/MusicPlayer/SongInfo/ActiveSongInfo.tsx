@@ -2,7 +2,7 @@ import ArtistLinks from "@/components/Utils/ArtistLinks";
 import { Flex, Image, SkeletonCircle, SkeletonText, VStack } from "@chakra-ui/react";
 import { ACT_SONG_WIDTH } from "@/components/constants/MusicPlayerC";
 import ActSongTitle from "./ActSongTitle";
-import { SongResponse } from "@/types/songTypes";
+import { SongResponse } from "@trackstack/schemas";
 
 const ActiveSongInfo = ({ activeSong } : { activeSong: SongResponse | null }) => {
     return(

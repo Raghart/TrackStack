@@ -5,10 +5,10 @@ import NotFound from "@/components/Error/NotFound";
 import { useAppSelector } from "@/components/Utils/redux-hooks";
 import useGetDetailSongs from "@/components/Utils/hooks/useGetDetailSongs";
 import { SONGCARD_SIZES } from "@/components/constants/SongCardC";
-import { SongResponse } from "@/types/songTypes";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "@/components/Utils/LoadingBeat";
 import usePaginateSongs from "@/components/Pagination/PaginateSongs";
+import { SongResponse } from "@trackstack/schemas";
 
 const DetailSongs = ({ type, filterValue, error }: { type: ValidDetail, filterValue: string, error: string }) => {
     const { data, loading, detailSongs } = useGetDetailSongs(type, filterValue);

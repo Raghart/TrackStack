@@ -5,7 +5,7 @@ import useActSongState from "@/components/Utils/hooks/useActSongState";
 import { Box, Icon, IconButton, Image, Skeleton } from "@chakra-ui/react";
 import { useState } from "react";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
-import { SongResponse } from "@/types/songTypes";
+import { SongResponse } from "@trackstack/schemas";
 
 const PlaySongBox = ({ id, name, artists, album_cover, url_preview } : SongResponse) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);

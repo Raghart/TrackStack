@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from "@/store";
 import { setActiveAudio, togglePlayAudio } from "@/reducers/songReducer";
-import { SongResponse } from "@/types/songTypes";
+import { SongResponse } from "@trackstack/schemas";
 
 const handlePlayingSong = (song: SongResponse) => (dispatch: AppDispatch, getState: () => RootState) => {
   const state = getState();

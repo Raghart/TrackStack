@@ -1,10 +1,4 @@
-export interface SongResponse {
-    id: number;
-    name: string;
-    artists: string[];
-    album_cover: string;
-    url_preview: string;
-};
+import { SongResponse } from "@trackstack/schemas";
 
 export interface songStateType {
     activeSong: SongResponse | null;
