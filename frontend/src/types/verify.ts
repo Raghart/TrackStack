@@ -1,17 +1,11 @@
 import { genreList } from "@/components/Utils/genreIconList";
 import { ValidDetail } from "./utilTypes";
 
-export const isString = (text: unknown): text is string => {
-    return typeof text === "string" || text instanceof String;
-};
-
 export const isValidDetail = (text: unknown) : text is ValidDetail => {
-    if (isString(text) && (text === "album" || text === "artist" || text === "genre")) {
-        return true;
-    };
-    return false;
+    return typeof text === "string" && ["album","artist","genre"].includes(text);
 };
 
-export const isValidGenre = (text: string) : boolean => {
-    return genreList.some(genre => genre.name.toLowerCase() === text.toLowerCase());
+export const isValidGenre = (text: unknown) : boolean => {
+    return typeof text === "string" && 
+        genreList.some(genre => genre.name.toLowerCase() === text.toLowerCase());
 };
