@@ -33,12 +33,3 @@ export type SongCreationAttributes = Optional<
   SongAttributes,
   'id' | 'artists' | 'album' | 'genres' | 'songDetails'
 >;
-
-export interface SongRecResponse {
-  id: number;
-  name: string;
-  artists: string;
-  album_cover: string;
-  url_preview: string;
-  cos_sim: number;
-}

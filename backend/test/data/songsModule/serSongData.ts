@@ -1,8 +1,5 @@
-import {
-  SongRecResponse,
-} from '@/attributes/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
-import { FullRawSong, SongRawData, SongResponse } from '@trackstack/schemas';
+import { FullRawSong, SongRawData, SongRecommendationResponse, SongResponse } from '@trackstack/schemas';
 
 export const songTestData = [
   {
@@ -138,4 +135,4 @@ export const songRecRawResponse = [
     artists: 'Quicksand',
     cos_sim: 0.9994,
   },
-] as unknown as SongRecResponse[];
+] as unknown as SongRecommendationResponse[];

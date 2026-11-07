@@ -194,4 +194,6 @@ const songRecommendationSchema = z.object({
   cos_sim: z.number(),
 });
 
+export type SongRecommendationResponse = z.infer<typeof songRecommendationSchema>;
+
 export const songRecommendationsSchema = z.array(songRecommendationSchema);
