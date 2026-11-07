@@ -8,7 +8,7 @@ Contexto específico del paquete `backend/`. Las reglas generales del monorepo e
 - **GraphQL code-first** con Apollo Server 5 (`@nestjs/graphql`): el schema se genera en memoria (`autoSchemaFile: true`), no hay archivo `.graphql` versionado.
 - **Subscriptions** por WebSocket (`graphql-ws`) para el streaming de la IA.
 - **Sequelize 6** (`@nestjs/sequelize`) sobre **PostgreSQL**; `autoLoadModels: true` y `synchronize: false`. Las **migraciones** se gestionan con **Prisma 7** en `database/` (`schema.prisma` + historial migrado 1:1 desde Goose, ya marcado como aplicado en la BD real).
-- **Búsqueda sobre PostgreSQL** mediante Sequelize en `src/search` (implementación en curso, sin servicio externo de búsqueda). La BD tiene `pg_trgm` + `unaccent`, índices GIN de trigramas y las funciones `search_songs`, `search_artists` y `search_albums` (ver la sección Database de `README.md`).
+- **Búsqueda sobre PostgreSQL** en `src/search` (sin servicio externo de búsqueda): `SearchService` ejecuta las funciones `search_songs`, `search_artists` y `search_albums` con Sequelize (`sequelize.query`, parámetros bound) y valida cada fila con los schemas Zod de `@trackstack/schemas`. La BD aporta `pg_trgm` + `unaccent`, índices GIN de trigramas y el ranking exacto → prefijo → contiene → fuzzy (ver `docs/database.md`).
 - **Google GenAI (Gemini)** inyectado como provider `AI`, usado para las recomendaciones/RAG en streaming.
 - **Vitest 5 + unplugin-swc** para unit tests; **ESLint 9** (flat config) con `typescript-eslint` y `eslint-plugin-security`; **Prettier** (`singleQuote`, `trailingComma: all`).
 - Alias de imports `src/*` (configurado en `tsconfig.json` y en `vitest.config.ts`).

@@ -4,7 +4,7 @@
 
 **TrackStack** es una aplicación web de recomendación musical. Combina:
 
-- Búsqueda de canciones, artistas y álbumes directamente sobre **PostgreSQL** (implementación en curso; sin motor de búsqueda externo), con `pg_trgm` + `unaccent`, índices GIN de trigramas y funciones de ranking SQL.
+- Búsqueda de canciones, artistas y álbumes directamente sobre **PostgreSQL** (sin motor de búsqueda externo), con `pg_trgm` + `unaccent`, índices GIN de trigramas y funciones de ranking SQL (`search_songs`, `search_artists`, `search_albums`).
 - Reproductor de previews de 30 s.
 - Recomendaciones personalizadas mediante **vectores construidos con metadata de canciones** (energía, danceability, mood, etc.) y pesos ajustables por el usuario.
 - Respuestas de IA en streaming vía **GraphQL Subscriptions** (WebSocket), con un sistema basado en principios **RAG** sobre un catálogo de +50 000 canciones.

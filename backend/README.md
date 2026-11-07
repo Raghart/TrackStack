@@ -40,6 +40,8 @@ Set up a `.env` file in `backend/` using these variable names:
 | `DB_PORT` | Yes | PostgreSQL port |
 | `API_KEY` | Yes | Google GenAI API key |
 | `AI_MODEL` | Yes | Gemini model name used for streamed messages |
+| `PORT` | No | HTTP port (defaults to `3000`) |
+| `URL_DOMAIN` | No | Allowed CORS origin for the frontend |
 | `LOCAL_PAGE_URL` | No | URL printed on startup |
 | `LOCAL_GRAPHQL` | No | GraphQL URL printed on startup |
 
@@ -72,8 +74,11 @@ pnpm --filter ./backend run db:generate
 
 ## Database & Migrations
 
-Prisma-managed PostgreSQL schema with pgvector support and custom fuzzy-search
-functions (trigram + unaccent). See [docs/database.md](./docs/database.md)
+Prisma-managed PostgreSQL schema with pgvector support. Search is implemented
+entirely in PostgreSQL through the `search_songs`, `search_artists`, and
+`search_albums` functions (trigram + unaccent, exact → prefix → contains →
+fuzzy ranking); `SearchService` calls them with Sequelize and validates the
+rows with the shared Zod schemas. See [docs/database.md](./docs/database.md)
 for migration structure and schema change guidelines.
 
 ## Tests

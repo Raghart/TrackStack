@@ -17,7 +17,7 @@ Do you want to find a new **banger**? TrackStack is an **AI-powered music recomm
 
 - 🎛️ **Personalized recommendations** — set genre, energy, danceability, mood, sentiment, tempo, and more; the app turns them into a weighted vector and finds the closest songs with **pgvector cosine similarity**.
 - 🤖 **AI recommendations in streaming** — Google Gemini describes your selection while the results arrive over a **GraphQL subscription** (WebSocket).
-- 🔎 **Search across songs, artists, and albums** — the search UI is powered by a GraphQL endpoint that is being migrated from Elasticsearch to **PostgreSQL** with `pg_trgm` and `unaccent`.
+- 🔎 **Search across songs, artists, and albums** — typo-tolerant and accent-insensitive search powered entirely by **PostgreSQL** (`pg_trgm` + `unaccent`), with trigram indexes and SQL ranking functions.
 - ▶️ **Built-in player** — 30-second previews, random/next/previous track controls, and volume control.
 - 🎨 **Browse by artist, album, or genre** — dedicated pages with infinite scrolling and detail views, including a Spotify link for full tracks.
 

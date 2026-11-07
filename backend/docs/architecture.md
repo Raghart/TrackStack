@@ -14,9 +14,11 @@ Each domain (`songs`, `albums`, `artists`, `genres`, `song_artists`, `song_genre
 2. `getSongRecommendations(genres, userVector, limit)` calls the PostgreSQL function `search_songs_cosine_similarity(genres, userVector::vector, limit)`, which ranks songs by cosine distance.
 3. In parallel, `aiResponse(genres, userVector)` opens a Gemini stream and yields each chunk as a GraphQL subscription event, so the message appears progressively in the UI.
 
-### Search (migration in progress)
+### Search
 
-The search endpoint is moving from Elasticsearch to a PostgreSQL-only implementation. The database migrations already add `pg_trgm`, `unaccent`, GIN trigram indexes, and the `search_songs`, `search_artists`, and `search_albums` functions with exact/prefix/contains/fuzzy ranking. The current `SearchService` still returns empty arrays while the Sequelize implementation is being completed; the GraphQL contract (`multipleSearch`) already matches the frontend.
+Search is PostgreSQL-only, with no external search engine. The database adds `pg_trgm`, `unaccent`, GIN trigram indexes, and the `search_songs`, `search_artists`, and `search_albums` functions with exact → prefix → contains → fuzzy ranking and `similarity()` as a tie-breaker.
+
+`SearchService` (`src/search`) calls those functions through Sequelize (`sequelize.query` with bound `query` and `limit` replacements), validates every row with the Zod schemas from `@trackstack/schemas`, and tags each result with its `type` (`song`, `artist`, or `album`). The resolvers expose `artistSearch`, `albumsSearch`, and `songsSearch` individually, plus `multipleSearch`, which returns the first result of each list as `exact*` and the rest as `*Results`.
 
 ## GraphQL API
 
@@ -39,7 +41,10 @@ The schema is generated at runtime. With the backend running, open `http://local
 | `getAllAlbumSongs` | `album` | Songs in an album |
 | `getAllGenres` | — | All genre names |
 | `getAllGenreSongs` | `seed`, `genre`, `page = 1`, `limit = 20` | Songs in a genre |
-| `multipleSearch` | `query` | Exact and fuzzy matches for songs, artists, and albums |
+| `multipleSearch` | `query` | Exact match plus remaining results for songs, artists, and albums |
+| `artistSearch` | `query` | Artists ranked by exact/prefix/contains/fuzzy match |
+| `albumsSearch` | `query` | Albums ranked by exact/prefix/contains/fuzzy match |
+| `songsSearch` | `query` | Songs ranked by exact/prefix/contains/fuzzy match |
 
 ### Subscription
 

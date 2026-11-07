@@ -18,7 +18,9 @@ database/
         ├── ...
         ├── 20261102000012_add_vectors/
         ├── 20261102000013_search_songs_cosine_similarity/
-        └── 20261102000014_search_extensions/
+        ├── 20261102000014_search_extensions/
+        ├── 20261105000000_search_artists_fill_limit/
+        └── 20261105000001_search_albums_fill_limit/
 ```
 
 `20261102000014_search_extensions` implements:
@@ -27,6 +29,12 @@ database/
 - `public.immutable_unaccent(text)`, an `IMMUTABLE` wrapper around `unaccent()` so it can be used in indexes.
 - GIN trigram indexes on `lower(immutable_unaccent(name))` for `songs`, `artists`, and `albums`. Queries must apply exactly that expression to use the indexes.
 - `search_songs`, `search_artists`, and `search_albums`, which combine `ILIKE`/`LIKE` with `similarity()` and rank results as exact → prefix → contains → fuzzy, then by `similarity()`.
+
+`20261105000000_search_artists_fill_limit` and `20261105000001_search_albums_fill_limit`
+redefine `search_artists` and `search_albums` so they rank every row and apply
+`LIMIT` at the end, instead of filtering with the `%` trigram operator (which
+uses the 0.3 similarity threshold and could return fewer rows than requested).
+`search_songs` still filters candidates with `LIKE`/`%` before ranking.
 
 `prisma.config.ts` loads `backend/.env` because Prisma 7 no longer reads it automatically. For Aiven you may need to append `?sslmode=require` to the URL.
 

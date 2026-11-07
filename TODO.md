@@ -8,10 +8,11 @@
 7. ~~Revise the READMEs to make sure it doesn't repeat information and what could go inside the docs folder~~.
 8. ~~Tell the agent that all the changes to the Database must be done through Prisma, never without a direct query~~.
 9. ~~Replace Elasticsearch search with PostgreSQL full-text search~~.
-10. Adopt Zod for runtime validation at system boundaries (replacing manual checks) (Backend semi Done).
+10. Adopt Zod for runtime validation at system boundaries (replacing manual checks) (Backend Done).
 11. Check the frontend README to see if it needs some improvements.
 12. Add tests to the Frontend.
 13. Make the agent fix the views in the cellphone because sometime it breaks.
 14. Make the project runnable via Docker (Dockerfile + docker-compose).
 15. Check if it's worthy to cifre the DB conexion to Aiven.
 16. Would be a good idea to add a note to AGENTS.md to tell that don't change the code when making tests, it will be better to consult with me if it detects a possible security breach before deciding the way to patch it.
+17. Update coverage image with one that covers both backend and frontend.

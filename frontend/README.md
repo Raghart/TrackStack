@@ -28,7 +28,7 @@ React single-page app for [TrackStack](../README.md). It provides the recommenda
 
 ### Search songs, artists, and albums
 
-The search bar in the top navbar sends the query to `multipleSearch` and shows exact matches plus fuzzy results. While the backend search migration is in progress, the UI, GraphQL document, and result handling are already in place.
+The search bar in the top navbar sends the query to `multipleSearch` and shows exact matches plus the remaining fuzzy results, all served by the backend's PostgreSQL search.
 
 <p align="center">
     <img src="../assets/songSearch.png" alt="Search results" />
