@@ -9,15 +9,15 @@ import safeQuery from '@/utils/safeQuery';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
-import { AlbumWithSongs } from '@/attributes/albumAttributes';
 import { InvalidPaginationException } from '@/utils/PaginationError';
 import {
   AlbumResponse,
+  albumResponseSchema,
   AlbumWithSongsData,
   albumWithSongsSchema,
   floatNumberSchema,
   SongResponse,
-  stringSchema,
+  songResponseSchema,
 } from '@trackstack/schemas';
 
 @Injectable()
@@ -62,11 +62,11 @@ export class AlbumsService {
   parseAlbums(
     albumData: AlbumWithSongsData[],
   ): AlbumResponse[] {
-    return albumData.map((data) => ({
+    return albumData.map((data) => albumResponseSchema.parse({
       id: data.id,
       name: data.name,
       album_cover: data.url_image,
-      artists: data.songs[0].artists?.map((artist) => artist.name) ?? [],
+      artists: data.songs[0].artists?.map((artist) => artist.name),
     }));
   }
 
@@ -105,15 +105,14 @@ export class AlbumsService {
   }
 
   parseAlbumSongs(
-    albumSongs: AlbumWithSongsData | AlbumWithSongs,
+    albumSongs: AlbumWithSongsData,
   ): SongResponse[] {
-    const album = albumSongs as AlbumWithSongsData;
-    return album.songs.map((song) => ({
+    return albumSongs.songs.map((song) => songResponseSchema.parse({
       id: song.id,
       name: song.name,
-      artists: song.artists?.map((artist) => stringSchema.parse(artist.name)) ?? [],
+      artists: song.artists?.map((artist) => artist.name),
       url_preview: song.url_preview,
-      album_cover: album.url_image,
+      album_cover: albumSongs.url_image,
     }));
   }
 

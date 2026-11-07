@@ -198,7 +198,7 @@ export type SongRecommendationResponse = z.infer<typeof songRecommendationSchema
 
 export const songRecommendationsSchema = z.array(songRecommendationSchema);
 
-export const albumResponseSchema = z.looseObject({
+export const albumResponseSchema = z.object({
   id: z.number(),
   name: stringSchema,
   album_cover: stringSchema,
