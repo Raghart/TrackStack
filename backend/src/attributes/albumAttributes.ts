@@ -12,11 +12,4 @@ export interface AlbumWithSongs extends AlbumAttributes {
   songs: SongsModel[];
 }
 
-export interface AlbumResponse {
-  id: number;
-  name: string;
-  album_cover: string;
-  artists: string[];
-}
-
 export type AlbumCreationAttributes = Optional<AlbumAttributes, 'id' | 'songs'>;

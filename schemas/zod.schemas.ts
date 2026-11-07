@@ -197,3 +197,12 @@ const songRecommendationSchema = z.object({
 export type SongRecommendationResponse = z.infer<typeof songRecommendationSchema>;
 
 export const songRecommendationsSchema = z.array(songRecommendationSchema);
+
+export const albumResponseSchema = z.looseObject({
+  id: z.number(),
+  name: stringSchema,
+  album_cover: stringSchema,
+  artists: z.array(stringSchema),
+});
+
+export type AlbumResponse = z.infer<typeof albumResponseSchema>;

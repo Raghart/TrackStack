@@ -9,9 +9,10 @@ import safeQuery from '@/utils/safeQuery';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
-import { AlbumResponse, AlbumWithSongs } from '@/attributes/albumAttributes';
+import { AlbumWithSongs } from '@/attributes/albumAttributes';
 import { InvalidPaginationException } from '@/utils/PaginationError';
 import {
+  AlbumResponse,
   AlbumWithSongsData,
   albumWithSongsSchema,
   floatNumberSchema,
