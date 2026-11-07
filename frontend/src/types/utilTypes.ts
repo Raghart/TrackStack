@@ -9,14 +9,11 @@ export interface highlightType {
 
 export type ValidDetail = "album" | "artist";
 
-export type NavNameOptions = "Home"  | "Artists" | "Genres" | "Albums";
-type NavPath = "/" | "/artists" | "/genres" | "/albums";
-
 export interface NavItem {
-    name: NavNameOptions;
+    name: "Home"  | "Artists" | "Genres" | "Albums";
     iconType: IconType;
     IconColor: string;
-    path: NavPath;
+    path: "/" | "/artists" | "/genres" | "/albums";
     bg: string;
     hover: string;
 };

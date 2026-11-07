@@ -1,8 +1,7 @@
-import { NavNameOptions } from "@/types/utilTypes";
 import { Heading, Highlight } from "@chakra-ui/react";
 import { PATH_HEADER_SIZES, PATH_HIGHLIGHT_SIZES } from "../constants/PathC";
 
-const PathHeader = ({type}: {type: NavNameOptions}) => {
+const PathHeader = ({type}: {type: "Home"  | "Artists" | "Genres" | "Albums"}) => {
     switch (type) {
         case "Artists":
             return (

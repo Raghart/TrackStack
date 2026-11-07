@@ -1,6 +1,6 @@
 import { getSongData } from "@/queries/DetailQueries";
-import { isNumber } from "@/types/verify";
 import { useLazyQuery } from "@apollo/client";
+import { floatNumberSchema } from "@trackstack/schemas";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -9,8 +9,8 @@ const useGetSongCover = () => {
     const [getSongID, { data }] = useLazyQuery(getSongData);
 
     useEffect(() => {
-        if (isNumber(songId)) {
-            getSongID({ variables: { SongID: parseInt(songId) } }); 
+        if (floatNumberSchema.safeParse(songId).success) {
+            getSongID({ variables: { SongID: floatNumberSchema.parse(songId) } }); 
         };
     }, [songId, getSongID]);
 
