@@ -127,7 +127,7 @@ export const songResponseSchema = z.object({
   url_preview: stringSchema,
 });
 
-export type SongResponseData = z.infer<typeof songResponseSchema>;
+export type SongResponse = z.infer<typeof songResponseSchema>;
 
 export const albumWithSongsSchema = z.object({
   id: z.number(),
@@ -156,8 +156,8 @@ export const songGenresSchema = z.looseObject({
 
 export type songGenresData = z.infer<typeof songGenresSchema>;
 
-export const fullSongRawSchema = z.looseObject({
-  id: z.number().optional(),
+export const fullRawSongSchema = z.looseObject({
+  id: z.number(),
   name: stringSchema,
   spotify_id: stringSchema,
   url_preview: stringSchema,
@@ -166,9 +166,9 @@ export const fullSongRawSchema = z.looseObject({
   artists: z.array(artistReferenceSchema),
   album: albumReferenceSchema,
   genres: z.array(genreReferenceSchema),
-}).required();
+});
 
-export type FullSongRawData = z.infer<typeof fullSongRawSchema>;
+export type FullRawSong = z.infer<typeof fullRawSongSchema>;
 
 export const fullSongResponseSchema = z.object({
   id: z.number(),

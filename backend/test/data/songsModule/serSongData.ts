@@ -2,7 +2,7 @@ import {
   SongRecResponse,
 } from '@/attributes/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
-import { FullSongResponseData, SongRawData, SongResponseData } from '@trackstack/schemas';
+import { FullRawSong, SongRawData, SongResponse } from '@trackstack/schemas';
 
 export const songTestData = [
   {
@@ -72,7 +72,7 @@ export const singleSongTestData = {
     url_image:
       'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
   },
-} as unknown as SongResponseData;
+} as unknown as SongResponse;
 
 export const songFullRawResponse = {
   id: 1,
@@ -95,7 +95,7 @@ export const songFullRawResponse = {
     { genre: 'Grunge' },
     { genre: '90s' },
   ],
-} as unknown as FullSongResponseData;
+} as unknown as FullRawSong;
 
 export const songRecRawResponse = [
   {

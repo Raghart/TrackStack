@@ -10,7 +10,7 @@ import {
   ArtistWithSongsData,
   artistWithSongsSchema,
   floatNumberSchema,
-  SongResponseData,
+  SongResponse,
   stringSchema,
 } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
@@ -101,7 +101,7 @@ export class ArtistsService {
 
   parseArtistSongs(
     artist: ArtistWithSongsData,
-  ): SongResponseData[] {
+  ): SongResponse[] {
     return artist.songs.map((song) => ({
       id: floatNumberSchema.parse(song.id),
       name: stringSchema.parse(song.name),
@@ -111,7 +111,7 @@ export class ArtistsService {
     }));
   }
 
-  async getAllArtistSongs(artist: string): Promise<SongResponseData[]> {
+  async getAllArtistSongs(artist: string): Promise<SongResponse[]> {
     const artistSongs = await this.fetchArtistSongs(artist);
     return this.parseArtistSongs(artistSongs);
   }

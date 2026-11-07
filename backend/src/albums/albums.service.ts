@@ -15,7 +15,7 @@ import {
   AlbumWithSongsData,
   albumWithSongsSchema,
   floatNumberSchema,
-  SongResponseData,
+  SongResponse,
   stringSchema,
 } from '@trackstack/schemas';
 
@@ -105,7 +105,7 @@ export class AlbumsService {
 
   parseAlbumSongs(
     albumSongs: AlbumWithSongsData | AlbumWithSongs,
-  ): SongResponseData[] {
+  ): SongResponse[] {
     const album = albumSongs as AlbumWithSongsData;
     return album.songs.map((song) => ({
       id: song.id,
@@ -116,7 +116,7 @@ export class AlbumsService {
     }));
   }
 
-  async getAllAlbumSongs(album: string): Promise<SongResponseData[]> {
+  async getAllAlbumSongs(album: string): Promise<SongResponse[]> {
     const albumSongs = await this.fetchAlbumSongs(album);
     return this.parseAlbumSongs(albumSongs);
   }

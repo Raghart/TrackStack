@@ -1,7 +1,7 @@
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
-import { FullSongResponseData, SongResponseData } from '@trackstack/schemas';
+import { FullSongResponseData, SongResponse } from '@trackstack/schemas';
 
-export const songTestResponses: SongResponseData[] = [
+export const songTestResponses: SongResponse[] = [
   {
     id: 1,
     name: 'Come as You Are',
@@ -49,7 +49,7 @@ export const songTestResponses: SongResponseData[] = [
   },
 ];
 
-export const singleSongData: SongResponseData = {
+export const singleSongData: SongResponse = {
   id: 2,
   name: 'Wonderwall',
   artists: ['Oasis'],
@@ -74,7 +74,7 @@ export const songFullTestResponse: FullSongResponseData = {
   genres: ['Rock', 'Alternative', 'Alternative Rock', 'Grunge', '90s'],
 };
 
-export const songRecommendResponses: SongResponseData[] = [
+export const songRecommendResponses: SongResponse[] = [
   {
     id: 1,
     name: 'Malpractice',

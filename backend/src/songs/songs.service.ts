@@ -14,13 +14,13 @@ import { GenresModel } from '../../models/genres/genres.model';
 import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
 import { existsSync } from 'node:fs';
 import {
-  FullSongRawData,
-  fullSongRawSchema,
+  FullRawSong,
+  fullRawSongSchema,
   FullSongResponseData,
   SongRawData,
   songRawSchema,
   songRecommendationsSchema,
-  SongResponseData,
+  SongResponse,
   stringSchema,
 } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
@@ -62,12 +62,12 @@ export class SongsService {
     );
   }
 
-  async getLandpageSongs(limit: number): Promise<SongResponseData[]> {
+  async getLandpageSongs(limit: number): Promise<SongResponse[]> {
     const songData = await this.fetchLandpageSongs(limit);
     return this.parseSongList(songData);
   }
 
-  parseSongList(songData: SongRawData[]): SongResponseData[] {
+  parseSongList(songData: SongRawData[]): SongResponse[] {
     return songData.map((song) => ({
       id: song.id,
       name: song.name,
@@ -77,7 +77,7 @@ export class SongsService {
     }));
   }
 
-  async fetchFullSongData(songID: number): Promise<FullSongRawData> {
+  async fetchFullSongData(songID: number): Promise<FullRawSong> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -114,10 +114,10 @@ export class SongsService {
         `The song with the ID: '${songID}' doesn't exist in the database!`,
       );
 
-    return fullSongRawSchema.parse(rawData.get({ plain: true }));
+    return fullRawSongSchema.parse(rawData.get({ plain: true }));
   }
 
-  parseFullSong(songData: FullSongRawData): FullSongResponseData {
+  parseFullSong(songData: FullRawSong): FullSongResponseData {
     return {
       id: songData.id,
       name: songData.name,
@@ -196,7 +196,7 @@ export class SongsService {
     genres: string[],
     userVector: number[],
     limit: number,
-  ): Promise<SongResponseData[]> {
+  ): Promise<SongResponse[]> {
     const parsedVector = `[${userVector.join(', ')}]`;
     const genresParsed = parseGenres(genres);
     const rawSongData = await this.songModel.sequelize?.query(
@@ -245,7 +245,7 @@ export class SongsService {
     return this.parseSongData(randomSong);
   }
 
-  parseSongData(songData: SongRawData): SongResponseData {
+  parseSongData(songData: SongRawData): SongResponse {
     return {
       id: songData.id,
       name: songData.name,
@@ -296,7 +296,7 @@ export class SongsService {
     return songRawSchema.parse(rawData.get({ plain: true }));
   }
 
-  async getNextSong(songId: number): Promise<SongResponseData> {
+  async getNextSong(songId: number): Promise<SongResponse> {
     const songData = await this.fetchNextSong(songId);
     return this.parseSongData(songData);
   }

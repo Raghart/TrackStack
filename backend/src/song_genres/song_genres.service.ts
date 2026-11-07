@@ -12,7 +12,7 @@ import { SongGenresModel } from '../../models/song_genres/SongGenres.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
-import { floatNumberSchema, songGenresData, songGenresSchema, SongResponseData, stringSchema } from '@trackstack/schemas';
+import { floatNumberSchema, songGenresData, songGenresSchema, SongResponse, stringSchema } from '@trackstack/schemas';
 
 @Injectable()
 export class SongGenresService {
@@ -62,7 +62,7 @@ export class SongGenresService {
     return rawData.map((entry) => songGenresSchema.parse(entry.get({ plain: true })));
   }
 
-  parseGenreSongs(data: songGenresData[]): SongResponseData[] {
+  parseGenreSongs(data: songGenresData[]): SongResponse[] {
     return data.map((entry) => ({
       id: floatNumberSchema.parse(entry.song.id),
       name: stringSchema.parse(entry.song.name),
