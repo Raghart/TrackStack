@@ -34,14 +34,6 @@ export type SongCreationAttributes = Optional<
   'id' | 'artists' | 'album' | 'genres' | 'songDetails'
 >;
 
-export interface SongResponse {
-  id: number;
-  name: string;
-  artists: string[];
-  album_cover: string;
-  url_preview: string;
-}
-
 export interface SongRecResponse {
   id: number;
   name: string;

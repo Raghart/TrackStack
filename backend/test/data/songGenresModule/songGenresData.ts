@@ -1,6 +1,5 @@
-import { SongResponse } from '@/attributes/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
-import { songGenresData } from '@trackstack/schemas';
+import { songGenresData, SongResponseData } from '@trackstack/schemas';
 
 export const songGenresTestData = [
   {
@@ -56,7 +55,7 @@ export const songGenresTestData = [
   },
 ] as unknown as songGenresData[];
 
-export const songGenresResponses: SongResponse[] = [
+export const songGenresResponses: SongResponseData[] = [
   {
     id: 1,
     name: "I'm A Mover",

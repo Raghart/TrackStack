@@ -119,6 +119,16 @@ export const songRawSchema = z.looseObject({
 
 export type SongRawData = z.infer<typeof songRawSchema>;
 
+export const songResponseSchema = z.looseObject({
+  id: z.number(),
+  name: stringSchema,
+  artists: z.array(stringSchema),
+  album_cover: stringSchema,
+  url_preview: stringSchema,
+});
+
+export type SongResponseData = z.infer<typeof songResponseSchema>;
+
 export const albumWithSongsSchema = z.object({
   id: z.number(),
   name: stringSchema,

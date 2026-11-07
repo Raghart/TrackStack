@@ -1,6 +1,5 @@
 import { ArtistResponse } from '@/attributes/artistAttributes';
-import { SongResponse } from '@/attributes/songAttributes';
-import { ArtistWithSongsData } from '@trackstack/schemas';
+import { ArtistWithSongsData, SongResponseData } from '@trackstack/schemas';
 
 export const artistData = [
   {
@@ -175,7 +174,7 @@ export const artistSongsData = {
   ],
 } as unknown as ArtistWithSongsData;
 
-export const artistTestSongs: SongResponse[] = [
+export const artistTestSongs: SongResponseData[] = [
   {
     id: 598102,
     name: 'Come as You Are',

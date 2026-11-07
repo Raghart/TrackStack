@@ -1,6 +1,5 @@
 import { AlbumResponse } from '@/attributes/albumAttributes';
-import { SongResponse } from '@/attributes/songAttributes';
-import { AlbumWithSongsData } from '@trackstack/schemas';
+import { AlbumWithSongsData, SongResponseData } from '@trackstack/schemas';
 
 export const albumSongs = {
   id: 549818,
@@ -27,7 +26,7 @@ export const albumResponse: AlbumResponse[] = [
   },
 ];
 
-export const albumParsedSongs: SongResponse[] = [
+export const albumParsedSongs: SongResponseData[] = [
   {
     id: 598104,
     name: 'Come as You Are',
@@ -39,7 +38,7 @@ export const albumParsedSongs: SongResponse[] = [
   },
 ];
 
-export const albumResSongs: SongResponse[] = [
+export const albumResSongs: SongResponseData[] = [
   {
     id: 598104,
     name: 'Come as You Are',

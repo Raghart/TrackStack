@@ -5,7 +5,6 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import { SongResponse } from '@/attributes/songAttributes';
 import safeQuery from '@/utils/safeQuery';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
@@ -16,6 +15,7 @@ import {
   AlbumWithSongsData,
   albumWithSongsSchema,
   floatNumberSchema,
+  SongResponseData,
   stringSchema,
 } from '@trackstack/schemas';
 
@@ -105,7 +105,7 @@ export class AlbumsService {
 
   parseAlbumSongs(
     albumSongs: AlbumWithSongsData | AlbumWithSongs,
-  ): SongResponse[] {
+  ): SongResponseData[] {
     const album = albumSongs as AlbumWithSongsData;
     return album.songs.map((song) => ({
       id: song.id,
@@ -116,7 +116,7 @@ export class AlbumsService {
     }));
   }
 
-  async getAllAlbumSongs(album: string): Promise<SongResponse[]> {
+  async getAllAlbumSongs(album: string): Promise<SongResponseData[]> {
     const albumSongs = await this.fetchAlbumSongs(album);
     return this.parseAlbumSongs(albumSongs);
   }

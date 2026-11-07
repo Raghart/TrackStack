@@ -19,11 +19,12 @@ import {
   SongRawData,
   songRawSchema,
   songRecommendationsSchema,
+  SongResponseData,
   stringSchema,
 } from '@trackstack/schemas';
 import safeQuery from '@/utils/safeQuery';
 import { InvalidPaginationException } from '@/utils/PaginationError';
-import { FullSongResponse, SongResponse } from '@/attributes/songAttributes';
+import { FullSongResponse } from '@/attributes/songAttributes';
 import parseGenres from '@/utils/parseGenres';
 if (existsSync('.env')) process.loadEnvFile();
 
@@ -61,12 +62,12 @@ export class SongsService {
     );
   }
 
-  async getLandpageSongs(limit: number): Promise<SongResponse[]> {
+  async getLandpageSongs(limit: number): Promise<SongResponseData[]> {
     const songData = await this.fetchLandpageSongs(limit);
     return this.parseSongList(songData);
   }
 
-  parseSongList(songData: SongRawData[]): SongResponse[] {
+  parseSongList(songData: SongRawData[]): SongResponseData[] {
     return songData.map((song) => ({
       id: song.id,
       name: song.name,
@@ -195,7 +196,7 @@ export class SongsService {
     genres: string[],
     userVector: number[],
     limit: number,
-  ): Promise<SongResponse[]> {
+  ): Promise<SongResponseData[]> {
     const parsedVector = `[${userVector.join(', ')}]`;
     const genresParsed = parseGenres(genres);
     const rawSongData = await this.songModel.sequelize?.query(
@@ -244,7 +245,7 @@ export class SongsService {
     return this.parseSongData(randomSong);
   }
 
-  parseSongData(songData: SongRawData): SongResponse {
+  parseSongData(songData: SongRawData): SongResponseData {
     return {
       id: songData.id,
       name: songData.name,
@@ -295,7 +296,7 @@ export class SongsService {
     return songRawSchema.parse(rawData.get({ plain: true }));
   }
 
-  async getNextSong(songId: number): Promise<SongResponse> {
+  async getNextSong(songId: number): Promise<SongResponseData> {
     const songData = await this.fetchNextSong(songId);
     return this.parseSongData(songData);
   }

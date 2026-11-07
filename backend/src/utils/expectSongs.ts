@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { FullSongResponse, SongResponse } from '@/attributes/songAttributes';
+import { FullSongResponse } from '@/attributes/songAttributes';
 import { TESTING_URL, TESTING_IMG } from '../../test/constants/constants';
+import { SongResponseData } from '@trackstack/schemas';
 
 export const expectFullSongProps = (song: FullSongResponse) => {
   expect(song).toMatchObject({
@@ -17,7 +18,7 @@ export const expectFullSongProps = (song: FullSongResponse) => {
   });
 };
 
-export const expectSongProps = (array: SongResponse[]) => {
+export const expectSongProps = (array: SongResponseData[]) => {
   array.forEach((song) => {
     expect(song).toMatchObject({
       id: expect.any(Number),
@@ -30,7 +31,7 @@ export const expectSongProps = (array: SongResponse[]) => {
 };
 
 export const expectSongData = (
-  song: SongResponse,
+  song: SongResponseData,
   name: string,
   artist: string,
 ) => {
