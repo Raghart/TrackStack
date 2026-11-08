@@ -1,6 +1,6 @@
 import { songStateType } from "@/types/songTypes";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { SongResponse } from "@trackstack/schemas";
+import { FullSongResponse, SongResponse } from "@trackstack/schemas";
 
 const initialState: { songState : songStateType } = {
     songState: {
@@ -17,7 +17,7 @@ const songSlice = createSlice({
             state.songState.activeSong = action.payload;
             state.songState.isPlaying = true;
         },
-        loadAudio(state, action: PayloadAction<SongResponse>) {
+        loadAudio(state, action: PayloadAction<FullSongResponse>) {
             state.songState.activeSong = action.payload;
         },
         togglePlayAudio(state) {

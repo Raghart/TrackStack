@@ -1,6 +1,6 @@
 import { getSongData } from "@/queries/DetailQueries";
 import { useLazyQuery } from "@apollo/client";
-import { floatNumberSchema } from "@trackstack/schemas";
+import { floatNumberSchema, fullSongResponseSchema } from "@trackstack/schemas";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -13,7 +13,7 @@ const useGetSongCover = () => {
             getSongID({ variables: { SongID: floatNumberSchema.parse(songId) } }); 
         };
     }, [songId, getSongID]);
-    return data?.getSongData;
+    return data?.getSongData ? fullSongResponseSchema.parse(data?.getSongData) : null;
 };
 
 export default useGetSongCover;
