@@ -161,7 +161,7 @@ export const fullRawSongSchema = z.looseObject({
   name: stringSchema,
   spotify_id: stringSchema,
   url_preview: stringSchema,
-  duration: z.number(),
+  duration: floatNumberSchema,
   year: z.number(),
   artists: z.array(artistReferenceSchema),
   album: albumReferenceSchema,

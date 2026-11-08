@@ -248,6 +248,15 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
       expect(fullSong).toStrictEqual(songFullRawResponse);
     });
 
+    it('fetchFullSongData parses a numeric-string duration returned by PostgreSQL', async () => {
+      songModel.findByPk.mockResolvedValue({
+        get: () => ({ ...songFullRawResponse, duration: '2.50000' }),
+      });
+
+      const fullSong = await service.fetchFullSongData(2);
+      expect(fullSong.duration).toBe(2.5);
+    });
+
     it('getSongData returns a full response song by id ready to deliver', async () => {
       const fullSong = await service.getSongData(2);
       expectFullSongProps(fullSong);

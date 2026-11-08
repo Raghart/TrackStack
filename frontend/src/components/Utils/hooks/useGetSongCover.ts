@@ -13,7 +13,6 @@ const useGetSongCover = () => {
             getSongID({ variables: { SongID: floatNumberSchema.parse(songId) } }); 
         };
     }, [songId, getSongID]);
-
     return data?.getSongData;
 };
 

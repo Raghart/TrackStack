@@ -12,8 +12,9 @@ const MainLayout = () => {
     const song = useGetSongCover();
     const isTyping = useAppSelector(state => state.search.query.length > 0);
     return(
-        <Box position="relative" minH="100vh" pt={4} pl={3} overflowX="hidden" w="full" bgRepeat="no-repeat"
-            bgImage={song?.album_cover ? `url(${song.album_cover})` : undefined} bgSize="cover" bgPos="center">
+        <Box position="relative" minH="100vh" pt={4} pl={3} overflowX="hidden" w="full" 
+            bgRepeat="no-repeat" bgImage={song?.album_cover ? `url(${song.album_cover})` : undefined} 
+            bgSize="cover" bgPos="center">
             <HomeBar />
             <TopBar />
 
