@@ -10,9 +10,7 @@ import { PATH_CARD_SIZES } from "../constants/PathC";
 import { ArtistResponse } from "@trackstack/schemas";
 
 const ArtistSelection = () => {
-    const { data, onLoadMore } = useGetArtistCards();
-    const dataLength = data?.getAllArtists ? data.getAllArtists.length : 20;
-
+    const { data, onLoadMore, dataLength } = useGetArtistCards();
     return(
         <Box w="full" h="full" direction="column" pt={8} gap={12} pb={20}>
             <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 40 }}>
@@ -29,7 +27,7 @@ const ArtistSelection = () => {
                     )}
 
                     {data && (
-                        <For each={data.getAllArtists}>
+                        <For each={data}>
                             {(artist: ArtistResponse) => <ArtistCard key={artist.name} {...artist} />}
                         </For>
                     )}

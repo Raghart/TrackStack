@@ -1,5 +1,6 @@
 import { getAllArtists } from "@/queries/DetailQueries";
 import { useQuery } from "@apollo/client";
+import { artistResponseSchema } from "@trackstack/schemas";
 import { useState } from "react";
 
 const useGetArtistCards = () => {
@@ -16,7 +17,11 @@ const useGetArtistCards = () => {
         setPage(nextPage);
     };
 
-    return { data, onLoadMore }
+    const parsedData = data?.getAllArtists ? 
+        artistResponseSchema.array().parse(data.getAllArtists) : undefined;
+    const dataLength = parsedData ? data.getAllArtists.length : 20;
+
+    return { data: parsedData, onLoadMore, dataLength }
 };
 
 export default useGetArtistCards;
