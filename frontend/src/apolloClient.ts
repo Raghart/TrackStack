@@ -1,4 +1,5 @@
 import { ApolloClient, HttpLink, InMemoryCache, split } from "@apollo/client";
+import { onError } from "@apollo/client/link/error";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { getMainDefinition } from "@apollo/client/utilities";
@@ -11,6 +12,17 @@ const httpLink = new HttpLink({
 const wsLink = new GraphQLWsLink(createClient({
   url: import.meta.env.VITE_SUBSCRIPTION_URI,
 }));
+
+const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
+  if (graphQLErrors) {
+    graphQLErrors.forEach(({ message, locations, path }) =>
+      console.error(`[GraphQL error] ${operation.operationName}: ${message}`, { locations, path })
+    );
+  }
+  if (networkError) {
+    console.error(`[Network error] ${operation.operationName}: ${networkError.message}`, networkError);
+  }
+});
 
 const splitLink = split(
   ({ query }) => {
@@ -66,5 +78,5 @@ export const client = new ApolloClient({
       }
     }
   }),
-  link: splitLink,
+  link: errorLink.concat(splitLink),
 });
