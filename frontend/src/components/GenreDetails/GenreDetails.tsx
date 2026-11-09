@@ -9,7 +9,7 @@ import GenreDetHeader from "./GenreDetHeader";
 import useGenreSongs from "../Utils/hooks/useGenreSongs";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
-import { SongResponse } from "@trackstack/schemas";
+import { SongResponse, stringSchema } from "@trackstack/schemas";
 
 const GenreDetails = () => {
   const { genre } = useParams();
@@ -22,7 +22,7 @@ const GenreDetails = () => {
   return (
     <Box w="full" h="full" direction="column" pt={8} gap={5} textAlign="center" pb={20}>
       <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 40 }}>
-        <GenreDetHeader genre={genreKey} />
+        <GenreDetHeader genre={stringSchema.parse(genreKey)} />
       </Zoom>
 
       <InfiniteScroll dataLength={dataLength} next={loadMore} hasMore={true} 

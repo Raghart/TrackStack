@@ -54,6 +54,24 @@ describe('SongGenresService retrieves and parses songs of a genre from the datab
       expect(results).toStrictEqual(songGenresTestData);
     });
 
+    it('fetchSongGenres parses a numeric string duration into a number', async () => {
+      songGenresModel.findAll.mockResolvedValue(
+        songGenresRawData.map((entry) => ({
+          get: () => {
+            const data = entry.get();
+            return {
+              ...data,
+              song: { ...data.song, duration: String(data.song.duration) },
+            };
+          },
+        })),
+      );
+
+      const results = await service.fetchSongGenres('1', 'Rock');
+      expect(typeof results[0].song.duration).toBe('number');
+      expect(results[0].song.duration).toBe(songGenresTestData[0].song.duration);
+    });
+
     it('getAllGenreSongs returns an array of songs of a specific genre ready to deliver', async () => {
       const genreSongs = await service.getAllGenreSongs('1', 'Rock', 1, 3);
       expect(genreSongs).toHaveLength(3);

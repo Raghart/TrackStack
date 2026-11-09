@@ -58,7 +58,7 @@ export const songSchema = z.looseObject({
   name: stringSchema,
   spotify_id: stringSchema.optional(),
   url_preview: stringSchema,
-  duration: z.number().optional(),
+  duration: floatNumberSchema.optional(),
   year: z.number().optional(),
   album_id: z.number().optional(),
   artists: z.array(artistReferenceSchema).optional(),
