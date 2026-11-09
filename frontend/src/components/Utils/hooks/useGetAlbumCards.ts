@@ -1,5 +1,6 @@
 import { getAlbums } from "@/queries/DetailQueries";
 import { useQuery } from "@apollo/client";
+import { albumResponseSchema } from "@trackstack/schemas";
 import { useState } from "react";
 
 const useGetAlbumCards = () => {
@@ -16,7 +17,11 @@ const useGetAlbumCards = () => {
         setPage(nextPage);
     };
 
-    return { data, onLoadMore }
+    const parsedData = data?.getAlbums ? 
+        albumResponseSchema.array().parse(data.getAlbums) : undefined;
+    const dataLength = parsedData ? data.getAlbums.length : 20;
+
+    return { data: parsedData, onLoadMore, dataLength }
 };
 
 export default useGetAlbumCards;

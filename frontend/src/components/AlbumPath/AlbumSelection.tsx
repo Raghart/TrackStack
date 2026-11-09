@@ -10,8 +10,7 @@ import ScrollUpArrow from "../Utils/ScrollUpArrow";
 import { AlbumResponse } from "@trackstack/schemas";
 
 const AlbumSelection = () => {
-    const { data, onLoadMore } = useGetAlbumCards();
-    const dataLength = data?.getAlbums ? data.getAlbums.length : 20;
+    const { data, onLoadMore, dataLength } = useGetAlbumCards();
     return(
         <Box w="full" h="full" direction="column" pt={8} gap={12} pb={20}>
             <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 40 }}>
@@ -28,7 +27,7 @@ const AlbumSelection = () => {
                     )}
 
                     {data && (
-                        <For each={data.getAlbums}>
+                        <For each={data}>
                             {(album: AlbumResponse) => (<AlbumCard key={album.id} {...album} />)}
                         </For>
                     )}

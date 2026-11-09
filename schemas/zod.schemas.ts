@@ -37,18 +37,18 @@ export const songDetailsSchema = z.object({
   time_signature: z.number(),
 });
 
-export const albumReferenceSchema = z.looseObject({
+const albumReferenceSchema = z.looseObject({
   id: z.number().optional(),
   name: stringSchema.optional(),
   url_image: stringSchema,
 });
 
-export const artistReferenceSchema = z.looseObject({
+const artistReferenceSchema = z.looseObject({
   id: z.number().optional(),
   name: stringSchema,
 });
 
-export const genreReferenceSchema = z.looseObject({
+const genreReferenceSchema = z.looseObject({
   id: z.number().optional(),
   genre: stringSchema,
 });
