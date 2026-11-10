@@ -1,232 +1,393 @@
-Reconocimiento del frontend: flujos externos y cobertura Zod No he modificado nada. Esto es solo análisis.
+# Plan de renovación del frontend
 
-1. Resumen ejecutivo
-Sí, hay varios flujos que cruzan una frontera externa, y ya hay bastante Zod aplicado en las respuestas GraphQL, más de lo que parece a primera vista. El problema no es tanto “falta Zod” como:
-    1. La validación no es uniforme: algunos hooks usan parse, otros no validan nada, y los errores de validación no siempre se manejan.
-    2. Solo se validan respuestas, no entradas: variables GraphQL, parámetros de ruta y variables de entorno quedan sin contrato.
-    3. Los schemas de respuesta son demasiado laxos en campos sensibles: URLs, IDs, años, duraciones y el chunk de IA.
-    4. parse se ejecuta en render o en callbacks sin una estrategia común de fallback, así que un payload inválido puede romper el componente en vez de degradar de forma controlada.
-    5. No hay infraestructura de tests en el frontend ni tests de los schemas compartidos, que es justo donde empezaría a construir la red de seguridad.
+**Objetivo:** hacer que el frontend falle de forma controlada cuando los datos externos no cumplen el contrato, y dejar una red de tests que permita seguir tocando la app sin miedo.
 
-2. Flujos que interactúan con el exterior
-2.1 GraphQL por HTTP
-Es el flujo principal. Todas las consultas pasan por frontend/src/apolloClient.ts y HttpLink.
-Flujo	Query	Hook / consumidor	Validación actual
-Canciones de portada	getLandpageSongs	useLandpageSongs	songResponseSchema.array().parse
-Contador total	getDBLength	useGetCount	floatNumberSchema.parse
-Géneros disponibles	getAllGenres	useGenreBtns	stringSchema.array().parse
-Artistas paginados	getAllArtists	useArtistBar, useGetArtistCards	artistResponseSchema.array().parse
-Álbumes paginados	getAlbums	useGetAlbumCards	albumResponseSchema.array().parse
-Canciones por género	getAllGenreSongs	useGenreSongs	songResponseSchema.array().parse
-Canciones por artista/álbum	getAllArtistSongs, getAllAlbumSongs	useGetDetailSongs	songResponseSchema.array().parse
-Detalle de canción	getSongData	useSongDetails, useGetSongCover	fullSongResponseSchema.parse
-Búsqueda múltiple	multipleSearch	useSearchResults	multipleSearchResultsSchema.parse dentro de try/catch
-Recomendaciones	getSongRecommendations	useLoadRec	songResponseSchema.array().parse
-Canción aleatoria	getRandomSong	useStraySong	songResponseSchema.parse
-Siguiente/anterior	getNextSong, getPreviousSong	useLoadNextSong, useLoadPriorSong	songResponseSchema.parse
+**Alcance:** validación de datos, manejo de errores y tests. No incluye rediseño visual ni cambios de UX.
 
-Conclusión: la capa de respuesta HTTP está razonablemente cubierta. Lo que falta es:
-- Un patrón común de safeParse + fallback/estado de error en vez de .parse() directo.
-- Validar también las variables de entrada antes de enviarlas.
-- Definir qué pasa cuando el schema falla: ¿se muestra NotFound, se mantiene el dato anterior, se corta la petición?
-2.2 GraphQL por WebSocket: la suscripción de IA
-Archivo: frontend/src/components/Utils/hooks/useSongRec.tsx.
-Es el flujo más delicado porque:
-- El servidor emite chunks de texto (aiResponse).
-- El backend tipa internamente el chunk como string | undefined.
-- El frontend hace stringSchema.parse(data.data.aiResponse).
-- stringSchema rechaza la cadena vacía, y no contempla undefined/null.
-Riesgos:
-- Un chunk vacío o nulo lanza excepción dentro de onData.
-- No hay onError ni estado de error de la suscripción.
-- aiResponse se acumula sin resetear explícitamente si cambian los genes/vector.
-- Si el parse falla, no hay un mensaje controlado para el usuario.
-Aquí sí recomendaría un schema específico nuevo en schemas/, por ejemplo un schema de payload de suscripción que admita null/ vacío y un schema de chunk no vacío solo si el contrato lo garantiza.
-2.3 Reproducción de audio externo
-Archivo clave: frontend/src/components/Utils/hooks/useSongState.ts.
-- audio.src = activeSong.url_preview.
-- url_preview viene del backend y hoy solo se valida como “string no vacío”.
-Riesgo: una URL inválida, un esquema no http/https o un valor inesperado se asigna directamente al elemento <audio>. No es el mismo riesgo que un href, pero sí es una frontera real y debería tener un schema de URL.
-2.4 Imágenes y fondos externos
-Se usan album_cover y url_image en:
-- <Image src={album_cover}> en tarjetas, búsqueda, player, etc.
-- MainLayout: bgImage={url(${song.album_cover})}.
-- Varios componentes construyen rutas con encodeURIComponent.
-Hoy album_cover y url_image son solo stringSchema. Recomendación: URL validada por protocolo permitido (http/https) antes de usarla en src o en CSS.
-2.5 Enlace externo a Spotify
-Archivo: frontend/src/components/SongPath/SongInfoLayout/SongInfoLayout.tsx.
-Se construye:
-https://open.spotify.com/track/${spotify_id}
-spotify_id solo está validado como string no vacío. No es un riesgo de esquema abierto porque el dominio es fijo, pero sí conviene validar el formato del ID para evitar enlaces roto (y para poder testearlo).
-2.6 Parámetros de URL / rutas
-Es una entrada controlada por el usuario y navegación:
-Ruta	Parámetro	Consumidor	Validación actual
-/songs/:songId	songId	useSongDetails	Number(songId) sin validar
-/songs/:songId	songId	useGetSongCover	floatNumberSchema.safeParse
-/albums/:album	album	DetailsLayout / useDetailFilter	stringSchema.safeParse
-/artists/:artist	artist	DetailsLayout / useDetailFilter	stringSchema.safeParse
-/genres/:genre	genre	GenreDetails	isValidGenre contra lista local
-Problemas:
-- useSongDetails convierte a número sin comprobar nada: Number(undefined) produce NaN y se envía como variable.
-- floatNumberSchema acepta decimales y negativos, pero SongID es un Int positivo.
-- useDetailFilter solo hace null check; la validación fuerte está en DetailsLayout, lo cual está bien pero deja el hook sin contrato propio.
-- GenreDetails valida con una lista local de iconos, no con un schema compartido. Eso puede ser correcto para la UI, pero conviene separar “género válido de ruta” de “género con icono”.
-- Los enlaces de género no usan encodeURIComponent (/genres/${genre}), a diferencia de artistas y álbumes. No es Zod, pero es una frontera de datos que conviene revisar.
-2.7 Variables de entorno
-Archivo: frontend/src/apolloClient.ts.
-- VITE_GRAPHQL_URI
-- VITE_SUBSCRIPTION_URI
-No hay validación en arranque. Si falta una variable o tiene un protocolo incorrecto, el cliente Apollo se construye igual y el fallo aparece después, de forma difusa.
-Esto no es un contrato de API compartido, así que probablemente no debería vivir en schemas/, sino en un schema local del frontend o en un módulo de configuración. Pero sí merece validación temprana.
-2.8 APIs del navegador
-No son “exteriores” de red, pero sí son puntos de integración que hoy no tienen tests:
-- <audio>: play, pause, currentTime, volume, loadedmetadata, canplay.
-- requestAnimationFrame en useAudioData.
-- window.scrollTo / scroll listener en useScrollUp.
-- location.pathname en useNavButtons.
-No necesitan schemas de Zod, pero sí tests de hooks aislados.
-2.9 Lo que no existe
-- No hay fetch directo, ni axios, ni localStorage, ni sessionStorage.
-- No hay mutaciones GraphQL.
-- spotify-preview-finder aparece en dependencias pero no se importa en frontend/src; parece dependencia muerta.
-3. Qué schemas nuevos o cambios recomendaría en schemas/
-Prioridad alta
-1. Schema del chunk de IA / suscripción
-Hoy se reutiliza stringSchema, que es demasiado estricto para un stream. Recomendación:
-- Un schema para el valor emitido por aiResponse.
-- Política explícita para null/undefined/cadena vacía.
-- Idealmente un schema del payload completo de la suscripción, no solo del string.
-Esto es contrato de API y encaja perfectamente en schemas/.
-2. Schemas de entrada GraphQL
-Añadiría schemas para las variables que el frontend envía:
+---
+
+## Punto de partida
+
+Lo que ya está bien:
+
+- La mayoría de respuestas GraphQL pasan por Zod (`songResponseSchema`, `albumResponseSchema`, etc.).
+- Los contratos compartidos viven en `schemas/zod.schemas.ts`.
+- Las consultas están centralizadas en hooks y en `apolloClient.ts`.
+
+Lo que falta:
+
+- Las **entradas** (variables GraphQL, params de ruta, variables de entorno) no se validan.
+- Los schemas son laxos con **URLs, IDs, años y duraciones**.
+- La suscripción de IA usa un schema pensado para strings normales.
+- Muchos hooks hacen `.parse()` directo: un payload inválido puede romper la pantalla.
+- No hay tests ni en `schemas/` ni en `frontend/`.
+
+Regla para todo el plan: cada paso debe terminar con `pnpm --filter ./frontend run build` en verde. Si tocas `schemas/`, añade también `pnpm --filter ./schemas exec tsc -p tsconfig.json --noEmit` y los tests del backend.
+
+---
+
+## Fase 0 — Decidir cómo falla la app
+
+### Paso 1. Elegir una política de validación única
+
+**Objetivo:** que un dato inválido no tumbe la aplicación entera.
+
+**Decisión recomendada:** `safeParse` + fallback local (`null`, `[]` o el dato anterior) y un `ErrorBoundary` global solo como última red. No usar `.parse()` suelto en render.
+
+**Cambios:**
+
+- Documentar la decisión en este archivo o en `frontend/README.md`.
+- Revisar los hooks que hoy usan `.parse()` y marcarlos para migrar.
+
+**Terminado cuando:** está claro qué hace la app ante un payload inválido y no hay discusión abierta sobre el tema.
+
+---
+
+## Fase 1 — Cimientos de validación
+
+### Paso 2. Crear helpers de parseo seguro
+
+**Objetivo:** no repetir `try/catch` y `safeParse` en cada hook.
+
+**Cambios:**
+
+- Crear `frontend/src/components/Utils/safeParse.ts` con dos helpers:
+  - `parseOrFallback(schema, value, fallback)`: devuelve el dato validado o el fallback.
+  - `parseArrayOrEmpty(schema, value)`: atajo para listas.
+- Registrar el error de validación con `console.error` incluyendo el nombre del schema.
+- Tipar los helpers con `ZodType` para que funcionen con cualquier schema.
+
+**Terminado cuando:** los hooks nuevos y los migrados usan estos helpers en lugar de `.parse()` directo.
+
+### Paso 3. Añadir un ErrorBoundary global
+
+**Objetivo:** si algo se escapa igualmente, el usuario ve un fallback y no una pantalla en blanco.
+
+**Cambios:**
+
+- Crear `frontend/src/components/Error/ErrorBoundary.tsx`.
+- Envolver `<App />` en `main.tsx`.
+- Reutilizar `NotFound` o un mensaje simple con opción de recargar.
+
+**Terminado cuando:** un error de render muestra el boundary y la app sigue navegable.
+
+---
+
+## Fase 2 — Endurecer los contratos compartidos
+
+> Todo lo de esta fase toca `schemas/zod.schemas.ts` y afecta también al backend. Hazlos de uno en uno y ejecuta los tests del backend al terminar cada paso.
+
+### Paso 4. Añadir primitivas estrictas
+
+**Objetivo:** dejar de usar `floatNumberSchema` para todo.
+
+**Cambios:**
+
+- `positiveIntSchema`: entero mayor que 0. Para IDs.
+- `yearSchema`: entero dentro de un rango razonable (por ejemplo 1900–2100).
+- `durationSchema`: número finito y positivo.
+- `floatNumberSchema`: añadir `Number.isFinite` para rechazar `"Infinity"` y valores raros.
+- `stringSchema`: valorar `trim()` y una longitud máxima para textos que vienen de fuera.
+
+**Terminado cuando:** las primitivas existen, están tipadas y probadas con casos válidos e inválidos.
+
+### Paso 5. Validar URLs antes de usarlas
+
+**Objetivo:** no meter cualquier string en `src`, CSS o `<audio>`.
+
+**Cambios:**
+
+- Crear `httpUrlSchema`: `URL` válida y protocolo `http:` o `https:`.
+- Aplicarlo a `url_preview`, `album_cover` y `url_image` en los schemas de respuesta.
+- Añadir `spotifyIdSchema` con patrón de ID de Spotify (22 caracteres alfanuméricos) y usarlo en `spotify_id`.
+- No aceptar `data:` salvo que se decida explícitamente.
+
+**Terminado cuando:** una URL inválida o `javascript:` no pasa la validación y el componente degrada sin romperse.
+
+### Paso 6. Corregir los campos numéricos de las respuestas
+
+**Objetivo:** que los tipos del schema reflejen la realidad del backend.
+
+**Cambios:**
+
+- `songResponseSchema.id` → `positiveIntSchema`.
+- `fullSongResponseSchema.year` → `yearSchema`.
+- `fullSongResponseSchema.duration` → `durationSchema`.
+- Revisar los `z.number()` de `songDetailsSchema` y de las referencias (`albumReferenceSchema`, `artistReferenceSchema`, `genreReferenceSchema`): los IDs deben ser enteros positivos.
+- Mantener `floatNumberSchema` solo donde de verdad se acepta un string numérico.
+
+**Terminado cuando:** IDs, años y duraciones rechazan negativos, decimales y strings no numéricos.
+
+### Paso 7. Resolver el contrato de `multipleSearchResultsSchema`
+
+**Objetivo:** que schema, backend y UI digan lo mismo.
+
+**Problema:** el schema exige `exactArtist`, `exactAlbum` y `exactSong`, pero el backend puede devolver `undefined` y la UI ya comprueba si existen.
+
+**Cambios:**
+
+- Decidir el contrato real. Recomendado: los tres campos `optional()` o `nullable()`.
+- Alinear `SearchResults` para que no tenga guardas duplicadas si al final son obligatorios.
+- Añadir un test de contrato con resultados completos, sin artista, sin álbum y sin canción.
+
+**Terminado cuando:** los tres lados aceptan el mismo conjunto de respuestas.
+
+### Paso 8. Crear el schema del stream de IA
+
+**Objetivo:** que un chunk vacío o nulo no lance una excepción dentro de la suscripción.
+
+**Cambios:**
+
+- En `schemas/`, añadir un schema específico para el payload que emite `aiResponse`.
+- Definir explícitamente qué se acepta: texto no vacío, cadena vacía, `null` o `undefined`.
+- Si el contrato garantiza chunks no vacíos, dejar un schema estricto para el chunk; si no, normalizar a `""` y acumular.
+- No reutilizar `stringSchema` para el stream.
+
+**Terminado cuando:** un chunk vacío o nulo se ignora sin romper y hay tests para los cuatro casos.
+
+### Paso 9. Documentar `songRecommendationsSchema`
+
+**Objetivo:** evitar que alguien use el schema equivocado.
+
+**Cambios:**
+
+- Añadir un comentario en `schemas/zod.schemas.ts`: `songRecommendationsSchema` modela la fila cruda de la función SQL y lo consume el backend; el frontend usa `songResponseSchema`.
+
+**Terminado cuando:** queda claro en el código qué schema usa cada capa.
+
+---
+
+## Fase 3 — Validar las entradas del frontend
+
+### Paso 10. Validar los parámetros de ruta
+
+**Objetivo:** no enviar `NaN` ni basura a GraphQL.
+
+**Cambios:**
+
+- `useSongDetails`: validar `songId` con `positiveIntSchema` antes de crear la query. Si no es válido, no consultar y devolver `null`.
+- `useGetSongCover`: cambiar `floatNumberSchema` por `positiveIntSchema`.
+- `useDetailFilter` / `DetailsLayout`: dejar la validación de `album` y `artist` en un único sitio, con `stringSchema` + `trim()`.
+- `GenreDetails`: separar “género válido de ruta” (string no vacío) de “género con icono” (lista local de UI).
+- Revisar enlaces de género que no usan `encodeURIComponent`: `GenreCard.tsx`, `GenreBarBtns.tsx` y `GenreBtn.tsx`.
+
+**Terminado cuando:** `/songs/abc`, `/songs/1.5` o una ruta sin parámetro no disparan ninguna petición.
+
+### Paso 11. Validar las variables GraphQL antes de enviarlas
+
+**Objetivo:** que el frontend no envíe datos que el backend no espera.
+
+**Cambios:** crear schemas para las variables que se envían:
+
 - ID de canción: entero positivo.
-- Query de búsqueda: string, trim, longitud mínima/máxima y quizá rechazo de caracteres de control.
-- Paginación: page >= 1, limit dentro de un rango razonable.
+- Query de búsqueda: string con `trim`, longitud mínima y máxima.
+- Paginación: `page >= 1` y `limit` dentro de un rango razonable.
 - Seed: string numérico válido.
 - Género: string no vacío.
-- Vector de usuario: array de exactamente 8 números finitos, con rangos coherentes.
-- Petición de recomendaciones: { genres, userVector, limit } como objeto.
-Estos schemas sirven tanto para robustez como para tests de contrato y evitan enviar NaN, arrays incompletos o límites absurdos.
-3. Schemas de URL
-Los campos que se usan en src, CSS o audio deberían dejar de ser stringSchema genérico:
-- url_preview: URL http/https.
-- album_cover / url_image: URL http/https.
-- spotify_id: patrón de ID de Spotify.
-No hace falta permitir esquemas como data: salvo decisión explícita.
-4. IDs y números más estrictos
-Hoy:
-- songResponseSchema.id usa floatNumberSchema, que admite strings numéricos, decimales y negativos.
-- Varios id usan z.number() sin .int().positive().
-- year usa floatNumberSchema aunque el backend lo declara como entero.
-- duration no exige positividad.
-Recomendación: separar primitivas:
-- positiveIntSchema
-- positiveNumberSchema o durationSchema
-- yearSchema
-- idSchema
-Y reservar floatNumberSchema para casos donde realmente se acepta string numérico.
-5. Revisar multipleSearchResultsSchema
-Hay una inconsistencia de contrato:
-- El schema exige exactArtist, exactAlbum y exactSong.
-- El backend hace destructuring del primer resultado y puede obtener undefined.
-- La UI (SearchResults) comprueba exactSong && exactAlbum && exactArtist, lo que sugiere que espera que puedan faltar.
-Recomendación: decidir el contrato real y alinearlo. Si puede no haber coincidencia exacta, los campos deberían ser nullable/opcionales. Si no, la UI no debería tener esas guardas. Este es un caso perfecto para un test de contrato antes de tocar la lógica.
-Prioridad media
-6. Primitivas más seguras
-floatNumberSchema acepta "Infinity" y notaciones raras porque solo comprueba Number.isNaN. Recomendación: exigir Number.isFinite.
-stringSchema rechaza strings vacíos pero no normaliza espacios. Para rutas y queries quizá convenga un schema con trim y longitud máxima.
-7. Schema de variables de entorno
-Probablemente local al frontend, no en schemas/, pero muy recomendable:
-- URI HTTP válida.
-- URI WebSocket válida.
-- Fallo rápido y claro al arrancar.
-8. Schema de respuesta de recomendaciones
-Ojo: songRecommendationsSchema en schemas/ modela la fila cruda de la función SQL (cos_sim, artists como string). El frontend no usa ese schema; usa songResponseSchema. Está bien que exista para el backend, pero conviene documentar que no es el contrato que consume el frontend.
-Lo que no metería en schemas/
-- La lista genreList con iconos: es UI, no contrato de API.
-- El estado de audio, volumen, reproducción: es estado de cliente.
-- Las rutas de React Router como tales: son contrato del frontend, no de la API. Los validadores de parámetros pueden vivir en frontend.
-- Variables de entorno: específicas de cada app.
-4. Problemas de robustez que afectan a la introducción de tests
-4.1 .parse() directo en render
-Muchos hooks hacen schema.parse(...) en el cuerpo del hook, que se ejecuta durante el render. Si el payload no cumple:
-- La excepción sube.
-- No hay ErrorBoundary en la app.
-- La pantalla puede romperse entera en vez de mostrar un fallback local.
-No digo que haya que cambiar todo a safeParse, pero sí definir una estrategia:
-- safeParse + fallback (undefined, [], dato anterior).
-- O parse + error boundary común.
-- O un helper parseOrThrow con logging y estado de error.
-Para tests, safeParse es mucho más fácil de cubrir.
-4.2 useLoadRec no maneja fallos
-useLoadRec hace await y luego parse. Si la query falla o el parse lanza:
-- setLoading(false) no se ejecuta.
-- El modal puede quedarse cargando.
-- No hay feedback de error.
-Es uno de los primeros sitios donde escribiría un test.
-4.3 useSongDetails valida dos veces y no valida la entrada
-- Parsea en onCompleted.
-- Vuelve a parsear en el render.
-- Envía Number(songId) sin validar.
-Además, si songId es undefined o basura, se hace una petición con NaN.
-4.4 useSongRec no tiene onError
-La suscripción no tiene manejo de error ni de cierre. Un fallo de WebSocket o un chunk inválido no tiene camino controlado.
-4.5 useSearchResults silencia errores
-Está bien que tenga try/catch, pero mezcla error de red y error de validación y termina mostrando el estado de “sin resultados”. Para tests y diagnóstico convendría distinguir:
-- error de red,
-- payload inválido,
-- sin resultados.
-4.6 useGetSongCover valida con un schema demasiado permisivo
-safeParse(songId) con floatNumberSchema deja pasar "1.5", "-2" o "Infinity". Para un ID de GraphQL debería ser entero positivo.
-4.7 Cache de Apollo
-apolloClient.ts usa typePolicies con merge que asume arrays y argumentos válidos. No es un flujo externo directo, pero es lógica sensible que conviene testear con datos de paginación.
-5. Dónde empezar con los tests
-Nivel 1: tests de schemas en schemas/
-No hay ningún test ahí ahora mismo. Empezaría por:
-- Casos válidos e inválidos de songResponseSchema, fullSongResponseSchema, albumResponseSchema, artistResponseSchema.
-- multipleSearchResultsSchema con:
-- resultados exactos presentes,
-- sin artistas,
-- sin álbumes,
-- sin canciones,
-- arrays vacíos.
-- URLs inválidas (javascript:, vacías, no URL).
-- IDs negativos, decimales y strings numéricos.
-- Chunks de IA: texto, vacío, null, undefined.
-- Vector de usuario: 8 valores, longitudes incorrectas, NaN, Infinity.
-Estos tests son baratos, no necesitan navegador ni base de datos, y protegen el contrato que comparten backend y frontend.
-Nivel 2: tests de hooks con Apollo MockedProvider
-El frontend no tiene Vitest ni React Testing Library configurados. Para introducirlos, el orden natural sería:
-1. useSearchResults: query válida, payload inválido, error de red, debounce.
-2. useLoadRec: éxito, respuesta vacía, parse fallido, variables correctas.
-3. useSongRec: chunks válidos, chunk vacío/nulo, error de suscripción, acumulación de texto.
-4. useSongDetails: songId válido, inválido, undefined, respuesta inválida.
-5. useGetSongCover: ruta válida, ruta inválida y que no se dispare la query.
-6. useGetDetailSongs, useGenreSongs, useArtistBar, useGetAlbumCards: carga, paginación, datos inválidos.
-7. useSongState / useAudioData: mockear <audio> y comprobar src, play, pause, currentTime, volume.
-Nivel 3: tests de integración con Apollo
-Con MockedProvider puedes simular respuestas GraphQL sin backend ni PostgreSQL. Es la forma más rentable de probar los flujos de datos antes de tocar E2E.
-Nivel 4: E2E
-El paquete e2e/ ya existe con Playwright, pero depende de servicios externos. Lo dejaría para smoke tests:
-- home carga canciones,
-- búsqueda devuelve resultados,
-- navegación a detalle de canción/artista/álbum/género,
-- reproducir/pausar,
-- flujo de recomendaciones con IA.
-No lo usaría como primera red de seguridad.
-6. Orden de adopción que recomendaría
-1. Definir la estrategia de validación: safeParse + fallback o error boundary. Sin esto, añadir más schemas solo traslada el problema.
-2. Añadir schemas de entrada (IDs, query, paginación, vector, recomendaciones).
-3. Añadir schemas de URL y endurecer primitivas (IDs enteros, año, duración, Number.isFinite).
-4. Corregir el schema de IA y el contrato de multipleSearchResults.
-5. Validar variables de entorno al arrancar.
-6. Introducir Vitest + RTL + MockedProvider y empezar por los schemas y los hooks de frontera.
-7. Dejar Playwright para smoke tests.
-7. Conclusión
-El frontend ya tiene una base buena: la mayoría de respuestas GraphQL pasan por Zod y los tipos compartidos vienen de @trackstack/schemas. Lo que falta para que sea sólido y testeable es:
-- validar entradas además de salidas;
-- tratar URLs, IDs y números con más precisión;
-- resolver el caso especial del stream de IA;
-- manejar los errores de validación de forma uniforme;
-- y montar tests de schemas y de hooks, que hoy no existen.
-Los puntos que primero testearía son useSearchResults, useLoadRec, useSongRec, useSongDetails y useGetSongCover, porque concentran la mayoría de las fronteras externas y los caminos de error.
+- Vector de usuario: exactamente 8 números finitos, dentro de los rangos que genera `generateUserVector`.
+- Petición de recomendaciones: objeto `{ genres, userVector, limit }`.
+
+Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`, `useGetAlbumCards`, `useGetDetailSongs` y `useStraySong`.
+
+**Terminado cuando:** un vector incompleto, un `limit` absurdo o una query vacía no llegan a la red.
+
+### Paso 12. Validar las variables de entorno al arrancar
+
+**Objetivo:** fallar al inicio con un mensaje claro, no cuando el usuario ya está usando la app.
+
+**Cambios:**
+
+- Crear `frontend/src/config/env.ts` (schema local, no en `schemas/`).
+- Validar `VITE_GRAPHQL_URI` como URL `http/https`.
+- Validar `VITE_SUBSCRIPTION_URI` como URL `ws/wss`.
+- Importarlo desde `apolloClient.ts` para que el fallo ocurra en el arranque.
+- Añadir un `.env.example` si no existe.
+
+**Terminado cuando:** una variable ausente o con protocolo incorrecto detiene la app con un error legible.
+
+---
+
+## Fase 4 — Arreglar los hooks más frágiles
+
+### Paso 13. `useSongDetails`: validar una sola vez
+
+**Objetivo:** quitar el doble parseo y proteger la entrada.
+
+**Cambios:**
+
+- Validar `songId` antes de la query.
+- Eliminar el parseo de `onCompleted` o el del render; dejar uno solo.
+- Usar `parseOrFallback` con `null` como fallback.
+- No mutar el store con datos inválidos.
+
+**Terminado cuando:** la canción se carga una vez, el store recibe datos válidos y un ID inválido no genera petición.
+
+### Paso 14. `useLoadRec`: manejar éxito, vacío y error
+
+**Objetivo:** que el modal no se quede cargando para siempre.
+
+**Cambios:**
+
+- Envolver la query en `try/catch/finally`.
+- `setLoading(false)` y `setOpen(false)` en `finally` o en la rama correcta.
+- Validar la respuesta con `parseOrFallback(..., [])`.
+- Estado de error visible para el usuario.
+- No navegar si la respuesta está vacía o es inválida.
+
+**Terminado cuando:** una query fallida o un payload inválido dejan el modal cerrado con un mensaje, no en loading infinito.
+
+### Paso 15. `useSongRec`: suscripción robusta
+
+**Objetivo:** que la IA no rompa la pantalla ni se quede sin respuesta.
+
+**Cambios:**
+
+- Usar el schema del Paso 8 en `onData`.
+- Ignorar chunks vacíos o nulos sin lanzar.
+- Añadir `onError` y un estado `error`.
+- Resetear `aiResponse` cuando cambien los géneros o el vector.
+- Exponer el error al componente que pinta la respuesta.
+
+**Terminado cuando:** funciona con chunks válidos, vacíos y nulos, y un fallo de WebSocket muestra un estado controlado.
+
+### Paso 16. `useSearchResults`: distinguir los tipos de fallo
+
+**Objetivo:** que “sin resultados” no signifique “algo se rompió”.
+
+**Cambios:**
+
+- Separar `error de red`, `payload inválido` y `sin resultados` en el reducer o en el estado local.
+- Asegurar que `setIsLoading(false)` se ejecuta en todos los caminos.
+- Usar el helper de parseo seguro.
+- Mantener el debounce de 400 ms.
+
+**Terminado cuando:** cada caso tiene un estado distinto y testeable.
+
+### Paso 17. Blindar el consumo de URLs en audio e imágenes
+
+**Objetivo:** que las URLs validadas en el Paso 5 se usen de forma segura.
+
+**Cambios:**
+
+- `useSongState`: comprobar `activeSong.url_preview` antes de asignarlo a `audio.src`.
+- Componentes de imagen: usar `album_cover` / `url_image` ya validados y aplicar un fallback si faltan.
+- `SongInfoLayout`: construir el enlace de Spotify solo si `spotify_id` cumple el patrón.
+
+**Terminado cuando:** una URL inválida no se asigna al `<audio>` ni se pinta como imagen o enlace.
+
+---
+
+## Fase 5 — Tests
+
+### Paso 18. Montar la infraestructura de tests
+
+**Objetivo:** poder testear schemas y hooks.
+
+**Cambios:**
+
+- Añadir a `frontend/`:
+  - `vitest`
+  - `@testing-library/react`
+  - `@testing-library/jest-dom`
+  - `jsdom`
+- Configurar `vitest.config.ts` y un `setupTests.ts`.
+- Añadir scripts `test` y `test:cov` en `frontend/package.json`.
+- Configurar Vitest en `schemas/` (o un script que ejecute los tests desde la raíz).
+
+**Terminado cuando:** `pnpm --filter ./frontend run test` y los tests de `schemas` arrancan aunque sea con un test trivial.
+
+### Paso 19. Tests de schemas (primera red de seguridad)
+
+**Objetivo:** proteger el contrato compartido sin necesitar navegador ni base de datos.
+
+**Casos mínimos:**
+
+- `songResponseSchema`, `fullSongResponseSchema`, `albumResponseSchema`, `artistResponseSchema`: válidos e inválidos.
+- `multipleSearchResultsSchema`: completo, sin artista, sin álbum, sin canción y arrays vacíos.
+- URLs: `javascript:`, vacías, texto plano, `http` y `https`.
+- IDs: negativos, decimales y strings numéricos.
+- Chunks de IA: texto, vacío, `null` y `undefined`.
+- Vector de usuario: 8 valores, longitudes incorrectas, `NaN` e `Infinity`.
+
+**Terminado cuando:** los schemas tienen tests y cualquier cambio de contrato rompe un test.
+
+### Paso 20. Tests de hooks con Apollo `MockedProvider`
+
+**Orden recomendado (de más rentable a menos):**
+
+1. `useSearchResults`: query válida, payload inválido, error de red y debounce.
+2. `useLoadRec`: éxito, respuesta vacía, parse fallido y variables correctas.
+3. `useSongRec`: chunks válidos, vacío/nulo, error de suscripción y acumulación de texto.
+4. `useSongDetails`: ID válido, inválido, `undefined` y respuesta inválida.
+5. `useGetSongCover`: ruta válida, ruta inválida y que no se dispare la query.
+6. `useGetDetailSongs`, `useGenreSongs`, `useArtistBar` y `useGetAlbumCards`: carga, paginación y datos inválidos.
+7. `useSongState` / `useAudioData`: mockear `<audio>` y comprobar `src`, `play`, `pause`, `currentTime` y `volume`.
+
+**Terminado cuando:** los cinco primeros hooks tienen tests y cubren sus caminos de error.
+
+### Paso 21. Tests de la caché de Apollo
+
+**Objetivo:** proteger los `merge` de `apolloClient.ts`, que asumen arrays y argumentos válidos.
+
+**Cambios:**
+
+- Testear `getAllGenreSongs`, `getAllArtists` y `getAlbums` con paginación.
+- Comprobar que no se duplican ni se pierden elementos al cambiar de página.
+
+**Terminado cuando:** un cambio en `typePolicies` que rompa la paginación falla en un test.
+
+### Paso 22. Smoke tests E2E
+
+**Objetivo:** comprobar los flujos completos, no usarlos como primera red de seguridad.
+
+**Cambios:** en `e2e/`, cubrir:
+
+- La home carga canciones.
+- La búsqueda devuelve resultados.
+- Navegación a detalle de canción, artista, álbum y género.
+- Reproducir y pausar.
+- Flujo de recomendaciones con IA.
+
+**Terminado cuando:** los smoke tests pasan contra un entorno con PostgreSQL y variables configuradas.
+
+### Paso 23. Limpieza final
+
+**Objetivo:** dejar el proyecto sin ruido.
+
+**Cambios:**
+
+- Eliminar `spotify-preview-finder` de `frontend/package.json` si se confirma que no se usa (hoy no se importa en `frontend/src`).
+- Actualizar `frontend/README.md` con los scripts de test y las variables de entorno.
+- Revisar que no queden `.parse()` directos en hooks sin justificación.
+
+**Terminado cuando:** no quedan dependencias muertas ni documentación desactualizada.
+
+---
+
+## Resumen del orden
+
+1. Política de fallo.
+2. Helpers de parseo seguro.
+3. ErrorBoundary.
+4. Primitivas estrictas.
+5. URLs seguras.
+6. Campos numéricos.
+7. Contrato de búsqueda.
+8. Schema de IA.
+9. Documentar schema de recomendaciones.
+10. Params de ruta.
+11. Variables GraphQL.
+12. Variables de entorno.
+13. `useSongDetails`.
+14. `useLoadRec`.
+15. `useSongRec`.
+16. `useSearchResults`.
+17. URLs en audio e imágenes.
+18. Infraestructura de tests.
+19. Tests de schemas.
+20. Tests de hooks.
+21. Tests de caché de Apollo.
+22. Smoke tests E2E.
+23. Limpieza final.
+
+**Si solo puedes hacer una cosa:** empieza por los pasos 2, 3 y 4. Sin una estrategia de fallo y primitivas fiables, el resto de validaciones solo mueve el problema de sitio.
