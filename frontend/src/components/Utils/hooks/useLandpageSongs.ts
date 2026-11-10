@@ -1,10 +1,11 @@
 import { getLandpageSongs } from "@/queries/LandpageQueries";
 import { useQuery } from "@apollo/client";
-import { SongResponse } from "@trackstack/schemas";
+import { songResponseSchema } from "@trackstack/schemas";
 
 const useLandpageSongs = () => {
     const { loading, data } = useQuery(getLandpageSongs);
-    const landpageSongs: SongResponse[] = data?.getLandpageSongs || [];
+    const landpageSongs = data?.getLandpageSongs ? 
+        songResponseSchema.array().parse(data.getLandpageSongs) : undefined;
 
     return { landpageSongs, loading };
 };

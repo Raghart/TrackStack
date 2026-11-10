@@ -19,8 +19,9 @@ const LandpageSongs = () => {
             <Swiper effect="coverflow" grabCursor={true} centeredSlides={true} slidesPerView={responsiveSize} 
                 coverflowEffect={{ rotate: 20, stretch: 0, depth: 200, modifier: 1, slideShadows: true }} 
                 className="mySwiper" modules={[EffectCoverflow]} style={{ height: "100%" }} initialSlide={10} 
-                loop={landpageSongs.length >= 10} speed={600} data-testid="Landpage-Cont">
-                    {loading ? Array.from({ length: 15 }).map((_, idx) => (
+                loop={landpageSongs ? landpageSongs.length >= 10 : false} 
+                speed={600} data-testid="Landpage-Cont">
+                    {(loading || !landpageSongs) ? Array.from({ length: 15 }).map((_, idx) => (
                         <SwiperSlide key={`skeleton-${idx}`}>
                             <Skeleton h="full" w="full" borderRadius="xl" />
                         </SwiperSlide>
