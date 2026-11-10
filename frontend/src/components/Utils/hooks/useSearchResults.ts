@@ -4,13 +4,14 @@ import { useCallback, useMemo, useState } from "react";
 import { debounce } from "lodash";
 import { clearQuery, setIsLoading, setQuery, setQueryResults } from "@/reducers/searchReducer";
 import { multipleSearch } from "@/queries/MultipleSearchQuerie";
+import { multipleSearchResultsSchema } from "@trackstack/schemas";
 
 const useSearchResults = () => {
     const [getResults] = useLazyQuery(multipleSearch);
     const [localQuery, setLocalQuery] = useState<string>("");
     const dispatch = useAppDispatch();
 
-    const search = useCallback((query: string) => {
+    const search = useCallback(async (query: string) => {
         if (!query.trim()) {
             dispatch(clearQuery());
             return;
@@ -19,13 +20,15 @@ const useSearchResults = () => {
         dispatch(setQuery(query));
         dispatch(setIsLoading(true));
 
-        getResults({ variables: { query }, 
-            onCompleted: (data) => {
-                if (data.multipleSearch) {
-                    dispatch(setQueryResults(data.multipleSearch));
-                };
-            },
-        });
+        try {
+            const { data } = await getResults({ variables: { query } });
+            if (data?.multipleSearch) {
+                const results = multipleSearchResultsSchema.parse(data.multipleSearch);
+                dispatch(setQueryResults(results));
+            };
+        } catch {
+            dispatch(setIsLoading(false));
+        }
     },[dispatch,getResults]);
 
     const debouncedSearch = useMemo(() => debounce(search, 400),[search]);
