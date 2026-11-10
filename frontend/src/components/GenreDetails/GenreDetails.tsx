@@ -16,8 +16,7 @@ const GenreDetails = () => {
   const { genre } = useParams();
   if (!isValidGenre(genre)) return <NotFound message={`404: Invalid Genre!`} />;
   const { data, loading, loadMore, activeSong, isPlaying, dataLength } = useGenreSongs(genre);
-  if ( !loading && !data) return <NotFound message={
-    `Error while retrieving the "${genre}" songs`} />;
+  if ( !loading && !data) return <NotFound message={`Error while retrieving the "${genre}" songs`} />;
   
   return (
     <Box w="full" h="full" direction="column" pt={8} gap={5} textAlign="center" pb={20}>

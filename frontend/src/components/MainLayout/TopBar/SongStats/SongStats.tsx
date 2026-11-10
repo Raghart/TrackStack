@@ -8,7 +8,7 @@ import { useState } from "react";
 import MobileCount from "./MobileCount";
 
 const SongStats = () => {
-    const count: number = useGetCount();
+    const count: number | undefined = useGetCount();
     const isMobile = useBreakpointValue({ base: true, sm: false }); 
     const [isFinished, setIsFinished] = useState<boolean>(false);
     return(
@@ -21,7 +21,8 @@ const SongStats = () => {
                         bgClip="text" gradientFrom="orange.500" fontWeight="600" gradientVia="yellow.500" 
                         gradientTo="orange.500">
                         {isMobile ? (<MobileCount setIsFinished={setIsFinished} /> ) : 
-                        (<CountUp end={count} duration={5} separator="," onEnd={() => setIsFinished(true)} />)}
+                        (<CountUp end={count ?? 50000} 
+                            duration={5} separator="," onEnd={() => setIsFinished(true)} />)}
                     </Stat.ValueText>
                 </AttentionSeeker>
                 <Stat.Label fontSize="md" color="gray.300" fontFamily="'Barlow'" fontWeight="600" 
