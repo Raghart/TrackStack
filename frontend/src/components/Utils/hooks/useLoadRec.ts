@@ -5,6 +5,7 @@ import { useLazyQuery } from "@apollo/client";
 import { setLaraRecommendations } from "@/reducers/recommendReducer";
 import { getSongRecommendations } from "@/queries/LaraRecQuerie";
 import generateUserVector from "../generateUserVector";
+import { songResponseSchema } from "@trackstack/schemas";
 
 const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const [loading, setLoading] = useState<boolean>(false);
@@ -23,7 +24,8 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
         const { data } = await getIASongs({ variables: { genres, userVector, limit } });
         
         if (data?.getSongRecommendations) {
-            dispatch(setLaraRecommendations(data.getSongRecommendations));
+            dispatch(setLaraRecommendations(
+                songResponseSchema.array().parse(data.getSongRecommendations)));
             navigate("/recommendations");
             setLoading(false);
             setOpen(false);
