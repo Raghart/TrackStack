@@ -3,7 +3,7 @@ import { useLazyQuery } from "@apollo/client";
 import { getPreviousSong } from "@/queries/MusicPlayerQueries";
 import { useEffect } from "react";
 import { setActiveAudio } from "@/reducers/songReducer";
-import { SongResponse } from "@trackstack/schemas";
+import { SongResponse, songResponseSchema } from "@trackstack/schemas";
 
 const useLoadPriorSong = (activeSong: SongResponse | null) => {
     const dispatch = useAppDispatch();
@@ -11,13 +11,13 @@ const useLoadPriorSong = (activeSong: SongResponse | null) => {
         
     useEffect(() => {
         if (data?.getPreviousSong) {
-            dispatch(setActiveAudio(data.getPreviousSong));
+            dispatch(setActiveAudio(songResponseSchema.parse(data.getPreviousSong)));
         };
     }, [data, dispatch])
 
     const loadPrevSong = () => {
         if (!activeSong?.id) return;
-        getPriorSong({ variables: { songID: activeSong.id } })
+        getPriorSong({ variables: { songID: activeSong.id } });
     };
 
     return loadPrevSong;

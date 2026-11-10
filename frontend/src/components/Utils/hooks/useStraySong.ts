@@ -3,6 +3,7 @@ import { useAppDispatch } from "../redux-hooks";
 import { setActiveAudio } from "@/reducers/songReducer";
 import { getRandomSong } from "@/queries/MusicPlayerQueries";
 import { useEffect } from "react";
+import { songResponseSchema } from "@trackstack/schemas";
 
 const useStraySong = () => {
     const dispatch = useAppDispatch();
@@ -12,7 +13,7 @@ const useStraySong = () => {
 
     useEffect(() => {
         if (data?.getRandomSong) {
-            dispatch(setActiveAudio(data.getRandomSong))
+            dispatch(setActiveAudio(songResponseSchema.parse(data.getRandomSong)))
         }
     }, [data, dispatch])
 

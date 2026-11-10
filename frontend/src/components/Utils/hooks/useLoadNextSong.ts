@@ -3,7 +3,7 @@ import { useAppDispatch } from "../redux-hooks";
 import { setActiveAudio } from "@/reducers/songReducer";
 import { getNextSong } from "@/queries/MusicPlayerQueries";
 import { useEffect } from "react";
-import { SongResponse } from "@trackstack/schemas";
+import { SongResponse, songResponseSchema } from "@trackstack/schemas";
 
 const useLoadNextSong = (activeSong: SongResponse | null) => {
     const dispatch = useAppDispatch();
@@ -12,7 +12,7 @@ const useLoadNextSong = (activeSong: SongResponse | null) => {
 
     useEffect(() => {
         if (data?.getNextSong) {
-            dispatch(setActiveAudio(data.getNextSong));
+            dispatch(setActiveAudio(songResponseSchema.parse(data.getNextSong)));
         };
     }, [data, dispatch])
 
