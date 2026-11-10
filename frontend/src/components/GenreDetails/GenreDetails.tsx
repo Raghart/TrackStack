@@ -9,20 +9,20 @@ import GenreDetHeader from "./GenreDetHeader";
 import useGenreSongs from "../Utils/hooks/useGenreSongs";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
-import { SongResponse, stringSchema } from "@trackstack/schemas";
+import { SongResponse } from "@trackstack/schemas";
+import { isValidGenre } from "@/types/verify";
 
 const GenreDetails = () => {
   const { genre } = useParams();
-  const { data, loading, genreKey, loadMore, activeSong, isPlaying, validGenre } = useGenreSongs(genre);
-  const dataLength = data?.getAllGenreSongs ? data.getAllGenreSongs.length : 20;
-
-  if (!validGenre || (!loading && !data)) return <NotFound 
-    message={`The genre: "${genre}" was not found in the DB!`} />;
+  if (!isValidGenre(genre)) return <NotFound message={`404: Invalid Genre!`} />;
+  const { data, loading, loadMore, activeSong, isPlaying, dataLength } = useGenreSongs(genre);
+  if ( !loading && !data) return <NotFound message={
+    `Error while retrieving the "${genre}" songs`} />;
   
   return (
     <Box w="full" h="full" direction="column" pt={8} gap={5} textAlign="center" pb={20}>
       <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 40 }}>
-        <GenreDetHeader genre={stringSchema.parse(genreKey)} />
+        <GenreDetHeader genre={genre} />
       </Zoom>
 
       <InfiniteScroll dataLength={dataLength} next={loadMore} hasMore={true} 
@@ -35,7 +35,7 @@ const GenreDetails = () => {
           )))}
           
           {data && (
-            <For each={data.getAllGenreSongs}>
+            <For each={data}>
               {(song: SongResponse) => <SongCard key={song.id} {...song} 
                 isSongPlaying={isPlaying && song.id === activeSong?.id} />}
             </For>
