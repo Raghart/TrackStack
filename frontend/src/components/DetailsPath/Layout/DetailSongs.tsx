@@ -7,7 +7,7 @@ import useGetDetailSongs from "@/components/Utils/hooks/useGetDetailSongs";
 import { SONGCARD_SIZES } from "@/components/constants/SongCardC";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "@/components/Utils/LoadingBeat";
-import usePaginateSongs from "@/components/Pagination/PaginateSongs";
+import usePaginateSongs from "@/components/Utils/hooks/usePaginateSongs";
 import { SongResponse } from "@trackstack/schemas";
 
 const DetailSongs = ({ type, filterValue, error }: { type: ValidDetail, filterValue: string, error: string }) => {
