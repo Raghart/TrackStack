@@ -22,10 +22,9 @@ const useLoadRec = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const loadRecommendations = async () => {
         setLoading(true);
         const { data } = await getIASongs({ variables: { genres, userVector, limit } });
-        
-        if (data?.getSongRecommendations) {
-            dispatch(setLaraRecommendations(
-                songResponseSchema.array().parse(data.getSongRecommendations)));
+        const result = songResponseSchema.array().safeParse(data?.getSongRecommendations);
+        if (result.success) {
+            dispatch(setLaraRecommendations(result.data));
             navigate("/recommendations");
             setLoading(false);
             setOpen(false);
