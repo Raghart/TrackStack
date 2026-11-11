@@ -1,10 +1,11 @@
 import { type ZodType } from 'zod';
 
-export function parseArrayOrEmpty<T>(schema: ZodType<T>, value: unknown) {
+export function parseDataOrEmpty<T>(schema: ZodType<T>, value: unknown) {
+    if (value === undefined) return undefined;
     const result = schema.safeParse(value);
     if (!result.success) {
-        console.error(`Validation failed for array schema: ${result.error}`);
-        return [];
+        console.error(`Validation failed for schema: ${result.error}`);
+        return undefined;
     };
     return result.data;
 };

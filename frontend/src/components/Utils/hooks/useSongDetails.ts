@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { loadAudio } from "@/reducers/songReducer";
 import { getSongData } from "@/queries/DetailQueries";
 import { fullSongResponseSchema } from "@trackstack/schemas";
+import { parseDataOrEmpty } from "../safeParse";
 
 const useSongDetails = (songId: string | undefined) => {
     const dispatch = useAppDispatch();
@@ -13,8 +14,8 @@ const useSongDetails = (songId: string | undefined) => {
             };
         }
     });
-    const songData = data?.getSongData ? fullSongResponseSchema.parse(data.getSongData) : null;
-
+    
+    const songData = parseDataOrEmpty(fullSongResponseSchema, data?.getSongData);
     return { songData, loading }
 };
 
