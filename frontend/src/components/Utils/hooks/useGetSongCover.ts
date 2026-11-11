@@ -10,8 +10,9 @@ const useGetSongCover = () => {
     const [getSongID, { data }] = useLazyQuery(getSongData);
 
     useEffect(() => {
-        if (floatNumberSchema.safeParse(songId).success) {
-            getSongID({ variables: { SongID: floatNumberSchema.parse(songId) } });
+        const result = floatNumberSchema.safeParse(songId);
+        if (result.success) {
+            getSongID({ variables: { SongID: result.data } });
         };
     }, [songId, getSongID]);
     return parseDataOrEmpty(fullSongResponseSchema, data?.getSongData);
