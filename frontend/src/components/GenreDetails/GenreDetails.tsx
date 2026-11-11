@@ -15,7 +15,7 @@ import { isValidGenre } from "@/types/verify";
 const GenreDetails = () => {
   const { genre } = useParams();
   if (!isValidGenre(genre)) return <NotFound message={`404: Invalid Genre!`} />;
-  const { data, loading, loadMore, activeSong, isPlaying, dataLength } = useGenreSongs(genre);
+  const { data, loading, loadMore, activeSong, isPlaying, hasData } = useGenreSongs(genre);
   if ( !loading && !data) return <NotFound message={`Error while retrieving the "${genre}" songs`} />;
   
   return (
@@ -24,16 +24,16 @@ const GenreDetails = () => {
         <GenreDetHeader genre={genre} />
       </Zoom>
 
-      <InfiniteScroll dataLength={dataLength} next={loadMore} hasMore={true} 
+      <InfiniteScroll dataLength={data.length} next={loadMore} hasMore={true} 
         loader={<Center m={2}><LoadingBeat /></Center>} style={{ overflow: "visible" }}>
           <SimpleGrid columns={{ base: 2, sm: 3, md: 4, lg: 5 }} pt={5} gap={{ base: 3, sm: 3, md: 3, 
             lg: 4 }} w="full">
-          {!data && (Array.from({ length: 20 }).map((_, idx) => (
+          {!hasData && (Array.from({ length: 20 }).map((_, idx) => (
             <Skeleton key={idx} w="full" maxW={SONGCARD_SIZES} loading={loading} aspectRatio={3/4} 
               borderRadius="md" />
           )))}
           
-          {data && (
+          {hasData && (
             <For each={data}>
               {(song: SongResponse) => <SongCard key={song.id} {...song} 
                 isSongPlaying={isPlaying && song.id === activeSong?.id} />}

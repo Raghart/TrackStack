@@ -3,6 +3,7 @@ import { useAppSelector } from "../redux-hooks";
 import { useQuery } from "@apollo/client";
 import { getAllGenreSongs } from "@/queries/DetailQueries";
 import { songResponseSchema } from "@trackstack/schemas";
+import { parseArrayOrEmpty } from "../safeParse";
 
 const useGenreSongs = (genre: string) => {
     const [page, setPage] = useState<number>(1);
@@ -20,11 +21,10 @@ const useGenreSongs = (genre: string) => {
         setPage(nextPage);
     };
 
-    const parsedData = data?.getAllGenreSongs ? 
-        songResponseSchema.array().parse(data?.getAllGenreSongs) : undefined;
-    const dataLength = parsedData ? data.getAllGenreSongs.length : 20;
+    const parsedData = parseArrayOrEmpty(songResponseSchema, data?.getAllGenreSongs);
+    const hasData = parsedData.length > 0;
 
-    return { data: parsedData, loading, genre, loadMore, activeSong, isPlaying, dataLength }
+    return { data: parsedData, loading, genre, loadMore, activeSong, isPlaying, hasData }
 };
 
 export default useGenreSongs;
