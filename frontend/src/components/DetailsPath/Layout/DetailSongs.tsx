@@ -11,20 +11,20 @@ import usePaginateSongs from "@/components/Utils/hooks/usePaginateSongs";
 import { SongResponse } from "@trackstack/schemas";
 
 const DetailSongs = ({ type, filterValue, error }: { type: ValidDetail, filterValue: string, error: string }) => {
-    const { data, loading, detailSongs } = useGetDetailSongs(type, filterValue);
+    const { detailSongs, loading, hasData } = useGetDetailSongs(type, filterValue);
     const { visibleSongs, loadMoreSongs } = usePaginateSongs(detailSongs);
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
-    if (!loading && !data && detailSongs.length === 0) return <NotFound message={error} />
+    if (!loading && detailSongs.length === 0) return <NotFound message={error} />
 
     return(
         <InfiniteScroll dataLength={visibleSongs.length} hasMore={visibleSongs.length < detailSongs.length} 
             loader={<Center m={2}><LoadingBeat /></Center>} next={loadMoreSongs} style={{ overflow: "visible" }}>
             <SimpleGrid columns={{ base: 2, sm: 3, md: 4, lg: 5 }} gap={{ base: 3, sm: 3, md: 3, lg: 4 }} 
                 w="full">
-                {!data && (Array.from({ length: 20 }).map((_, idx) => <Skeleton key={idx} w="full" 
+                {!hasData && (Array.from({ length: 20 }).map((_, idx) => <Skeleton key={idx} w="full" 
                     maxW={SONGCARD_SIZES} loading={loading} aspectRatio={3/4} borderRadius="md" />))}
                 
-                {data && (
+                {hasData && (
                     <For each={visibleSongs}>
                         {(song: SongResponse) => <SongCard key={song.id} {...song} 
                             isSongPlaying={isPlaying && activeSong?.id === song.id} />}

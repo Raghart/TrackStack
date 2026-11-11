@@ -8,9 +8,11 @@ const useGetDetailSongs = (type: ValidDetail, filterValue: string) => {
     const query = type === "album" ? getAllAlbumSongs : getAllArtistSongs;
     const variables = type === "album" ? { album: filterValue } : { artist: filterValue };
     const { loading, data } = useQuery(query, { variables });
+    
     const detailSongs = parseArrayOrEmpty(songResponseSchema, 
         data?.getAllAlbumSongs ?? data?.getAllArtistSongs);
-    return { data, loading, detailSongs }
+    const hasData = detailSongs.length > 0;
+    return { detailSongs, loading, hasData }
 };
 
 export default useGetDetailSongs;

@@ -19,9 +19,9 @@ const useGetArtistCards = () => {
     };
 
     const parsedData = parseArrayOrEmpty(artistResponseSchema, data?.getAllArtists);
-    const dataLength = parsedData.length;
+    const hasData = parsedData.length > 0;
 
-    return { data: parsedData, onLoadMore, dataLength }
+    return { data: parsedData, onLoadMore, hasData }
 };
 
 export default useGetArtistCards;
