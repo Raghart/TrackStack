@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { useBreakpointValue } from "@chakra-ui/react";
 import { artistResponseSchema } from "@trackstack/schemas";
 import { useEffect, useState } from "react";
+import { parseArrayOrEmpty } from "../safeParse";
 
 const useArtistBar = () => {
     const [page, setPage] = useState<number>(1);
@@ -12,9 +13,8 @@ const useArtistBar = () => {
         skip: !limit,
         variables: { seed, page, limit },
     });
-    const artists =  data?.getAllArtists ? 
-        artistResponseSchema.array().parse(data.getAllArtists) : [];
-
+    
+    const artists = parseArrayOrEmpty(artistResponseSchema, data?.getAllArtists); 
     useEffect(() => { 
         if (limit) refetch({ seed, page, limit }); 
     },[page, seed, limit, refetch]);

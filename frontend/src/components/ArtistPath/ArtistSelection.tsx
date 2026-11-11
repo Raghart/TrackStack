@@ -20,13 +20,13 @@ const ArtistSelection = () => {
             <InfiniteScroll dataLength={dataLength} next={onLoadMore} hasMore={true}
                 loader={<Center m={2}><LoadingBeat /></Center>} style={{ overflow: "visible" }}>
                 <SimpleGrid columns={{ base: 2, sm: 3, md: 4, lg: 5 }} w="full" gap={4}>
-                    {!data && (Array.from({ length: 20 }).map((_, idx) => (
+                    {data.length === 0 && (Array.from({ length: 20 }).map((_, idx) => (
                         <Skeleton key={idx} w="full" maxW={PATH_CARD_SIZES} aspectRatio={3/4} 
                             borderRadius="2xl" inset={0} />
                         ))
                     )}
 
-                    {data && (
+                    {data.length > 0 && (
                         <For each={data}>
                             {(artist: ArtistResponse) => <ArtistCard key={artist.name} {...artist} />}
                         </For>

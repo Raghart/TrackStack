@@ -2,6 +2,7 @@ import { getAllArtists } from "@/queries/DetailQueries";
 import { useQuery } from "@apollo/client";
 import { artistResponseSchema } from "@trackstack/schemas";
 import { useState } from "react";
+import { parseArrayOrEmpty } from "../safeParse";
 
 const useGetArtistCards = () => {
     const [page, setPage] = useState<number>(1);
@@ -17,9 +18,8 @@ const useGetArtistCards = () => {
         setPage(nextPage);
     };
 
-    const parsedData = data?.getAllArtists ? 
-        artistResponseSchema.array().parse(data.getAllArtists) : undefined;
-    const dataLength = parsedData ? data.getAllArtists.length : 20;
+    const parsedData = parseArrayOrEmpty(artistResponseSchema, data?.getAllArtists);
+    const dataLength = parsedData.length;
 
     return { data: parsedData, onLoadMore, dataLength }
 };
