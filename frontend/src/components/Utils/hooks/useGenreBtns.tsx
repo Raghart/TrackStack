@@ -2,11 +2,12 @@ import { getAllGenres } from "@/queries/LandpageQueries";
 import { useQuery } from "@apollo/client";
 import { stringSchema } from "@trackstack/schemas";
 import { useRef, useState } from "react";
+import { parseArrayOrEmpty } from "../safeParse";
 
 const useGenreBtns = () => {
     const { data } = useQuery(getAllGenres);
-    const genres: string[] = data?.getAllGenres ? 
-        stringSchema.array().parse(data?.getAllGenres) : [];
+    const genres = parseArrayOrEmpty(stringSchema, data?.getAllGenres);
+    const hasData = genres.length > 0;
     const scrollRef = useRef<HTMLDivElement>(null);
     const [atStart, setAtStart] = useState<boolean>(true);
     const [atEnd, setAtEnd] = useState<boolean>(false);
@@ -20,7 +21,7 @@ const useGenreBtns = () => {
         setAtEnd(scrollLeft + clientWidth >= scrollWidth);
     };
 
-    return { genres, atStart, atEnd, scrollRef, handleScroll }
+    return { genres, hasData, atStart, atEnd, scrollRef, handleScroll }
 };
 
 export default useGenreBtns;

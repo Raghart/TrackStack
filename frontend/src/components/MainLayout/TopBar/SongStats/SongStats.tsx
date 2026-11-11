@@ -8,7 +8,7 @@ import { useState } from "react";
 import MobileCount from "./MobileCount";
 
 const SongStats = () => {
-    const count: number | undefined = useGetCount();
+    const count = useGetCount();
     const isMobile = useBreakpointValue({ base: true, sm: false }); 
     const [isFinished, setIsFinished] = useState<boolean>(false);
     return(
