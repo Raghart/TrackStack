@@ -1,3 +1,4 @@
+import { useEffect, useMemo } from "react";
 import { useAppDispatch } from "../redux-hooks";
 import { useQuery } from "@apollo/client";
 import { loadAudio } from "@/reducers/songReducer";
@@ -7,15 +8,19 @@ import { parseDataOrEmpty } from "../safeParse";
 
 const useSongDetails = (songId: string | undefined) => {
     const dispatch = useAppDispatch();
-    const { loading, data } = useQuery(getSongData, { variables: { SongID: Number(songId) }, 
-        onCompleted: (data) => {
-            if (data && data.getSongData) {
-                dispatch(loadAudio(fullSongResponseSchema.parse(data.getSongData)));
-            };
+    const { loading, data } = useQuery(getSongData, { variables: { SongID: Number(songId) } });
+
+    const songData = useMemo(
+        () => parseDataOrEmpty(fullSongResponseSchema, data?.getSongData),
+        [data]
+    );
+
+    useEffect(() => {
+        if (songData) {
+            dispatch(loadAudio(songData));
         }
-    });
-    
-    const songData = parseDataOrEmpty(fullSongResponseSchema, data?.getSongData);
+    }, [songData, dispatch]);
+
     return { songData, loading }
 };
 
