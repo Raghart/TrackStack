@@ -4,14 +4,14 @@ import { useQuery } from "@apollo/client";
 import { loadAudio } from "@/reducers/songReducer";
 import { getSongData } from "@/queries/DetailQueries";
 import { fullSongResponseSchema } from "@trackstack/schemas";
-import { parseDataOrEmpty } from "../safeParse";
+import { parseDataOrUndefined } from "../safeParse";
 
 const useSongDetails = (songId: string | undefined) => {
     const dispatch = useAppDispatch();
     const { loading, data } = useQuery(getSongData, { variables: { SongID: Number(songId) } });
 
     const songData = useMemo(
-        () => parseDataOrEmpty(fullSongResponseSchema, data?.getSongData),
+        () => parseDataOrUndefined(fullSongResponseSchema, data?.getSongData),
         [data]
     );
 
