@@ -41,12 +41,9 @@ describe('SearchResolver forwards the queries to SearchService and returns its r
 
     expect(service.multipleSearch).toHaveBeenCalledWith('Nirvana');
     expect(result).toBe(mockMultipleSeach);
-    expect(result.exactArtist).toStrictEqual(searchArtists[0]);
-    expect(result.exactAlbum).toStrictEqual(searchAlbums[0]);
-    expect(result.exactSong).toStrictEqual(searchSongs[0]);
-    expect(result.artistResults).toStrictEqual(searchArtists.slice(1));
-    expect(result.albumResults).toStrictEqual(searchAlbums.slice(1));
-    expect(result.songResults).toStrictEqual(searchSongs.slice(1));
+    expect(result.artistResults).toStrictEqual(searchArtists);
+    expect(result.albumResults).toStrictEqual(searchAlbums);
+    expect(result.songResults).toStrictEqual(searchSongs);
   });
 
   it('artistSearch returns the artists from the service', async () => {

@@ -507,12 +507,9 @@ describe('SearchService.multipleSearch combines the three searches', () => {
     const result = await service.multipleSearch('Nirvana');
 
     expect(result).toStrictEqual(mockMultipleSeach);
-    expect(result.exactArtist).toStrictEqual(searchArtists[0]);
-    expect(result.exactAlbum).toStrictEqual(searchAlbums[0]);
-    expect(result.exactSong).toStrictEqual(searchSongs[0]);
-    expect(result.artistResults).toStrictEqual(searchArtists.slice(1));
-    expect(result.albumResults).toStrictEqual(searchAlbums.slice(1));
-    expect(result.songResults).toStrictEqual(searchSongs.slice(1));
+    expect(result.artistResults).toStrictEqual(searchArtists);
+    expect(result.albumResults).toStrictEqual(searchAlbums);
+    expect(result.songResults).toStrictEqual(searchSongs);
   });
 
   it('searches artists, albums and songs with the same query and limit', async () => {

@@ -155,9 +155,6 @@ export const multipleSearchResultsSchema = z.object({
   artistResults: z.array(artistSearchResultSchema),
   albumResults: z.array(albumSearchResultSchema),
   songResults: z.array(songSearchResultSchema),
-  exactArtist: artistSearchResultSchema,
-  exactAlbum: albumSearchResultSchema,
-  exactSong: songSearchResultSchema,
 });
 
 export type multipleSearchResults = z.infer<typeof multipleSearchResultsSchema>;

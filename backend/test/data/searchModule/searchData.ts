@@ -1,4 +1,4 @@
-import { AlbumSearchResultData, ArtistSearchResultData, SongSearchResultData } from '@trackstack/schemas';
+import { AlbumSearchResultData, ArtistSearchResultData, multipleSearchResults, SongSearchResultData } from '@trackstack/schemas';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
 
 export const searchArtists: ArtistSearchResultData[] = [
@@ -62,11 +62,8 @@ export const searchSongs: SongSearchResultData[] = [
   },
 ];
 
-export const mockMultipleSeach = {
-  exactArtist: searchArtists[0],
-  exactAlbum: searchAlbums[0],
-  exactSong: searchSongs[0],
-  artistResults: searchArtists.slice(1),
-  albumResults: searchAlbums.slice(1),
-  songResults: searchSongs.slice(1),
+export const mockMultipleSeach : multipleSearchResults = {
+  artistResults: searchArtists,
+  albumResults: searchAlbums,
+  songResults: searchSongs,
 };

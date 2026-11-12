@@ -60,14 +60,11 @@ export class SearchService {
   }
 
   async multipleSearch(query: string): Promise<multipleSearchResults> {
-    const [exactArtist, ...artistResults] = await this.searchArtists(query);
-    const [exactAlbum, ...albumResults] = await this.searchAlbums(query);
-    const [exactSong, ...songResults] = await this.seachSongs(query);
+    const artistResults = await this.searchArtists(query);
+    const albumResults = await this.searchAlbums(query);
+    const songResults = await this.seachSongs(query);
 
     return multipleSearchResultsSchema.parse({
-      exactArtist,
-      exactAlbum,
-      exactSong,
       artistResults,
       albumResults,
       songResults,
