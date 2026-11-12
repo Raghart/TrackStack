@@ -149,7 +149,7 @@ describe('SearchService.searchArtists retrieves artists from PostgreSQL', () => 
 
   it('rejects rows with an empty artist name', async () => {
     artistModel.sequelize.query.mockResolvedValue([
-      { id: 1, name: '   ', album_cover: 'url1' },
+      { id: 1, name: '   ', album_cover: 'https://example.com/cover.jpg' },
     ]);
 
     await expect(service.searchArtists('Nirvana')).rejects.toThrow(ZodError);

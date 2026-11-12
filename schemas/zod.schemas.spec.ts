@@ -1,9 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import {
   MAX_STRING_LENGTH,
+  albumResponseSchema,
   durationSchema,
   floatNumberSchema,
+  fullSongResponseSchema,
+  httpUrlSchema,
   positiveIntSchema,
+  songResponseSchema,
+  spotifyIdSchema,
   stringSchema,
   yearSchema,
 } from './zod.schemas';
@@ -34,6 +39,150 @@ describe('stringSchema', () => {
     );
     expect(
       stringSchema.safeParse('a'.repeat(MAX_STRING_LENGTH + 1)).success,
+    ).toBe(false);
+  });
+});
+
+describe('httpUrlSchema', () => {
+  it('accepts absolute http and https URLs', () => {
+    const urls = [
+      'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
+      'http://localhost:3000/graphql',
+      'https://example.com/path?query=1#fragment',
+      'HTTPS://EXAMPLE.COM/cover.jpg',
+    ];
+
+    for (const value of urls) {
+      expect(httpUrlSchema.safeParse(value).success).toBe(true);
+    }
+  });
+
+  it('trims surrounding whitespace before validating', () => {
+    expect(httpUrlSchema.parse('  https://example.com/cover.jpg  ')).toBe(
+      'https://example.com/cover.jpg',
+    );
+  });
+
+  it('rejects URLs with unsafe or unsupported protocols', () => {
+    const urls = [
+      'javascript:alert(1)',
+      'data:image/png;base64,aGVsbG8=',
+      'file:///etc/passwd',
+      'ftp://example.com/file.mp3',
+    ];
+
+    for (const value of urls) {
+      expect(httpUrlSchema.safeParse(value).success).toBe(false);
+    }
+  });
+
+  it('rejects relative, empty and malformed URLs', () => {
+    for (const value of ['', '   ', '/cover.jpg', 'example.com', 'http://']) {
+      expect(httpUrlSchema.safeParse(value).success).toBe(false);
+    }
+  });
+
+  it('rejects non-string values', () => {
+    for (const value of [123, null, undefined, {}]) {
+      expect(httpUrlSchema.safeParse(value).success).toBe(false);
+    }
+  });
+});
+
+describe('spotifyIdSchema', () => {
+  it('accepts 22-character alphanumeric IDs', () => {
+    expect(spotifyIdSchema.parse('0keNu0t0tqsWtExGM3nT1D')).toBe(
+      '0keNu0t0tqsWtExGM3nT1D',
+    );
+    expect(spotifyIdSchema.parse('a'.repeat(22))).toBe('a'.repeat(22));
+  });
+
+  it('trims surrounding whitespace before validating', () => {
+    expect(spotifyIdSchema.parse('  0keNu0t0tqsWtExGM3nT1D  ')).toBe(
+      '0keNu0t0tqsWtExGM3nT1D',
+    );
+  });
+
+  it('rejects IDs with the wrong length', () => {
+    for (const value of ['a'.repeat(21), 'a'.repeat(23), '', 'testingID']) {
+      expect(spotifyIdSchema.safeParse(value).success).toBe(false);
+    }
+  });
+
+  it('rejects IDs with characters outside the alphanumeric set', () => {
+    for (const value of ['a'.repeat(21) + '-', 'a'.repeat(21) + '_', 'a'.repeat(21) + ' ']) {
+      expect(spotifyIdSchema.safeParse(value).success).toBe(false);
+    }
+  });
+
+  it('rejects non-string values', () => {
+    for (const value of [123, null, undefined, {}]) {
+      expect(spotifyIdSchema.safeParse(value).success).toBe(false);
+    }
+  });
+});
+
+describe('response schemas URL validation', () => {
+  const songResponse = {
+    id: 1,
+    name: 'Come as You Are',
+    artists: ['Nirvana'],
+    album_cover: 'https://i.scdn.co/image/cover.jpg',
+    url_preview: 'https://p.scdn.co/mp3-preview/preview.mp3',
+  };
+
+  it('accepts response payloads with http(s) URLs', () => {
+    expect(songResponseSchema.safeParse(songResponse).success).toBe(true);
+    expect(
+      albumResponseSchema.safeParse({
+        id: 1,
+        name: 'Nevermind',
+        album_cover: 'https://i.scdn.co/image/cover.jpg',
+        artists: ['Nirvana'],
+      }).success,
+    ).toBe(true);
+  });
+
+  it('rejects a javascript: preview URL', () => {
+    const result = songResponseSchema.safeParse({
+      ...songResponse,
+      url_preview: 'javascript:alert(1)',
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a data: cover URL', () => {
+    const result = albumResponseSchema.safeParse({
+      id: 1,
+      name: 'Nevermind',
+      album_cover: 'data:image/png;base64,aGVsbG8=',
+      artists: ['Nirvana'],
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects invalid Spotify IDs in full song responses', () => {
+    const fullSong = {
+      id: 1,
+      name: 'Come as You Are',
+      artists: ['Nirvana'],
+      genres: ['Rock'],
+      album: 'Nevermind',
+      album_cover: 'https://i.scdn.co/image/cover.jpg',
+      duration: 2.5,
+      year: 1991,
+      spotify_id: '0keNu0t0tqsWtExGM3nT1D',
+      url_preview: 'https://p.scdn.co/mp3-preview/preview.mp3',
+    };
+
+    expect(fullSongResponseSchema.safeParse(fullSong).success).toBe(true);
+    expect(
+      fullSongResponseSchema.safeParse({
+        ...fullSong,
+        spotify_id: 'not-a-valid-spotify-id',
+      }).success,
     ).toBe(false);
   });
 });

@@ -10,6 +10,30 @@ export const stringSchema = z
     error: `The string must be at most ${MAX_STRING_LENGTH} characters long`,
   });
 
+export const httpUrlSchema = stringSchema
+  .refine(
+    (value: string) => {
+      try {
+        const url = new URL(value);
+        return url.protocol === 'http:' || url.protocol === 'https:';
+      } catch {
+        return false;
+      }
+    },
+    { error: 'The string must be a valid http or https URL' },
+  )
+  .describe('absolute URL with the http or https protocol');
+
+export const SPOTIFY_ID_PATTERN = /^[A-Za-z0-9]{22}$/;
+
+export const spotifyIdSchema = z
+  .string()
+  .trim()
+  .regex(SPOTIFY_ID_PATTERN, {
+    error: 'The Spotify ID must be 22 alphanumeric characters long',
+  })
+  .describe('22-character alphanumeric Spotify ID');
+
 const numericStringSchema = z
   .string()
   .refine(
@@ -71,7 +95,7 @@ export const songDetailsSchema = z.object({
 const albumReferenceSchema = z.looseObject({
   id: positiveIntSchema.optional(),
   name: stringSchema.optional(),
-  url_image: stringSchema,
+  url_image: httpUrlSchema,
 });
 
 const artistReferenceSchema = z.looseObject({
@@ -87,8 +111,8 @@ const genreReferenceSchema = z.looseObject({
 export const songSchema = z.looseObject({
   id: positiveIntSchema,
   name: stringSchema,
-  spotify_id: stringSchema.optional(),
-  url_preview: stringSchema,
+  spotify_id: spotifyIdSchema.optional(),
+  url_preview: httpUrlSchema,
   duration: durationSchema.optional(),
   year: yearSchema.optional(),
   album_id: positiveIntSchema.optional(),
@@ -101,7 +125,7 @@ export const songSchema = z.looseObject({
 export const artistSearchResultSchema = z.looseObject({
   id: positiveIntSchema,
   name: stringSchema,
-  album_cover: stringSchema,
+  album_cover: httpUrlSchema,
   type: z.literal('artist'),
 });
 
@@ -111,7 +135,7 @@ export const albumSearchResultSchema = z.looseObject({
   id: positiveIntSchema,
   name: stringSchema,
   artists: z.array(stringSchema),
-  album_cover: stringSchema,
+  album_cover: httpUrlSchema,
   type: z.literal('album'),
 });
 
@@ -122,8 +146,8 @@ export const songSearchResultSchema = z.looseObject({
   name: stringSchema,
   artists: z.array(stringSchema),
   album: stringSchema,
-  album_cover: stringSchema,
-  url_preview: stringSchema,
+  album_cover: httpUrlSchema,
+  url_preview: httpUrlSchema,
   type: z.literal('song'),
 });
 
@@ -143,7 +167,7 @@ export type SongSearchResultData = z.infer<typeof songSearchResultSchema>;
 export const songRawSchema = z.looseObject({
   id: positiveIntSchema,
   name: stringSchema,
-  url_preview: stringSchema,
+  url_preview: httpUrlSchema,
   artists: z.array(artistReferenceSchema),
   album: albumReferenceSchema,
 });
@@ -154,8 +178,8 @@ export const songResponseSchema = z.object({
   id: floatNumberSchema,
   name: stringSchema,
   artists: z.array(stringSchema),
-  album_cover: stringSchema,
-  url_preview: stringSchema,
+  album_cover: httpUrlSchema,
+  url_preview: httpUrlSchema,
 });
 
 export type SongResponse = z.infer<typeof songResponseSchema>;
@@ -163,7 +187,7 @@ export type SongResponse = z.infer<typeof songResponseSchema>;
 export const albumWithSongsSchema = z.object({
   id: positiveIntSchema,
   name: stringSchema,
-  url_image: stringSchema,
+  url_image: httpUrlSchema,
   songs: z.array(songSchema).min(1),
 });
 
@@ -190,8 +214,8 @@ export type songGenresData = z.infer<typeof songGenresSchema>;
 export const fullRawSongSchema = z.looseObject({
   id: positiveIntSchema,
   name: stringSchema,
-  spotify_id: stringSchema,
-  url_preview: stringSchema,
+  spotify_id: spotifyIdSchema,
+  url_preview: httpUrlSchema,
   duration: floatNumberSchema,
   year: yearSchema,
   artists: z.array(artistReferenceSchema),
@@ -207,11 +231,11 @@ export const fullSongResponseSchema = z.object({
   artists: z.array(stringSchema),
   genres: z.array(stringSchema),
   album: stringSchema,
-  album_cover: stringSchema,
+  album_cover: httpUrlSchema,
   duration: durationSchema,
   year: yearSchema,
-  spotify_id: stringSchema,
-  url_preview: stringSchema,
+  spotify_id: spotifyIdSchema,
+  url_preview: httpUrlSchema,
 });
 
 export type FullSongResponse = z.infer<typeof fullSongResponseSchema>;
@@ -220,8 +244,8 @@ const songRecommendationSchema = z.object({
   id: positiveIntSchema,
   name: stringSchema,
   artists: stringSchema,
-  album_cover: stringSchema,
-  url_preview: stringSchema,
+  album_cover: httpUrlSchema,
+  url_preview: httpUrlSchema,
   cos_sim: z.number(),
 });
 
@@ -232,7 +256,7 @@ export const songRecommendationsSchema = z.array(songRecommendationSchema);
 export const albumResponseSchema = z.object({
   id: positiveIntSchema,
   name: stringSchema,
-  album_cover: stringSchema,
+  album_cover: httpUrlSchema,
   artists: z.array(stringSchema),
 });
 
@@ -241,7 +265,7 @@ export type AlbumResponse = z.infer<typeof albumResponseSchema>;
 export const artistResponseSchema = z.object({
   id: positiveIntSchema,
   name: stringSchema,
-  album_cover: stringSchema,
+  album_cover: httpUrlSchema,
 });
 
 export type ArtistResponse = z.infer<typeof artistResponseSchema>;

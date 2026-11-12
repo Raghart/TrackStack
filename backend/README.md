@@ -81,6 +81,10 @@ fuzzy ranking); `SearchService` calls them with Sequelize and validates the
 rows with the shared Zod schemas. See [docs/database.md](./docs/database.md)
 for migration structure and schema change guidelines.
 
+## Shared validation
+
+Response parsing uses the Zod schemas in `@trackstack/schemas`: the services validate database rows before returning them. Besides trimming and numeric bounds, the contracts enforce security-sensitive formats — every `url_preview`, `album_cover`, and `url_image` must be an absolute `http:` or `https:` URL, and `spotify_id` must be a 22-character alphanumeric Spotify ID. Values such as `javascript:` or `data:` URLs are rejected before they can reach the client. See `schemas/zod.schemas.ts` and its spec for the primitives (`httpUrlSchema`, `spotifyIdSchema`).
+
 ## Tests
 
 Unit tests live next to the code (`src/<domain>/*.spec.ts`) and do not need PostgreSQL: models are mocked and the AI provider is replaced with a stub. Fixtures live in `test/data/` and shared assertions in `src/utils/expect*.ts`.

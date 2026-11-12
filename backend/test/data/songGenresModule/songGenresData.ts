@@ -10,7 +10,7 @@ export const songGenresTestData = [
     song: {
       id: 1,
       name: "I'm A Mover",
-      spotify_id: 'testingID',
+      spotify_id: '0keNu0t0tqsWtExGM3nT1D',
       url_preview: TESTING_URL,
       duration: 2.94,
       year: 2010,
@@ -27,7 +27,7 @@ export const songGenresTestData = [
     song: {
       id: 2,
       name: 'Smoking Umbrellas',
-      spotify_id: 'testingID',
+      spotify_id: '0keNu0t0tqsWtExGM3nT1D',
       url_preview: TESTING_URL,
       duration: 3.98,
       year: 1996,
@@ -44,7 +44,7 @@ export const songGenresTestData = [
     song: {
       id: 3,
       name: 'Bones',
-      spotify_id: 'testingID',
+      spotify_id: '0keNu0t0tqsWtExGM3nT1D',
       url_preview: TESTING_URL,
       duration: 3.78,
       year: 2010,
