@@ -12,9 +12,7 @@ import LoadingBeat from "../Utils/LoadingBeat";
 import { SongResponse } from "@trackstack/schemas";
 import { isValidGenre } from "@/types/verify";
 
-const GenreDetails = () => {
-  const { genre } = useParams();
-  if (!isValidGenre(genre)) return <NotFound message={`404: Invalid Genre!`} />;
+const GenreSongs = ({ genre }: { genre: string }) => {
   const { data, loading, loadMore, activeSong, isPlaying, hasData } = useGenreSongs(genre);
   if ( !loading && !data) return <NotFound message={`Error while retrieving the "${genre}" songs`} />;
   
@@ -44,6 +42,13 @@ const GenreDetails = () => {
       <ScrollUpArrow />
     </Box>
   );
+};
+
+const GenreDetails = () => {
+  const { genre } = useParams();
+  if (!isValidGenre(genre)) return <NotFound message={`404: Invalid Genre!`} />;
+
+  return <GenreSongs genre={genre} />;
 };
 
 export default GenreDetails;
