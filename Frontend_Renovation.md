@@ -77,7 +77,7 @@ Regla para todo el plan: cada paso debe terminar con `pnpm --filter ./frontend r
 
 > Todo lo de esta fase toca `schemas/zod.schemas.ts` y afecta también al backend. Hazlos de uno en uno y ejecuta los tests del backend al terminar cada paso.
 
-### Paso 4. Añadir primitivas estrictas
+### ~~Paso 4. Añadir primitivas estrictas~~
 
 **Objetivo:** dejar de usar `floatNumberSchema` para todo.
 
@@ -91,7 +91,7 @@ Regla para todo el plan: cada paso debe terminar con `pnpm --filter ./frontend r
 
 **Terminado cuando:** las primitivas existen, están tipadas y probadas con casos válidos e inválidos.
 
-### Paso 5. Validar URLs antes de usarlas
+### ~~Paso 5. Validar URLs antes de usarlas~~
 
 **Objetivo:** no meter cualquier string en `src`, CSS o `<audio>`.
 
@@ -104,7 +104,7 @@ Regla para todo el plan: cada paso debe terminar con `pnpm --filter ./frontend r
 
 **Terminado cuando:** una URL inválida o `javascript:` no pasa la validación y el componente degrada sin romperse.
 
-### Paso 6. Corregir los campos numéricos de las respuestas
+### ~~Paso 6. Corregir los campos numéricos de las respuestas~~
 
 **Objetivo:** que los tipos del schema reflejen la realidad del backend.
 
