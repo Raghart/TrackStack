@@ -10,8 +10,9 @@ const useLoadPriorSong = (activeSong: SongResponse | null) => {
     const [getPriorSong, { data }] = useLazyQuery(getPreviousSong);
         
     useEffect(() => {
-        if (data?.getPreviousSong) {
-            dispatch(setActiveAudio(songResponseSchema.parse(data.getPreviousSong)));
+        const result = songResponseSchema.safeParse(data?.getPreviousSong);
+        if (result.success) {
+            dispatch(setActiveAudio(result.data));
         };
     }, [data, dispatch])
 

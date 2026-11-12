@@ -12,8 +12,9 @@ const useStraySong = () => {
     });
 
     useEffect(() => {
-        if (data?.getRandomSong) {
-            dispatch(setActiveAudio(songResponseSchema.parse(data.getRandomSong)))
+        const result = songResponseSchema.safeParse(data?.getRandomSong);
+        if (result.success) {
+            dispatch(setActiveAudio(result.data));
         }
     }, [data, dispatch])
 

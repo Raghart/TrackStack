@@ -11,8 +11,9 @@ const useLoadNextSong = (activeSong: SongResponse | null) => {
     const [getFollowingSong, { data }] = useLazyQuery(getNextSong);
 
     useEffect(() => {
-        if (data?.getNextSong) {
-            dispatch(setActiveAudio(songResponseSchema.parse(data.getNextSong)));
+        const result = songResponseSchema.safeParse(data?.getNextSong);
+        if (result.success) {
+            dispatch(setActiveAudio(result.data));
         };
     }, [data, dispatch])
 
