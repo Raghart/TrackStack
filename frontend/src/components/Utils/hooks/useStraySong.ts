@@ -4,6 +4,7 @@ import { setActiveAudio } from "@/reducers/songReducer";
 import { getRandomSong } from "@/queries/MusicPlayerQueries";
 import { useEffect } from "react";
 import { songResponseSchema } from "@trackstack/schemas";
+import { parseDataOrUndefined } from "../safeParse";
 
 const useStraySong = () => {
     const dispatch = useAppDispatch();
@@ -12,9 +13,9 @@ const useStraySong = () => {
     });
 
     useEffect(() => {
-        const result = songResponseSchema.safeParse(data?.getRandomSong);
-        if (result.success) {
-            dispatch(setActiveAudio(result.data));
+        const parsedData = parseDataOrUndefined(songResponseSchema, data?.getRandomSong);
+        if (parsedData) {
+            dispatch(setActiveAudio(parsedData));
         }
     }, [data, dispatch])
 

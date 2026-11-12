@@ -4,6 +4,7 @@ import { setActiveAudio } from "@/reducers/songReducer";
 import { getNextSong } from "@/queries/MusicPlayerQueries";
 import { useEffect } from "react";
 import { SongResponse, songResponseSchema } from "@trackstack/schemas";
+import { parseDataOrUndefined } from "../safeParse";
 
 const useLoadNextSong = (activeSong: SongResponse | null) => {
     const dispatch = useAppDispatch();
@@ -11,9 +12,9 @@ const useLoadNextSong = (activeSong: SongResponse | null) => {
     const [getFollowingSong, { data }] = useLazyQuery(getNextSong);
 
     useEffect(() => {
-        const result = songResponseSchema.safeParse(data?.getNextSong);
-        if (result.success) {
-            dispatch(setActiveAudio(result.data));
+        const parsedData = parseDataOrUndefined(songResponseSchema, data?.getNextSong);
+        if (parsedData) {
+            dispatch(setActiveAudio(parsedData));
         };
     }, [data, dispatch])
 
