@@ -23,6 +23,7 @@ frontend/
 │   │   ├── AlbumPath/DetailsPath/    # album catalogue and detail layout
 │   │   ├── SongCard/                 # song cards and play overlay
 │   │   ├── MainLayout/               # sidebar, top bar, player shell
+│   │   ├── Error/                    # global error boundary and not-found message
 │   │   ├── Pagination/               # pagination controls and helpers
 │   │   ├── Utils/                    # hooks, formatting, vector helpers
 │   │   ├── constants/                # labels, modal config, recommendation weights

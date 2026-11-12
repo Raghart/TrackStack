@@ -5,6 +5,7 @@ import { debounce } from "lodash";
 import { clearQuery, setIsLoading, setQuery, setQueryResults } from "@/reducers/searchReducer";
 import { multipleSearch } from "@/queries/MultipleSearchQuerie";
 import { multipleSearchResultsSchema } from "@trackstack/schemas";
+import { parseDataOrUndefined } from "../safeParse";
 
 const useSearchResults = () => {
     const [getResults] = useLazyQuery(multipleSearch);
@@ -22,9 +23,9 @@ const useSearchResults = () => {
 
         try {
             const { data } = await getResults({ variables: { query } });
-            const result = multipleSearchResultsSchema.safeParse(data?.multipleSearch);
-            if (result.success) {
-                dispatch(setQueryResults(result.data));
+            const parsedData = parseDataOrUndefined(multipleSearchResultsSchema, data?.multipleSearch); 
+            if (parsedData) {
+                dispatch(setQueryResults(parsedData));
             };
         } catch {
             dispatch(setIsLoading(false));

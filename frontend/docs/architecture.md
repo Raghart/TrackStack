@@ -17,6 +17,10 @@
 
 `MainLayout` keeps the sidebar, search bar, and music player mounted across routes. When the search query is non-empty, it renders the search results instead of the routed page.
 
+### Error handling
+
+`components/Error/ErrorBoundary.tsx` wraps `<App />` in `main.tsx` as a last-resort guard, so an unhandled render error shows a fallback instead of a blank page. A second boundary inside `MainLayout` surrounds only the routed content (and the search results): if a page fails, the sidebar, search bar, and player stay usable, and the boundary resets automatically when the route changes. Page-specific "not found" and empty states are still handled by `components/Error/NotFound.tsx`.
+
 ### How the recommendation vector is built
 
 `components/Utils/generateUserVector.ts` normalizes each slider with min-max scaling and multiplies it by the weights in `components/constants/WeightData.ts`:
