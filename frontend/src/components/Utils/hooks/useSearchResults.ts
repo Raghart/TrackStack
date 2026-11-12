@@ -22,9 +22,9 @@ const useSearchResults = () => {
 
         try {
             const { data } = await getResults({ variables: { query } });
-            if (data?.multipleSearch) {
-                const results = multipleSearchResultsSchema.parse(data.multipleSearch);
-                dispatch(setQueryResults(results));
+            const result = multipleSearchResultsSchema.safeParse(data?.multipleSearch);
+            if (result.success) {
+                dispatch(setQueryResults(result.data));
             };
         } catch {
             dispatch(setIsLoading(false));
