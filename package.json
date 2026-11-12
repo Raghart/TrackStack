@@ -16,7 +16,8 @@
     "build:frontend": "pnpm --filter ./frontend run build",
     "build:backend": "pnpm --filter ./backend run build",
     "start:prod": "pnpm --filter ./backend run start:prod",
-    "test:backend": "pnpm --filter ./backend run test"
+    "test:backend": "pnpm --filter ./backend run test",
+    "test:schemas": "pnpm --filter ./schemas run test"
   },
   "keywords": [],
   "license": "MIT License",

@@ -68,6 +68,7 @@ pnpm run build:frontend     # build del frontend -> backend/public
 pnpm run build:backend      # compila NestJS -> backend/dist
 pnpm run start:prod         # ejecuta backend compilado
 pnpm run test:backend       # tests del backend (Vitest)
+pnpm run test:schemas       # tests de los schemas compartidos (Vitest)
 ```
 
 Por paquete:
@@ -154,7 +155,7 @@ Estos archivos son documentación viva: si se quedan obsoletos, las siguientes s
 - Usa Zod 4 (ya instalado en los tres workspaces) y `z.looseObject` para no descartar campos extra que los parsers actuales devuelven tal cual.
 - `schemas/tsconfig.json` tiene `strict: true`, por lo que `noImplicitAny` está habilitado. Tipa **explícitamente** los parámetros de callbacks como `.refine`, `.transform`, `.superRefine`, etc. (por ejemplo, `(value: string) => ...` o `(value: number | string) => ...`); no dejes que el tipo se infiera a `any` y evita anotar `unknown` si luego necesitas el tipo real en la transformación.
 - Al añadir o cambiar un parser o un contrato GraphQL, actualiza también su schema en `schemas/`; no dupliques validaciones nuevas en `backend/src/types` ni en `frontend/src/types`.
-- Antes de dar por terminado un cambio en `schemas/`, comprueba los tipos con `pnpm --filter ./schemas exec tsc -p tsconfig.json --noEmit`.
+- Antes de dar por terminado un cambio en `schemas/`, comprueba los tipos con `pnpm --filter ./schemas exec tsc -p tsconfig.json --noEmit` y ejecuta sus tests con `pnpm run test:schemas`.
 
 ### Nota sobre documentación de planificación
 

@@ -1,24 +1,55 @@
 import { z } from 'zod';
 
+export const MAX_STRING_LENGTH = 2048;
+
 export const stringSchema = z
   .string()
-  .refine((value: string) => value.trim() !== '', {
-    error: 'The string must not be empty',
+  .trim()
+  .min(1, { error: 'The string must not be empty' })
+  .max(MAX_STRING_LENGTH, {
+    error: `The string must be at most ${MAX_STRING_LENGTH} characters long`,
   });
 
 const numericStringSchema = z
   .string()
   .refine(
-    (value: string) => value.trim() !== '' && !Number.isNaN(Number(value.trim())),
-    { error: 'The string must contain a valid number' },
+    (value: string) => {
+      const trimmed = value.trim();
+      return trimmed !== '' && Number.isFinite(Number(trimmed));
+    },
+    { error: 'The string must contain a finite number' },
   );
 
-export const floatNumberSchema = z
+const numericSchema = z
   .union([z.number(), numericStringSchema])
   .transform((value: number | string) =>
-    typeof value === 'string' ? parseFloat(value.trim()) : value,
+    typeof value === 'string' ? Number(value.trim()) : value,
+  );
+
+export const floatNumberSchema = numericSchema
+  .refine((value: number) => Number.isFinite(value), {
+    error: 'The number must be finite',
+  })
+  .describe('finite number or numeric string, parsed to number');
+
+export const positiveIntSchema = numericSchema
+  .refine((value: number) => Number.isInteger(value) && value > 0, {
+    error: 'The number must be a positive integer',
+  })
+  .describe('positive integer or numeric string, parsed to number');
+
+export const yearSchema = numericSchema
+  .refine(
+    (value: number) => Number.isInteger(value) && value >= 1900 && value <= 2100,
+    { error: 'The year must be an integer between 1900 and 2100' },
   )
-  .describe('number or numeric string, parsed to number');
+  .describe('year between 1900 and 2100, parsed to number');
+
+export const durationSchema = numericSchema
+  .refine((value: number) => Number.isFinite(value) && value > 0, {
+    error: 'The duration must be a finite positive number',
+  })
+  .describe('finite positive number or numeric string, parsed to number');
 
 export const songDetailsSchema = z.object({
   id: z.number(),
