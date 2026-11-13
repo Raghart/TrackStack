@@ -15,10 +15,10 @@ import {
   albumResponseSchema,
   AlbumWithSongsData,
   albumWithSongsSchema,
-  floatNumberSchema,
   SongResponse,
   songResponseSchema,
 } from '@trackstack/schemas';
+import { floatNumberSchema } from '../../../schemas/zod.parsers';
 
 @Injectable()
 export class AlbumsService {

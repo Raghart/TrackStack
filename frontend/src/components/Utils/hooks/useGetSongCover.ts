@@ -1,9 +1,10 @@
 import { getSongData } from "@/queries/DetailQueries";
 import { useLazyQuery } from "@apollo/client";
-import { floatNumberSchema, fullSongResponseSchema } from "@trackstack/schemas";
+import { fullSongResponseSchema } from "@trackstack/schemas";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { parseDataOrUndefined } from "../safeParse";
+import { floatNumberSchema } from "../../../../../schemas/zod.parsers";
 
 const useGetSongCover = () => {
     const { songId } = useParams();
