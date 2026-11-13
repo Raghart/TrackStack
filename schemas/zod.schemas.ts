@@ -1,131 +1,6 @@
 import { z } from 'zod';
-
-export const MAX_STRING_LENGTH = 2048;
-
-export const stringSchema = z
-  .string()
-  .trim()
-  .min(1, { error: 'The string must not be empty' })
-  .max(MAX_STRING_LENGTH, {
-    error: `The string must be at most ${MAX_STRING_LENGTH} characters long`,
-  });
-
-export const aiStreamChunkSchema = z
-  .union([z.string(), z.null(), z.undefined()])
-  .transform((value: string | null | undefined) => value ?? '')
-  .describe('AI stream chunk; null and undefined normalized to an empty string');
-
-export const httpUrlSchema = stringSchema
-  .refine(
-    (value: string) => {
-      try {
-        const url = new URL(value);
-        return url.protocol === 'http:' || url.protocol === 'https:';
-      } catch {
-        return false;
-      }
-    },
-    { error: 'The string must be a valid http or https URL' },
-  )
-  .describe('absolute URL with the http or https protocol');
-
-export const SPOTIFY_ID_PATTERN = /^[A-Za-z0-9]{22}$/;
-
-export const spotifyIdSchema = z
-  .string()
-  .trim()
-  .regex(SPOTIFY_ID_PATTERN, {
-    error: 'The Spotify ID must be 22 alphanumeric characters long',
-  })
-  .describe('22-character alphanumeric Spotify ID');
-
-const numericStringSchema = z
-  .string()
-  .refine(
-    (value: string) => {
-      const trimmed = value.trim();
-      return trimmed !== '' && Number.isFinite(Number(trimmed));
-    },
-    { error: 'The string must contain a finite number' },
-  );
-
-const numericSchema = z
-  .union([z.number(), numericStringSchema])
-  .transform((value: number | string) =>
-    typeof value === 'string' ? Number(value.trim()) : value,
-  );
-
-export const floatNumberSchema = numericSchema
-  .refine((value: number) => Number.isFinite(value), {
-    error: 'The number must be finite',
-  })
-  .describe('finite number or numeric string, parsed to number');
-
-export const positiveIntSchema = numericSchema
-  .refine((value: number) => Number.isInteger(value) && value > 0, {
-    error: 'The number must be a positive integer',
-  })
-  .describe('positive integer or numeric string, parsed to number');
-
-export const yearSchema = numericSchema
-  .refine(
-    (value: number) => Number.isInteger(value) && value >= 1900 && value <= 2100,
-    { error: 'The year must be an integer between 1900 and 2100' },
-  )
-  .describe('year between 1900 and 2100, parsed to number');
-
-export const durationSchema = numericSchema
-  .refine((value: number) => Number.isFinite(value) && value > 0, {
-    error: 'The duration must be a finite positive number',
-  })
-  .describe('finite positive number or numeric string, parsed to number');
-
-export const songDetailsSchema = z.object({
-  id: positiveIntSchema,
-  song_id: positiveIntSchema,
-  danceability: z.number(),
-  energy: z.number(),
-  track_key: z.number(),
-  loudness: z.number(),
-  mode: z.number(),
-  speechiness: z.number(),
-  acousticness: z.number(),
-  instrumentalness: z.number(),
-  liveness: z.number(),
-  valence: z.number(),
-  tempo: z.number(),
-  time_signature: z.number(),
-});
-
-const albumReferenceSchema = z.looseObject({
-  id: positiveIntSchema.optional(),
-  name: stringSchema.optional(),
-  url_image: httpUrlSchema,
-});
-
-const artistReferenceSchema = z.looseObject({
-  id: positiveIntSchema.optional(),
-  name: stringSchema,
-});
-
-const genreReferenceSchema = z.looseObject({
-  id: positiveIntSchema.optional(),
-  genre: stringSchema,
-});
-
-export const songSchema = z.looseObject({
-  id: positiveIntSchema,
-  name: stringSchema,
-  spotify_id: spotifyIdSchema.optional(),
-  url_preview: httpUrlSchema,
-  duration: durationSchema.optional(),
-  year: yearSchema.optional(),
-  album_id: positiveIntSchema.optional(),
-  artists: z.array(artistReferenceSchema).optional(),
-  album: albumReferenceSchema.optional(),
-  genres: z.array(genreReferenceSchema).optional(),
-  songDetails: songDetailsSchema.optional(),
-});
+import { durationSchema, floatNumberSchema, httpUrlSchema, positiveIntSchema, spotifyIdSchema, stringSchema, yearSchema } from './zod.parsers';
+import { albumReferenceSchema, artistReferenceSchema, genreReferenceSchema, songSchema } from './zod.dbSchemas';
 
 export const artistSearchResultSchema = z.looseObject({
   id: positiveIntSchema,
@@ -156,6 +31,8 @@ export const songSearchResultSchema = z.looseObject({
   type: z.literal('song'),
 });
 
+export type SongSearchResultData = z.infer<typeof songSearchResultSchema>;
+
 export const multipleSearchResultsSchema = z.object({
   artistResults: z.array(artistSearchResultSchema),
   albumResults: z.array(albumSearchResultSchema),
@@ -163,8 +40,6 @@ export const multipleSearchResultsSchema = z.object({
 });
 
 export type multipleSearchResults = z.infer<typeof multipleSearchResultsSchema>;
-
-export type SongSearchResultData = z.infer<typeof songSearchResultSchema>;
 
 export const songRawSchema = z.looseObject({
   id: positiveIntSchema,

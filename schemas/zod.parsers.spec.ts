@@ -2,17 +2,15 @@ import { describe, expect, it } from 'vitest';
 import {
   MAX_STRING_LENGTH,
   aiStreamChunkSchema,
-  albumResponseSchema,
   durationSchema,
   floatNumberSchema,
-  fullSongResponseSchema,
   httpUrlSchema,
   positiveIntSchema,
-  songResponseSchema,
   spotifyIdSchema,
   stringSchema,
   yearSchema,
-} from './zod.schemas';
+} from './zod.parsers';
+import { albumResponseSchema, fullSongResponseSchema, songResponseSchema } from './zod.schemas';
 
 describe('stringSchema', () => {
   it('accepts non-empty strings', () => {
