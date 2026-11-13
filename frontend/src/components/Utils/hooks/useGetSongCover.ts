@@ -4,14 +4,14 @@ import { fullSongResponseSchema } from "@trackstack/schemas";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { parseDataOrUndefined } from "../safeParse";
-import { floatNumberSchema } from "@trackstack/schemas/zod.parsers";
+import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
 
 const useGetSongCover = () => {
     const { songId } = useParams();
     const [getSongID, { data }] = useLazyQuery(getSongData);
 
     useEffect(() => {
-        const result = floatNumberSchema.safeParse(songId);
+        const result = positiveIntSchema.safeParse(songId);
         if (result.success) {
             getSongID({ variables: { SongID: result.data } });
         };
