@@ -3,8 +3,7 @@ import { useAppSelector } from "../redux-hooks";
 import { useSubscription } from "@apollo/client";
 import generateUserVector from "../generateUserVector";
 import { aiSubscription } from "@/queries/LaraRecQuerie";
-import { stringSchema } from "@trackstack/schemas";
-import { parseDataOrUndefined } from "../safeParse";
+import { aiStreamChunkSchema } from "@trackstack/schemas";
 
 const useSongRec = () => {
     const [visibleCount, setVisibleCount] = useState<number>(20);
@@ -17,7 +16,7 @@ const useSongRec = () => {
     useSubscription(aiSubscription, {
         variables: { genres, userVector },
         onData({ data }) {
-            const chunkText = parseDataOrUndefined(stringSchema, data.data.aiResponse);
+            const chunkText = aiStreamChunkSchema.safeParse(data.data.aiResponse).data;
             setAIResponse(prev => prev + chunkText);
         }
     });

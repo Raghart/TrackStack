@@ -132,7 +132,7 @@ Regla para todo el plan: cada paso debe terminar con `pnpm --filter ./frontend r
 
 **Terminado cuando:** los tres lados aceptan el mismo conjunto de respuestas.
 
-### Paso 8. Crear el schema del stream de IA
+### ~~Paso 8. Crear el schema del stream de IA~~
 
 **Objetivo:** que un chunk vacío o nulo no lance una excepción dentro de la suscripción.
 
