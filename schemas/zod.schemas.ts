@@ -10,6 +10,11 @@ export const stringSchema = z
     error: `The string must be at most ${MAX_STRING_LENGTH} characters long`,
   });
 
+export const aiStreamChunkSchema = z
+  .union([z.string(), z.null(), z.undefined()])
+  .transform((value: string | null | undefined) => value ?? '')
+  .describe('AI stream chunk; null and undefined normalized to an empty string');
+
 export const httpUrlSchema = stringSchema
   .refine(
     (value: string) => {

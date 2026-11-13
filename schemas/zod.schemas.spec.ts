@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   MAX_STRING_LENGTH,
+  aiStreamChunkSchema,
   albumResponseSchema,
   durationSchema,
   floatNumberSchema,
@@ -40,6 +41,32 @@ describe('stringSchema', () => {
     expect(
       stringSchema.safeParse('a'.repeat(MAX_STRING_LENGTH + 1)).success,
     ).toBe(false);
+  });
+});
+
+describe('aiStreamChunkSchema', () => {
+  it('keeps non-empty text untouched, including whitespace', () => {
+    expect(aiStreamChunkSchema.parse('Hello')).toBe('Hello');
+    expect(aiStreamChunkSchema.parse(' world ')).toBe(' world ');
+    expect(aiStreamChunkSchema.parse('\n')).toBe('\n');
+  });
+
+  it('normalizes an empty string to an empty string', () => {
+    expect(aiStreamChunkSchema.parse('')).toBe('');
+  });
+
+  it('normalizes null to an empty string', () => {
+    expect(aiStreamChunkSchema.parse(null)).toBe('');
+  });
+
+  it('normalizes undefined to an empty string', () => {
+    expect(aiStreamChunkSchema.parse(undefined)).toBe('');
+  });
+
+  it('rejects values that are not strings, null or undefined', () => {
+    for (const value of [123, true, {}, []]) {
+      expect(aiStreamChunkSchema.safeParse(value).success).toBe(false);
+    }
   });
 });
 
