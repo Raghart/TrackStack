@@ -5,15 +5,6 @@ import { searchSongsDto } from './songsSearchDto';
 
 @ObjectType()
 export class multipleSearchResultsDto {
-  @Field(() => artistsSearchDto)
-  exactArtist: artistsSearchDto;
-
-  @Field(() => albumsSearchDto)
-  exactAlbum: albumsSearchDto;
-
-  @Field(() => searchSongsDto)
-  exactSong: searchSongsDto;
-
   @Field(() => [artistsSearchDto])
   artistResults: artistsSearchDto[];
 
