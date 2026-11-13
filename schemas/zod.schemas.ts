@@ -242,7 +242,7 @@ export const fullSongResponseSchema = z.object({
 
 export type FullSongResponse = z.infer<typeof fullSongResponseSchema>;
 
-const songRecommendationSchema = z.object({
+export const songRawRecommendationSchema = z.object({
   id: positiveIntSchema,
   name: stringSchema,
   artists: stringSchema,
@@ -251,9 +251,7 @@ const songRecommendationSchema = z.object({
   cos_sim: z.number(),
 });
 
-export type SongRecommendationResponse = z.infer<typeof songRecommendationSchema>;
-
-export const songRecommendationsSchema = z.array(songRecommendationSchema);
+export type SongRawRecommendation = z.infer<typeof songRawRecommendationSchema>;
 
 export const albumResponseSchema = z.object({
   id: positiveIntSchema,

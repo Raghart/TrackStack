@@ -19,8 +19,8 @@ import {
   FullSongResponse,
   fullSongResponseSchema,
   SongRawData,
+  songRawRecommendationSchema,
   songRawSchema,
-  songRecommendationsSchema,
   SongResponse,
   songResponseSchema,
   stringSchema,
@@ -214,7 +214,7 @@ export class SongsService {
       },
     );
 
-    const parsedData = songRecommendationsSchema.parse(rawSongData);
+    const parsedData = songRawRecommendationSchema.array().parse(rawSongData);
 
     return parsedData.map((songData) => songResponseSchema.parse({
       id: songData.id,
