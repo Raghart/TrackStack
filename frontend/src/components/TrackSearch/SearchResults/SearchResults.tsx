@@ -3,8 +3,7 @@ import ArtistResults from "./ArtistResults/ArtistResults";
 import AlbumResults from "./AlbumResults/AlbumResults";
 import SongResults from "./SongResults/SongResults";
 import { multipleSearchResults } from "@trackstack/schemas";
-// Should move the TrackSearch directory files and subfiles to the main files components/
-// The general Results tab doesn't need the first data
+
 const SearchResults = ({ artistResults, albumResults, songResults  } : 
     multipleSearchResults) => {
     return(

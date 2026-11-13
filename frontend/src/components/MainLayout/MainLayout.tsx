@@ -6,7 +6,7 @@ import TopBar from "./TopBar/TopBar";
 import { useAppSelector } from "../Utils/redux-hooks";
 import useGetSongCover from "../Utils/hooks/useGetSongCover";
 import { MAIN_LAYOUT_HEIGHT, MAIN_LAYOUT_ML, MAIN_LAYOUT_MR } from "../constants/MainLayoutC";
-import TrackSearch from "../Landpage/TrackSearch/TrackSearch";
+import TrackSearch from "../TrackSearch/TrackSearch";
 import ErrorBoundary from "../Error/ErrorBoundary";
 import { ErrorFallback } from "../Error/ErrorFallback";
 
