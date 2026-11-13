@@ -13,7 +13,7 @@ import { GenresModel } from '../../models/genres/genres.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { songGenresData, songGenresSchema, SongResponse, songResponseSchema } from '@trackstack/schemas';
-import { floatNumberSchema } from '../../../schemas/zod.parsers';
+import { floatNumberSchema } from '@trackstack/schemas/zod.parsers';
 
 @Injectable()
 export class SongGenresService {

@@ -18,7 +18,7 @@ import {
   SongResponse,
   songResponseSchema,
 } from '@trackstack/schemas';
-import { floatNumberSchema } from '../../../schemas/zod.parsers';
+import { floatNumberSchema } from '@trackstack/schemas/zod.parsers';
 
 @Injectable()
 export class AlbumsService {

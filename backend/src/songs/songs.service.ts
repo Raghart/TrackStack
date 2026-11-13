@@ -27,7 +27,7 @@ import {
 import safeQuery from '@/utils/safeQuery';
 import { InvalidPaginationException } from '@/utils/PaginationError';
 import parseGenres from '@/utils/parseGenres';
-import { stringSchema } from '../../../schemas/zod.parsers';
+import { stringSchema } from '@trackstack/schemas/zod.parsers';
 if (existsSync('.env')) process.loadEnvFile();
 
 @Injectable()

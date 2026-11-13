@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { GenresModel } from '../../models/genres/genres.model';
 import safeQuery from '@/utils/safeQuery';
-import { stringSchema } from '../../../schemas/zod.parsers';
+import { stringSchema } from '@trackstack/schemas/zod.parsers';
 
 @Injectable()
 export class GenresService {

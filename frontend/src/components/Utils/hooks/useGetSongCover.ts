@@ -4,7 +4,7 @@ import { fullSongResponseSchema } from "@trackstack/schemas";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { parseDataOrUndefined } from "../safeParse";
-import { floatNumberSchema } from "../../../../../schemas/zod.parsers";
+import { floatNumberSchema } from "@trackstack/schemas/zod.parsers";
 
 const useGetSongCover = () => {
     const { songId } = useParams();

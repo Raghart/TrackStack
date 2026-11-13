@@ -3,7 +3,7 @@ import { useAppSelector } from "../redux-hooks";
 import { useSubscription } from "@apollo/client";
 import generateUserVector from "../generateUserVector";
 import { aiSubscription } from "@/queries/LaraRecQuerie";
-import { aiStreamChunkSchema } from "../../../../../schemas/zod.parsers";
+import { aiStreamChunkSchema } from "@trackstack/schemas/zod.parsers";
 
 const useSongRec = () => {
     const [visibleCount, setVisibleCount] = useState<number>(20);

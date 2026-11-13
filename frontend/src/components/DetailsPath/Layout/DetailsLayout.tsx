@@ -7,7 +7,7 @@ import DetailSongs from "./DetailSongs";
 import { isValidDetail } from "@/types/verify";
 import useDetailFilter from "@/components/Utils/hooks/useDetailFilter";
 import { Zoom } from "react-awesome-reveal";
-import { stringSchema } from "@trackstack/schemas";
+import { stringSchema } from "@trackstack/schemas/zod.parsers";
 
 const DetailsLayout = ({ type, gradientInit, gradientMid, error } : { type: ValidDetail, gradientInit: string, 
     gradientMid: string, error: string }) => {

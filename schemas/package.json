@@ -6,7 +6,11 @@
   "main": "zod.schemas.ts",
   "types": "zod.schemas.ts",
   "exports": {
-    ".": "./zod.schemas.ts"
+    ".": "./zod.schemas.ts",
+    "./zod.schemas": "./zod.schemas.ts",
+    "./zod.dbSchemas": "./zod.dbSchemas.ts",
+    "./zod.parsers": "./zod.parsers.ts",
+    "./*": "./*.ts"
   },
   "scripts": {
     "test": "vitest run"

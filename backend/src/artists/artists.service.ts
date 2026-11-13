@@ -18,7 +18,7 @@ import { InvalidPaginationException } from '@/utils/PaginationError';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { SongsModel } from '../../models/songs/song.model';
-import { floatNumberSchema } from '../../../schemas/zod.parsers';
+import { floatNumberSchema } from '@trackstack/schemas/zod.parsers';
 
 @Injectable()
 export class ArtistsService {
