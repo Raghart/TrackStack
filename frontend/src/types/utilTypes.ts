@@ -7,6 +7,11 @@ export interface highlightType {
     hightlight: string;
 };
 
+export interface GradientData {
+    gradientInit: string;
+    gradientMid: string;
+}
+
 export type ValidDetail = "album" | "artist";
 
 export interface NavItem {

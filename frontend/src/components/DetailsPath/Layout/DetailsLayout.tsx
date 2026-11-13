@@ -10,39 +10,30 @@ import { stringSchema } from "@trackstack/schemas/zod.parsers";
 import { useParams } from "react-router-dom";
 import getHightlightDetails from "@/dynamicCSS/getHighlightDetails";
 import { parseDataOrUndefined } from "@/components/Utils/safeParse";
+import { getGradientDetails } from "@/dynamicCSS/getGradientDetails";
 
-const DetailsLayout = ({ type, gradientInit, gradientMid, error } : { type: ValidDetail, gradientInit: string, 
-    gradientMid: string, error: string }) => {
+const DetailsLayout = ({ type } : { type: ValidDetail }) => {
     const { album, artist } = useParams();
     const filterValue = parseDataOrUndefined(stringSchema, album ?? artist);
     if (!isValidDetail(type) || !filterValue) {
         return <NotFound message="Invalid type or search value" />
     }
-    const hightlightDetails = getHightlightDetails(type, filterValue);
-    return (
-        <Box direction="column" gap={{ base: 8, sm: 10, md: 11, lg: 11 }} pt={7} textAlign="center" pb={20}>
-            <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 40 }}>
-                <HighlightTitle title={hightlightDetails.title} gradientInit={gradientInit} grandientMid={gradientMid}
-                    hightlight={hightlightDetails.hightlight} />
-            </Zoom>
 
-            <DetailSongs type={type} filterValue={stringSchema.parse(filterValue)} error={error} />            
-            <ScrollUpArrow />            
-        </Box>
-    );
+    return <DetailsData type={type} filterValue={filterValue} />;
 };
-
-const DetailsData = ({ type, filterValue, gradientInit, gradientMid, error } : { type: ValidDetail, 
-    filterValue: string, gradientInit: string, radientInit: string, gradientMid: string, error: string }) => {
+const DetailsData = ({ type, filterValue } : { type: ValidDetail, filterValue: string }) => {
     const hightlightDetails = getHightlightDetails(type, filterValue);
+    const gradientDetails = getGradientDetails(type);
     return (
         <Box direction="column" gap={{ base: 8, sm: 10, md: 11, lg: 11 }} pt={7} textAlign="center" pb={20}>
             <Zoom triggerOnce direction="down" delay={100} style={{ paddingBottom: 40 }}>
-                <HighlightTitle title={hightlightDetails.title} gradientInit={gradientInit} grandientMid={gradientMid}
+                <HighlightTitle title={hightlightDetails.title} 
+                    gradientInit={gradientDetails.gradientInit} 
+                    grandientMid={gradientDetails.gradientMid} 
                     hightlight={hightlightDetails.hightlight} />
             </Zoom>
 
-            <DetailSongs type={type} filterValue={stringSchema.parse(filterValue)} error={error} />            
+            <DetailSongs type={type} filterValue={stringSchema.parse(filterValue)} error={"Not found"} />            
             <ScrollUpArrow />            
         </Box>
     );
