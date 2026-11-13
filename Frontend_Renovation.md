@@ -118,7 +118,7 @@ Regla para todo el plan: cada paso debe terminar con `pnpm --filter ./frontend r
 
 **Terminado cuando:** IDs, años y duraciones rechazan negativos, decimales y strings no numéricos.
 
-### Paso 7. Resolver el contrato de `multipleSearchResultsSchema`
+### ~~Paso 7. Resolver el contrato de `multipleSearchResultsSchema`~~
 
 **Objetivo:** que schema, backend y UI digan lo mismo.
 
