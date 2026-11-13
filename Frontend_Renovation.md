@@ -145,7 +145,7 @@ Regla para todo el plan: cada paso debe terminar con `pnpm --filter ./frontend r
 
 **Terminado cuando:** un chunk vacío o nulo se ignora sin romper y hay tests para los cuatro casos.
 
-### Paso 9. Documentar `songRecommendationsSchema`
+### ~~Paso 9. Documentar `songRecommendationsSchema`~~
 
 **Objetivo:** evitar que alguien use el schema equivocado.
 
