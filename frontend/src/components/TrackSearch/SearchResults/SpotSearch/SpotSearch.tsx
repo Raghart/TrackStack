@@ -15,7 +15,7 @@ const SpotSearch = ({ song, artist, album } : {
         ...(artist ? [{ name: normalizeText(artist.name), element: <SpotArtist {...artist} /> }] : []),
         ...(album ? [{ name: normalizeText(album.name), element: <SpotAlbum {...album} /> }] : []),
     ];
-    const sortedResults: searchResultsType[] = useSortResults(spotResults);
+    const sortedResults = useSortResults(spotResults);
 
     return(
         <For each={sortedResults}>
