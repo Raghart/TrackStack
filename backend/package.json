@@ -10,7 +10,7 @@
     "start": "nest start",
     "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "tsx dist/backend/src/main",
+    "start:prod": "tsx dist/src/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\"",
     "test": "vitest run",
     "test:watch": "vitest",
