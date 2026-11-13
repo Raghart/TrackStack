@@ -9,17 +9,18 @@ import { Zoom } from "react-awesome-reveal";
 import { AlbumResponse, ArtistResponse, SongResponse } from "@trackstack/schemas";
 
 const SpotSearch = ({ song, artist, album } : { 
-    song: SongResponse, artist: ArtistResponse, album: AlbumResponse }) => {
-    const sortedResults: searchResultsType[] = useSortResults([
-        { name: normalizeText(song.name), element: <SpotSong {...song} /> },
-        { name: normalizeText(artist.name), element: <SpotArtist {...artist} /> },
-        { name: normalizeText(album.name), element: <SpotAlbum {...album} /> },
-    ]);
+    song?: SongResponse, artist?: ArtistResponse, album?: AlbumResponse }) => {
+    const spotResults: searchResultsType[] = [
+        ...(song ? [{ name: normalizeText(song.name), element: <SpotSong {...song} /> }] : []),
+        ...(artist ? [{ name: normalizeText(artist.name), element: <SpotArtist {...artist} /> }] : []),
+        ...(album ? [{ name: normalizeText(album.name), element: <SpotAlbum {...album} /> }] : []),
+    ];
+    const sortedResults: searchResultsType[] = useSortResults(spotResults);
 
     return(
         <For each={sortedResults}>
             {((comp,idx) => (
-                <Zoom triggerOnce direction="right" key={`${idx}-${song.id}-${artist.id}-${album.id}`}>
+                <Zoom triggerOnce direction="right" key={`${idx}-${comp.name}`}>
                     <Box>{comp.element}</Box>
                 </Zoom>
             ))}

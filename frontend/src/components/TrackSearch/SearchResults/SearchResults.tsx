@@ -6,14 +6,15 @@ import { multipleSearchResults } from "@trackstack/schemas";
 
 const SearchResults = ({ artistResults, albumResults, songResults  } : 
     multipleSearchResults) => {
+    const hasSpotResults = songResults.length > 0 || albumResults.length > 0 || artistResults.length > 0;
     return(
         <>
-            {songResults[0] && albumResults[0] && artistResults[0] && (
+            {hasSpotResults && (
                 <SpotSearch song={songResults[0]} artist={artistResults[0]} album={albumResults[0]} />
             )}
-            {artistResults.length > 0 && (<ArtistResults artistResults={artistResults.slice(1)} />)}
-            {albumResults.length > 0 && (<AlbumResults albumResults={albumResults.slice(1)} />)}
-            {songResults.length > 0 && (<SongResults songResults={songResults.slice(1)} />)}
+            {artistResults.length > 1 && (<ArtistResults artistResults={artistResults.slice(1)} />)}
+            {albumResults.length > 1 && (<AlbumResults albumResults={albumResults.slice(1)} />)}
+            {songResults.length > 1 && (<SongResults songResults={songResults.slice(1)} />)}
         </>
     );
 };
