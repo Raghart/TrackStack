@@ -6,7 +6,7 @@ import { getSongData } from "@/queries/DetailQueries";
 import { fullSongResponseSchema } from "@trackstack/schemas";
 import { parseDataOrUndefined } from "../safeParse";
 
-const useSongDetails = (songId: string | undefined) => {
+const useSongDetails = (songId: number) => {
     const dispatch = useAppDispatch();
     const { loading, data } = useQuery(getSongData, { variables: { SongID: Number(songId) } });
 

@@ -5,11 +5,20 @@ import AlbumBox from "../AlbumBox/AlbumBox";
 import GenreBox from "../GenreBox/GenreBox";
 import SongInfoLayout from "./SongInfoLayout";
 import useSongDetails from "../../Utils/hooks/useSongDetails";
+import { parseDataOrUndefined } from "@/components/Utils/safeParse";
+import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
 
 const SongDetails = () => {
     const { songId } = useParams<{songId: string}>();
+    const parsedSongId = parseDataOrUndefined(positiveIntSchema, songId);
+    if (!parsedSongId) return <NotFound message="Invalid Song ID" />
+    return <FullSongData songId={parsedSongId} />;
+};
+
+const FullSongData = ({ songId } : { songId: number }) => {
     const { songData, loading } = useSongDetails(songId);
     const isLoading = loading || !songData;
+
     if (!loading && !songData) return <NotFound message={
         `The song with the ID: "${songId}" not found in the Database!`} />;
 
@@ -28,6 +37,6 @@ const SongDetails = () => {
             </GridItem>
         </Grid>
     );
-};
+}
 
 export default SongDetails;
