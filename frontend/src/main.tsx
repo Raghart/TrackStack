@@ -7,6 +7,7 @@ import store from './store.ts';
 import App from './App.tsx';
 import ErrorBoundary from './components/Error/ErrorBoundary.tsx';
 import { ColorModeProvider } from './components/ui/color-mode.tsx';
+import { Toaster } from './components/ui/toaster.tsx';
 import theme from './theme.ts';
 import { ApolloProvider } from '@apollo/client';
 import { client } from './apolloClient.ts';
@@ -22,6 +23,7 @@ createRoot(document.getElementById('root')!).render(
               <ErrorBoundary>
                 <App />
               </ErrorBoundary>
+              <Toaster />
             </ApolloProvider>
           </ColorModeProvider>
         </Router>
