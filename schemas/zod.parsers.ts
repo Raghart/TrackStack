@@ -1,4 +1,5 @@
 import z from "zod";
+import { MAX_LIMIT, MAX_SEARCH_QUERY_LENGTH, MIN_LIMIT, MIN_SEARCH_QUERY_LENGTH } from "./zod.contants";
 
 export const MAX_STRING_LENGTH = 2048;
 
@@ -39,15 +40,14 @@ export const spotifyIdSchema = z
   })
   .describe('22-character alphanumeric Spotify ID');
 
-const numericStringSchema = z
+export const numericStringSchema = z
   .string()
+  .trim()
   .refine(
-    (value: string) => {
-      const trimmed = value.trim();
-      return trimmed !== '' && Number.isFinite(Number(trimmed));
-    },
+    (value: string) => value !== '' && Number.isFinite(Number(value)),
     { error: 'The string must contain a finite number' },
-  );
+  )
+  .describe('string containing a finite number');
 
 const numericSchema = z
   .union([z.number(), numericStringSchema])
@@ -79,3 +79,20 @@ export const durationSchema = numericSchema
     error: 'The duration must be a finite positive number',
   })
   .describe('finite positive number or numeric string, parsed to number');
+
+export const searchQuerySchema = z
+  .string()
+  .trim()
+  .min(MIN_SEARCH_QUERY_LENGTH, {
+    error: `The search query must be at least ${MIN_SEARCH_QUERY_LENGTH} character long`,
+  })
+  .max(MAX_SEARCH_QUERY_LENGTH, {
+    error: `The search query must be at most ${MAX_SEARCH_QUERY_LENGTH} characters long`,
+  })
+  .describe('trimmed search query with a bounded length');
+
+export const limitSchema = positiveIntSchema
+  .refine((value: number) => value <= MAX_LIMIT, {
+    error: `The limit must be at most ${MAX_LIMIT}`,
+  })
+  .describe(`number of items per page, between ${MIN_LIMIT} and ${MAX_LIMIT}`);

@@ -1,6 +1,7 @@
 import { z } from 'zod';
-import { durationSchema, floatNumberSchema, httpUrlSchema, positiveIntSchema, spotifyIdSchema, stringSchema, yearSchema } from './zod.parsers';
+import { durationSchema, floatNumberSchema, httpUrlSchema, limitSchema, positiveIntSchema, spotifyIdSchema, stringSchema, yearSchema } from './zod.parsers';
 import { albumReferenceSchema, artistReferenceSchema, genreReferenceSchema, songSchema } from './zod.dbSchemas';
+import { USER_VECTOR_LENGTH } from './zod.contants';
 
 export const artistSearchResultSchema = z.looseObject({
   id: positiveIntSchema,
@@ -144,3 +145,37 @@ export const artistResponseSchema = z.object({
 });
 
 export type ArtistResponse = z.infer<typeof artistResponseSchema>;
+
+export const paginationSchema = z.object({
+  page: positiveIntSchema,
+  limit: limitSchema,
+});
+
+export type PaginationVariables = z.infer<typeof paginationSchema>;
+
+export const userVectorSchema = z
+  .tuple([
+    z.number().min(0).max(1),
+    z.number().min(0).max(1.5),
+    z.number().min(0).max(1),
+    z.number().min(0).max(1.2),
+    z.number().min(0).max(1.5),
+    z.number().min(0).max(1.3),
+    z.number().min(0).max(1.2),
+    z.number().min(0).max(1.2),
+  ])
+  .describe(
+    `exactly ${USER_VECTOR_LENGTH} finite values in the ranges produced by generateUserVector`,
+  );
+
+export type UserVector = z.infer<typeof userVectorSchema>;
+
+export const recommendationRequestSchema = z.object({
+  genres: z.array(stringSchema),
+  userVector: userVectorSchema,
+  limit: limitSchema,
+});
+
+export type RecommendationRequestVariables = z.infer<
+  typeof recommendationRequestSchema
+>;

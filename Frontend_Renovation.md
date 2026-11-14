@@ -159,7 +159,7 @@ Regla para todo el plan: cada paso debe terminar con `pnpm --filter ./frontend r
 
 ## Fase 3 — Validar las entradas del frontend
 
-### Paso 10. Validar los parámetros de ruta
+### ~~Paso 10. Validar los parámetros de ruta~~
 
 **Objetivo:** no enviar `NaN` ni basura a GraphQL.
 
