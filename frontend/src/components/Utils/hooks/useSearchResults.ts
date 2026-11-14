@@ -6,17 +6,23 @@ import { clearQuery, setIsLoading, setQuery, setQueryResults } from "@/reducers/
 import { multipleSearch } from "@/queries/MultipleSearchQuerie";
 import { multipleSearchResultsSchema } from "@trackstack/schemas";
 import { parseDataOrUndefined } from "../safeParse";
+import { searchQuerySchema } from "@trackstack/schemas/zod.parsers";
 
 const useSearchResults = () => {
     const [getResults] = useLazyQuery(multipleSearch);
     const [localQuery, setLocalQuery] = useState<string>("");
     const dispatch = useAppDispatch();
 
-    const search = useCallback(async (query: string) => {
-        if (!query.trim()) {
+    const search = useCallback(async (rawQuery: unknown) => {
+        if (typeof rawQuery !== "string") return;
+
+        if (!rawQuery.trim()) {
             dispatch(clearQuery());
             return;
         };
+
+        const query = parseDataOrUndefined(searchQuerySchema, rawQuery);
+        if (!query) return;
 
         dispatch(setQuery(query));
         dispatch(setIsLoading(true));
@@ -36,7 +42,8 @@ const useSearchResults = () => {
 
     const handleQuery = (query: string) => debouncedSearch(query);
 
-    const handleQueryChange = (query: string) => {
+    const handleQueryChange = (query: unknown) => {
+        if (typeof query !== "string") return;
         handleQuery(query);
         setLocalQuery(query);
     };
