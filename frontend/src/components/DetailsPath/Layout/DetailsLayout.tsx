@@ -4,7 +4,6 @@ import HighlightTitle from "../Utils/HightlightTitle";
 import { Box } from "@chakra-ui/react";
 import ScrollUpArrow from "@/components/Utils/ScrollUpArrow";
 import DetailSongs from "./DetailSongs";
-import { isValidDetail } from "@/types/verify";
 import { Zoom } from "react-awesome-reveal";
 import { stringSchema } from "@trackstack/schemas/zod.parsers";
 import { useParams } from "react-router-dom";
@@ -15,8 +14,8 @@ import { getGradientDetails } from "@/dynamicCSS/getGradientDetails";
 const DetailsLayout = ({ type } : { type: ValidDetail }) => {
     const { album, artist } = useParams();
     const filterValue = parseDataOrUndefined(stringSchema, album ?? artist);
-    if (!isValidDetail(type) || !filterValue) {
-        return <NotFound message="Invalid type or search value" />
+    if (!["album","artist"].includes(type) || !filterValue) {
+        return <NotFound message="Invalid type or search value" />;
     }
 
     return <DetailsData type={type} filterValue={filterValue} />;

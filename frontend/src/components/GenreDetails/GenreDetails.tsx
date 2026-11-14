@@ -10,7 +10,7 @@ import useGenreSongs from "../Utils/hooks/useGenreSongs";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
 import { SongResponse } from "@trackstack/schemas";
-import { isValidGenre } from "@/types/verify";
+import { stringSchema } from "@trackstack/schemas/zod.parsers";
 
 const GenreSongs = ({ genre }: { genre: string }) => {
   const { data, loading, loadMore, activeSong, isPlaying, hasData } = useGenreSongs(genre);
@@ -46,9 +46,9 @@ const GenreSongs = ({ genre }: { genre: string }) => {
 
 const GenreDetails = () => {
   const { genre } = useParams();
-  if (!isValidGenre(genre)) return <NotFound message={`404: Invalid Genre!`} />;
-
-  return <GenreSongs genre={genre} />;
+  const parsedGenre = stringSchema.safeParse(genre);
+  if (!parsedGenre.success) return <NotFound message={`404: Invalid Genre!`} />;
+  return <GenreSongs genre={parsedGenre.data} />;
 };
 
 export default GenreDetails;
