@@ -155,14 +155,14 @@ export type PaginationVariables = z.infer<typeof paginationSchema>;
 
 export const userVectorSchema = z
   .tuple([
-    z.number().min(0).max(1),
-    z.number().min(0).max(1.5),
-    z.number().min(0).max(1),
-    z.number().min(0).max(1.2),
-    z.number().min(0).max(1.5),
-    z.number().min(0).max(1.3),
-    z.number().min(0).max(1.2),
-    z.number().min(0).max(1.2),
+    z.number().min(0).max(2),
+    z.number().min(0).max(2),
+    z.number().min(0).max(1), 
+    z.number().min(0).max(2),
+    z.number().min(0).max(2),
+    z.number().min(0).max(2),
+    z.number().min(0).max(2),
+    z.number().min(0).max(2), 
   ])
   .describe(
     `exactly ${USER_VECTOR_LENGTH} finite values in the ranges produced by generateUserVector`,

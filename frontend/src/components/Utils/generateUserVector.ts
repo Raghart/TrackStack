@@ -1,3 +1,4 @@
+import { userVectorSchema } from "@trackstack/schemas";
 import { acousticnessMAX, acousticnessMIN, danceabilityMax, danceabilityMin, 
     energyMAX, energyMIN, 
     instrumentalnessMAX, 
@@ -16,7 +17,7 @@ import minMaxScale from "./minMaxScale";
 const generateUserVector = (tempo: number, danceability: number, energy: number,
     mood: number, speechLevel: number, acousticness: number, voiceType: number,
     sentiment: number
-) : number[] => {
+) => {
     const danceabilityNor = minMaxScale(
         danceability, 
         danceabilityMin, danceabilityMax) * weightRecommendations.danceability;
@@ -47,7 +48,7 @@ const generateUserVector = (tempo: number, danceability: number, energy: number,
 
     const tempoNor = minMaxScale(tempo, tempoMIN, tempoMAX) * weightRecommendations.tempo;
 
-    return [
+    return userVectorSchema.parse([
         danceabilityNor,
         energyNor,
         modeNor,
@@ -56,7 +57,7 @@ const generateUserVector = (tempo: number, danceability: number, energy: number,
         instrumentalnessNor,
         valenceNor,
         tempoNor,
-    ];
+    ]);
 };
 
 export default generateUserVector;
