@@ -5,10 +5,11 @@ import NoResults from "./utils/NoResults";
 import { Zoom } from "react-awesome-reveal";
 import { SEARCH_TITLE_FONTSIZES } from "@/components/constants/TrackSearchC";
 import SearchResults from "./SearchResults/SearchResults";
+import SearchError from "./utils/SearchError";
 import useSearchResponse from "@/components/Utils/hooks/useSearchResponse";
 
 const TrackSearch = () => {
-    const { query, isLoading, searchResults } = useSearchResponse();
+    const { query, isLoading, searchResults, status } = useSearchResponse();
     return(
         <Flex direction="column" p={4} pb={20}>
             {searchResults && (
@@ -22,7 +23,9 @@ const TrackSearch = () => {
             )}
 
             {isLoading && query.length > 0 && !searchResults && (<LoadingResults />)}
-            {!isLoading && query.length > 0 && !searchResults && (<NoResults />)}
+            {!isLoading && status === "empty" && query.length > 0 && (<NoResults />)}
+            {!isLoading && (status === "network-error" || status === "invalid-payload") && query.length > 0 
+                && (<SearchError status={status} />)}
             {searchResults && (<SearchResults {...searchResults} />)}
             <ScrollUpArrow />
         </Flex>

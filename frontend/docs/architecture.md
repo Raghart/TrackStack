@@ -43,5 +43,5 @@ The resulting 8-value array is sent to `getSongRecommendations` and also passed 
 - `src/queries/` contains every GraphQL document. There is one file per feature: details, landing page, recommendations, multiple search, and player.
 - `apolloClient.ts` splits operations by type: queries go through `HttpLink`, subscriptions go through `GraphQLWsLink`.
 - The Apollo cache defines `merge` policies for `getAllGenreSongs`, `getAllArtists`, and `getAlbums`, which lets the infinite-scroll lists append pages instead of replacing them.
-- Redux Toolkit stores three slices: `songs` (active track and playback state), `songData` (recommendation inputs and results), and `search` (query and results).
+- Redux Toolkit stores three slices: `songs` (active track and playback state), `songData` (recommendation inputs and results), and `search` (query and results). The search slice keeps a `status` (`idle`, `loading`, `success`, `empty`, `network-error` or `invalid-payload`) so an empty result set and a failed request render different states.
 - Page-specific data fetching lives in custom hooks under `components/Utils/hooks/`.

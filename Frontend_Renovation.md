@@ -236,7 +236,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 
 **Terminado cuando:** una query fallida o un payload inválido dejan el modal cerrado con un mensaje, no en loading infinito.
 
-### Paso 15. `useSongRec`: suscripción robusta
+### ~~Paso 15. `useSongRec`: suscripción robusta~~
 
 **Objetivo:** que la IA no rompa la pantalla ni se quede sin respuesta.
 

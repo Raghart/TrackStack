@@ -12,6 +12,7 @@ const useSongRecommendations = () => {
     const [aiResponse, setAIResponse] = useState<string>("");
     const [error, setError] = useState<ApolloError | null>(null);
     const errorNotified = useRef<boolean>(false);
+    
     const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
             mood, acousticness } = useAppSelector(state => state.songData);
     const userVector = generateUserVector(tempo, danceability, energy, mood, speechLevel, 
