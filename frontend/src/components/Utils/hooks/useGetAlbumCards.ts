@@ -3,6 +3,7 @@ import { useQuery } from "@apollo/client";
 import { albumResponseSchema } from "@trackstack/schemas";
 import { useState } from "react";
 import { parseArrayOrEmpty } from "../safeParse";
+import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
 
 const useGetAlbumCards = () => {
     const [page, setPage] = useState<number>(1);
@@ -14,7 +15,9 @@ const useGetAlbumCards = () => {
 
     const onLoadMore = () => {
         const nextPage = page + 1;
-        fetchMore({ variables: { page: nextPage, limit: 20, } })
+        const parsedPage = positiveIntSchema.safeParse(nextPage);
+        if (!parsedPage.success) return;
+        fetchMore({ variables: { page: parsedPage.data, limit: 20, } })
         setPage(nextPage);
     };
 

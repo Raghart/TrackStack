@@ -4,6 +4,7 @@ import { useQuery } from "@apollo/client";
 import { getAllGenreSongs } from "@/queries/DetailQueries";
 import { songResponseSchema } from "@trackstack/schemas";
 import { parseArrayOrEmpty } from "../safeParse";
+import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
 
 const useGenreSongs = (genre: string) => {
     const [page, setPage] = useState<number>(1);
@@ -17,7 +18,9 @@ const useGenreSongs = (genre: string) => {
 
     const loadMore = () => {
         const nextPage = page + 1;
-        fetchMore({ variables: { genre, page: nextPage, limit: 20 } });
+        const parsedPage = positiveIntSchema.safeParse(nextPage);
+        if (!parsedPage.success) return;
+        fetchMore({ variables: { genre, page: parsedPage.data, limit: 20 } });
         setPage(nextPage);
     };
 

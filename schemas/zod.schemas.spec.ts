@@ -1,38 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
-  paginationSchema,
-  recommendationRequestSchema,
   userVectorSchema,
 } from './zod.schemas';
-import { limitSchema, positiveIntSchema } from './zod.parsers';
-import { MAX_LIMIT, USER_VECTOR_LENGTH } from './zod.contants';
+import { USER_VECTOR_LENGTH } from './zod.contants';
 
 const validUserVector = [0.5, 0.75, 0.5, 0.6, 0.75, 0.65, 0.6, 0.6];
-
-describe('pagination schemas', () => {
-  it('accepts a valid page and limit', () => {
-    expect(paginationSchema.parse({ page: 1, limit: 20 })).toEqual({
-      page: 1,
-      limit: 20,
-    });
-    expect(paginationSchema.parse({ page: '2', limit: '40' })).toEqual({
-      page: 2,
-      limit: 40,
-    });
-  });
-
-  it('rejects a page lower than 1', () => {
-    for (const value of [0, -1, '0']) {
-      expect(limitSchema.safeParse(value).success).toBe(false);
-    }
-  });
-
-  it('rejects limits outside the allowed range', () => {
-    for (const value of [0, -1, MAX_LIMIT + 1]) {
-      expect(limitSchema.safeParse(value).success).toBe(false);
-    }
-  });
-});
 
 describe('userVectorSchema', () => {
   it('accepts exactly eight finite values within their ranges', () => {
@@ -75,57 +47,5 @@ describe('userVectorSchema', () => {
     ]) {
       expect(userVectorSchema.safeParse(value).success).toBe(false);
     }
-  });
-});
-
-describe('recommendationRequestSchema', () => {
-  it('accepts a valid recommendation request', () => {
-    expect(
-      recommendationRequestSchema.parse({
-        genres: ['Rock', 'Pop'],
-        userVector: validUserVector,
-        limit: 40,
-      }),
-    ).toEqual({
-      genres: ['Rock', 'Pop'],
-      userVector: validUserVector,
-      limit: 40,
-    });
-  });
-
-  it('accepts an empty genre list but rejects invalid genres', () => {
-    expect(
-      recommendationRequestSchema.safeParse({
-        genres: [],
-        userVector: validUserVector,
-        limit: 40,
-      }).success,
-    ).toBe(true);
-
-    expect(
-      recommendationRequestSchema.safeParse({
-        genres: [''],
-        userVector: validUserVector,
-        limit: 40,
-      }).success,
-    ).toBe(false);
-  });
-
-  it('rejects an invalid vector or limit', () => {
-    expect(
-      recommendationRequestSchema.safeParse({
-        genres: ['Rock'],
-        userVector: validUserVector.slice(0, 7),
-        limit: 40,
-      }).success,
-    ).toBe(false);
-
-    expect(
-      recommendationRequestSchema.safeParse({
-        genres: ['Rock'],
-        userVector: validUserVector,
-        limit: MAX_LIMIT + 1,
-      }).success,
-    ).toBe(false);
   });
 });

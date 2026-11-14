@@ -173,7 +173,7 @@ Regla para todo el plan: cada paso debe terminar con `pnpm --filter ./frontend r
 
 **Terminado cuando:** `/songs/abc`, `/songs/1.5` o una ruta sin parámetro no disparan ninguna petición.
 
-### Paso 11. Validar las variables GraphQL antes de enviarlas
+### ~~Paso 11. Validar las variables GraphQL antes de enviarlas~~
 
 **Objetivo:** que el frontend no envíe datos que el backend no espera.
 

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { durationSchema, floatNumberSchema, httpUrlSchema, limitSchema, positiveIntSchema, spotifyIdSchema, stringSchema, yearSchema } from './zod.parsers';
+import { durationSchema, floatNumberSchema, httpUrlSchema, positiveIntSchema, spotifyIdSchema, stringSchema, yearSchema } from './zod.parsers';
 import { albumReferenceSchema, artistReferenceSchema, genreReferenceSchema, songSchema } from './zod.dbSchemas';
 import { USER_VECTOR_LENGTH } from './zod.contants';
 
@@ -146,13 +146,6 @@ export const artistResponseSchema = z.object({
 
 export type ArtistResponse = z.infer<typeof artistResponseSchema>;
 
-export const paginationSchema = z.object({
-  page: positiveIntSchema,
-  limit: limitSchema,
-});
-
-export type PaginationVariables = z.infer<typeof paginationSchema>;
-
 export const userVectorSchema = z
   .tuple([
     z.number().min(0).max(2),
@@ -169,13 +162,3 @@ export const userVectorSchema = z
   );
 
 export type UserVector = z.infer<typeof userVectorSchema>;
-
-export const recommendationRequestSchema = z.object({
-  genres: z.array(stringSchema),
-  userVector: userVectorSchema,
-  limit: limitSchema,
-});
-
-export type RecommendationRequestVariables = z.infer<
-  typeof recommendationRequestSchema
->;

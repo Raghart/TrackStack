@@ -1,5 +1,5 @@
 import z from "zod";
-import { MAX_LIMIT, MAX_SEARCH_QUERY_LENGTH, MIN_LIMIT, MIN_SEARCH_QUERY_LENGTH } from "./zod.contants";
+import { MAX_SEARCH_QUERY_LENGTH, MIN_SEARCH_QUERY_LENGTH } from "./zod.contants";
 
 export const MAX_STRING_LENGTH = 2048;
 
@@ -90,9 +90,3 @@ export const searchQuerySchema = z
     error: `The search query must be at most ${MAX_SEARCH_QUERY_LENGTH} characters long`,
   })
   .describe('trimmed search query with a bounded length');
-
-export const limitSchema = positiveIntSchema
-  .refine((value: number) => value <= MAX_LIMIT, {
-    error: `The limit must be at most ${MAX_LIMIT}`,
-  })
-  .describe(`number of items per page, between ${MIN_LIMIT} and ${MAX_LIMIT}`);
