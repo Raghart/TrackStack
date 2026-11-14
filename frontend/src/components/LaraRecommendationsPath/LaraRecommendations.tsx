@@ -3,16 +3,16 @@ import SongCard from "../SongCard/SongCard";
 import LaraHeader from "./LaraHeader";
 import { Navigate } from "react-router-dom";
 import ScrollUpArrow from "../Utils/ScrollUpArrow";
-import useSongRec from "../Utils/hooks/useSongRec";
 import { useAppSelector } from "../Utils/redux-hooks";
 import { Zoom } from "react-awesome-reveal";
 import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
 import AIResponse from "./AIResponse";
 import { SongResponse } from "@trackstack/schemas";
+import useSongRecommendations from "../Utils/hooks/useSongRecommendations";
 
 const LaraRecommendations = () => {
-    const { visibleSongs, recommendations, loadMoreSongs, aiResponse } = useSongRec();
+    const { visibleSongs, recommendations, loadMoreSongs, aiResponse, error } = useSongRecommendations();
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);    
     if (visibleSongs.length === 0) return <Navigate to="/" replace />
     
@@ -23,7 +23,7 @@ const LaraRecommendations = () => {
             </Zoom>
 
             <Zoom triggerOnce direction="right" delay={100} style={{ paddingBottom: 10 }}>
-                <AIResponse message={aiResponse} />
+                <AIResponse message={aiResponse} error={error} />
             </Zoom>
 
             <Zoom triggerOnce direction="up" delay={100}>

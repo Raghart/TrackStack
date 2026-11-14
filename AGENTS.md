@@ -106,6 +106,14 @@ npm run test:report
 - No borres ni reescribas trabajo del usuario que no entiendas. Investiga antes de tocar archivos ajenos al cambio.
 - Si un cambio afecta el contrato GraphQL, la estructura de la base de datos o la API pública, explícalo y confírmalo antes de aplicarlo.
 
+### Manejo de errores en el frontend
+
+- Notifica siempre los errores al usuario con el Toaster de Chakra (`toaster` de `@/components/ui/toasterInstance`), como en `frontend/src/components/Utils/hooks/useLoadRecommendations.ts`. No dejes el fallo solo en `console.error`.
+- Usa mensajes orientados al usuario (título corto y descripción accionable) sin exponer detalles técnicos; registra el error completo en consola para diagnóstico.
+- En queries y mutaciones, captura el error con `try/catch` y notifica en el `catch` (el `finally` se reserva para resetear estado de carga).
+- En suscripciones (`useSubscription`), añade `onError`, guarda el error en un estado controlado y notifica al usuario. Expón ese estado al componente que pinta la respuesta para que muestre un mensaje de fallback en lugar de quedarse cargando indefinidamente.
+- Evita toasts duplicados ante errores repetidos (reintentos de WebSocket, re-renderizados…); notifica una sola vez por fallo y vuelve a permitir la notificación cuando la conexión se recupere o cambien los parámetros.
+
 ### Documentación (READMEs)
 
 La documentación pública se reparte en **exactamente tres** `README.md`:
