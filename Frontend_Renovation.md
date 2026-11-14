@@ -191,7 +191,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 
 **Terminado cuando:** un vector incompleto, un `limit` absurdo o una query vacía no llegan a la red.
 
-### Paso 12. Validar las variables de entorno al arrancar
+### ~~Paso 12. Validar las variables de entorno al arrancar~~
 
 **Objetivo:** fallar al inicio con un mensaje claro, no cuando el usuario ya está usando la app.
 
@@ -209,7 +209,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 
 ## Fase 4 — Arreglar los hooks más frágiles
 
-### Paso 13. `useSongDetails`: validar una sola vez
+### ~~Paso 13. `useSongDetails`: validar una sola vez~~
 
 **Objetivo:** quitar el doble parseo y proteger la entrada.
 

@@ -8,7 +8,7 @@ import { parseDataOrUndefined } from "../safeParse";
 
 const useSongDetails = (songId: number) => {
     const dispatch = useAppDispatch();
-    const { loading, data } = useQuery(getSongData, { variables: { SongID: Number(songId) } });
+    const { loading, data } = useQuery(getSongData, { variables: { SongID: songId } });
 
     const songData = useMemo(
         () => parseDataOrUndefined(fullSongResponseSchema, data?.getSongData),
