@@ -4,13 +4,14 @@ import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
 import { createClient } from "graphql-ws";
 import { getMainDefinition } from "@apollo/client/utilities";
 import { AlbumResponse, ArtistResponse, SongResponse } from "@trackstack/schemas";
+import { getEnvHttpLink, getEnvWsLink } from "./config/env";
 
 const httpLink = new HttpLink({
-  uri: import.meta.env.VITE_GRAPHQL_URI,
+  uri: getEnvHttpLink(),
 });
 
 const wsLink = new GraphQLWsLink(createClient({
-  url: import.meta.env.VITE_SUBSCRIPTION_URI,
+  url: getEnvWsLink(),
 }));
 
 const errorLink = onError(({ graphQLErrors, networkError, operation }) => {

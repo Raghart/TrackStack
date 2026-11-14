@@ -8,6 +8,7 @@ import {
   positiveIntSchema,
   spotifyIdSchema,
   stringSchema,
+  wsUrlSchema,
   yearSchema,
 } from './zod.parsers';
 import { albumResponseSchema, fullSongResponseSchema, songResponseSchema } from './zod.schemas';
@@ -110,6 +111,53 @@ describe('httpUrlSchema', () => {
   it('rejects non-string values', () => {
     for (const value of [123, null, undefined, {}]) {
       expect(httpUrlSchema.safeParse(value).success).toBe(false);
+    }
+  });
+});
+
+describe('wsUrlSchema', () => {
+  it('accepts absolute ws and wss URLs', () => {
+    const urls = [
+      'ws://localhost:3000/graphql',
+      'wss://example.com/graphql',
+      'ws://example.com/path?query=1#fragment',
+      'WSS://EXAMPLE.COM/graphql',
+    ];
+
+    for (const value of urls) {
+      expect(wsUrlSchema.safeParse(value).success).toBe(true);
+    }
+  });
+
+  it('trims surrounding whitespace before validating', () => {
+    expect(wsUrlSchema.parse('  ws://localhost:3000/graphql  ')).toBe(
+      'ws://localhost:3000/graphql',
+    );
+  });
+
+  it('rejects URLs with unsafe or unsupported protocols', () => {
+    const urls = [
+      'javascript:alert(1)',
+      'data:text/plain;base64,aGVsbG8=',
+      'file:///etc/passwd',
+      'https://example.com/graphql',
+      'http://localhost:3000/graphql',
+    ];
+
+    for (const value of urls) {
+      expect(wsUrlSchema.safeParse(value).success).toBe(false);
+    }
+  });
+
+  it('rejects relative, empty and malformed URLs', () => {
+    for (const value of ['', '   ', '/graphql', 'example.com', 'ws://']) {
+      expect(wsUrlSchema.safeParse(value).success).toBe(false);
+    }
+  });
+
+  it('rejects non-string values', () => {
+    for (const value of [123, null, undefined, {}]) {
+      expect(wsUrlSchema.safeParse(value).success).toBe(false);
     }
   });
 });

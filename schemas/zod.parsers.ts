@@ -30,6 +30,20 @@ export const httpUrlSchema = stringSchema
   )
   .describe('absolute URL with the http or https protocol');
 
+export const wsUrlSchema = stringSchema
+  .refine(
+    (value: string) => {
+      try {
+        const url = new URL(value);
+        return url.protocol === 'ws:' || url.protocol === 'wss:';
+      } catch {
+        return false;
+      }
+    },
+    { error: 'The string must be a valid ws or wss URL' },
+  )
+  .describe('absolute URL with the ws or wss protocol');
+
 export const SPOTIFY_ID_PATTERN = /^[A-Za-z0-9]{22}$/;
 
 export const spotifyIdSchema = z
