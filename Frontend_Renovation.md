@@ -250,7 +250,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 
 **Terminado cuando:** funciona con chunks válidos, vacíos y nulos, y un fallo de WebSocket muestra un estado controlado.
 
-### Paso 16. `useSearchResults`: distinguir los tipos de fallo
+### ~~Paso 16. `useSearchResults`: distinguir los tipos de fallo~~
 
 **Objetivo:** que “sin resultados” no signifique “algo se rompió”.
 
