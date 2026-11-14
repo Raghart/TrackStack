@@ -222,7 +222,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 
 **Terminado cuando:** la canción se carga una vez, el store recibe datos válidos y un ID inválido no genera petición.
 
-### Paso 14. `useLoadRec`: manejar éxito, vacío y error
+### ~~Paso 14. `useLoadRec`: manejar éxito, vacío y error~~
 
 **Objetivo:** que el modal no se quede cargando para siempre.
 
