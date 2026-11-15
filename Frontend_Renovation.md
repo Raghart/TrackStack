@@ -290,13 +290,13 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
   - `@testing-library/react`
   - `@testing-library/jest-dom`
   - `jsdom`
-- Configurar `vitest.config.ts` y un `setupTests.ts`.
+- Configurar `vitest.config.ts`.
 - Añadir scripts `test` y `test:cov` en `frontend/package.json`.
-- Configurar Vitest en `schemas/` (o un script que ejecute los tests desde la raíz).
+- Configurar Vitest para que se pueda ejecutar los tests del frontend desde la raiz del proyecto.
 
 **Terminado cuando:** `pnpm --filter ./frontend run test` y los tests de `schemas` arrancan aunque sea con un test trivial.
 
-### Paso 19. Tests de schemas (primera red de seguridad)
+### ~~Paso 19. Tests de schemas (primera red de seguridad)~~
 
 **Objetivo:** proteger el contrato compartido sin necesitar navegador ni base de datos.
 
