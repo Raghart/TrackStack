@@ -9,7 +9,7 @@
     "frontend",
     "schemas"
   ],
-  "packageManager": "pnpm@12.16.1",
+  "packageManager": "pnpm@12.21.0",
   "scripts": {
     "dev:backend": "pnpm --filter ./backend run dev",
     "dev:frontend": "pnpm --filter ./frontend run dev",
@@ -17,7 +17,8 @@
     "build:backend": "pnpm --filter ./backend run build",
     "start:prod": "pnpm --filter ./backend run start:prod",
     "test:backend": "pnpm --filter ./backend run test",
-    "test:schemas": "pnpm --filter ./schemas run test"
+    "test:schemas": "pnpm --filter ./schemas run test",
+    "test:frontend": "pnpm --filter ./frontend run test"
   },
   "keywords": [],
   "license": "MIT License",

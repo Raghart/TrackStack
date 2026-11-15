@@ -292,7 +292,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
   - `jsdom`
 - Configurar `vitest.config.ts`.
 - Añadir scripts `test` y `test:cov` en `frontend/package.json`.
-- Configurar Vitest para que se pueda ejecutar los tests del frontend desde la raiz del proyecto.
+- Configurar para que se pueda ejecutar los tests del frontend desde la raiz del proyecto.
 
 **Terminado cuando:** `pnpm --filter ./frontend run test` y los tests de `schemas` arrancan aunque sea con un test trivial.
 

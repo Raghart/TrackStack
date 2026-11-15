@@ -30,7 +30,7 @@ Do you want to find a new **banger**? TrackStack is an **AI-powered music recomm
 | **Schemas** | Shared Zod 4 contracts (`@trackstack/schemas`) | — |
 | **E2E** | Playwright across Chromium, Firefox, and WebKit | — |
 
-Unit tests for the backend run with Vitest. Delivery is handled by GitHub Actions CI, Render CD, and a scheduled health check.
+Unit tests for the backend and frontend run with Vitest. Delivery is handled by GitHub Actions CI, Render CD, and a scheduled health check.
 
 ## Quick start
 

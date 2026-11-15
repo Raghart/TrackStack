@@ -68,6 +68,7 @@ pnpm run build:frontend     # build del frontend -> backend/public
 pnpm run build:backend      # compila NestJS -> backend/dist
 pnpm run start:prod         # ejecuta backend compilado
 pnpm run test:backend       # tests del backend (Vitest)
+pnpm run test:frontend      # tests del frontend (Vitest + Testing Library)
 pnpm run test:schemas       # tests de los schemas compartidos (Vitest)
 ```
 
@@ -83,6 +84,8 @@ pnpm --filter ./backend run format        # Prettier
 # frontend
 pnpm --filter ./frontend run lint
 pnpm --filter ./frontend run build        # tsc -b && vite build
+pnpm --filter ./frontend run test         # Vitest + Testing Library (jsdom)
+pnpm --filter ./frontend run test:cov
 ```
 
 E2E (paquete aparte, **fuera** del workspace de pnpm; instalar dependencias dentro de `e2e/`):

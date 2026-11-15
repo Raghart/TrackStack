@@ -31,12 +31,14 @@ frontend/
 │   ├── queries/                      # GraphQL documents (gql)
 │   ├── reducers/                     # Redux slices: songs, songData, search
 │   ├── types/                        # client types
+│   ├── test/                         # Vitest setup (jsdom + jest-dom)
 │   ├── dynamicCSS/                   # dynamic styles
 │   ├── apolloClient.ts               # HTTP/WebSocket split link and cache policies
 │   ├── store.ts                      # Redux store
 │   ├── theme.ts                      # Chakra theme
 │   └── App.tsx                       # route definitions
 ├── public/
+├── vitest.config.ts                  # Vitest + Testing Library (jsdom)
 └── vite.config.ts                    # build output -> ../backend/public
 ```
 
@@ -77,7 +79,13 @@ See [docs/architecture.md](./docs/architecture.md) for routing, how the recommen
 
 ## Tests
 
-There is no frontend unit-test suite yet. End-to-end coverage lives in the separate Playwright package [`../e2e`](../e2e), which exercises the landing page, search, songs, artists, genres, and the recommendation modal in Chromium, Firefox, and WebKit.
+Unit tests use **Vitest** with **Testing Library** and **jsdom**. The configuration lives in [`vitest.config.ts`](./vitest.config.ts) and the shared setup (jest-dom matchers) in [`src/test/setup.ts`](./src/test/setup.ts).
+
+```bash
+pnpm run test:frontend                         # from the repository root
+pnpm --filter ./frontend run test              # one run
+pnpm --filter ./frontend run test:cov          # coverage -> frontend/coverage/
+```
 
 ```bash
 cd e2e
