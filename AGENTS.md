@@ -34,7 +34,7 @@ TrackStack/
 │   ├── test/                 # fixtures/datos compartidos por los tests
 │   ├── database/             # Prisma: schema, migraciones y configuración
 │   └── public/               # build del frontend servido por el backend (generado)
-├── frontend/                 # SPA React + Vite (tiene README.md propio)
+├── frontend/                 # SPA React + Vite (tiene README.md y AGENTS.md propios)
 │   └── src/
 │       ├── components/       # componentes agrupados por feature/ruta
 │       │   └── Utils/hooks/  # custom hooks reutilizables
@@ -136,7 +136,7 @@ Reglas:
 
 Estos archivos son documentación viva: si se quedan obsoletos, las siguientes sesiones trabajan con información incorrecta. **No esperes a que el usuario te pida actualizarlos.**
 
-- Al terminar un cambio **relevante**, revisa si `AGENTS.md` (raíz) y `backend/AGENTS.md` siguen describiendo la realidad del repo. Actualiza lo que haya quedado desfasado como parte del mismo cambio, no en una tarea aparte.
+- Al terminar un cambio **relevante**, revisa si `AGENTS.md` (raíz), `backend/AGENTS.md` y `frontend/AGENTS.md` siguen describiendo la realidad del repo. Actualiza lo que haya quedado desfasado como parte del mismo cambio, no en una tarea aparte.
 - Actualiza la documentación cuando el cambio:
   - añade, elimina o mueve un dominio, paquete o carpeta importante del layout;
   - añade o cambia scripts/comandos, el gestor de paquetes o el flujo de verificación;
@@ -145,7 +145,7 @@ Estos archivos son documentación viva: si se quedan obsoletos, las siguientes s
   - cambia el contrato GraphQL, el esquema de la base de datos o la forma de consumir la API de un modo que afecte a cómo se trabaja en el repo.
 - Cómo hacerlo:
   - Edita **solo las secciones afectadas**, con cambios mínimos y en el mismo idioma/estilo/tono que el resto del archivo.
-  - Mantén la separación: las reglas del monorepo van en `AGENTS.md`; lo específico del paquete va en `backend/AGENTS.md`. No dupliques una regla en ambos.
+  - Mantén la separación: las reglas del monorepo van en `AGENTS.md`; lo específico del paquete va en `backend/AGENTS.md` o `frontend/AGENTS.md`. No dupliques una regla en ambos.
   - Corrige o elimina la información obsoleta en lugar de añadir una nota que la contradiga.
   - No reescribas ni reorganices el archivo completo sin necesidad.
 - **No** hace falta actualizarlos por cambios triviales ni por refactors internos que no cambian cómo se trabaja en el repo (p. ej. un fix de bug que no altera convenciones ni comandos).
