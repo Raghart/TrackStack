@@ -279,7 +279,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 
 ## Fase 5 — Tests
 
-### Paso 18. Montar la infraestructura de tests
+### ~~Paso 18. Montar la infraestructura de tests~~
 
 **Objetivo:** poder testear schemas y hooks.
 
