@@ -1,5 +1,7 @@
 import { useEffect } from "react";
 import { useAppSelector } from "../redux-hooks";
+import { stringSchema } from "@trackstack/schemas/zod.parsers";
+import { parseDataOrUndefined } from "../safeParse";
 
 const useSongState = (audioRef: React.RefObject<HTMLAudioElement>) => {
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
@@ -7,7 +9,9 @@ const useSongState = (audioRef: React.RefObject<HTMLAudioElement>) => {
     useEffect(() => {
         if (!audioRef.current || !activeSong) return;
         const audio = audioRef.current;
-        audioRef.current.src = activeSong.url_preview;
+        const parsedUrl = parseDataOrUndefined(stringSchema, activeSong.url_preview);
+        if (!parsedUrl) return;
+        audioRef.current.src = parsedUrl;
 
         if (isPlaying) {
             const onCanPlay = () => { audio.play().catch(err => console.warn("Play failed", err.message)); };

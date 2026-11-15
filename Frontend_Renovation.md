@@ -263,7 +263,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 
 **Terminado cuando:** cada caso tiene un estado distinto y testeable.
 
-### Paso 17. Blindar el consumo de URLs en audio e imágenes
+### ~~Paso 17. Blindar el consumo de URLs en audio e imágenes~~
 
 **Objetivo:** que las URLs validadas en el Paso 5 se usen de forma segura.
 

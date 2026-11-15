@@ -18,8 +18,8 @@ const SongInfoLayout = ({ name, artists, year, duration, spotify_id }: FullSongR
             <Box textAlign="center">
                 <Zoom triggerOnce direction="down" delay={100}>
                     <SongNameBox name={name} />
-                    <ArtistLinks artists={artists} color="yellow.500" hoverColor="yellow.400" size={responsiveSize} 
-                        font="'Barlow', sans-serif" fontWeight="700" lineClamp={2} />
+                    <ArtistLinks artists={artists} color="yellow.500" hoverColor="yellow.400" 
+                        size={responsiveSize} font="'Barlow', sans-serif" fontWeight="700" lineClamp={2} />
                 </Zoom>
             </Box>
 
