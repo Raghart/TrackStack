@@ -57,6 +57,13 @@ Contexto específico del paquete `frontend/`. Las reglas generales del monorepo 
 - **No** crees carpetas `src/__tests__/`, `src/tests/` ni un árbol de tests paralelo. `src/test/` se reserva para setup y helpers compartidos, no para specs.
 - Los helpers de test compartidos (por ejemplo un `renderWithProviders`) y fixtures comunes pueden vivir en `src/test/`, pero los tests de un archivo siempre se colocan junto a ese archivo.
 
+### Constantes, fixtures y mocks de una suite
+
+- Al escribir un set de tests, agrupa sus constantes, fixtures, mocks y helpers en **un archivo propio dentro de `src/test/`**, nombrado por la feature/hook que cubre (`searchConstants.tsx`, `loadRecSetups.tsx`). El spec junto al código importa de ahí con `@/test/...`.
+- **Reutiliza antes de crear**: revisa los archivos que ya existen en `src/test/` y usa sus stores, fixtures, respuestas de GraphQL y helpers de render si encajan. Si una constante sirve para varias suites, muévela a un archivo compartido en `src/test/` en lugar de duplicarla.
+- No llenes `src/test/` de constantes de un solo uso: si un valor solo lo consume un `it` y es corto, déjalo en el propio spec. Promueve al archivo de la suite lo que se repita entre tests o sea voluminoso.
+- `vi.mock` se hoistea al principio del módulo. Para compartir mocks entre el archivo de la suite y las fábricas de `vi.mock`, declara `const hoisted = vi.hoisted(() => ({ ... }))` **sin exportarlo**, exporta los alias con `export const { mockX } = hoisted` y referencia `hoisted.mockX` dentro de las fábricas de `vi.mock`. Exportar directamente `export const { mockX } = vi.hoisted(...)` falla con "Cannot export hoisted variable".
+
 ### Entorno de test
 
 - Vitest corre con `environment: 'jsdom'`, `globals: true` (no hace falta importar `describe`/`it`/`expect`, aunque `vi` se importa explícitamente desde `vitest`) y `@testing-library/jest-dom/vitest` ya cargado en `src/test/setup.ts`.

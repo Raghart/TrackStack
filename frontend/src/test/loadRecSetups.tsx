@@ -4,29 +4,31 @@ import { Provider } from "react-redux";
 import recommendReducer from "@/reducers/recommendReducer";
 import useLoadRecommendations from "@/components/Utils/hooks/useLoadRecommendations";
 
-export const { mockGetIASongs, mockToasterCreate, mockNavigate } = vi.hoisted(() => ({
+const hoisted = vi.hoisted(() => ({
     mockGetIASongs: vi.fn(),
     mockToasterCreate: vi.fn(),
     mockNavigate: vi.fn(),
 }));
 
+export const { mockGetIASongs, mockToasterCreate, mockNavigate } = hoisted;
+
 vi.mock("@apollo/client", async (importOriginal) => {
     const actual = await importOriginal<typeof import("@apollo/client")>();
     return {
         ...actual,
-        useLazyQuery: () => [mockGetIASongs],
+        useLazyQuery: () => [hoisted.mockGetIASongs],
     };
 });
 
 vi.mock("@/components/ui/toasterInstance", () => ({
-    toaster: { create: mockToasterCreate },
+    toaster: { create: hoisted.mockToasterCreate },
 }));
 
 vi.mock("react-router-dom", async (importOriginal) => {
     const actual = await importOriginal<typeof import("react-router-dom")>();
     return {
         ...actual,
-        useNavigate: () => mockNavigate,
+        useNavigate: () => hoisted.mockNavigate,
     };
 });
 

@@ -5,21 +5,23 @@ import searchReducer from "@/reducers/searchReducer";
 import useSearchResults from "@/components/Utils/hooks/useSearchResults";
 import { Provider } from "react-redux";
 
-export const { mockGetResults, mockToasterCreate } = vi.hoisted(() => ({
+const hoisted = vi.hoisted(() => ({
     mockGetResults: vi.fn(),
     mockToasterCreate: vi.fn(),
 }));
+
+export const { mockGetResults, mockToasterCreate } = hoisted;
 
 vi.mock("@apollo/client", async (importOriginal) => {
     const actual = await importOriginal<typeof import("@apollo/client")>();
     return {
         ...actual,
-        useLazyQuery: () => [mockGetResults],
+        useLazyQuery: () => [hoisted.mockGetResults],
     };
 });
 
 vi.mock("@/components/ui/toasterInstance", () => ({
-    toaster: { create: mockToasterCreate },
+    toaster: { create: hoisted.mockToasterCreate },
 }));
 
 export const DEBOUNCE_MS = 400;
