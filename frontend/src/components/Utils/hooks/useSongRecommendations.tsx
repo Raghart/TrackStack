@@ -2,33 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../redux-hooks";
 import { useSubscription } from "@apollo/client";
 import type { ApolloError } from "@apollo/client";
-import generateUserVector from "../generateUserVector";
 import { aiSubscription } from "@/queries/LaraRecQuerie";
 import { aiStreamChunkSchema, MAX_STRING_LENGTH } from "@trackstack/schemas/zod.parsers";
 import { toaster } from "@/components/ui/toasterInstance";
-import { recommendInitialState } from "@/reducers/recommendReducer";
-
-const buildUserVector = (tempo: number, danceability: number, energy: number,
-    mood: number, speechLevel: number, acousticness: number, voiceType: number,
-    sentiment: number
-) => {
-    try {
-        return generateUserVector(tempo, danceability, energy, mood, speechLevel,
-            acousticness, voiceType, sentiment);
-    } catch (err) {
-        console.error("Unable to build the user vector from the current settings", err);
-        return generateUserVector(
-            recommendInitialState.tempo,
-            recommendInitialState.danceability,
-            recommendInitialState.energy,
-            recommendInitialState.mood,
-            recommendInitialState.speechLevel,
-            recommendInitialState.acousticness,
-            recommendInitialState.voiceType,
-            recommendInitialState.sentiment,
-        );
-    };
-};
+import { buildUserVector } from "../buildUserVector";
 
 const useSongRecommendations = () => {
     const [visibleCount, setVisibleCount] = useState<number>(20);
