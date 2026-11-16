@@ -42,7 +42,12 @@ const useSearchResults = () => {
         }
 
         const query = parseDataOrUndefined(searchQuerySchema, normalizedQuery);
-        if (!query) return;
+        if (!query) {
+            requestIdRef.current += 1;
+            lastErrorRef.current = null;
+            dispatch(clearQuery());
+            return;
+        }
 
         const requestId = ++requestIdRef.current;
 
@@ -78,7 +83,6 @@ const useSearchResults = () => {
 
     useEffect(() => () => {
         debouncedSearch.cancel();
-        requestIdRef.current += 1;
     }, [debouncedSearch]);
 
     const handleQuery = (query: string) => debouncedSearch(query);
