@@ -28,7 +28,7 @@ Contexto específico del paquete `frontend/`. Las reglas generales del monorepo 
 
 - Usa el alias `@/...` para imports que cruzan carpetas y rutas relativas dentro de la misma feature.
 - Mantén el estilo existente: `export default` en componentes y hooks de features; los wrappers de `components/ui/` y utilidades concretas conservan su export nombrado. Nombres de archivos en PascalCase para componentes y camelCase para hooks/utilidades.
-- Valida las respuestas de GraphQL con los schemas de `@trackstack/schemas` y los helpers `parseDataOrUndefined` / `parseArrayOrEmpty` de `components/Utils/safeParse.ts` antes de guardarlas en Redux o pintarlas.
+- Valida las respuestas de GraphQL con los schemas de `@trackstack/schemas` y los helpers `parseDataOrUndefined` / `parseArrayOrEmpty` de `components/Utils/safeParse.ts` antes de guardarlas en Redux o pintarlas. Si el hook necesita distinguir un payload inválido de una lista vacía, usa `parseArrayWithOutcome`, que además devuelve el flag `invalid`.
 - Usa `useAppDispatch` y `useAppSelector` de `components/Utils/redux-hooks.ts`; no llames a `useDispatch`/`useSelector` directamente.
 - Chakra 3: usa el `toaster` de `@/components/ui/toasterInstance` y los wrappers de `components/ui/`; no uses APIs de Chakra 2 (`useToast`, etc.).
 - No introduzcas `any` ni casts para sortear tipos. Si un dato externo es `unknown`, valídalo con Zod y trabaja con el tipo parseado.

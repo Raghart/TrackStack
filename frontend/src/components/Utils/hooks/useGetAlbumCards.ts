@@ -1,14 +1,14 @@
 import { getAlbums } from "@/queries/DetailQueries";
 import { useQuery } from "@apollo/client";
 import { albumResponseSchema } from "@trackstack/schemas";
-import { useState } from "react";
-import { parseArrayOrEmpty } from "../safeParse";
+import { useMemo, useState } from "react";
 import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
+import { parseArrayOrEmpty } from "../safeParse";
 
 const useGetAlbumCards = () => {
     const [page, setPage] = useState<number>(1);
-    const [seed] = useState(Math.random().toString().slice(2));
-    const { data, fetchMore } = useQuery(getAlbums, {
+    const [seed] = useState(() => Math.random().toString().slice(2));
+    const { data, loading, fetchMore } = useQuery(getAlbums, {
         variables: { seed, page: 1, limit: 20 },
         notifyOnNetworkStatusChange: true,
     });
@@ -21,10 +21,18 @@ const useGetAlbumCards = () => {
         setPage(nextPage);
     };
 
-    const parsedData = parseArrayOrEmpty(albumResponseSchema, data?.getAlbums);
-    const hasData = parsedData.length > 0;
+    const rawData = data?.getAlbums;
+    const parsedData = useMemo(
+        () => parseArrayOrEmpty(albumResponseSchema, rawData),
+        [rawData],
+    );
 
-    return { data: parsedData, onLoadMore, hasData }
+    return {
+        data: parsedData,
+        loading,
+        onLoadMore,
+        hasData: parsedData.length > 0,
+    }
 };
 
 export default useGetAlbumCards;
