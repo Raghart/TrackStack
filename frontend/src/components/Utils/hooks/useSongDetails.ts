@@ -4,15 +4,24 @@ import { useQuery } from "@apollo/client";
 import { loadAudio } from "@/reducers/songReducer";
 import { getSongData } from "@/queries/DetailQueries";
 import { fullSongResponseSchema } from "@trackstack/schemas";
+import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
 import { parseDataOrUndefined } from "../safeParse";
 
 const useSongDetails = (songId: number) => {
     const dispatch = useAppDispatch();
-    const { loading, data } = useQuery(getSongData, { variables: { SongID: songId } });
+    const parsedSongId = positiveIntSchema.safeParse(songId);
+    const validSongId = parsedSongId.success ? parsedSongId.data : undefined;
+
+    const { loading, data } = useQuery(getSongData, {
+        variables: { SongID: validSongId },
+        skip: validSongId === undefined,
+    });
 
     const songData = useMemo(
-        () => parseDataOrUndefined(fullSongResponseSchema, data?.getSongData),
-        [data]
+        () => validSongId === undefined
+            ? undefined
+            : parseDataOrUndefined(fullSongResponseSchema, data?.getSongData),
+        [data, validSongId]
     );
 
     useEffect(() => {
@@ -21,7 +30,7 @@ const useSongDetails = (songId: number) => {
         }
     }, [songData, dispatch]);
 
-    return { songData, loading }
+    return { songData, loading: validSongId === undefined ? false : loading }
 };
 
 export default useSongDetails;
