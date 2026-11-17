@@ -1,19 +1,18 @@
 import { useEffect, useRef, useState } from "react";
-import { useAppSelector } from "../redux-hooks";
 import { useSubscription } from "@apollo/client";
 import type { ApolloError } from "@apollo/client";
 import { aiSubscription } from "@/queries/LaraRecQuerie";
 import { aiStreamChunkSchema, MAX_STRING_LENGTH } from "@trackstack/schemas/zod.parsers";
 import { toaster } from "@/components/ui/toasterInstance";
+import { useAppSelector } from "../redux-hooks";
 import { buildUserVector } from "../buildUserVector";
 
-const useSongRecommendations = () => {
-    const [visibleCount, setVisibleCount] = useState<number>(20);
+const useAIStream = () => {
     const [aiResponse, setAIResponse] = useState<string>("");
     const [error, setError] = useState<ApolloError | null>(null);
     const errorNotified = useRef<boolean>(false);
-    
-    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType, 
+
+    const { genres, energy, speechLevel, danceability, tempo, sentiment, voiceType,
             mood, acousticness } = useAppSelector(state => state.songData);
     const userVector = buildUserVector(tempo, danceability, energy, mood, speechLevel,
             acousticness, voiceType, sentiment);
@@ -67,16 +66,7 @@ const useSongRecommendations = () => {
         }
     });
 
-    const recommendations = useAppSelector(state => state.songData.results);
-    const visibleSongs = recommendations.slice(0, visibleCount);
-
-    const loadMoreSongs = () => {
-        if (visibleSongs.length < recommendations.length) {
-            setVisibleCount(prev => prev + 20);
-        };
-    };
-
-    return { visibleSongs, recommendations, loadMoreSongs, aiResponse, error };
+    return { aiResponse, error };
 };
 
-export default useSongRecommendations;
+export default useAIStream;

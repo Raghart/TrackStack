@@ -19,12 +19,12 @@ import {
     getSubscriptionOptions,
     mockToasterCreate,
     mockUseSubscription,
-    renderSongRecommendations,
+    renderAIStream,
     resetSubscriptionMock,
     TestStore,
 } from "@/test/songRecSetups";
 
-describe("useSongRecommendations", () => {
+describe("useAIStream", () => {
     let store: TestStore;
     let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
     let consoleWarnSpy: ReturnType<typeof vi.spyOn>;
@@ -42,25 +42,18 @@ describe("useSongRecommendations", () => {
         consoleWarnSpy.mockRestore();
     });
 
-    it("starts with an empty AI response, no error and only the first 20 songs visible", () => {
-        const songs = createSongs(45);
-        store.dispatch(setLaraRecommendations(songs));
-
-        const { result } = renderSongRecommendations(store);
+    it("starts with an empty AI response and no error", () => {
+        const { result } = renderAIStream(store);
 
         expect(result.current.aiResponse).toBe("");
         expect(result.current.error).toBeNull();
-        expect(result.current.recommendations).toHaveLength(45);
-        expect(result.current.visibleSongs).toHaveLength(20);
-        expect(result.current.visibleSongs).toEqual(songs.slice(0, 20));
-        expect(typeof result.current.loadMoreSongs).toBe("function");
     });
 
     it("subscribes with the genres and the user vector built from the current settings", () => {
         store.dispatch(setRecommendedGenres(["rock", "jazz"]));
         store.dispatch(setTempo(200));
 
-        renderSongRecommendations(store);
+        renderAIStream(store);
 
         expect(mockUseSubscription).toHaveBeenCalled();
         expect(mockUseSubscription.mock.calls[0][0]).toBe(aiSubscription);
@@ -74,7 +67,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("accumulates valid chunks in arrival order, preserving whitespace", () => {
-        const { result } = renderSongRecommendations(store);
+        const { result } = renderAIStream(store);
 
         emitChunk("Here are ");
         emitChunk("three songs");
@@ -85,7 +78,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("ignores empty, null and undefined chunks without notifying the user", () => {
-        const { result } = renderSongRecommendations(store);
+        const { result } = renderAIStream(store);
 
         emitChunk("Start");
         emitChunk("");
@@ -100,7 +93,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("treats a missing or malformed payload as an empty chunk", () => {
-        const { result } = renderSongRecommendations(store);
+        const { result } = renderAIStream(store);
 
         emitChunk("Text");
         emitSubscriptionData({});
@@ -113,7 +106,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("warns and ignores chunks that are not strings, null or undefined", () => {
-        const { result } = renderSongRecommendations(store);
+        const { result } = renderAIStream(store);
 
         emitChunk("Safe");
         emitChunk(42);
@@ -132,7 +125,7 @@ describe("useSongRecommendations", () => {
 
     it("exposes a subscription error and notifies the user once", () => {
         const failure = new ApolloError({ errorMessage: "socket closed" });
-        const { result } = renderSongRecommendations(store);
+        const { result } = renderAIStream(store);
 
         emitSubscriptionError(failure);
 
@@ -152,7 +145,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("deduplicates repeated errors from the same failed subscription", () => {
-        const { result } = renderSongRecommendations(store);
+        const { result } = renderAIStream(store);
 
         emitSubscriptionError(new ApolloError({ errorMessage: "first" }));
         emitSubscriptionError(new ApolloError({ errorMessage: "second" }));
@@ -164,7 +157,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("recovers from an error on a valid chunk and notifies again on a new failure", () => {
-        const { result } = renderSongRecommendations(store);
+        const { result } = renderAIStream(store);
 
         emitSubscriptionError(new ApolloError({ errorMessage: "first" }));
         emitChunk("Recovered");
@@ -180,7 +173,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("keeps error notifications deduplicated when only invalid chunks arrive in between", () => {
-        const { result } = renderSongRecommendations(store);
+        const { result } = renderAIStream(store);
 
         emitSubscriptionError(new ApolloError({ errorMessage: "first" }));
         emitChunk(42);
@@ -192,7 +185,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("clears the AI response, the error and the deduplication when the genres change", () => {
-        const { result, rerender } = renderSongRecommendations(store);
+        const { result, rerender } = renderAIStream(store);
 
         emitChunk("Old response");
         emitSubscriptionError(new ApolloError({ errorMessage: "first" }));
@@ -214,7 +207,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("clears the AI response, the error and the deduplication when the user vector changes", () => {
-        const { result, rerender } = renderSongRecommendations(store);
+        const { result, rerender } = renderAIStream(store);
 
         emitChunk("Old response");
         emitSubscriptionError(new ApolloError({ errorMessage: "first" }));
@@ -233,7 +226,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("keeps the AI response when only the recommendation list changes", () => {
-        const { result, rerender } = renderSongRecommendations(store);
+        const { result, rerender } = renderAIStream(store);
         emitChunk("Keep me");
 
         act(() => {
@@ -242,52 +235,11 @@ describe("useSongRecommendations", () => {
         rerender();
 
         expect(result.current.aiResponse).toBe("Keep me");
-        expect(result.current.recommendations).toHaveLength(3);
-        expect(result.current.visibleSongs).toHaveLength(3);
-    });
-
-    it("loads 20 more songs per call and stops at the end of the list", () => {
-        const songs = createSongs(45);
-        store.dispatch(setLaraRecommendations(songs));
-        const { result } = renderSongRecommendations(store);
-
-        act(() => result.current.loadMoreSongs());
-        expect(result.current.visibleSongs).toHaveLength(40);
-
-        act(() => result.current.loadMoreSongs());
-        expect(result.current.visibleSongs).toHaveLength(45);
-
-        act(() => result.current.loadMoreSongs());
-        expect(result.current.visibleSongs).toHaveLength(45);
-        expect(result.current.visibleSongs).toEqual(songs);
-    });
-
-    it("does nothing when every recommendation is already visible", () => {
-        const songs = createSongs(20);
-        store.dispatch(setLaraRecommendations(songs));
-        const { result } = renderSongRecommendations(store);
-
-        act(() => result.current.loadMoreSongs());
-
-        expect(result.current.visibleSongs).toHaveLength(20);
-        expect(result.current.visibleSongs).toEqual(songs);
-    });
-
-    it("keeps a slice of the current recommendations instead of caching the initial list", () => {
-        store.dispatch(setLaraRecommendations(createSongs(3)));
-        const { result, rerender } = renderSongRecommendations(store);
-
-        act(() => {
-            store.dispatch(setLaraRecommendations(createSongs(5)));
-        });
-        rerender();
-
-        expect(result.current.recommendations).toHaveLength(5);
-        expect(result.current.visibleSongs).toHaveLength(5);
+        expect(result.current.error).toBeNull();
     });
 
     it("ignores chunks and errors delivered by a superseded subscription", () => {
-        const { result, rerender } = renderSongRecommendations(store);
+        const { result, rerender } = renderAIStream(store);
         const supersededOptions = getSubscriptionOptions();
         emitChunk("Old");
 
@@ -316,7 +268,7 @@ describe("useSongRecommendations", () => {
             store.dispatch(setTempo(1_000_000_000));
         });
 
-        const { result } = renderSongRecommendations(store);
+        const { result } = renderAIStream(store);
 
         expect(consoleErrorSpy).toHaveBeenCalledWith(
             "Unable to build the user vector from the current settings",
@@ -338,7 +290,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("ignores chunks larger than the supported string length", () => {
-        const { result } = renderSongRecommendations(store);
+        const { result } = renderAIStream(store);
 
         emitChunk("Safe");
         emitChunk("a".repeat(MAX_STRING_LENGTH + 1));
@@ -351,7 +303,7 @@ describe("useSongRecommendations", () => {
     });
 
     it("bounds the accumulated AI response to avoid unbounded memory growth", () => {
-        const { result } = renderSongRecommendations(store);
+        const { result } = renderAIStream(store);
         const chunk = "a".repeat(MAX_STRING_LENGTH);
 
         for (let index = 0; index < 50; index += 1) {

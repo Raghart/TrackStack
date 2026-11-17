@@ -9,10 +9,12 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
 import AIResponse from "./AIResponse";
 import { SongResponse } from "@trackstack/schemas";
-import useSongRecommendations from "../Utils/hooks/useSongRecommendations";
+import useAIStream from "../Utils/hooks/useAIStream";
+import useRecommendationsList from "../Utils/hooks/useRecommendationsList";
 
 const LaraRecommendations = () => {
-    const { visibleSongs, recommendations, loadMoreSongs, aiResponse, error } = useSongRecommendations();
+    const { aiResponse, error } = useAIStream();
+    const { visibleSongs, recommendations, loadMoreSongs } = useRecommendationsList();
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);    
     if (visibleSongs.length === 0) return <Navigate to="/" replace />
     

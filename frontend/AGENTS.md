@@ -44,7 +44,7 @@ Contexto específico del paquete `frontend/`. Las reglas generales del monorepo 
 ## Errores y UX
 
 - El manejo de errores del frontend (Toaster, mensajes al usuario, `try/catch`, `onError` en suscripciones y deduplicación de toasts) está definido en la sección **"Manejo de errores en el frontend"** de `../AGENTS.md`. Síguela; no la dupliques aquí.
-- Toma como referencia los patrones ya implementados en `useLoadRecommendations.ts` (query), `useSearchResults.ts` (estados de búsqueda y deduplicación) y `useSongRecommendations.tsx` (subscription con estado de error expuesto al componente).
+- Toma como referencia los patrones ya implementados en `useLoadRecommendations.ts` (query), `useSearchResults.ts` (estados de búsqueda y deduplicación) y `useAIStream.ts` (subscription con estado de error expuesto al componente).
 
 ## Tests
 

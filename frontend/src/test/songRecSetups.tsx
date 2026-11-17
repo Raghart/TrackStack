@@ -4,7 +4,8 @@ import { Provider } from "react-redux";
 import type { ApolloError } from "@apollo/client";
 import type { SongResponse } from "@trackstack/schemas";
 import recommendReducer from "@/reducers/recommendReducer";
-import useSongRecommendations from "@/components/Utils/hooks/useSongRecommendations";
+import useAIStream from "@/components/Utils/hooks/useAIStream";
+import useRecommendationsList from "@/components/Utils/hooks/useRecommendationsList";
 
 const hoisted = vi.hoisted(() => ({
     mockUseSubscription: vi.fn(),
@@ -91,7 +92,12 @@ export const createSong = (id: number, name = `Song ${id}`): SongResponse => ({
 export const createSongs = (count: number): SongResponse[] =>
     Array.from({ length: count }, (_, index) => createSong(index + 1));
 
-export const renderSongRecommendations = (store: TestStore) =>
-    renderHook(() => useSongRecommendations(), {
+export const renderAIStream = (store: TestStore) =>
+    renderHook(() => useAIStream(), {
+        wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
+    });
+
+export const renderRecommendationsList = (store: TestStore) =>
+    renderHook(() => useRecommendationsList(), {
         wrapper: ({ children }) => <Provider store={store}>{children}</Provider>,
     });
