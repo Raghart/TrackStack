@@ -320,7 +320,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 3. ~~`useSongRecommendations`: chunks válidos, vacío/nulo, error de suscripción y acumulación de texto.~~
 4. ~~`useSongDetails`: ID válido, inválido, `undefined` y respuesta inválida.~~
 5. ~~`useGetSongCover`: ruta válida, ruta inválida y que no se dispare la query.~~
-6. `useGetDetailSongs`, `useGenreSongs`, `useArtistBar` y `useGetAlbumCards`: carga, paginación y datos inválidos.
+6. ~~`useGetDetailSongs`~~, `useGenreSongs`, `useArtistBar` y `useGetAlbumCards`: carga, paginación y datos inválidos.
 7. `useSongState` / `useAudioData`: mockear `<audio>` y comprobar `src`, `play`, `pause`, `currentTime` y `volume`.
 
 **Terminado cuando:** los cinco primeros hooks tienen tests y cubren sus caminos de error.
