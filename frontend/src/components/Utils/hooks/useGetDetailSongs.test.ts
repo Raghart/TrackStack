@@ -5,59 +5,12 @@ import {
     artistSongs,
     getLastQuery,
     getQueryOptions,
+    invalidSongs,
     mockQueryResult,
     renderDetailSongs,
     resetQueryMock,
-    validDetailSong,
     type DetailHookProps,
 } from "@/test/detailSongsSetups";
-
-const invalidSongs = [
-    {
-        label: "a missing name",
-        payload: { ...validDetailSong, name: undefined },
-    },
-    {
-        label: "an empty name",
-        payload: { ...validDetailSong, name: "   " },
-    },
-    {
-        label: "an oversized name",
-        payload: { ...validDetailSong, name: "a".repeat(2049) },
-    },
-    {
-        label: "a non-numeric ID",
-        payload: { ...validDetailSong, id: "not-a-number" },
-    },
-    {
-        label: "a non-finite ID",
-        payload: { ...validDetailSong, id: Number.POSITIVE_INFINITY },
-    },
-    {
-        label: "artists as a string",
-        payload: { ...validDetailSong, artists: "Radiohead" },
-    },
-    {
-        label: "an empty artist entry",
-        payload: { ...validDetailSong, artists: [""] },
-    },
-    {
-        label: "a javascript: preview URL",
-        payload: { ...validDetailSong, url_preview: "javascript:alert(1)" },
-    },
-    {
-        label: "a relative cover URL",
-        payload: { ...validDetailSong, album_cover: "/images/in-rainbows.jpg" },
-    },
-    {
-        label: "a cover URL without a host",
-        payload: { ...validDetailSong, album_cover: "https://" },
-    },
-    {
-        label: "a null song",
-        payload: null,
-    },
-];
 
 describe("useGetDetailSongs", () => {
     let consoleErrorSpy: ReturnType<typeof vi.spyOn>;
