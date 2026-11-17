@@ -1,9 +1,11 @@
+import { act, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 import { getSongData } from "@/queries/DetailQueries";
 import { validFullSong } from "@/test/songFixtures";
 import {
     getLazyQueryDocument,
     mockGetSongID,
+    mockToasterCreate,
     renderSongCover,
     resetSongCoverMocks,
     setLazyData,
@@ -42,6 +44,7 @@ describe("useGetSongCover", () => {
         expect(getLazyQueryDocument()).toBe(getSongData);
         expect(mockGetSongID).toHaveBeenCalledTimes(1);
         expect(mockGetSongID).toHaveBeenCalledWith({ variables: { SongID: 42 } });
+        expect(mockToasterCreate).not.toHaveBeenCalled();
     });
 
     it("parses numeric route params before querying", () => {
@@ -79,6 +82,7 @@ describe("useGetSongCover", () => {
 
             expect(mockGetSongID).not.toHaveBeenCalled();
             expect(result.current).toBeUndefined();
+            expect(mockToasterCreate).not.toHaveBeenCalled();
             expect(consoleErrorSpy).not.toHaveBeenCalled();
         },
     );
@@ -188,4 +192,124 @@ describe("useGetSongCover", () => {
         expect(result.current).toEqual(validFullSong);
         expect(result.current).not.toHaveProperty("injected");
     });
+
+    it("notifies the user with a generic message when the query rejects", async () => {
+        const failure = new Error("database credentials leaked");
+        mockGetSongID.mockRejectedValue(failure);
+        setSongId("42");
+
+        const { result } = renderSongCover();
+
+        await waitFor(() => expect(mockToasterCreate).toHaveBeenCalledTimes(1));
+
+        expect(result.current).toBeUndefined();
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+            "Unable to get the song cover",
+            failure,
+        );
+        expect(mockToasterCreate).toHaveBeenCalledWith({
+            type: "error",
+            title: "Cover unavailable",
+            description: "We couldn't load the song cover. Please try again.",
+            meta: { closable: true },
+        });
+        expect(JSON.stringify(mockToasterCreate.mock.calls)).not.toContain(
+            "database credentials leaked",
+        );
+    });
+
+    it("notifies the user when Apollo returns an error without rejecting", async () => {
+        const failure = new Error("internal stack trace");
+        mockGetSongID.mockResolvedValue({ error: failure });
+        setSongId("42");
+
+        renderSongCover();
+
+        await waitFor(() => expect(mockToasterCreate).toHaveBeenCalledTimes(1));
+
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+            "Unable to get the song cover",
+            failure,
+        );
+        expect(mockToasterCreate).toHaveBeenCalledWith(
+            expect.objectContaining({ type: "error", title: "Cover unavailable" }),
+        );
+        expect(JSON.stringify(mockToasterCreate.mock.calls)).not.toContain(
+            "internal stack trace",
+        );
+    });
+
+    it("notifies only once for a single failed request", async () => {
+        mockGetSongID.mockRejectedValue(new Error("offline"));
+        setSongId("42");
+
+        const { rerender } = renderSongCover();
+
+        await waitFor(() => expect(mockToasterCreate).toHaveBeenCalledTimes(1));
+
+        rerender();
+        rerender();
+
+        expect(mockToasterCreate).toHaveBeenCalledTimes(1);
+        expect(mockGetSongID).toHaveBeenCalledTimes(1);
+        expect(consoleErrorSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it("notifies again when a new route request also fails", async () => {
+        mockGetSongID
+            .mockRejectedValueOnce(new Error("offline"))
+            .mockRejectedValueOnce(new Error("offline again"));
+        setSongId("42");
+
+        const { rerender } = renderSongCover();
+
+        await waitFor(() => expect(mockToasterCreate).toHaveBeenCalledTimes(1));
+
+        setSongId("43");
+        rerender();
+
+        await waitFor(() => expect(mockToasterCreate).toHaveBeenCalledTimes(2));
+        expect(mockGetSongID).toHaveBeenLastCalledWith({ variables: { SongID: 43 } });
+    });
+
+    it("ignores a stale failure when the route changed before it resolved", async () => {
+        const first = deferred<unknown>();
+        const second = deferred<unknown>();
+        mockGetSongID.mockReturnValueOnce(first.promise).mockReturnValueOnce(second.promise);
+        setSongId("42");
+
+        const { rerender } = renderSongCover();
+
+        setSongId("43");
+        rerender();
+
+        await act(async () => {
+            second.resolve({ data: {} });
+            await second.promise;
+        });
+        await act(async () => {
+            first.reject(new Error("stale failure"));
+            await first.promise.catch(() => undefined);
+        });
+
+        expect(mockGetSongID).toHaveBeenCalledTimes(2);
+        expect(mockToasterCreate).not.toHaveBeenCalled();
+        expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
 });
+
+type Deferred<T> = {
+    promise: Promise<T>;
+    reject: (reason?: unknown) => void;
+    resolve: (value: T) => void;
+};
+
+const deferred = <T,>(): Deferred<T> => {
+    let resolve!: (value: T) => void;
+    let reject!: (reason?: unknown) => void;
+    const promise = new Promise<T>((res, rej) => {
+        resolve = res;
+        reject = rej;
+    });
+    return { promise, reject, resolve };
+};

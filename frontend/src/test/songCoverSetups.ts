@@ -6,10 +6,11 @@ const hoisted = vi.hoisted(() => ({
     mockUseParams: vi.fn(),
     mockUseLazyQuery: vi.fn(),
     mockGetSongID: vi.fn(),
+    mockToasterCreate: vi.fn(),
     lazyState: { data: undefined as { getSongData?: unknown } | undefined },
 }));
 
-export const { mockUseParams, mockUseLazyQuery, mockGetSongID } = hoisted;
+export const { mockUseParams, mockUseLazyQuery, mockGetSongID, mockToasterCreate } = hoisted;
 
 vi.mock("react-router-dom", async (importOriginal) => {
     const actual = await importOriginal<typeof import("react-router-dom")>();
@@ -30,6 +31,10 @@ vi.mock("@apollo/client", async (importOriginal) => {
     };
 });
 
+vi.mock("@/components/ui/toasterInstance", () => ({
+    toaster: { create: hoisted.mockToasterCreate },
+}));
+
 export const setSongId = (songId: string | undefined) => {
     hoisted.mockUseParams.mockReturnValue({ songId });
 };
@@ -42,6 +47,7 @@ export const resetSongCoverMocks = () => {
     hoisted.mockUseParams.mockReset();
     hoisted.mockUseLazyQuery.mockReset();
     hoisted.mockGetSongID.mockReset();
+    hoisted.mockToasterCreate.mockReset();
     hoisted.lazyState.data = undefined;
     hoisted.mockUseParams.mockReturnValue({ songId: undefined });
 };
