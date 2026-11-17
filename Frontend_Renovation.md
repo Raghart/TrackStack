@@ -315,10 +315,10 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 
 **Orden recomendado (de más rentable a menos):**
 
-1. `useSearchResults`: query válida, payload inválido, error de red y debounce.
-2. `useLoadRecommendations`: éxito, respuesta vacía, parse fallido y variables correctas.
-3. `useSongRecommendations`: chunks válidos, vacío/nulo, error de suscripción y acumulación de texto.
-4. `useSongDetails`: ID válido, inválido, `undefined` y respuesta inválida.
+1. ~~`useSearchResults`: query válida, payload inválido, error de red y debounce.~~
+2. ~~`useLoadRecommendations`: éxito, respuesta vacía, parse fallido y variables correctas.~~
+3. ~~`useSongRecommendations`: chunks válidos, vacío/nulo, error de suscripción y acumulación de texto.~~
+4. ~~`useSongDetails`: ID válido, inválido, `undefined` y respuesta inválida.~~
 5. `useGetSongCover`: ruta válida, ruta inválida y que no se dispare la query.
 6. `useGetDetailSongs`, `useGenreSongs`, `useArtistBar` y `useGetAlbumCards`: carga, paginación y datos inválidos.
 7. `useSongState` / `useAudioData`: mockear `<audio>` y comprobar `src`, `play`, `pause`, `currentTime` y `volume`.
