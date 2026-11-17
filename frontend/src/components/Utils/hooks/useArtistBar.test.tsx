@@ -40,6 +40,14 @@ describe("useArtistBar", () => {
         expect(getQueryOptions().skip).toBe(false);
     });
 
+    it("bypasses the merged artists cache so every page replaces the previous one", () => {
+        mockQueryResult({ loading: true });
+
+        renderArtistBar();
+
+        expect(getQueryOptions().fetchPolicy).toBe("no-cache");
+    });
+
     it("uses the limit reported by the breakpoint value", () => {
         mockBreakpointLimit(7);
         mockQueryResult({ loading: true });
@@ -283,6 +291,45 @@ describe("useArtistBar", () => {
 
         expect(result.current.page).toBe(2);
         expect(getQueryOptions().variables).toEqual({ seed, page: 2, limit: 10 });
+    });
+
+    it("keeps the previous page visible while the next one is loading", () => {
+        mockQueryResult({ loading: false, data: { getAllArtists: artists } });
+        const { result, rerender } = renderArtistBar();
+        const firstPage = result.current.artists;
+
+        mockQueryResult({
+            loading: true,
+            data: undefined,
+            previousData: { getAllArtists: artists },
+        });
+        act(() => result.current.setPage(2));
+        rerender();
+
+        expect(result.current.page).toBe(2);
+        expect(result.current.artists).toEqual(firstPage);
+        expect(result.current.artists).toEqual(artists);
+        expect(result.current.artistsPage).toBe(1);
+    });
+
+    it("advances artistsPage only when the new page payload arrives", () => {
+        const pageTwo = [
+            { id: 3, name: "Portishead", album_cover: "https://example.com/portishead.jpg" },
+        ];
+        mockQueryResult({ loading: false, data: { getAllArtists: artists } });
+        const { result, rerender } = renderArtistBar();
+
+        mockQueryResult({ loading: true, previousData: { getAllArtists: artists } });
+        act(() => result.current.setPage(2));
+        rerender();
+        expect(result.current.artistsPage).toBe(1);
+        expect(result.current.artists).toEqual(artists);
+
+        mockQueryResult({ loading: false, data: { getAllArtists: pageTwo } });
+        rerender();
+
+        expect(result.current.artistsPage).toBe(2);
+        expect(result.current.artists).toEqual(pageTwo);
     });
 
     it("queries pages sequentially across setPage calls", () => {

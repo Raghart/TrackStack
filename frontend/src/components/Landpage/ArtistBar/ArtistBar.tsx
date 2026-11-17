@@ -7,7 +7,7 @@ import useArtistBar from "@/components/Utils/hooks/useArtistBar";
 import { Bounce, Zoom } from "react-awesome-reveal";
 
 const ArtistBar = () => {
-    const { artists, page, setPage, limit } = useArtistBar();
+    const { artists, page, artistsPage, setPage, limit } = useArtistBar();
     return(
         <Flex w="full" h="full" borderRadius="2xl" direction="column" mt={2}>
             {artists.length > 0 && (
@@ -22,7 +22,7 @@ const ArtistBar = () => {
                         </Bounce>
                     </Flex>
 
-                    <Zoom triggerOnce direction="left">
+                    <Zoom key={artistsPage} triggerOnce direction="left">
                         <Flex align="center" justify="center" gap={2} pb="2.5px">
                             <For each={artists}>
                                 {(artist) => <LandpageArtistCard key={artist.name} {...artist} /> }

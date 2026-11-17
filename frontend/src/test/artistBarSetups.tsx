@@ -24,12 +24,14 @@ vi.mock("@chakra-ui/react", () => ({
 export type ArtistBarQueryResult = {
     loading?: boolean;
     data?: Record<string, unknown> | null;
+    previousData?: Record<string, unknown> | null;
     error?: unknown;
 };
 
 export type ArtistBarQueryOptions = {
     variables?: { seed?: unknown; page?: unknown; limit?: unknown };
     skip?: boolean;
+    fetchPolicy?: string;
 };
 
 export const mockBreakpointLimit = (limit: number | undefined) => {
@@ -40,6 +42,7 @@ export const mockQueryResult = (result: ArtistBarQueryResult) => {
     hoisted.mockUseQuery.mockReturnValue({
         loading: false,
         data: undefined,
+        previousData: undefined,
         error: undefined,
         ...result,
     });
@@ -52,6 +55,7 @@ export const resetArtistBarMocks = () => {
     hoisted.mockUseQuery.mockReturnValue({
         loading: false,
         data: undefined,
+        previousData: undefined,
         error: undefined,
     });
 };

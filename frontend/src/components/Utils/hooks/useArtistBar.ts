@@ -3,16 +3,26 @@ import { useQuery } from "@apollo/client";
 import { useBreakpointValue } from "@chakra-ui/react";
 import { artistResponseSchema } from "@trackstack/schemas";
 import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
-import { type Dispatch, type SetStateAction, useCallback, useMemo, useState } from "react";
+import {
+    type Dispatch,
+    type SetStateAction,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from "react";
 import { parseArrayOrEmpty } from "../safeParse";
-
+// Retrieving artists feels slow, try to make it faster to see artists already seen
 const useArtistBar = () => {
     const [page, setPageState] = useState<number>(1);
+    const [artistsPage, setArtistsPage] = useState<number>(1);
     const limit = useBreakpointValue({ base: 3, sm: 5, md: 7, lg: 10 });
     const [seed] = useState<string>(Math.floor(Math.random() * 1e15).toString());
-    const { data } = useQuery(getAllArtists, {
+    const { data, previousData } = useQuery(getAllArtists, {
         skip: !limit,
         variables: { seed, page, limit },
+        fetchPolicy: "no-cache",
     });
 
     const setPage: Dispatch<SetStateAction<number>> = useCallback((nextPage) => {
@@ -23,13 +33,22 @@ const useArtistBar = () => {
         });
     }, []);
 
-    const rawArtists = data?.getAllArtists;
+    const rawArtists = data ? data.getAllArtists : previousData?.getAllArtists;
+    const lastPayload = useRef(rawArtists);
+
+    useEffect(() => {
+        if (rawArtists && rawArtists !== lastPayload.current) {
+            lastPayload.current = rawArtists;
+            setArtistsPage(page);
+        }
+    }, [rawArtists, page]);
+
     const artists = useMemo(
         () => parseArrayOrEmpty(artistResponseSchema, rawArtists),
         [rawArtists],
     );
 
-    return { artists, page, setPage, limit };
+    return { artists, page, artistsPage, setPage, limit };
 };
 
 export default useArtistBar;
