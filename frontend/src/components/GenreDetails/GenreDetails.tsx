@@ -11,9 +11,11 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import LoadingBeat from "../Utils/LoadingBeat";
 import { SongResponse } from "@trackstack/schemas";
 import { stringSchema } from "@trackstack/schemas/zod.parsers";
+import { useAppSelector } from "../Utils/redux-hooks";
 
 const GenreSongs = ({ genre }: { genre: string }) => {
-  const { data, loading, loadMore, activeSong, isPlaying, hasData } = useGenreSongs(genre);
+  const { data, loading, loadMore, hasData } = useGenreSongs(genre);
+  const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
   if ( !loading && !data) return <NotFound message={`Error while retrieving the "${genre}" songs`} />;
   
   return (
