@@ -1,43 +1,14 @@
 import { ApolloClient, InMemoryCache, TypePolicies } from "@apollo/client";
 import { AlbumResponse, ArtistResponse, SongResponse } from "@trackstack/schemas";
 import { graphLink } from "./components/Utils/getGraphLink";
+import { getPaginatedField } from "./components/Utils/getPaginatedField";
 
 const typePolicies: TypePolicies = {
   Query: {
     fields: {
-      getAllGenreSongs: {
-        keyArgs: ["genre"],
-        merge(existing, incoming, { args }) {
-          const page: number = args?.page ?? 1;
-          const limit: number = args?.limit ?? 20;
-          const offset = (page - 1) * limit;
-          const merged: SongResponse[] = [...(existing ?? [])];
-          merged.splice(offset, incoming.length, ...incoming);
-          return merged;
-        }
-      },
-      getAllArtists: {
-        keyArgs: false,
-        merge(existing, incoming, { args }) {
-          const page: number = args?.page ?? 1;
-          const limit: number = args?.limit ?? 20;
-          const offset = (page - 1) * limit;
-          const merged: ArtistResponse[] = [...(existing ?? [])];
-          merged.splice(offset, incoming.length, ...incoming);
-          return merged;
-        }
-      },
-      getAlbums: {
-        keyArgs: false,
-        merge(existing, incoming, {args}) {
-          const page: number = args?.page ?? 1;
-          const limit: number = args?.limit ?? 20;
-          const offset = (page - 1) * limit;
-          const merged: AlbumResponse[] = [...(existing ?? [])];
-          merged.splice(offset, incoming.length, ...incoming);
-          return merged;
-        }
-      }
+      getAllGenreSongs: getPaginatedField<SongResponse>(["genre"]),
+      getAllArtists: getPaginatedField<ArtistResponse>(false),
+      getAlbums: getPaginatedField<AlbumResponse>(false)
     }
   }
 };
