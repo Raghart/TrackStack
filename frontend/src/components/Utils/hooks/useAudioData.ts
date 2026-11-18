@@ -6,14 +6,21 @@ const useAudioData = (audioRef: React.RefObject<HTMLAudioElement>, isPlaying: bo
     const [duration, setDuration] = useState<number>(30);
 
     const handleSongTime = (e: SliderValueChangeDetails) => {
-         setCurrentTime(e.value[0]);
-        if (audioRef.current) { audioRef.current.currentTime = e.value[0] };
+        const nextTime = e.value[0];
+        if (!Number.isFinite(nextTime) || nextTime < 0) return;
+
+        const safeTime = Math.min(nextTime, duration);
+        setCurrentTime(safeTime);
+        if (audioRef.current) { audioRef.current.currentTime = safeTime };
     };
     
     useEffect(() => {
         const audio = audioRef.current
         if (audio) {
-            const handleLoadedMetaData = () => { setDuration(audio.duration) }
+            const handleLoadedMetaData = () => {
+                const isFinitePositive = (value: number) => Number.isFinite(value) && value > 0;
+                if (isFinitePositive(audio.duration)) { setDuration(audio.duration) }
+            }
             audio.addEventListener("loadedmetadata", handleLoadedMetaData);
             return () => { audio.removeEventListener("loadedmetadata", handleLoadedMetaData) }
         };
