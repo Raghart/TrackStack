@@ -311,7 +311,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 
 **Terminado cuando:** los schemas tienen tests y cualquier cambio de contrato rompe un test.
 
-### Paso 20. Tests de hooks con Apollo `MockedProvider`
+### ~~Paso 20. Tests de hooks con Apollo `MockedProvider`~~
 
 **Orden recomendado (de más rentable a menos):**
 
@@ -321,7 +321,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 4. ~~`useSongDetails`: ID válido, inválido, `undefined` y respuesta inválida.~~
 5. ~~`useGetSongCover`: ruta válida, ruta inválida y que no se dispare la query.~~
 6. ~~`useGetDetailSongs`~~, `useGenreSongs`, ~~`useArtistBar`~~ y `useGetAlbumCards`: carga, paginación y datos inválidos (The two hooks left could have a way to report to the user when an error has happened).
-7. ~~`useSongState`~~ / `useAudioData`: mockear `<audio>` y comprobar `src`, `play`, `pause`, `currentTime` y `volume`.
+7. ~~`useSongState`~~ / ~~`useAudioData`~~: mockear `<audio>` y comprobar `src`, `play`, `pause`, `currentTime` y `volume`.
 
 **Terminado cuando:** los cinco primeros hooks tienen tests y cubren sus caminos de error.
 
