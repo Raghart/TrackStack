@@ -9,9 +9,9 @@ const typePolicies: TypePolicies = {
         keyArgs: ["genre"],
         merge(existing, incoming, { args }) {
           const page: number = args?.page ?? 1;
-          const limit: number = args?.limit ?? 2;
+          const limit: number = args?.limit ?? 20;
           const offset = (page - 1) * limit;
-          const merged: SongResponse[] = existing ? existing.slice(0) : [];
+          const merged: SongResponse[] = [...(existing ?? [])];
           merged.splice(offset, incoming.length, ...incoming);
           return merged;
         }
@@ -22,7 +22,7 @@ const typePolicies: TypePolicies = {
           const page: number = args?.page ?? 1;
           const limit: number = args?.limit ?? 20;
           const offset = (page - 1) * limit;
-          const merged: ArtistResponse[] = existing ? existing.slice(0) : [];
+          const merged: ArtistResponse[] = [...(existing ?? [])];
           merged.splice(offset, incoming.length, ...incoming);
           return merged;
         }
@@ -33,7 +33,7 @@ const typePolicies: TypePolicies = {
           const page: number = args?.page ?? 1;
           const limit: number = args?.limit ?? 20;
           const offset = (page - 1) * limit;
-          const merged: AlbumResponse[] = existing ? existing.slice(0) : [];
+          const merged: AlbumResponse[] = [...(existing ?? [])];
           merged.splice(offset, incoming.length, ...incoming);
           return merged;
         }
