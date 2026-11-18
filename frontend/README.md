@@ -79,7 +79,9 @@ See [docs/architecture.md](./docs/architecture.md) for routing, how the recommen
 
 ## Tests
 
-Unit tests use **Vitest** with **Testing Library** and **jsdom**. The configuration lives in [`vitest.config.ts`](./vitest.config.ts) and the shared setup (jest-dom matchers) in [`src/test/setup.ts`](./src/test/setup.ts).
+Unit tests use **Vitest** with **Testing Library** and **jsdom**. They cover the GraphQL data hooks, the Apollo pagination policies, the player/audio state and the user-facing error notifications (including Toaster messages and their deduplication). No backend or `frontend/.env` is needed for testing: GraphQL, Apollo and the environment are mocked.
+
+See [docs/testing.md](./docs/testing.md) for the coverage map, fixtures and conventions.
 
 ```bash
 pnpm run test:frontend                         # from the repository root
