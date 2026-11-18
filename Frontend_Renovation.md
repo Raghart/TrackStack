@@ -325,7 +325,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 
 **Terminado cuando:** los cinco primeros hooks tienen tests y cubren sus caminos de error.
 
-### Paso 21. Tests de la caché de Apollo
+### ~~Paso 21. Tests de la caché de Apollo~~
 
 **Objetivo:** proteger los `merge` de `apolloClient.ts`, que asumen arrays y argumentos válidos.
 
@@ -336,7 +336,7 @@ Aplicarlos en `useSearchResults`, `useLoadRec`, `useGenreSongs`, `useArtistBar`,
 
 **Terminado cuando:** un cambio en `typePolicies` que rompa la paginación falla en un test.
 
-### Paso 22. Smoke tests E2E
+### ~~Paso 22. Smoke tests E2E~~
 
 **Objetivo:** comprobar los flujos completos, no usarlos como primera red de seguridad.
 
