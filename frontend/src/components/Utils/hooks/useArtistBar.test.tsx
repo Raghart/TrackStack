@@ -462,4 +462,79 @@ describe("useArtistBar", () => {
 
         expect(consoleErrorSpy).not.toHaveBeenCalled();
     });
+
+    it("serves a visited page from the cache instead of querying it again", () => {
+        const pageTwo = [
+            { id: 3, name: "Portishead", album_cover: "https://example.com/portishead.jpg" },
+        ];
+        mockQueryResult({ loading: false, data: { getAllArtists: artists } });
+        const { result, rerender } = renderArtistBar();
+
+        mockQueryResult({ loading: false, data: { getAllArtists: pageTwo } });
+        act(() => result.current.setPage(2));
+        rerender();
+        expect(result.current.artists).toEqual(pageTwo);
+
+        mockQueryResult({
+            loading: true,
+            data: undefined,
+            previousData: { getAllArtists: pageTwo },
+        });
+        act(() => result.current.setPage(1));
+        rerender();
+
+        expect(result.current.page).toBe(1);
+        expect(getQueryOptions().skip).toBe(true);
+        expect(result.current.artists).toEqual(artists);
+        expect(result.current.artistsPage).toBe(1);
+        expect(consoleErrorSpy).not.toHaveBeenCalled();
+    });
+
+    it("serves a revisited page from the cache when moving forward again", () => {
+        const pageTwo = [
+            { id: 3, name: "Portishead", album_cover: "https://example.com/portishead.jpg" },
+        ];
+        mockQueryResult({ loading: false, data: { getAllArtists: artists } });
+        const { result, rerender } = renderArtistBar();
+
+        mockQueryResult({ loading: false, data: { getAllArtists: pageTwo } });
+        act(() => result.current.setPage(2));
+        rerender();
+
+        mockQueryResult({
+            loading: true,
+            data: undefined,
+            previousData: { getAllArtists: pageTwo },
+        });
+        act(() => result.current.setPage(1));
+        rerender();
+
+        mockQueryResult({
+            loading: true,
+            data: undefined,
+            previousData: { getAllArtists: artists },
+        });
+        act(() => result.current.setPage(2));
+        rerender();
+
+        expect(result.current.page).toBe(2);
+        expect(getQueryOptions().skip).toBe(true);
+        expect(result.current.artists).toEqual(pageTwo);
+        expect(result.current.artistsPage).toBe(2);
+    });
+
+    it("keeps the query active for a page that is still loading", () => {
+        mockQueryResult({ loading: false, data: { getAllArtists: artists } });
+        const { result, rerender } = renderArtistBar();
+
+        mockQueryResult({
+            loading: true,
+            data: undefined,
+            previousData: { getAllArtists: artists },
+        });
+        act(() => result.current.setPage(2));
+        rerender();
+
+        expect(getQueryOptions().skip).toBe(false);
+    });
 });
