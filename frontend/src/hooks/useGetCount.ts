@@ -1,6 +1,6 @@
 import { getDBLength } from "@/queries/LandpageQueries";
+import { parseDataOrUndefined } from "@/Utils/safeParse";
 import { useQuery } from "@apollo/client";
-import { parseDataOrUndefined } from "../safeParse";
 import { floatNumberSchema } from "@trackstack/schemas/zod.parsers";
 
 const useGetCount = () => {;

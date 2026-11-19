@@ -1,4 +1,4 @@
-import { useAppSelector } from "../redux-hooks";
+import { useAppSelector } from "@/Utils/redux-hooks";
 
 const useActSongState = (id: number) => {
     const activeSongState = useAppSelector(state => state.songs.songState);

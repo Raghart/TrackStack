@@ -1,4 +1,5 @@
 import { getAllArtists } from "@/queries/DetailQueries";
+import { parseArrayOrEmpty } from "@/Utils/safeParse";
 import { useQuery } from "@apollo/client";
 import { useBreakpointValue } from "@chakra-ui/react";
 import { artistResponseSchema, type ArtistResponse } from "@trackstack/schemas";
@@ -12,7 +13,6 @@ import {
     useRef,
     useState,
 } from "react";
-import { parseArrayOrEmpty } from "../safeParse";
 
 type ArtistPageCache = Map<string, ArtistResponse[]>;
 

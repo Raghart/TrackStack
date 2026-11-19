@@ -4,8 +4,8 @@ import { Provider } from "react-redux";
 import type { ApolloError } from "@apollo/client";
 import type { SongResponse } from "@trackstack/schemas";
 import recommendReducer from "@/reducers/recommendReducer";
-import useAIStream from "@/components/Utils/hooks/useAIStream";
-import useRecommendationsList from "@/components/Utils/hooks/useRecommendationsList";
+import useAIStream from "@/hooks/useAIStream";
+import useRecommendationsList from "@/hooks/useRecommendationsList";
 
 const hoisted = vi.hoisted(() => ({
     mockUseSubscription: vi.fn(),

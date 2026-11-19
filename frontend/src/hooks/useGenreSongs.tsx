@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import { getAllGenreSongs } from "@/queries/DetailQueries";
 import { songResponseSchema } from "@trackstack/schemas";
 import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
-import { parseArrayOrEmpty } from "../safeParse";
+import { parseArrayOrEmpty } from "@/Utils/safeParse";
 
 const useGenreSongs = (genre: string) => {
     const [pagination, setPagination] = useState<{ genre: string; page: number }>({

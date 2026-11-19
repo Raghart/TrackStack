@@ -1,7 +1,7 @@
 import { createListCollection } from "@chakra-ui/react";
 import { useMemo } from "react";
-import { genreList } from "../genreIconList";
 import { GenreListFormat } from "@/types/genreTypes";
+import { genreList } from "@/Utils/genreIconList";
 
 const useGenreCollection = (searchValue: string, selectedGenres: string[]) => {
     return useMemo(() => {

@@ -1,5 +1,5 @@
+import { genreList } from "@/Utils/genreIconList";
 import { useState } from "react";
-import { genreList } from "../genreIconList";
 
 const useGenreSel = () => {
     const [visibleCount, setVisibleCount] = useState<number>(20);

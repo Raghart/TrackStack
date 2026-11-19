@@ -3,7 +3,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { Provider } from "react-redux";
 import { vi } from "vitest";
 import songReducer from "@/reducers/songReducer";
-import useSongDetails from "@/components/Utils/hooks/useSongDetails";
+import useSongDetails from "@/hooks/useSongDetails";
 
 const hoisted = vi.hoisted(() => ({
     mockUseQuery: vi.fn(),

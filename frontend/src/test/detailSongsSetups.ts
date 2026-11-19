@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { vi } from "vitest";
-import useGetDetailSongs from "@/components/Utils/hooks/useGetDetailSongs";
+import useGetDetailSongs from "@/hooks/useGetDetailSongs";
 import type { ValidDetail } from "@/types/utilTypes";
 
 const hoisted = vi.hoisted(() => ({

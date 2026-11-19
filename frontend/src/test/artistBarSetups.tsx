@@ -1,6 +1,6 @@
 import { renderHook } from "@testing-library/react";
 import { vi } from "vitest";
-import useArtistBar from "@/components/Utils/hooks/useArtistBar";
+import useArtistBar from "@/hooks/useArtistBar";
 
 const hoisted = vi.hoisted(() => ({
     mockUseQuery: vi.fn(),

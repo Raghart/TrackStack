@@ -1,10 +1,10 @@
 import { getAllAlbumSongs, getAllArtistSongs } from "@/queries/DetailQueries";
 import { ValidDetail } from "@/types/utilTypes";
+import { parseArrayOrEmpty } from "@/Utils/safeParse";
 import { useQuery } from "@apollo/client";
 import { songResponseSchema } from "@trackstack/schemas";
 import { stringSchema } from "@trackstack/schemas/zod.parsers";
 import { useMemo } from "react";
-import { parseArrayOrEmpty } from "../safeParse";
 
 const useGetDetailSongs = (type: ValidDetail, filterValue: string) => {
     const parsedFilter = stringSchema.safeParse(filterValue);

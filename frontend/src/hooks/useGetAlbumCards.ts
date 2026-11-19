@@ -3,7 +3,7 @@ import { useQuery } from "@apollo/client";
 import { albumResponseSchema } from "@trackstack/schemas";
 import { useMemo, useState } from "react";
 import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
-import { parseArrayOrEmpty } from "../safeParse";
+import { parseArrayOrEmpty } from "@/Utils/safeParse";
 
 const useGetAlbumCards = () => {
     const [page, setPage] = useState<number>(1);

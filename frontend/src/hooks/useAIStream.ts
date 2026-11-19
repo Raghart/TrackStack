@@ -4,8 +4,8 @@ import type { ApolloError } from "@apollo/client";
 import { aiSubscription } from "@/queries/LaraRecQuerie";
 import { aiStreamChunkSchema, MAX_STRING_LENGTH } from "@trackstack/schemas/zod.parsers";
 import { toaster } from "@/components/ui/toasterInstance";
-import { useAppSelector } from "../redux-hooks";
-import { buildUserVector } from "../buildUserVector";
+import { useAppSelector } from "@/Utils/redux-hooks";
+import { buildUserVector } from "@/Utils/buildUserVector";
 
 const useAIStream = () => {
     const [aiResponse, setAIResponse] = useState<string>("");

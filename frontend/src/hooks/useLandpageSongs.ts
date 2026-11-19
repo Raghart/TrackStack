@@ -1,7 +1,7 @@
 import { getLandpageSongs } from "@/queries/LandpageQueries";
+import { parseArrayOrEmpty } from "@/Utils/safeParse";
 import { useQuery } from "@apollo/client";
 import { songResponseSchema } from "@trackstack/schemas";
-import { parseArrayOrEmpty } from "../safeParse";
 
 const useLandpageSongs = () => {
     const { loading, data } = useQuery(getLandpageSongs);

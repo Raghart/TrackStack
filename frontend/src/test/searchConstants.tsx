@@ -2,8 +2,8 @@ import { act, renderHook } from "@testing-library/react";
 import { configureStore } from "@reduxjs/toolkit";
 import { vi } from "vitest";
 import searchReducer from "@/reducers/searchReducer";
-import useSearchResults from "@/components/Utils/hooks/useSearchResults";
 import { Provider } from "react-redux";
+import useSearchResults from "@/hooks/useSearchResults";
 
 const hoisted = vi.hoisted(() => ({
     mockGetResults: vi.fn(),

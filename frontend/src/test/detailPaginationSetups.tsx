@@ -1,7 +1,7 @@
 import { renderHook } from "@testing-library/react";
 import { vi } from "vitest";
-import useGenreSongs from "@/components/Utils/hooks/useGenreSongs";
-import useGetAlbumCards from "@/components/Utils/hooks/useGetAlbumCards";
+import useGenreSongs from "@/hooks/useGenreSongs";
+import useGetAlbumCards from "@/hooks/useGetAlbumCards";
 
 const hoisted = vi.hoisted(() => ({
     mockUseQuery: vi.fn(),

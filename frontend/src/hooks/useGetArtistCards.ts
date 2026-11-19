@@ -1,8 +1,8 @@
 import { getAllArtists } from "@/queries/DetailQueries";
+import { parseArrayOrEmpty } from "@/Utils/safeParse";
 import { useQuery } from "@apollo/client";
 import { artistResponseSchema } from "@trackstack/schemas";
 import { useState } from "react";
-import { parseArrayOrEmpty } from "../safeParse";
 
 const useGetArtistCards = () => {
     const [page, setPage] = useState<number>(1);

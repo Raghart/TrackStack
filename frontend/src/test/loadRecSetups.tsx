@@ -2,7 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { renderHook } from "@testing-library/react";
 import { Provider } from "react-redux";
 import recommendReducer from "@/reducers/recommendReducer";
-import useLoadRecommendations from "@/components/Utils/hooks/useLoadRecommendations";
+import useLoadRecommendations from "@/hooks/useLoadRecommendations";
 
 const hoisted = vi.hoisted(() => ({
     mockGetIASongs: vi.fn(),

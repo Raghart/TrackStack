@@ -1,6 +1,6 @@
+import useGetSongCover from "@/hooks/useGetSongCover";
 import { renderHook } from "@testing-library/react";
 import { vi } from "vitest";
-import useGetSongCover from "@/components/Utils/hooks/useGetSongCover";
 
 const hoisted = vi.hoisted(() => ({
     mockUseParams: vi.fn(),

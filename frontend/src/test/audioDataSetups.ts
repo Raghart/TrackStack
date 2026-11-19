@@ -1,7 +1,7 @@
 import { act, renderHook } from "@testing-library/react";
 import { vi } from "vitest";
 import type { SliderValueChangeDetails } from "@chakra-ui/react";
-import useAudioData from "@/components/Utils/hooks/useAudioData";
+import useAudioData from "@/hooks/useAudioData";
 
 export const DEFAULT_DURATION = 30;
 

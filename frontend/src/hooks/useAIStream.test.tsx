@@ -8,7 +8,6 @@ import {
     setTempo,
 } from "@/reducers/recommendReducer";
 import { aiSubscription } from "@/queries/LaraRecQuerie";
-import generateUserVector from "@/components/Utils/generateUserVector";
 import { MAX_STRING_LENGTH } from "@trackstack/schemas/zod.parsers";
 import {
     createSongs,
@@ -23,6 +22,7 @@ import {
     resetSubscriptionMock,
     TestStore,
 } from "@/test/songRecSetups";
+import generateUserVector from "@/Utils/generateUserVector";
 
 describe("useAIStream", () => {
     let store: TestStore;

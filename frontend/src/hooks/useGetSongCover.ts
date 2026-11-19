@@ -3,9 +3,9 @@ import { useLazyQuery } from "@apollo/client";
 import { fullSongResponseSchema } from "@trackstack/schemas";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { parseDataOrUndefined } from "../safeParse";
 import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
 import { toaster } from "@/components/ui/toasterInstance";
+import { parseDataOrUndefined } from "@/Utils/safeParse";
 
 const useGetSongCover = () => {
     const { songId } = useParams();

@@ -1,8 +1,8 @@
 import { getAllGenres } from "@/queries/LandpageQueries";
 import { useQuery } from "@apollo/client";
 import { useRef, useState } from "react";
-import { parseArrayOrEmpty } from "../safeParse";
 import { stringSchema } from "@trackstack/schemas/zod.parsers";
+import { parseArrayOrEmpty } from "@/Utils/safeParse";
 
 const useGenreBtns = () => {
     const { data } = useQuery(getAllGenres);
