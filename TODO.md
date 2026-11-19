@@ -10,7 +10,7 @@
 9. ~~Replace Elasticsearch search with PostgreSQL full-text search~~.
 10. ~~Adopt Zod for runtime validation at system boundaries (replacing manual checks) (Backend Done)~~.
 11. ~~Check the frontend README to see if it needs some improvements~~.
-12. Add tests to the Frontend.
+12. ~~Add tests to the Frontend~~.
 13. Make the agent fix the views in the cellphone because sometime it breaks.
 14. Make the project runnable via Docker (Dockerfile + docker-compose).
 15. Check if it's worthy to cifre the DB conexion to Aiven.
