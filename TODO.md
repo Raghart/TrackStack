@@ -11,10 +11,11 @@
 10. ~~Adopt Zod for runtime validation at system boundaries (replacing manual checks) (Backend Done)~~.
 11. ~~Check the frontend README to see if it needs some improvements~~.
 12. ~~Add tests to the Frontend~~.
-13. Make the agent fix the views in the cellphone because sometime it breaks.
-14. Make the project runnable via Docker (Dockerfile + docker-compose).
-15. Check if it's worthy to cifre the DB conexion to Aiven.
-16. Would be a good idea to add a note to AGENTS.md to tell that don't change the code when making tests, it will be better to consult with me if it detects a possible security breach before deciding the way to patch it.
-17. Update coverage image with one that covers both backend and frontend.
-18. Upgrade the frontend/docs/architecture.md to be better. It feels kinda awkard right now.
-19. There is a bug when typing a message in the search browser and open the console with F12, the text disappear.
+13. ~~Updated outdated CI Pipeline to make it ready when pushing code~~.
+14. Make the agent fix the views in the cellphone because sometime it breaks.
+15. Make the project runnable via Docker (Dockerfile + docker-compose).
+16. Check if it's worthy to cifre the DB conexion to Aiven.
+17. Would be a good idea to add a note to AGENTS.md to tell that don't change the code when making tests, it will be better to consult with me if it detects a possible security breach before deciding the way to patch it.
+18. Update coverage image with one that covers both backend and frontend.
+19. Upgrade the frontend/docs/architecture.md to be better. It feels kinda awkard right now.
+20. There is a bug when typing a message in the search browser and open the console with F12, the text disappear.
