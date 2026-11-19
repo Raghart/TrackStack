@@ -3,7 +3,7 @@ import SongStats from "./SongStats/SongStats";
 import LaraRecommendModal from "./LaraRecommendModal/LaraRecommendModal";
 import SearchInput from "./SearchInput/SearchInput";
 import { TOPBAR_SIZES } from "@/components/constants/TopBarC";
-import { useAppSelector } from "@/components/Utils/redux-hooks";
+import { useAppSelector } from "@/Utils/redux-hooks";
 
 const TopBar = () => {
     const isMobileSearch = useAppSelector(state => state.search.isMobileSearch);

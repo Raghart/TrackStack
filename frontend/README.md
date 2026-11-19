@@ -25,9 +25,10 @@ frontend/
 │   │   ├── MainLayout/               # sidebar, top bar, player shell
 │   │   ├── Error/                    # global error boundary and not-found message
 │   │   ├── Pagination/               # pagination controls and helpers
-│   │   ├── Utils/                    # hooks, formatting, vector helpers
 │   │   ├── constants/                # labels, modal config, recommendation weights
 │   │   └── ui/                       # Chakra wrappers (color mode, toaster, tooltip)
+│   ├── hooks/                        # reusable and page data hooks
+│   ├── Utils/                        # formatting, parsing, vector and shared helpers
 │   ├── queries/                      # GraphQL documents (gql)
 │   ├── reducers/                     # Redux slices: songs, songData, search
 │   ├── types/                        # client types

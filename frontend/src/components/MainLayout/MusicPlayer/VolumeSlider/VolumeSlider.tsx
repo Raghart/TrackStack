@@ -1,7 +1,7 @@
 import { Flex, Slider } from "@chakra-ui/react";
 import BtnVolume from "./BtnVolume";
 import { VOL_THUMB_SIZES } from "@/components/constants/MusicPlayerC";
-import useHandleVolume from "@/components/Utils/hooks/useHandleVolume";
+import useHandleVolume from "@/hooks/useHandleVolume";
 
 const VolumeSlider = ({ audioRef }: { audioRef: React.RefObject<HTMLAudioElement> }) => {
     const { volume, setVolume, handleVolumeChange } = useHandleVolume(audioRef);

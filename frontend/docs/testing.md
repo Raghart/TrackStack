@@ -7,7 +7,7 @@ Specs live next to the code they cover (`src/**/*.test.ts(x)`). Shared fixtures,
 ### What the suite covers
 
 - **Apollo cache policies** (`src/apolloClient.test.ts`): pagination `merge` policies for `getAllArtists`, `getAlbums` and `getAllGenreSongs` — first page, append, refresh/replace, stale entries, shorter last page, offset calculation, ignored seeds and per-genre isolation.
-- **GraphQL data hooks** (`src/components/Utils/hooks/`): search with debounce and request supersession, recommendations, song details, detail-song pagination, artist/album/genre catalogues, song cover, random/next/previous song and AI streaming.
+- **GraphQL data hooks** (`src/hooks/`): search with debounce and request supersession, recommendations, song details, detail-song pagination, artist/album/genre catalogues, song cover, random/next/previous song and AI streaming.
 - **Player and audio state** (`useSongState`, `useAudioData`): source switching, play/pause, `canplay` listeners, animation-frame progress, seeking, clamping and cleanup on unmount.
 - **Payload validation**: empty, null and invalid responses; rejected lists when one item is invalid; extra fields stripped; numeric IDs coerced; results kept referentially stable across re-renders.
 - **User-facing errors and Toaster notifications**: failed queries and subscriptions notify once per failure, stay deduplicated across retries and re-renders, notify again after a successful request or a new failure, and ignore stale responses from superseded requests. Subscription errors are also exposed as state so the UI can render a fallback instead of loading forever.
@@ -22,7 +22,7 @@ pnpm --filter ./frontend run test              # one run
 pnpm --filter ./frontend run test:cov          # coverage -> frontend/coverage/
 
 # Run a specific spec
-pnpm --filter ./frontend run test -- src/components/Utils/hooks/useSearchResults.test.tsx
+pnpm --filter ./frontend run test -- src/hooks/useSearchResults.test.tsx
 ```
 
 Coverage includes `src/**/*.{ts,tsx}` and excludes `src/test/**`, `main.tsx` and `.d.ts` files. There is no coverage threshold configured.

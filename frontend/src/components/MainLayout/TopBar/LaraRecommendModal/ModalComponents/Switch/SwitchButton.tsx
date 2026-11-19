@@ -1,10 +1,10 @@
 import { Box, Heading, Flex, Switch } from "@chakra-ui/react";
-import { useAppDispatch } from "@/components/Utils/redux-hooks";
+import { useAppDispatch } from "@/Utils/redux-hooks";
 import { SwitchOptionsType, SwitchLabelType } from "@/types/RecDataTypes";
 import LeftSwitchTag from "./LeftSwitchTag";
 import RightSwitchTag from "./RightSwitchTag";
 import ControlSwitchStyle from "./ControlSwitchStyle";
-import useSwitchValue from "@/components/Utils/hooks/useSwitchValue";
+import useSwitchValue from "@/hooks/useSwitchValue";
 import { BLUE_SHADOW_MODAL, LARA_OPT_SIZES, SWITCH_BTN_TRANSITION } from "@/components/constants/TopBarC";
 import { defaultSwitchStyle, MapSwitchStyles } from "@/dynamicCSS/SwitchStyles";
 

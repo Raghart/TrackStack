@@ -1,5 +1,5 @@
 import { Flex, Link, useBreakpointValue } from "@chakra-ui/react";
-import ArtistLinks from "../Utils/ArtistLinks";
+import ArtistLinks from "@/Utils/ArtistLinks";
 import { Tooltip } from "@/components/ui/tooltip";
 import { SONGCARD_ART_FONTSIZES, SONGCARD_FONTSIZES } from "../constants/SongCardC";
 

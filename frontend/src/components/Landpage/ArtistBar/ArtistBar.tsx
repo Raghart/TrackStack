@@ -3,7 +3,7 @@ import React from "react";
 import PaginationControl from "@/components/Pagination/PaginationControl";
 import LandpageArtistCard from "./LandpageArtCard/LandpageArtistCard";
 import ArtistBarHeader from "./ArtistBarHeader";
-import useArtistBar from "@/components/Utils/hooks/useArtistBar";
+import useArtistBar from "@/hooks/useArtistBar";
 import { Bounce, Zoom } from "react-awesome-reveal";
 
 const ArtistBar = () => {

@@ -1,6 +1,6 @@
 import { Box, Icon, IconButton } from "@chakra-ui/react";
-import { useAppDispatch } from "../../../Utils/redux-hooks";
-import handlePlayingSong from "../../../Utils/handlePlayingSong";
+import { useAppDispatch } from "@/Utils/redux-hooks";
+import handlePlayingSong from "@/Utils/handlePlayingSong";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";
 import { motion } from "framer-motion";
 import { SongResponse } from "@trackstack/schemas";

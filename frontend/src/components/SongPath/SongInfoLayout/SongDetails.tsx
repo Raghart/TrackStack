@@ -4,8 +4,8 @@ import NotFound from "../../Error/NotFound";
 import AlbumBox from "../AlbumBox/AlbumBox";
 import GenreBox from "../GenreBox/GenreBox";
 import SongInfoLayout from "./SongInfoLayout";
-import useSongDetails from "../../Utils/hooks/useSongDetails";
-import { parseDataOrUndefined } from "@/components/Utils/safeParse";
+import useSongDetails from "@/hooks/useSongDetails";
+import { parseDataOrUndefined } from "@/Utils/safeParse";
 import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
 
 const SongDetails = () => {

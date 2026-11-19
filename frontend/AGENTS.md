@@ -15,7 +15,8 @@ Contexto específico del paquete `frontend/`. Las reglas generales del monorepo 
 ## Dónde va cada cosa
 
 - Componentes agrupados por **feature/ruta** dentro de `src/components/<Feature>/`, no por tipo de archivo. Un componente nuevo de una feature existente vive junto a los de esa feature.
-- Hooks reutilizables y hooks de página en `src/components/Utils/hooks/`, con nombre `useX.ts`/`useX.tsx` y export default.
+- Hooks reutilizables y hooks de página en `src/hooks/`, con nombre `useX.ts`/`useX.tsx` y export default.
+- Helpers y componentes utilitarios compartidos en `src/Utils/` (p. ej. `safeParse.ts`, `redux-hooks.ts`, `ArtistLinks.tsx`).
 - Documentos GraphQL en `src/queries/`, un archivo por feature. No escribas `gql` inline en componentes u hooks.
 - Slices de Redux en `src/reducers/<feature>Reducer.ts`; el store se configura en `src/store.ts`.
 - Tipos y validadores del cliente en `src/types/`. Los contratos que cruzan la API se importan de `@trackstack/schemas`; no los redeclares.
@@ -28,8 +29,8 @@ Contexto específico del paquete `frontend/`. Las reglas generales del monorepo 
 
 - Usa el alias `@/...` para imports que cruzan carpetas y rutas relativas dentro de la misma feature.
 - Mantén el estilo existente: `export default` en componentes y hooks de features; los wrappers de `components/ui/` y utilidades concretas conservan su export nombrado. Nombres de archivos en PascalCase para componentes y camelCase para hooks/utilidades.
-- Valida las respuestas de GraphQL con los schemas de `@trackstack/schemas` y los helpers `parseDataOrUndefined` / `parseArrayOrEmpty` de `components/Utils/safeParse.ts` antes de guardarlas en Redux o pintarlas. Si el hook necesita distinguir un payload inválido de una lista vacía, usa `parseArrayWithOutcome`, que además devuelve el flag `invalid`.
-- Usa `useAppDispatch` y `useAppSelector` de `components/Utils/redux-hooks.ts`; no llames a `useDispatch`/`useSelector` directamente.
+- Valida las respuestas de GraphQL con los schemas de `@trackstack/schemas` y los helpers `parseDataOrUndefined` / `parseArrayOrEmpty` de `@/Utils/safeParse.ts` antes de guardarlas en Redux o pintarlas. Si el hook necesita distinguir un payload inválido de una lista vacía, usa `parseArrayWithOutcome`, que además devuelve el flag `invalid`.
+- Usa `useAppDispatch` y `useAppSelector` de `@/Utils/redux-hooks.ts`; no llames a `useDispatch`/`useSelector` directamente.
 - Chakra 3: usa el `toaster` de `@/components/ui/toasterInstance` y los wrappers de `components/ui/`; no uses APIs de Chakra 2 (`useToast`, etc.).
 - No introduzcas `any` ni casts para sortear tipos. Si un dato externo es `unknown`, valídalo con Zod y trabaja con el tipo parseado.
 - No edites `dist/`, `coverage/`, `../backend/public/`, `node_modules/` ni lockfiles (salvo cambio intencional de dependencias, gestionado con pnpm desde la raíz).
@@ -37,7 +38,7 @@ Contexto específico del paquete `frontend/`. Las reglas generales del monorepo 
 
 ## Apollo y estado
 
-- Las operaciones de una feature viven en su archivo de `src/queries/`; los hooks de `Utils/hooks/` orquestan `useQuery`/`useLazyQuery`/`useMutation`/`useSubscription` y traducen el resultado a estado de la UI.
+- Las operaciones de una feature viven en su archivo de `src/queries/`; los hooks de `src/hooks/` orquestan `useQuery`/`useLazyQuery`/`useMutation`/`useSubscription` y traducen el resultado a estado de la UI.
 - `src/apolloClient.ts` divide queries (HTTP) y subscriptions (WebSocket) y define políticas `merge` para las listas paginadas (`getAllGenreSongs`, `getAllArtists`, `getAlbums`). No cambies esas políticas sin un test que cubra la paginación/infinite scroll.
 - No importes `apolloClient.ts` en tests sin necesidad: al cargarse lee `VITE_GRAPHQL_URI` y `VITE_SUBSCRIPTION_URI` y crea el cliente WebSocket. Mockea `@/config/env` o los hooks de Apollo según el caso.
 

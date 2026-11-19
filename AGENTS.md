@@ -37,7 +37,8 @@ TrackStack/
 ├── frontend/                 # SPA React + Vite (tiene README.md y AGENTS.md propios)
 │   └── src/
 │       ├── components/       # componentes agrupados por feature/ruta
-│       │   └── Utils/hooks/  # custom hooks reutilizables
+│       ├── hooks/            # custom hooks reutilizables y de página
+│       ├── Utils/            # helpers y componentes utilitarios (safeParse, redux-hooks…)
 │       ├── queries/          # documentos GraphQL (gql)
 │       ├── reducers/         # slices de Redux Toolkit
 │       ├── types/            # tipos y validadores del cliente
@@ -111,7 +112,7 @@ npm run test:report
 
 ### Manejo de errores en el frontend
 
-- Notifica siempre los errores al usuario con el Toaster de Chakra (`toaster` de `@/components/ui/toasterInstance`), como en `frontend/src/components/Utils/hooks/useLoadRecommendations.ts`. No dejes el fallo solo en `console.error`.
+- Notifica siempre los errores al usuario con el Toaster de Chakra (`toaster` de `@/components/ui/toasterInstance`), como en `frontend/src/hooks/useLoadRecommendations.ts`. No dejes el fallo solo en `console.error`.
 - Usa mensajes orientados al usuario (título corto y descripción accionable) sin exponer detalles técnicos; registra el error completo en consola para diagnóstico.
 - En queries y mutaciones, captura el error con `try/catch` y notifica en el `catch` (el `finally` se reserva para resetear estado de carga).
 - En suscripciones (`useSubscription`), añade `onError`, guarda el error en un estado controlado y notifica al usuario. Expón ese estado al componente que pinta la respuesta para que muestre un mensaje de fallback en lugar de quedarse cargando indefinidamente.

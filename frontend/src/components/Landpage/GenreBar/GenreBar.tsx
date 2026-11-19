@@ -1,7 +1,7 @@
 import { Box, Flex } from "@chakra-ui/react";
 import React from "react";
 import GenreBarHeader from "./GenreBarHeader";
-import useGenreBtns from "@/components/Utils/hooks/useGenreBtns";
+import useGenreBtns from "@/hooks/useGenreBtns";
 import GenrePagination from "./GenrePagination";
 import GenreBarBtns from "./GenreBarBtns";
 import { Bounce } from "react-awesome-reveal";

@@ -1,11 +1,11 @@
 import { Box, Center, For, SimpleGrid, Skeleton } from "@chakra-ui/react";
-import ScrollUpArrow from "@/components/Utils/ScrollUpArrow";
-import useGetArtistCards from "../Utils/hooks/useGetArtistCards";
+import ScrollUpArrow from "@/Utils/ScrollUpArrow";
+import useGetArtistCards from "@/hooks/useGetArtistCards";
 import { Zoom } from "react-awesome-reveal";
 import InfiniteScroll from "react-infinite-scroll-component"
 import ArtistCard from "./ArtistCard";
-import LoadingBeat from "../Utils/LoadingBeat";
-import PathHeader from "../Utils/PathHeader";
+import LoadingBeat from "@/Utils/LoadingBeat";
+import PathHeader from "@/Utils/PathHeader";
 import { PATH_CARD_SIZES } from "../constants/PathC";
 import { ArtistResponse } from "@trackstack/schemas";
 

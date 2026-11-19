@@ -1,4 +1,4 @@
-import ArtistLinks from "@/components/Utils/ArtistLinks";
+import ArtistLinks from "@/Utils/ArtistLinks";
 import { Flex, Image, SkeletonCircle, SkeletonText, VStack } from "@chakra-ui/react";
 import { ACT_SONG_WIDTH } from "@/components/constants/MusicPlayerC";
 import ActSongTitle from "./ActSongTitle";

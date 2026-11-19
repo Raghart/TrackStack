@@ -1,6 +1,6 @@
 import { Box, Center, Text } from "@chakra-ui/react"
 import type { ApolloError } from "@apollo/client"
-import LoadingBeat from "../Utils/LoadingBeat"
+import LoadingBeat from "@/Utils/LoadingBeat"
 import Markdown from "react-markdown"
 
 const AIResponse = ({ message, error } : { message: string, error: ApolloError | null }) => {

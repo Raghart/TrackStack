@@ -2,12 +2,12 @@ import { Center, For, SimpleGrid, Skeleton } from "@chakra-ui/react";
 import SongCard from "../../SongCard/SongCard";
 import { ValidDetail } from "@/types/utilTypes";
 import NotFound from "@/components/Error/NotFound";
-import { useAppSelector } from "@/components/Utils/redux-hooks";
-import useGetDetailSongs from "@/components/Utils/hooks/useGetDetailSongs";
+import { useAppSelector } from "@/Utils/redux-hooks";
+import useGetDetailSongs from "@/hooks/useGetDetailSongs";
 import { SONGCARD_SIZES } from "@/components/constants/SongCardC";
 import InfiniteScroll from "react-infinite-scroll-component";
-import LoadingBeat from "@/components/Utils/LoadingBeat";
-import usePaginateSongs from "@/components/Utils/hooks/usePaginateSongs";
+import LoadingBeat from "@/Utils/LoadingBeat";
+import usePaginateSongs from "@/hooks/usePaginateSongs";
 import { SongResponse } from "@trackstack/schemas";
 
 const DetailSongs = ({ type, filterValue, error }: { type: ValidDetail, filterValue: string, error: string }) => {

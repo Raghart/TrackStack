@@ -1,13 +1,13 @@
 import { Box, Center, For, SimpleGrid } from "@chakra-ui/react";
 import GenreCard from "./GenreCard";
-import ScrollUpArrow from "@/components/Utils/ScrollUpArrow";
-import useGenreSel from "../Utils/hooks/useGenreSel";
+import ScrollUpArrow from "@/Utils/ScrollUpArrow";
+import useGenreSel from "@/hooks/useGenreSel";
 import { Zoom } from "react-awesome-reveal";
 import { GenreListFormat } from "@/types/genreTypes";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { genreList } from "../Utils/genreIconList";
-import LoadingBeat from "../Utils/LoadingBeat";
-import PathHeader from "../Utils/PathHeader";
+import { genreList } from "@/Utils/genreIconList";
+import LoadingBeat from "@/Utils/LoadingBeat";
+import PathHeader from "@/Utils/PathHeader";
 
 const GenreSelection = () => {
     const { visibleGenres, loadMoreGenres } = useGenreSel();

@@ -2,13 +2,13 @@ import NotFound from "@/components/Error/NotFound";
 import { ValidDetail } from "@/types/utilTypes";
 import HighlightTitle from "../Utils/HightlightTitle";
 import { Box } from "@chakra-ui/react";
-import ScrollUpArrow from "@/components/Utils/ScrollUpArrow";
+import ScrollUpArrow from "@/Utils/ScrollUpArrow";
 import DetailSongs from "./DetailSongs";
 import { Zoom } from "react-awesome-reveal";
 import { stringSchema } from "@trackstack/schemas/zod.parsers";
 import { useParams } from "react-router-dom";
 import getHightlightDetails from "@/dynamicCSS/getHighlightDetails";
-import { parseDataOrUndefined } from "@/components/Utils/safeParse";
+import { parseDataOrUndefined } from "@/Utils/safeParse";
 import { getGradientDetails } from "@/dynamicCSS/getGradientDetails";
 
 const DetailsLayout = ({ type } : { type: ValidDetail }) => {

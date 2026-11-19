@@ -1,6 +1,6 @@
 import { Flex, Link, useBreakpointValue } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
-import ArtistLinks from "@/components/Utils/ArtistLinks";
+import ArtistLinks from "@/Utils/ArtistLinks";
 
 const LandSongCardInfo = ({ id, name, artists } : { id: number, name: string, artists: string[] }) => {
     const responsiveFontSize = useBreakpointValue({ base: "14px", sm: "15px", md: "15px", lg: "16px" });

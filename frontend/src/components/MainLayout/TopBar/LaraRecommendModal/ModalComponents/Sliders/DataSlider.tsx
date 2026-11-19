@@ -1,5 +1,5 @@
 import { Heading, Slider, Flex } from "@chakra-ui/react";
-import { useAppDispatch } from "@/components/Utils/redux-hooks";
+import { useAppDispatch } from "@/Utils/redux-hooks";
 import { useState } from "react";
 import { SlidersDataTypes } from "@/types/RecDataTypes";
 import { getSliderStyle } from "@/dynamicCSS/getDynamicSlider";

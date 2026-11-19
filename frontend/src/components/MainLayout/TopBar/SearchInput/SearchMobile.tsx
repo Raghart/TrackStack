@@ -1,4 +1,4 @@
-import { useAppDispatch, useAppSelector } from "@/components/Utils/redux-hooks";
+import { useAppDispatch, useAppSelector } from "@/Utils/redux-hooks";
 import { setIsMobileSeach } from "@/reducers/searchReducer";
 import { Box, Icon, IconButton } from "@chakra-ui/react";
 import { LuSearch } from "react-icons/lu";

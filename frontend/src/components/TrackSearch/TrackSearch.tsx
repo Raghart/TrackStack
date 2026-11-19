@@ -1,12 +1,12 @@
 import { Flex, Heading } from "@chakra-ui/react"
-import ScrollUpArrow from "@/components/Utils/ScrollUpArrow";
+import ScrollUpArrow from "@/Utils/ScrollUpArrow";
 import LoadingResults from "./utils/LoadingResults";
 import NoResults from "./utils/NoResults";
 import { Zoom } from "react-awesome-reveal";
 import { SEARCH_TITLE_FONTSIZES } from "@/components/constants/TrackSearchC";
 import SearchResults from "./SearchResults/SearchResults";
 import SearchError from "./utils/SearchError";
-import useSearchResponse from "@/components/Utils/hooks/useSearchResponse";
+import useSearchResponse from "@/hooks/useSearchResponse";
 
 const TrackSearch = () => {
     const { query, isLoading, searchResults, status } = useSearchResponse();

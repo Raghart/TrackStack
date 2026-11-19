@@ -1,6 +1,6 @@
 import { Box, Heading, Text } from "@chakra-ui/react";
 import { SearchFailureStatus } from "@/types/searchTypes";
-import { getSearchErrorMessage } from "@/components/Utils/searchErrorMessages";
+import { getSearchErrorMessage } from "@/Utils/searchErrorMessages";
 
 const SearchError = ({ status }: { status: SearchFailureStatus }) => {
     const { title, description } = getSearchErrorMessage(status);

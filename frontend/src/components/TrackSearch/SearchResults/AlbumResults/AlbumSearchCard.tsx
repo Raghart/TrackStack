@@ -1,4 +1,4 @@
-import ArtistLinks from "@/components/Utils/ArtistLinks";
+import ArtistLinks from "@/Utils/ArtistLinks";
 import { Card, LinkBox, LinkOverlay, useBreakpointValue } from "@chakra-ui/react";
 import { ALB_RESULTS_FONTSIZES, SEARCH_RESULTS_SIZES } from "@/components/constants/TrackSearchC";
 import AlbumSearchImg from "./AlbumSearchImg";

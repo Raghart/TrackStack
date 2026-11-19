@@ -1,6 +1,6 @@
 import { Box, Image, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { useState } from "react";
-import LoadingBeat from "../Utils/LoadingBeat";
+import LoadingBeat from "@/Utils/LoadingBeat";
 import BtnPlayLayer from "./BtnPlayLayer";
 import SongCardInfo from "./SongCardInfo";
 import { SONGCARD_SIZES } from "../constants/SongCardC";

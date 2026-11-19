@@ -1,12 +1,12 @@
 import { Box, Center, For, SimpleGrid, Skeleton } from "@chakra-ui/react";
 import { Zoom } from "react-awesome-reveal";
-import PathHeader from "../Utils/PathHeader";
+import PathHeader from "@/Utils/PathHeader";
 import InfiniteScroll from "react-infinite-scroll-component";
-import useGetAlbumCards from "../Utils/hooks/useGetAlbumCards";
-import LoadingBeat from "../Utils/LoadingBeat";
+import useGetAlbumCards from "@/hooks/useGetAlbumCards";
+import LoadingBeat from "@/Utils/LoadingBeat";
 import AlbumCard from "./AlbumCard";
 import { PATH_CARD_SIZES } from "../constants/PathC";
-import ScrollUpArrow from "../Utils/ScrollUpArrow";
+import ScrollUpArrow from "@/Utils/ScrollUpArrow";
 import { AlbumResponse } from "@trackstack/schemas";
 
 const AlbumSelection = () => {

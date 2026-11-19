@@ -3,7 +3,7 @@ import SongNameBox from "./SongNameBox";
 import YearBox from "./YearBox";
 import DurationBox from "./DurationBox";
 import SpotifyUrl from "./SpotifyUrl";
-import ArtistLinks from "../../Utils/ArtistLinks";
+import ArtistLinks from "@/Utils/ArtistLinks";
 import { Slide, Zoom, Bounce, Fade } from "react-awesome-reveal";
 import { SONGBOX_SHADOW, SONGBOX_SIZES } from "../../constants/SongDetailsC";
 import { FullSongResponse } from "@trackstack/schemas";

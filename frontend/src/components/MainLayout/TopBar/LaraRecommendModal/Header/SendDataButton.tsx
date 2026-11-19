@@ -1,7 +1,7 @@
 import { Button, useBreakpointValue } from "@chakra-ui/react";
 import { BeatLoader } from "react-spinners"
 import { DATA_BTN_FONTSIZES, DATA_BTN_PX, DATA_BTN_SHADOW, DATA_BTN_TRANS } from "@/components/constants/TopBarC";
-import useLoadRecommendations from "@/components/Utils/hooks/useLoadRecommendations";
+import useLoadRecommendations from "@/hooks/useLoadRecommendations";
 
 const SendDataButton = ({ setOpen } : { setOpen: React.Dispatch<React.SetStateAction<boolean>> }) => {
     const { loadRecommendations, loading } = useLoadRecommendations(setOpen);

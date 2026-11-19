@@ -2,15 +2,15 @@ import { Box, Center, For, SimpleGrid } from "@chakra-ui/react";
 import SongCard from "../SongCard/SongCard";
 import LaraHeader from "./LaraHeader";
 import { Navigate } from "react-router-dom";
-import ScrollUpArrow from "../Utils/ScrollUpArrow";
-import { useAppSelector } from "../Utils/redux-hooks";
+import ScrollUpArrow from "@/Utils/ScrollUpArrow";
+import { useAppSelector } from "@/Utils/redux-hooks";
 import { Zoom } from "react-awesome-reveal";
 import InfiniteScroll from "react-infinite-scroll-component";
-import LoadingBeat from "../Utils/LoadingBeat";
+import LoadingBeat from "@/Utils/LoadingBeat";
 import AIResponse from "./AIResponse";
 import { SongResponse } from "@trackstack/schemas";
-import useAIStream from "../Utils/hooks/useAIStream";
-import useRecommendationsList from "../Utils/hooks/useRecommendationsList";
+import useAIStream from "@/hooks/useAIStream";
+import useRecommendationsList from "@/hooks/useRecommendationsList";
 
 const LaraRecommendations = () => {
     const { aiResponse, error } = useAIStream();

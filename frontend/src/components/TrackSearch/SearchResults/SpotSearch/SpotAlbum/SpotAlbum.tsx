@@ -1,4 +1,4 @@
-import ArtistLinks from "@/components/Utils/ArtistLinks";
+import ArtistLinks from "@/Utils/ArtistLinks";
 import { Card, Heading, LinkBox, LinkOverlay, useBreakpointValue } from "@chakra-ui/react";
 import { ALBUM_TITLE_FONTSIZES, SPOT_CARD_SIZES, SPOTALBUM_FONTSIZES } from "@/components/constants/TrackSearchC";
 import SpotAlbumImg from "./SpotAlbumImg";

@@ -1,7 +1,7 @@
 import { SONG_ICON_SIZES, SONG_IMG_SIZES } from "@/components/constants/TrackSearchC";
-import { onPlayClick } from "@/components/Utils/onPlayClick";
-import { useAppDispatch } from "@/components/Utils/redux-hooks";
-import useActSongState from "@/components/Utils/hooks/useActSongState";
+import { onPlayClick } from "@/Utils/onPlayClick";
+import { useAppDispatch } from "@/Utils/redux-hooks";
+import useActSongState from "@/hooks/useActSongState";
 import { Box, Icon, IconButton, Image, Skeleton } from "@chakra-ui/react";
 import { useState } from "react";
 import { BsPauseFill, BsPlayFill } from "react-icons/bs";

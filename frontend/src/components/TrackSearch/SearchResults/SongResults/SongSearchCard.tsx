@@ -1,4 +1,4 @@
-import ArtistLinks from "@/components/Utils/ArtistLinks";
+import ArtistLinks from "@/Utils/ArtistLinks";
 import { Card, LinkBox, LinkOverlay, useBreakpointValue } from "@chakra-ui/react";
 import BtnPlaySearchSong from "./BtnPlaySearchSong";
 import { SONGSEARCH_FONTSIZES, SONGSEARCH_SIZES } from "@/components/constants/TrackSearchC";

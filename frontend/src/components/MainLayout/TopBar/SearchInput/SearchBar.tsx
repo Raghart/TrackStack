@@ -1,4 +1,4 @@
-import useSearchResults from "@/components/Utils/hooks/useSearchResults";
+import useSearchResults from "@/hooks/useSearchResults";
 import { Icon, Input, InputGroup } from "@chakra-ui/react";
 import { HiMiniMagnifyingGlass } from "react-icons/hi2";
 import CloseSearchBtn from "./closeSearchBtn";

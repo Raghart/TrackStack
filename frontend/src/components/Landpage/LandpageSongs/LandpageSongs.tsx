@@ -5,8 +5,8 @@ import "swiper/css/effect-coverflow";
 import { EffectCoverflow } from 'swiper/modules';
 import React from "react";
 import LandpageSongCard from "@/components/Landpage/LandpageSongs/SongCard/LandpageSongCard";
-import useLandpageSongs from "@/components/Utils/hooks/useLandpageSongs";
-import { useAppSelector } from "@/components/Utils/redux-hooks";
+import useLandpageSongs from "@/hooks/useLandpageSongs";
+import { useAppSelector } from "@/Utils/redux-hooks";
 
 const LandpageSongs = () => {
    const { landpageSongs, loading, hasData } = useLandpageSongs();

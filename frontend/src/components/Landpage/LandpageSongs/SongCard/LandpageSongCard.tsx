@@ -1,6 +1,6 @@
 import { Box, Flex, Image } from "@chakra-ui/react";
 import { useState } from "react";
-import LoadingBeat from "../../../Utils/LoadingBeat";
+import LoadingBeat from "@/Utils/LoadingBeat";
 import BtnLandPlayLayer from "./BtnLandPlayLayer";
 import { LAND_SONGCARD_SIZES } from "../../../constants/SongCardC";
 import LandSongCardInfo from "./LandSongCardInfo";

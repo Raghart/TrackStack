@@ -3,7 +3,7 @@ import { RiFolderMusicFill } from "react-icons/ri";
 import { COUNT_FONTSIZE, COUNTBOX_SIZES } from "@/components/constants/TopBarC";
 import { AttentionSeeker } from 'react-awesome-reveal';
 import CountUp from 'react-countup';
-import useGetCount from "@/components/Utils/hooks/useGetCount";
+import useGetCount from "@/hooks/useGetCount";
 import { useState } from "react";
 import MobileCount from "./MobileCount";
 

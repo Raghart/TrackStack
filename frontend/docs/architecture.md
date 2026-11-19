@@ -23,7 +23,7 @@
 
 ### How the recommendation vector is built
 
-`components/Utils/generateUserVector.ts` normalizes each slider with min-max scaling and multiplies it by the weights in `components/constants/WeightData.ts`:
+`Utils/generateUserVector.ts` normalizes each slider with min-max scaling and multiplies it by the weights in `components/constants/WeightData.ts`:
 
 | Feature | Weight |
 | --- | --- |
@@ -44,4 +44,4 @@ The resulting 8-value array is sent to `getSongRecommendations` and also passed 
 - `apolloClient.ts` splits operations by type: queries go through `HttpLink`, subscriptions go through `GraphQLWsLink`.
 - The Apollo cache defines `merge` policies for `getAllGenreSongs`, `getAllArtists`, and `getAlbums`, which lets the infinite-scroll lists append pages instead of replacing them.
 - Redux Toolkit stores three slices: `songs` (active track and playback state), `songData` (recommendation inputs and results), and `search` (query and results). The search slice keeps a `status` (`idle`, `loading`, `success`, `empty`, `network-error` or `invalid-payload`) so an empty result set and a failed request render different states.
-- Page-specific data fetching lives in custom hooks under `components/Utils/hooks/`.
+- Page-specific data fetching lives in custom hooks under `src/hooks/`.

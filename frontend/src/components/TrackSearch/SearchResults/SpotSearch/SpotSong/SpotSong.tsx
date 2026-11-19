@@ -1,5 +1,5 @@
 import { Card, Heading, LinkBox, LinkOverlay, useBreakpointValue } from "@chakra-ui/react";
-import ArtistLinks from "@/components/Utils/ArtistLinks";
+import ArtistLinks from "@/Utils/ArtistLinks";
 import { SONG_TITLE_FONTSIZES, SPOT_CARD_SIZES, SPOTSONG_ARTISTS_FONTSIZES, SPOTSONG_FONTSIZES } from "@/components/constants/TrackSearchC";
 import PlaySongBox from "./PlaySongBox";
 import { SongResponse } from "@trackstack/schemas";

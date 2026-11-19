@@ -1,7 +1,7 @@
 import { Box, Icon, IconButton } from "@chakra-ui/react";
 import { FaCircleArrowUp } from "react-icons/fa6";
 import { Tooltip } from "@/components/ui/tooltip";
-import useScrollUp from "./hooks/useScrollUp";
+import useScrollUp from "@/hooks/useScrollUp";
 import { Bounce } from "react-awesome-reveal";
 
 const ScrollUpArrow = () => {

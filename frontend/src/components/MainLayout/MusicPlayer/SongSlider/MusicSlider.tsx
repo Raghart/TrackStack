@@ -1,4 +1,4 @@
-import useAudioData from "@/components/Utils/hooks/useAudioData";
+import useAudioData from "@/hooks/useAudioData";
 import { Flex, Slider } from "@chakra-ui/react";
 import PlayingTime from "./PlayingTime";
 import SongDuration from "./SongDuration";

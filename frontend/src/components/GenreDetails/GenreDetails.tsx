@@ -1,17 +1,17 @@
 import SongCard from "@/components/SongCard/SongCard";
 import { Box, Center, For, SimpleGrid, Skeleton } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
-import ScrollUpArrow from "@/components/Utils/ScrollUpArrow";
+import ScrollUpArrow from "@/Utils/ScrollUpArrow";
 import NotFound from "@/components/Error/NotFound";
 import { Zoom } from "react-awesome-reveal";
 import { SONGCARD_SIZES } from "@/components/constants/SongCardC";
 import GenreDetHeader from "./GenreDetHeader";
-import useGenreSongs from "../Utils/hooks/useGenreSongs";
+import useGenreSongs from "@/hooks/useGenreSongs";
 import InfiniteScroll from "react-infinite-scroll-component";
-import LoadingBeat from "../Utils/LoadingBeat";
+import LoadingBeat from "@/Utils/LoadingBeat";
 import { SongResponse } from "@trackstack/schemas";
 import { stringSchema } from "@trackstack/schemas/zod.parsers";
-import { useAppSelector } from "../Utils/redux-hooks";
+import { useAppSelector } from "@/Utils/redux-hooks";
 
 const GenreSongs = ({ genre }: { genre: string }) => {
   const { data, loading, loadMore, hasData } = useGenreSongs(genre);

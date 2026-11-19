@@ -1,5 +1,5 @@
 import { Box, For, Heading, SimpleGrid } from "@chakra-ui/react";
-import { useAppSelector } from "@/components/Utils/redux-hooks";
+import { useAppSelector } from "@/Utils/redux-hooks";
 import { Zoom, Bounce } from "react-awesome-reveal";
 import SongSearchCard from "./SongSearchCard";
 import { SongResponse } from "@trackstack/schemas";

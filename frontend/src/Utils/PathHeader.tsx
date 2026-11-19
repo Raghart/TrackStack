@@ -1,5 +1,5 @@
 import { Heading, Highlight } from "@chakra-ui/react";
-import { PATH_HEADER_SIZES, PATH_HIGHLIGHT_SIZES } from "../constants/PathC";
+import { PATH_HEADER_SIZES, PATH_HIGHLIGHT_SIZES } from "@/components/constants/PathC";
 
 const PathHeader = ({type}: {type: "Home"  | "Artists" | "Genres" | "Albums"}) => {
     switch (type) {

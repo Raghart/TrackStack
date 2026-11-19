@@ -1,7 +1,7 @@
 import { ApolloClient, InMemoryCache, TypePolicies } from "@apollo/client";
 import { AlbumResponse, ArtistResponse, SongResponse } from "@trackstack/schemas";
-import { graphLink } from "./components/Utils/getGraphLink";
-import { getPaginatedField } from "./components/Utils/getPaginatedField";
+import { graphLink } from "./Utils/getGraphLink";
+import { getPaginatedField } from "./Utils/getPaginatedField";
 
 const typePolicies: TypePolicies = {
   Query: {
