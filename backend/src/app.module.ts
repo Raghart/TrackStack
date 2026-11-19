@@ -26,7 +26,6 @@ if (existsSync('.env')) process.loadEnvFile();
     SequelizeModule.forRoot({
       dialect: 'postgres',
       uri: process.env.DB_URL,
-      port: Number(process.env.DB_PORT),
       dialectOptions: {
         ssl: {
           require: true,
