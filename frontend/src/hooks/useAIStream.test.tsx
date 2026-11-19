@@ -22,7 +22,7 @@ import {
     resetSubscriptionMock,
     TestStore,
 } from "@/test/songRecSetups";
-import generateUserVector from "@/Utils/generateUserVector";
+import { generateUserVector } from "@/Utils/generateUserVector";
 
 describe("useAIStream", () => {
     let store: TestStore;

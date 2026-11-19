@@ -5,7 +5,7 @@ import { aiSubscription } from "@/queries/LaraRecQuerie";
 import { aiStreamChunkSchema, MAX_STRING_LENGTH } from "@trackstack/schemas/zod.parsers";
 import { toaster } from "@/components/ui/toasterInstance";
 import { useAppSelector } from "@/Utils/redux-hooks";
-import { buildUserVector } from "@/Utils/buildUserVector";
+import { buildUserVector } from "@/Utils/generateUserVector";
 
 const useAIStream = () => {
     const [aiResponse, setAIResponse] = useState<string>("");

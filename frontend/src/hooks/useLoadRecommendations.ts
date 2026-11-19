@@ -6,8 +6,8 @@ import { getSongRecommendations } from "@/queries/LaraRecQuerie";
 import { songResponseSchema } from "@trackstack/schemas";
 import { toaster } from "@/components/ui/toasterInstance";
 import { useAppDispatch, useAppSelector } from "@/Utils/redux-hooks";
-import generateUserVector from "@/Utils/generateUserVector";
 import { parseDataOrUndefined } from "@/Utils/safeParse";
+import { generateUserVector } from "@/Utils/generateUserVector";
 
 const useLoadRecommendations = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const [loading, setLoading] = useState<boolean>(false);

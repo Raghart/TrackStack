@@ -1,9 +1,9 @@
 import { userVectorSchema } from "@trackstack/schemas";
-import minMaxScale from "./minMaxScale";
 import { weightRecommendations } from "@/components/constants/WeightData";
 import { acousticnessMAX, acousticnessMIN, danceabilityMax, danceabilityMin, energyMAX, energyMIN, instrumentalnessMAX, instrumentalnessMIN, modeMax, modeMin, speechinessMAX, speechinessMIN, tempoMAX, tempoMIN, valenceMAX, valenceMIN } from "@/components/constants/ModalC";
+import { recommendInitialState } from "@/reducers/recommendReducer";
 
-const generateUserVector = (tempo: number, danceability: number, energy: number,
+export const generateUserVector = (tempo: number, danceability: number, energy: number,
     mood: number, speechLevel: number, acousticness: number, voiceType: number,
     sentiment: number
 ) => {
@@ -49,4 +49,28 @@ const generateUserVector = (tempo: number, danceability: number, energy: number,
     ]);
 };
 
-export default generateUserVector;
+export const buildUserVector = (tempo: number, danceability: number, energy: number,
+    mood: number, speechLevel: number, acousticness: number, voiceType: number,
+    sentiment: number
+) => {
+    try {
+        return generateUserVector(tempo, danceability, energy, mood, speechLevel,
+            acousticness, voiceType, sentiment);
+    } catch (err) {
+        console.error("Unable to build the user vector from the current settings", err);
+        return generateUserVector(
+            recommendInitialState.tempo,
+            recommendInitialState.danceability,
+            recommendInitialState.energy,
+            recommendInitialState.mood,
+            recommendInitialState.speechLevel,
+            recommendInitialState.acousticness,
+            recommendInitialState.voiceType,
+            recommendInitialState.sentiment,
+        );
+    };
+};
+
+const minMaxScale = (value: number, min: number, max: number) : number => {
+    return (value - min) / (max - min)
+};
