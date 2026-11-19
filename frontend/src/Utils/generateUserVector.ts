@@ -1,18 +1,7 @@
 import { userVectorSchema } from "@trackstack/schemas";
-import { acousticnessMAX, acousticnessMIN, danceabilityMax, danceabilityMin, 
-    energyMAX, energyMIN, 
-    instrumentalnessMAX, 
-    instrumentalnessMIN, 
-    modeMax, 
-    modeMin, 
-    speechinessMAX, 
-    speechinessMIN, 
-    tempoMAX, 
-    tempoMIN, 
-    valenceMAX,
-    valenceMIN} from "../constants/ModalC";
-import { weightRecommendations } from "../constants/WeightData";
 import minMaxScale from "./minMaxScale";
+import { weightRecommendations } from "@/components/constants/WeightData";
+import { acousticnessMAX, acousticnessMIN, danceabilityMax, danceabilityMin, energyMAX, energyMIN, instrumentalnessMAX, instrumentalnessMIN, modeMax, modeMin, speechinessMAX, speechinessMIN, tempoMAX, tempoMIN, valenceMAX, valenceMIN } from "@/components/constants/ModalC";
 
 const generateUserVector = (tempo: number, danceability: number, energy: number,
     mood: number, speechLevel: number, acousticness: number, voiceType: number,

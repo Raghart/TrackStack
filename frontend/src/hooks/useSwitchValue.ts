@@ -1,8 +1,8 @@
 import { SwitchLabelType } from "@/types/RecDataTypes";
 import { useState } from "react";
-import { getSwitchValue } from "../getSwitchValue";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { AppDispatch } from "@/store";
+import { getSwitchValue } from "@/Utils/getSwitchValue";
 
 const useSwitchValue = (title: string, leftTag: SwitchLabelType, rightTag: SwitchLabelType, 
     setValue: (value: number) => PayloadAction<number>) => {

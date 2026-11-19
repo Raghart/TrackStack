@@ -1,10 +1,10 @@
-import { useAppDispatch } from "../redux-hooks";
 import { useLazyQuery } from "@apollo/client";
 import { getPreviousSong } from "@/queries/MusicPlayerQueries";
 import { useEffect } from "react";
 import { setActiveAudio } from "@/reducers/songReducer";
 import { SongResponse, songResponseSchema } from "@trackstack/schemas";
-import { parseDataOrUndefined } from "../safeParse";
+import { useAppDispatch } from "@/Utils/redux-hooks";
+import { parseDataOrUndefined } from "@/Utils/safeParse";
 
 const useLoadPriorSong = (activeSong: SongResponse | null) => {
     const dispatch = useAppDispatch();

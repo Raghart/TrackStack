@@ -1,13 +1,13 @@
 import { useCallback, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../redux-hooks";
 import { useLazyQuery } from "@apollo/client";
 import { setLaraRecommendations } from "@/reducers/recommendReducer";
 import { getSongRecommendations } from "@/queries/LaraRecQuerie";
-import generateUserVector from "../generateUserVector";
 import { songResponseSchema } from "@trackstack/schemas";
-import { parseDataOrUndefined } from "../safeParse";
 import { toaster } from "@/components/ui/toasterInstance";
+import { useAppDispatch, useAppSelector } from "@/Utils/redux-hooks";
+import generateUserVector from "@/Utils/generateUserVector";
+import { parseDataOrUndefined } from "@/Utils/safeParse";
 
 const useLoadRecommendations = (setOpen: React.Dispatch<React.SetStateAction<boolean>>) => {
     const [loading, setLoading] = useState<boolean>(false);

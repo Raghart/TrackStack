@@ -1,11 +1,11 @@
 import { useEffect, useMemo } from "react";
-import { useAppDispatch } from "../redux-hooks";
 import { useQuery } from "@apollo/client";
 import { loadAudio } from "@/reducers/songReducer";
 import { getSongData } from "@/queries/DetailQueries";
 import { fullSongResponseSchema } from "@trackstack/schemas";
 import { positiveIntSchema } from "@trackstack/schemas/zod.parsers";
-import { parseDataOrUndefined } from "../safeParse";
+import { useAppDispatch } from "@/Utils/redux-hooks";
+import { parseDataOrUndefined } from "@/Utils/safeParse";
 
 const useSongDetails = (songId: number) => {
     const dispatch = useAppDispatch();

@@ -3,12 +3,12 @@ import HomeBar from "./HomeBar/HomeBar";
 import { Outlet, useLocation } from "react-router-dom";
 import MusicPlayer from "./MusicPlayer/MusicPlayer";
 import TopBar from "./TopBar/TopBar";
-import { useAppSelector } from "../Utils/redux-hooks";
-import useGetSongCover from "../Utils/hooks/useGetSongCover";
 import { MAIN_LAYOUT_HEIGHT, MAIN_LAYOUT_ML, MAIN_LAYOUT_MR } from "../constants/MainLayoutC";
 import TrackSearch from "../TrackSearch/TrackSearch";
 import ErrorBoundary from "../Error/ErrorBoundary";
 import { ErrorFallback } from "../Error/ErrorFallback";
+import useGetSongCover from "@/hooks/useGetSongCover";
+import { useAppSelector } from "@/Utils/redux-hooks";
 
 const MainLayout = () => {
     const song = useGetSongCover();

@@ -5,8 +5,8 @@ import type { ReactNode } from "react";
 import { vi } from "vitest";
 import type { SongResponse } from "@trackstack/schemas";
 import songReducer from "@/reducers/songReducer";
-import useSongState from "@/components/Utils/hooks/useSongState";
 import type { songStateType } from "@/types/songTypes";
+import useSongState from "@/hooks/useSongState";
 
 export const activeSongFixture: SongResponse = {
     id: 42,

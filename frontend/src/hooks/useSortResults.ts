@@ -1,6 +1,6 @@
 import { searchResultsType } from "@/types/searchTypes";
-import { useAppSelector } from "../redux-hooks";
-import { normalizeText } from "../normalizeText";
+import { normalizeText } from "@/Utils/normalizeText";
+import { useAppSelector } from "@/Utils/redux-hooks";
 
 const useSortResults = (results: searchResultsType[]) => {
     const query = normalizeText(useAppSelector(state => state.search.query));

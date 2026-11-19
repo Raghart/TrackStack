@@ -1,15 +1,15 @@
 import { useLazyQuery } from "@apollo/client";
-import { useAppDispatch } from "../redux-hooks";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { debounce } from "lodash";
 import { clearQuery, setIsLoading, setQuery, setQueryResults, setSearchError } from "@/reducers/searchReducer";
 import { multipleSearch } from "@/queries/MultipleSearchQuerie";
 import { multipleSearchResultsSchema } from "@trackstack/schemas";
-import { parseDataOrUndefined } from "../safeParse";
 import { searchQuerySchema } from "@trackstack/schemas/zod.parsers";
 import { SearchFailureStatus } from "@/types/searchTypes";
 import { toaster } from "@/components/ui/toasterInstance";
-import { getSearchErrorMessage } from "../searchErrorMessages";
+import { getSearchErrorMessage } from "@/Utils/searchErrorMessages";
+import { useAppDispatch } from "@/Utils/redux-hooks";
+import { parseDataOrUndefined } from "@/Utils/safeParse";
 
 const useSearchResults = () => {
     const [getResults] = useLazyQuery(multipleSearch);

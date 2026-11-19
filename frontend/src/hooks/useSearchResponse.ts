@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useAppSelector } from "../redux-hooks";
 import { multipleSearchResults } from "@trackstack/schemas";
+import { useAppSelector } from "@/Utils/redux-hooks";
 
 const useSearchResponse = () => {
     const { query, isLoading, results, status } = useAppSelector(state => state.search);

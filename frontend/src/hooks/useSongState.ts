@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import { useAppSelector } from "../redux-hooks";
 import { httpUrlSchema } from "@trackstack/schemas/zod.parsers";
-import { parseDataOrUndefined } from "../safeParse";
+import { useAppSelector } from "@/Utils/redux-hooks";
+import { parseDataOrUndefined } from "@/Utils/safeParse";
 
 const useSongState = (audioRef: React.RefObject<HTMLAudioElement>) => {
     const { activeSong, isPlaying } = useAppSelector(state => state.songs.songState);
