@@ -115,13 +115,8 @@ jobs:
         run: pnpm run build
         working-directory: ./backend
 
-      - name: Install Playwright dependencies
-        run: npm ci
-        working-directory: ./e2e
-
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
-        working-directory: ./e2e
+        run: pnpm --filter ./e2e exec playwright install --with-deps
 
       - name: Run Server
         run: pnpm run start:prod &
@@ -131,8 +126,7 @@ jobs:
           DB_PORT: ${{ secrets.DB_PORT }}
 
       - name: Running Playwright tests
-        run: npm run test
-        working-directory: ./e2e
+        run: pnpm run test:e2e
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

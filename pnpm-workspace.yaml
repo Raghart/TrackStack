@@ -2,6 +2,7 @@ packages:
   - backend
   - frontend
   - schemas
+  - e2e
 
 # pnpm bloquea los scripts de instalación por defecto (supply-chain security).
 # Solo se permite ejecutar postinstall a los paquetes que compilan/descargan

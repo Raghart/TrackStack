@@ -91,10 +91,10 @@ pnpm --filter ./frontend run test:cov          # coverage -> frontend/coverage/
 ```
 
 ```bash
-cd e2e
-npm ci
-npm run test
-npm run test:report
+pnpm run test:e2e                              # from the repository root
+pnpm --filter ./e2e run test                   # one run
+pnpm run test:e2e:report                       # open the HTML report
+pnpm --filter ./e2e exec playwright install    # install browsers once
 ```
 
 The E2E suite expects the built app at `http://localhost:3000` (override with `E2ETEST_URL`) and needs a running backend and database.

@@ -47,7 +47,7 @@ TrackStack/
 │       ├── store.ts          # configuración de Redux
 │       └── App.tsx           # rutas de React Router
 ├── schemas/                  # @trackstack/schemas — Zod compartido (en migración)
-├── e2e/                      # Playwright (paquete aparte, fuera de workspaces)
+├── e2e/                      # Playwright (workspace de pnpm)
 ├── .github/workflows/        # CI, CD y health check
 ├── assets/                   # imágenes usadas por el README
 ├── PLAN_MEJORAS.md           # notas personales del autor (ver nota)
@@ -71,6 +71,8 @@ pnpm run start:prod         # ejecuta backend compilado
 pnpm run test:backend       # tests del backend (Vitest)
 pnpm run test:frontend      # tests del frontend (Vitest + Testing Library)
 pnpm run test:schemas       # tests de los schemas compartidos (Vitest)
+pnpm run test:e2e           # tests E2E (Playwright)
+pnpm run test:e2e:report    # abre el último reporte de Playwright
 ```
 
 Por paquete:
@@ -89,13 +91,13 @@ pnpm --filter ./frontend run test         # Vitest + Testing Library (jsdom)
 pnpm --filter ./frontend run test:cov
 ```
 
-E2E (paquete aparte, **fuera** del workspace de pnpm; instalar dependencias dentro de `e2e/`):
+E2E (workspace `e2e/`; Playwright):
 
 ```bash
-cd e2e
-npm ci
-npm run test
-npm run test:report
+pnpm run test:e2e                    # desde la raíz
+pnpm --filter ./e2e run test         # equivalente por paquete
+pnpm --filter ./e2e exec playwright install   # instala los navegadores la primera vez
+pnpm run test:e2e:report             # abre el reporte HTML
 ```
 
 > Los tests E2E y parte de los tests de integración requieren servicios externos (PostgreSQL) y variables de entorno. No los ejecutes asumiendo que existen: comprueba primero y reporta si faltan.
@@ -154,9 +156,9 @@ Estos archivos son documentación viva: si se quedan obsoletos, las siguientes s
 
 ### Dependencias
 
-- Instala en la raíz con pnpm para los workspaces (`backend`, `frontend`, `schemas`): `pnpm add <paquete>` (o `pnpm add -D <paquete>`), y para un paquete concreto `pnpm --filter ./backend add <paquete>`.
+- Instala en la raíz con pnpm para los workspaces (`backend`, `frontend`, `schemas`, `e2e`): `pnpm add <paquete>` (o `pnpm add -D <paquete>`), y para un paquete concreto `pnpm --filter ./backend add <paquete>`.
 - No uses `npm install` en la raíz: npm y pnpm comparten `node_modules` y mezclar ambos deja el árbol inconsistente.
-- `e2e/` **no** es un workspace: sus dependencias se instalan dentro de `e2e/` (con npm y su propio lockfile).
+- `e2e/` es un workspace más: sus dependencias se instalan con `pnpm install` desde la raíz y no debe tener lockfile propio.
 - Justifica cualquier dependencia nueva y evita duplicar librerías que ya cubran la necesidad.
 - Los scripts de instalación (`postinstall`…) están bloqueados por defecto en `pnpm-workspace.yaml` (`allowBuilds`). Si una dependencia legítima necesita compilar binarios, añádela con `pnpm approve-builds` y justifícalo.
 

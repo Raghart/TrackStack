@@ -57,7 +57,7 @@ pnpm run dev:backend
 pnpm run dev:frontend
 ```
 
-The end-to-end suite is a separate package in [`./e2e`](./e2e), driven by Playwright against the built app. It requires a running backend and database.
+The end-to-end suite is the [`./e2e`](./e2e) workspace, driven by Playwright against the built app. It requires a running backend and database; run it from the repository root with `pnpm run test:e2e` (install browsers once with `pnpm --filter ./e2e exec playwright install`).
 
 The full variable list and every available command live in the backend README:
 
@@ -71,7 +71,7 @@ TrackStack/
 ├── backend/          # NestJS + GraphQL API, Sequelize models, Prisma migrations
 ├── frontend/         # React SPA (Vite), built into backend/public
 ├── schemas/          # Shared Zod schemas (@trackstack/schemas)
-├── e2e/              # Playwright end-to-end tests (separate npm package)
+├── e2e/              # Playwright end-to-end tests (pnpm workspace)
 ├── assets/           # Screenshots used by the READMEs
 └── .github/workflows # CI, CD, and health check
 ```
