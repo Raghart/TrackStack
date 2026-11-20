@@ -11,7 +11,7 @@ import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
-import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
+import { GoogleGenAI } from '@google/genai';
 import { existsSync } from 'node:fs';
 import {
   FullRawSong,
@@ -28,6 +28,7 @@ import safeQuery from '@/utils/safeQuery';
 import { InvalidPaginationException } from '@/utils/PaginationError';
 import parseGenres from '@/utils/parseGenres';
 import { stringSchema } from '@trackstack/schemas/zod.parsers';
+import { AITextChunk } from './types/aiAttributes';
 if (existsSync('.env')) process.loadEnvFile();
 
 @Injectable()
@@ -156,15 +157,32 @@ export class SongsService {
     );
   }
 
+  // async generator required by the AI stream contract; no await needed
+  // eslint-disable-next-line @typescript-eslint/require-await
+  private async *getFallbackAIStream(): AsyncGenerator<AITextChunk> {
+    yield {
+      text: '**AI recommendations are unavailable in this demo**, but your personalized selection is ready below. Press play and enjoy!',
+    };
+  }
+
   async getAIStream(
     genres: string[],
     userVector: number[],
-  ): Promise<AsyncGenerator<GenerateContentResponse>> {
+  ): Promise<AsyncIterable<AITextChunk>> {
+    const aiModel = process.env.AI_MODEL;
+
+    if (!aiModel || !process.env.API_KEY) {
+      console.warn(
+        'AI_MODEL or API_KEY is not configured; using the demo fallback message',
+      );
+      return this.getFallbackAIStream();
+    }
+
     const formattedUV = this.buildUVString(userVector);
 
     try {
       return await this.genai.models.generateContentStream({
-        model: stringSchema.parse(process.env.AI_MODEL),
+        model: stringSchema.parse(aiModel),
         contents: [
           'Generate a message for an user who wants to listen to songs with the following metadata:',
           `Genres: ${genres.join(',')}`,
