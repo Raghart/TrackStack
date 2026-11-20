@@ -31,7 +31,7 @@ backend/
 │   └── main.ts               # bootstrap, CORS, puerto
 ├── models/<dominio>/         # modelos Sequelize
 ├── test/                     # fixtures (data/) y constantes (constants/)
-├── database/                 # Prisma: schema, migraciones y configuración
+├── database/                 # Prisma (schema/migraciones) e init/ (seed de la demo)
 ├── README.md                 # documentación del paquete
 ├── dist/ coverage/ public/   # artefactos generados (no editar)
 └── eslint.config.mjs / tsconfig*.json / nest-cli.json

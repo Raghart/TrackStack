@@ -24,7 +24,7 @@ backend/
 │   └── main.ts               # bootstrap, CORS, port
 ├── models/<domain>/          # Sequelize models
 ├── test/                     # fixtures and shared constants for unit tests
-├── database/                 # Prisma schema, migrations, and database notes
+├── database/                 # Prisma schema/migrations and init/ demo seed
 ├── public/                   # generated frontend build served by Nest
 ├── dist/                     # compiled output
 └── coverage/                 # generated test coverage

@@ -38,6 +38,26 @@ uses the 0.3 similarity threshold and could return fewer rows than requested).
 
 `prisma.config.ts` loads `backend/.env` because Prisma 7 no longer reads it automatically. For Aiven you may need to append `?sslmode=require` to the URL.
 
+### Demo data
+
+`database/init/` contains a self-contained PostgreSQL snapshot for the Docker
+demo. The official `postgres` image runs these files in name order the first
+time the data directory is initialised:
+
+```text
+database/init/
+├── 00_extensions.sql  # vector, pg_trgm and unaccent
+├── 01_schema.sql      # tables, constraints, indexes, search functions and Prisma history
+└── 02_seed.sql        # 100 songs with their artists, albums, genres and song_details
+```
+
+The schema mirrors the production database (including the `numeric(10,5)`
+columns and the `vector(8)` column), not just the Prisma migration files. The
+Prisma history is marked as applied so `db:deploy` does not try to recreate
+existing tables. The seed is a fixed snapshot generated from production: do
+not edit it by hand, and keep it in sync if the schema changes. It is intended
+only for the demo, not for local development against real data.
+
 ### Changing the schema
 
 Edit `schema.prisma`, create the migration locally with `db:migrate`, and review the generated SQL. Do not run `db:migrate` or `db:deploy` against a shared database without checking the SQL first; Prisma may propose destructive changes.
