@@ -37,6 +37,8 @@ Set up a `.env` file in `backend/` using these variable names:
 | Variable | Required | Purpose |
 | --- | --- | --- |
 | `DB_URL` | Yes | PostgreSQL connection string |
+| `DB_SSL` | No | Enables TLS for PostgreSQL (`true`/`false`, defaults to `false`). Keep it `false` for the Docker demo database. |
+| `DB_SSL_CA` | No | Path to the CA certificate used when `DB_SSL=true` (for example `certs/ca.pem` for Aiven). Relative paths are resolved from the backend directory. |
 | `DB_PORT` | Yes | PostgreSQL port |
 | `API_KEY` | No | Google GenAI API key (AI messages fall back to a demo notice when missing) |
 | `AI_MODEL` | No | Gemini model name used for streamed messages (AI messages fall back to a demo notice when missing) |

@@ -16,6 +16,7 @@ import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { existsSync } from 'node:fs';
+import { databaseSslOptions } from './utils/databaseSsl';
 if (existsSync('.env')) process.loadEnvFile();
 
 @Module({
@@ -26,12 +27,9 @@ if (existsSync('.env')) process.loadEnvFile();
     SequelizeModule.forRoot({
       dialect: 'postgres',
       uri: process.env.DB_URL,
-      dialectOptions: {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false,
-        },
-      },
+      dialectOptions: databaseSslOptions
+        ? { ssl: databaseSslOptions }
+        : {},
       autoLoadModels: true,
       synchronize: false,
       logging: false,

@@ -159,5 +159,5 @@ Notas:
 
 - La suite completa es lenta; la CI la ejecuta en cada PR. En local basta con validar los specs directamente relacionados con el cambio.
 - No hay umbral de cobertura configurado en Vitest, pero el proyecto mantiene métricas altas; evita bajar la cobertura del archivo que tocas.
-- `pnpm run test` no requiere `.env` ni servicios externos. `start:prod`, los E2E y cualquier prueba de integración sí necesitan `DB_URL`, `DB_PORT` y, para la IA, `API_KEY`. Si faltan, dilo explícitamente en el resumen en lugar de asumir que pasan.
+- `pnpm run test` no requiere `.env` ni servicios externos. `start:prod`, los E2E y cualquier prueba de integración sí necesitan `DB_URL`, `DB_PORT` y, para la IA, `API_KEY`. Si faltan, dilo explícitamente en el resumen en lugar de asumir que pasan. La conexión TLS se activa con `DB_SSL=true` (por defecto `false`, para la BD del Docker demo) y el certificado se indica con `DB_SSL_CA` (por ejemplo `certs/ca.pem` en Aiven); ver `README.md`.
 - La CI ejecuta lint, `eslint .` (seguridad) y los tests en cada PR, así que esos tres deben pasar.

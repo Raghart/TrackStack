@@ -124,6 +124,8 @@ jobs:
         env:
           DB_URL: ${{ secrets.DB_URL }}
           DB_PORT: ${{ secrets.DB_PORT }}
+          DB_SSL: "true"
+          DB_SSL_CA: certs/ca.pem
 
       - name: Running Playwright tests
         run: pnpm run test:e2e

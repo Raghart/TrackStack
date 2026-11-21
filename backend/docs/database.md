@@ -38,6 +38,8 @@ uses the 0.3 similarity threshold and could return fewer rows than requested).
 
 `prisma.config.ts` loads `backend/.env` because Prisma 7 no longer reads it automatically. For Aiven you may need to append `?sslmode=require` to the URL.
 
+The API reads TLS settings for Sequelize from `DB_SSL` and `DB_SSL_CA` (see `backend/README.md`). The Docker demo database does not accept SSL, so leave `DB_SSL=false` there; for Aiven use `DB_SSL=true` and point `DB_SSL_CA` to the downloaded certificate (the repo keeps it at `backend/certs/ca.pem`).
+
 ### Demo data
 
 `database/init/` contains a self-contained PostgreSQL snapshot for the Docker
