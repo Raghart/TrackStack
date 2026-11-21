@@ -76,8 +76,7 @@ pnpm --filter ./backend run db:generate
 
 ## Docker
 
-The backend has a standalone Docker image. The build context is the repository
-root because the pnpm workspace and `schemas/` live there:
+The backend has a standalone Docker image. The build context is the repository root because the pnpm workspace and `schemas/` live there:
 
 ```bash
 docker build -f backend/Dockerfile -t trackstack-backend .
@@ -87,14 +86,9 @@ docker run --rm -p 3000:3000 \
   trackstack-backend
 ```
 
-The image runs as the non-root `node` user, listens on port 3000 and reads the
-same environment variables as `start:prod`. It only contains the backend (the
-GraphQL endpoint is served at `/graphql`); a database with the schema applied is
-still required (the demo snapshot in `database/init/` needs the `pgvector`
-extension).
+The image runs as the non-root `node` user, listens on port 3000 and reads the same environment variables as `start:prod`. It only contains the backend (the GraphQL endpoint is served at `/graphql`); a database with the schema applied is still required (the demo snapshot in `database/init/` needs the `pgvector` extension).
 
-To run the complete demo (database with the seed + backend + frontend) use the
-compose file at the repository root:
+To run the complete demo (database with the seed + backend + frontend) use the compose file at the repository root:
 
 ```bash
 docker compose up --build

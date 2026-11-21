@@ -42,9 +42,7 @@ The API reads TLS settings for Sequelize from `DB_SSL` and `DB_SSL_CA` (see `bac
 
 ### Demo data
 
-`database/init/` contains a self-contained PostgreSQL snapshot for the Docker
-demo. The official `postgres` image runs these files in name order the first
-time the data directory is initialised:
+`database/init/` contains a self-contained PostgreSQL snapshot for the Docker demo. The official `postgres` image runs these files in name order the first time the data directory is initialised:
 
 ```text
 database/init/
@@ -53,12 +51,8 @@ database/init/
 └── 02_seed.sql        # 100 songs with their artists, albums, genres and song_details
 ```
 
-The schema mirrors the production database (including the `numeric(10,5)`
-columns and the `vector(8)` column), not just the Prisma migration files. The
-Prisma history is marked as applied so `db:deploy` does not try to recreate
-existing tables. The seed is a fixed snapshot generated from production: do
-not edit it by hand, and keep it in sync if the schema changes. It is intended
-only for the demo, not for local development against real data.
+The schema mirrors the production database (including the `numeric(10,5)` columns and the `vector(8)` column), not just the Prisma migration files. The Prisma history is marked as applied so `db:deploy` does not try to recreate existing tables. The seed is a fixed snapshot generated from production: do
+not edit it by hand, and keep it in sync if the schema changes. It is intended only for the demo, not for local development against real data.
 
 ### Changing the schema
 

@@ -76,21 +76,16 @@ The production build is written to `../backend/public` and served by NestJS next
 
 ## Docker
 
-The frontend has a standalone image that serves the Vite build with **Nginx**
-(SPA fallback included). The build context is the repository root because the
-pnpm workspace and `schemas/` live there:
+The frontend has a standalone image that serves the Vite build with **Nginx** (SPA fallback included). The build context is the repository root because the pnpm workspace and `schemas/` live there:
 
 ```bash
 docker build -f frontend/Dockerfile -t trackstack-frontend .
 docker run --rm -p 8080:80 trackstack-frontend
 ```
 
-The app is available at `http://localhost:8080`. By default the image expects
-the backend at `http://localhost:3000`, matching `frontend/.env`; the backend
-must allow `http://localhost:8080` through CORS (`FRONTEND_URL`).
+The app is available at `http://localhost:8080`. By default the image expects the backend at `http://localhost:3000`, matching `frontend/.env`; the backend must allow `http://localhost:8080` through CORS (`FRONTEND_URL`).
 
-Vite bakes `VITE_GRAPHQL_URI` and `VITE_SUBSCRIPTION_URI` at build time, so
-override them as build args when the API lives somewhere else:
+Vite bakes `VITE_GRAPHQL_URI` and `VITE_SUBSCRIPTION_URI` at build time, so override them as build args when the API lives somewhere else:
 
 ```bash
 docker build -f frontend/Dockerfile \
@@ -99,9 +94,7 @@ docker build -f frontend/Dockerfile \
   -t trackstack-frontend .
 ```
 
-Inside the image the bundle is written to `frontend/dist` (not
-`../backend/public`) and copied to Nginx's web root. Nginx configuration:
-[`nginx.conf`](./nginx.conf).
+Inside the image the bundle is written to `frontend/dist` (not `../backend/public`) and copied to Nginx's web root. Nginx configuration: [`nginx.conf`](./nginx.conf).
 
 ## Architecture
 
