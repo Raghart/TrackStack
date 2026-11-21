@@ -30,16 +30,31 @@ Do you want to find a new **banger**? TrackStack is an **AI-powered music recomm
 | **Schemas** | Shared Zod 4 contracts (`@trackstack/schemas`) | — |
 | **E2E** | Playwright across Chromium, Firefox, and WebKit | — |
 
-Unit tests for the backend and frontend run with Vitest. Delivery is handled by GitHub Actions CI, Render CD, and a scheduled health check.
+- Unit tests for the backend and frontend run with Vitest.
+- Delivery is handled by GitHub Actions CI, Render CD, and a scheduled health check.
 
 ## Quick start
 
 ### Try the live version
 
-1. Open [TrackStack](https://trackstack-c9rh.onrender.com/).
-2. Click the **beam note** button in the top-right corner.
+1. Open [TrackStack](https://trackstack-c9rh.onrender.com/) (It might take ~1 min to wake up).
+2. Click the blue **beam note** button in the top-right corner.
 3. Pick your genres and adjust the sliders and switches.
-4. Press **Send Data** and listen to the results.
+4. Press **Send Data** and check out the results.
+
+### Run the demo with Docker
+
+If you only want to try the app, Docker builds the backend and frontend images and loads the demo database snapshot with a sample of 100 songs automatically:
+
+```bash
+docker compose up --build
+```
+
+The command brings up PostgreSQL (with pgvector and the demo seed), the NestJS/GraphQL backend, and the React build served by Nginx. The database schema and the sample catalogue live in backend/database/init/ and are loaded automatically the first time the database volume is created. The page is served on <http://localhost:8080>.
+
+The AI messages use the demo fallback unless you provide a Google GenAI key: `API_KEY=... AI_MODEL=... docker compose up --build`. See [`docker-compose.yml`](./docker-compose.yml) for the remaining overrides
+(ports, database credentials, CORS origin and GraphQL URLs). To start over with
+a fresh database, run `docker compose down -v`.
 
 ### Run locally
 
@@ -57,26 +72,7 @@ pnpm run dev:backend
 pnpm run dev:frontend
 ```
 
-### Run the demo with Docker
-
-If you only want to try the app, Docker builds the backend and frontend images
-and loads the demo database snapshot (100 songs) automatically:
-
-```bash
-docker compose up --build
-```
-
-- Frontend: <http://localhost:8080>
-- GraphQL API and playground: <http://localhost:3000/graphql>
-- PostgreSQL: `localhost:5432` (`trackstack` / `trackstack`)
-
-The AI messages use the demo fallback unless you provide a Google GenAI key:
-`API_KEY=... AI_MODEL=... docker compose up --build`. See
-[`docker-compose.yml`](./docker-compose.yml) for the remaining overrides
-(ports, database credentials, CORS origin and GraphQL URLs). To start over with
-a fresh database, run `docker compose down -v`.
-
-The end-to-end suite is the [`./e2e`](./e2e) workspace, driven by Playwright against the built app. It requires a running backend and database; run it from the repository root with `pnpm run test:e2e` (install browsers once with `pnpm --filter ./e2e exec playwright install`).
+The backend also serves the production frontend build, so `pnpm run build:frontend && pnpm run build:backend` produces a single deployable app.
 
 ## Repository layout
 
@@ -91,9 +87,4 @@ TrackStack/
 └── .github/workflows # CI, CD, and health check
 ```
 
-The backend also serves the production frontend build, so `pnpm run build:frontend && pnpm run build:backend` produces a single deployable app.
-
-The full variable list and every available command live in the backend README:
-
-- 📖 **[Backend README](./backend/README.md)** — architecture, GraphQL API, database, environment variables, and tests.
-- 📖 **[Frontend README](./frontend/README.md)** — features, routes, state management, Apollo setup, and usage screenshots.
+[← Backend README](backend/README.md) · [Frontend README →](frontend/README.md)

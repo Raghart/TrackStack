@@ -1,12 +1,3 @@
-# TrackStack demo stack.
-#
-#   docker compose up --build
-#
-# Brings up PostgreSQL (with pgvector and the demo seed), the NestJS/GraphQL
-# backend, and the React build served by Nginx. The database schema and the
-# sample catalogue live in backend/database/init/ and are loaded automatically
-# the first time the database volume is created.
-
 name: trackstack
 
 services:
