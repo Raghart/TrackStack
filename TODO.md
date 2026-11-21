@@ -13,7 +13,7 @@
 12. ~~Add tests to the Frontend~~.
 13. ~~Updated outdated CI Pipeline to make it ready when pushing code~~.
 14. ~~Make the agent fix the views in the cellphone because sometime it breaks~~.
-15. Make the project runnable via Docker (Dockerfile + docker-compose).
+15. ~~Make the project runnable via Docker (Dockerfile + docker-compose)~~.
 16. ~~Check if it's worthy to cifre the DB conexion to Aiven~~.
 17. ~~Update coverage image with one that covers backend~~.
 18. Upgrade the frontend/docs/architecture.md to be better. It feels kinda awkard right now.
