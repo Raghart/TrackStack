@@ -1,3 +1,5 @@
+/* eslint-disable security/detect-non-literal-fs-filename */
+// Path is built from a constant, not user input.
 import { existsSync, readFileSync } from 'node:fs';
 import { isAbsolute, resolve } from 'node:path';
 
