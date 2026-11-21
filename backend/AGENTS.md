@@ -139,6 +139,7 @@ pnpm run test -- src/songs/songs.service.spec.ts   # un spec concreto
 pnpm run test:watch                  # Vitest en watch
 pnpm run test:cov                    # cobertura -> backend/coverage/
 pnpm run build                       # compila con Nest
+docker build -f backend/Dockerfile -t trackstack-backend .   # imagen Docker (contexto: raíz del repo)
 pnpm run format                      # Prettier sobre src/ y test/
 pnpm run db:validate                 # valida database/prisma/schema.prisma (sin conectar)
 pnpm run db:status                   # estado de migraciones Prisma frente a la BD

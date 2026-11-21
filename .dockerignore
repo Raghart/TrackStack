@@ -1,0 +1,21 @@
+# Build context hygiene for the backend Docker image.
+# The build context is the repository root (the pnpm workspace lives there).
+
+**/node_modules
+**/dist
+**/coverage
+**/.env
+**/.env.*
+**/*.log
+
+# Generated or host-specific artefacts
+backend/public
+backend/certs
+backend/Datasets
+
+# VCS and editor metadata
+.git
+.gitignore
+.vscode
+.idea
+.DS_Store

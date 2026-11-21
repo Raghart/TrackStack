@@ -74,6 +74,25 @@ pnpm --filter ./backend run db:migrate
 pnpm --filter ./backend run db:generate
 ```
 
+## Docker
+
+The backend has a standalone Docker image. The build context is the repository
+root because the pnpm workspace and `schemas/` live there:
+
+```bash
+docker build -f backend/Dockerfile -t trackstack-backend .
+docker run --rm -p 3000:3000 \
+  -e DB_URL=postgres://user:password@host:5432/trackstack \
+  -e DB_SSL=false \
+  trackstack-backend
+```
+
+The image runs as the non-root `node` user, listens on port 3000 and reads the
+same environment variables as `start:prod`. It only contains the backend (the
+GraphQL endpoint is served at `/graphql`); a database with the schema applied is
+still required (the demo snapshot in `database/init/` needs the `pgvector`
+extension).
+
 ## Database & Migrations
 
 Prisma-managed PostgreSQL schema with pgvector support. Search is implemented
