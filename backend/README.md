@@ -93,14 +93,16 @@ GraphQL endpoint is served at `/graphql`); a database with the schema applied is
 still required (the demo snapshot in `database/init/` needs the `pgvector`
 extension).
 
+To run the complete demo (database with the seed + backend + frontend) use the
+compose file at the repository root:
+
+```bash
+docker compose up --build
+```
+
 ## Database & Migrations
 
-Prisma-managed PostgreSQL schema with pgvector support. Search is implemented
-entirely in PostgreSQL through the `search_songs`, `search_artists`, and
-`search_albums` functions (trigram + unaccent, exact → prefix → contains →
-fuzzy ranking); `SearchService` calls them with Sequelize and validates the
-rows with the shared Zod schemas. See [docs/database.md](./docs/database.md)
-for migration structure and schema change guidelines.
+Prisma-managed PostgreSQL schema with pgvector support. Search is implemented entirely in PostgreSQL through the `search_songs`, `search_artists`, and `search_albums` functions (trigram + unaccent, exact → prefix → contains → fuzzy ranking); `SearchService` calls them with Sequelize and validates the rows with the shared Zod schemas. See [docs/database.md](./docs/database.md) for migration structure and schema change guidelines.
 
 ## Shared validation
 

@@ -48,6 +48,7 @@ TrackStack/
 │       └── App.tsx           # rutas de React Router
 ├── schemas/                  # @trackstack/schemas — Zod compartido (en migración)
 ├── e2e/                      # Playwright (workspace de pnpm)
+├── docker-compose.yml        # demo completa: PostgreSQL + seed + backend + frontend
 ├── .github/workflows/        # CI, CD y health check
 ├── assets/                   # imágenes usadas por el README
 ├── PLAN_MEJORAS.md           # notas personales del autor (ver nota)
@@ -73,6 +74,8 @@ pnpm run test:frontend      # tests del frontend (Vitest + Testing Library)
 pnpm run test:schemas       # tests de los schemas compartidos (Vitest)
 pnpm run test:e2e           # tests E2E (Playwright)
 pnpm run test:e2e:report    # abre el último reporte de Playwright
+
+docker compose up --build   # demo completa: BD con seed + backend + frontend
 ```
 
 Por paquete:

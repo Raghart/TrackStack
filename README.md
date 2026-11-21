@@ -57,12 +57,26 @@ pnpm run dev:backend
 pnpm run dev:frontend
 ```
 
+### Run the demo with Docker
+
+If you only want to try the app, Docker builds the backend and frontend images
+and loads the demo database snapshot (100 songs) automatically:
+
+```bash
+docker compose up --build
+```
+
+- Frontend: <http://localhost:8080>
+- GraphQL API and playground: <http://localhost:3000/graphql>
+- PostgreSQL: `localhost:5432` (`trackstack` / `trackstack`)
+
+The AI messages use the demo fallback unless you provide a Google GenAI key:
+`API_KEY=... AI_MODEL=... docker compose up --build`. See
+[`docker-compose.yml`](./docker-compose.yml) for the remaining overrides
+(ports, database credentials, CORS origin and GraphQL URLs). To start over with
+a fresh database, run `docker compose down -v`.
+
 The end-to-end suite is the [`./e2e`](./e2e) workspace, driven by Playwright against the built app. It requires a running backend and database; run it from the repository root with `pnpm run test:e2e` (install browsers once with `pnpm --filter ./e2e exec playwright install`).
-
-The full variable list and every available command live in the backend README:
-
-- 📖 **[Backend README](./backend/README.md)** — architecture, GraphQL API, database, environment variables, and tests.
-- 📖 **[Frontend README](./frontend/README.md)** — features, routes, state management, Apollo setup, and usage screenshots.
 
 ## Repository layout
 
@@ -73,7 +87,13 @@ TrackStack/
 ├── schemas/          # Shared Zod schemas (@trackstack/schemas)
 ├── e2e/              # Playwright end-to-end tests (pnpm workspace)
 ├── assets/           # Screenshots used by the READMEs
+├── docker-compose.yml # Demo stack: PostgreSQL + backend + frontend
 └── .github/workflows # CI, CD, and health check
 ```
 
 The backend also serves the production frontend build, so `pnpm run build:frontend && pnpm run build:backend` produces a single deployable app.
+
+The full variable list and every available command live in the backend README:
+
+- 📖 **[Backend README](./backend/README.md)** — architecture, GraphQL API, database, environment variables, and tests.
+- 📖 **[Frontend README](./frontend/README.md)** — features, routes, state management, Apollo setup, and usage screenshots.
