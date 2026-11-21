@@ -33,6 +33,17 @@ Do you want to find a new **banger**? TrackStack is an **AI-powered music recomm
 - Unit tests for the backend and frontend run with Vitest.
 - Delivery is handled by GitHub Actions CI, Render CD, and a scheduled health check.
 
+### Why this stack?
+
+Each layer earns its place by solving a concrete problem:
+
+- **NestJS with GraphQL**: gives a self-documenting, strongly typed API that streams AI answers over WebSocket subscriptions. 
+- **PostgreSQL**: `pgvector` and `pg_trgm` covers vector similarity and typo-tolerant search from a single source of truth, with no extra search engine to maintain.
+- **Prisma for migrations, Sequelize for queries**: schema changes are versioned in one place, while queries stay flexible.
+- **React 19, Vite and Chakra UI**: keep the client fast, Redux Toolkit and Apollo Client cleanly split global from server state. 
+- **Shared Zod schemas**: backend and frontend validate against the same contract.
+- **Vitest, Playwright, GitHub Actions, Docker**: automated tests and one-command deploys.
+
 ## Quick start
 
 ### Try the live version
