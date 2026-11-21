@@ -61,11 +61,9 @@ If you only want to try the app, Docker builds the backend and frontend images a
 docker compose up --build
 ```
 
-The command brings up PostgreSQL (with pgvector and the demo seed), the NestJS/GraphQL backend, and the React build served by Nginx. The database schema and the sample catalogue live in backend/database/init/ and are loaded automatically the first time the database volume is created. The page is served on <http://localhost:8080>.
+The command brings up PostgreSQL (with pgvector and the demo seed), the NestJS/GraphQL backend, and the React build served by Nginx. The database schema and the sample catalogue live in `backend/database/init/` and are loaded automatically the first time the database volume is created. The page is served on <http://localhost:8080>.
 
-The AI messages use the demo fallback unless you provide a Google GenAI key: `API_KEY=... AI_MODEL=... docker compose up --build`. See [`docker-compose.yml`](./docker-compose.yml) for the remaining overrides
-(ports, database credentials, CORS origin and GraphQL URLs). To start over with
-a fresh database, run `docker compose down -v`.
+The AI messages use the demo fallback unless you provide a Google GenAI key: `API_KEY=... AI_MODEL=... docker compose up --build`. See [`docker-compose.yml`](./docker-compose.yml) for the remaining overrides (ports, database credentials, CORS origin and GraphQL URLs). To start over with a fresh database, run `docker compose down -v`.
 
 ### Run locally
 
@@ -94,7 +92,6 @@ TrackStack/
 ├── schemas/          # Shared Zod schemas (@trackstack/schemas)
 ├── e2e/              # Playwright end-to-end tests (pnpm workspace)
 ├── assets/           # Screenshots used by the READMEs
-├── docker-compose.yml # Demo stack: PostgreSQL + backend + frontend
 └── .github/workflows # CI, CD, and health check
 ```
 
