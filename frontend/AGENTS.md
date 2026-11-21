@@ -4,7 +4,7 @@ Contexto específico del paquete `frontend/`. Las reglas generales del monorepo 
 
 ## Stack y configuración
 
-- **React 19 + TypeScript** con **Vite 6**; el build (`tsc -b && vite build`) se escribe en `../backend/public` (artefacto generado, no editar).
+- **React 19 + TypeScript** con **Vite 6**; el build (`tsc -b && vite build`) se escribe en `../backend/public` (artefacto generado, no editar). El `Dockerfile` del paquete sobreescribe la salida a `frontend/dist` y la sirve con Nginx (`nginx.conf`), sin tocar el flujo normal de Nest.
 - **Chakra UI 3** para la UI, **Apollo Client 3** para GraphQL (HTTP + WebSocket) y **Redux Toolkit 2** para el estado global.
 - **React Router 7** para las rutas.
 - **Vitest 5 + Testing Library + jsdom** para unit tests. Configuración en `vitest.config.ts`; setup compartido en `src/test/setup.ts`.

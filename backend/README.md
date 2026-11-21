@@ -43,7 +43,7 @@ Set up a `.env` file in `backend/` using these variable names:
 | `API_KEY` | No | Google GenAI API key (AI messages fall back to a demo notice when missing) |
 | `AI_MODEL` | No | Gemini model name used for streamed messages (AI messages fall back to a demo notice when missing) |
 | `PORT` | No | HTTP port (defaults to `3000`) |
-| `URL_DOMAIN` | No | Allowed CORS origin for the frontend |
+| `FRONTEND_URL` | No | Allowed CORS origin for the frontend |
 | `LOCAL_PAGE_URL` | No | URL printed on startup |
 | `LOCAL_GRAPHQL` | No | GraphQL URL printed on startup |
 
