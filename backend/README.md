@@ -8,7 +8,7 @@ NestJS + GraphQL API for [TrackStack](../README.md). It serves the song catalogu
 - **Data:** Sequelize 6 over PostgreSQL, with `pgvector` for song embeddings.
 - **Migrations:** Prisma 7 (`database/`).
 - **AI:** Google GenAI (Gemini) for streamed recommendation messages.
-- **Tests:** Vitest 5 + `unplugin-swc`.
+- **Tests:** Vitest + `unplugin-swc`.
 
 ## Project structure
 
@@ -39,13 +39,12 @@ Set up a `.env` file in `backend/` using these variable names:
 | `DB_URL` | Yes | PostgreSQL connection string |
 | `DB_SSL` | No | Enables TLS for PostgreSQL (`true`/`false`, defaults to `false`). Keep it `false` for the Docker demo database. |
 | `DB_SSL_CA` | No | Path to the CA certificate used when `DB_SSL=true` (for example `certs/ca.pem` for Aiven). Relative paths are resolved from the backend directory. |
-| `DB_PORT` | Yes | PostgreSQL port |
 | `API_KEY` | No | Google GenAI API key (AI messages fall back to a demo notice when missing) |
-| `AI_MODEL` | No | Gemini model name used for streamed messages (AI messages fall back to a demo notice when missing) |
+| `AI_MODEL` | No | Gemini model name used for streamed messages (Used with API_KEY) |
 | `PORT` | No | HTTP port (defaults to `3000`) |
 | `FRONTEND_URL` | No | Allowed CORS origin for the frontend |
-| `LOCAL_PAGE_URL` | No | URL printed on startup |
-| `LOCAL_GRAPHQL` | No | GraphQL URL printed on startup |
+
+Check out [.env.example](.env.example) to see an example on how to setup the .env file.
 
 ## Commands
 
@@ -88,19 +87,9 @@ docker run --rm -p 3000:3000 \
 
 The image runs as the non-root `node` user, listens on port 3000 and reads the same environment variables as `start:prod`. It only contains the backend (the GraphQL endpoint is served at `/graphql`); a database with the schema applied is still required (the demo snapshot in `database/init/` needs the `pgvector` extension).
 
-To run the complete demo (database with the seed + backend + frontend) use the compose file at the repository root:
-
-```bash
-docker compose up --build
-```
-
 ## Database & Migrations
 
 Prisma-managed PostgreSQL schema with pgvector support. Search is implemented entirely in PostgreSQL through the `search_songs`, `search_artists`, and `search_albums` functions (trigram + unaccent, exact → prefix → contains → fuzzy ranking); `SearchService` calls them with Sequelize and validates the rows with the shared Zod schemas. See [docs/database.md](./docs/database.md) for migration structure and schema change guidelines.
-
-## Shared validation
-
-Response parsing uses the Zod schemas in `@trackstack/schemas`: the services validate database rows before returning them. Besides trimming and numeric bounds, the contracts enforce security-sensitive formats — every `url_preview`, `album_cover`, and `url_image` must be an absolute `http:` or `https:` URL, and `spotify_id` must be a 22-character alphanumeric Spotify ID. Values such as `javascript:` or `data:` URLs are rejected before they can reach the client. See `schemas/zod.schemas.ts` and its spec for the primitives (`httpUrlSchema`, `spotifyIdSchema`).
 
 ## Tests
 
