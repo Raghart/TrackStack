@@ -40,11 +40,11 @@ Set up a `.env` file in `backend/` using these variable names:
 | `DB_SSL` | No | Enables TLS for PostgreSQL (`true`/`false`, defaults to `false`). Keep it `false` for the Docker demo database. |
 | `DB_SSL_CA` | No | Path to the CA certificate used when `DB_SSL=true` (for example `certs/ca.pem` for Aiven). Relative paths are resolved from the backend directory. |
 | `API_KEY` | No | Google GenAI API key (AI messages fall back to a demo notice when missing) |
-| `AI_MODEL` | No | Gemini model name used for streamed messages (Used with API_KEY) |
+| `AI_MODEL` | No | Gemini model name used for streamed messages (Used together with API_KEY) |
 | `PORT` | No | HTTP port (defaults to `3000`) |
 | `FRONTEND_URL` | No | Allowed CORS origin for the frontend |
 
-Check out [.env.example](.env.example) to see an example on how to setup the .env file.
+Check out an example on how to setup the [.env](.env.example) file.
 
 ## Commands
 
@@ -57,23 +57,57 @@ pnpm run start:prod                  # run the compiled backend
 pnpm run test:backend                # Vitest unit tests
 ```
 
-Or target the package directly:
+Or target the package directly. The scripts are grouped by purpose:
 
 ```bash
-pnpm --filter ./backend run dev
-pnpm --filter ./backend run build
-pnpm --filter ./backend run lint
-pnpm --filter ./backend run test
-pnpm --filter ./backend run test:watch
-pnpm --filter ./backend run test:cov
-pnpm --filter ./backend run format
-pnpm --filter ./backend run db:validate
-pnpm --filter ./backend run db:status
-pnpm --filter ./backend run db:migrate
-pnpm --filter ./backend run db:generate
+# Development
+pnpm --filter ./backend run dev          # Nest in watch mode (same as dev:backend)
+pnpm --filter ./backend run build        # nest build -> backend/dist
+pnpm --filter ./backend run start:prod   # run the compiled build (needs DB_URL)
+pnpm --filter ./backend run lint         # ESLint over src, test, apps and libs
+pnpm --filter ./backend run format       # Prettier over src/ and test/
+
+# Tests
+pnpm --filter ./backend run test         # Vitest unit suite (no database needed)
+pnpm --filter ./backend run test:watch   # Vitest in watch mode
+pnpm --filter ./backend run test:cov     # suite + coverage -> backend/coverage/
+
+# Database (Prisma, reads backend/.env)
+pnpm --filter ./backend run db:validate  # validate schema.prisma without connecting
+pnpm --filter ./backend run db:status    # list applied and pending migrations
+pnpm --filter ./backend run db:migrate   # local only: create and apply migrations (prisma migrate dev)
+pnpm --filter ./backend run db:generate  # regenerate the Prisma client after editing schema.prisma
+pnpm --filter ./backend run db:deploy    # apply committed migrations to an existing DB (CI/production)
 ```
 
-## Docker
+## Quick start
+
+### Local setup
+
+Prerequisites: Node.js, pnpm, and PostgreSQL 17 with the `pgvector` extension available (the `pgvector/pgvector:pg17` image works). The migrations create the `vector`, `pg_trgm` and `unaccent` extensions, so the role in `DB_URL` needs permission to install them.
+
+```bash
+pnpm install
+cp backend/.env.example backend/.env     # set DB_URL and keep DB_SSL=false
+createdb trackstack                      # or: psql -c 'CREATE DATABASE trackstack;'
+```
+
+Then apply the schema and start the API:
+
+```bash
+pnpm --filter ./backend run db:migrate   # applies database/prisma/migrations in order
+pnpm run dev:backend                     # GraphQL at http://localhost:3000/graphql
+```
+
+To load the demo catalogue (100 songs) into that database after migrating:
+
+```bash
+psql "postgres://user:password@localhost:5432/trackstack" -f backend/database/init/02_seed.sql
+```
+
+Only the seed file should be applied: `00_extensions.sql` and `01_schema.sql` are the Docker snapshot, and the migrations already create the schema and the Prisma history.
+
+### Docker
 
 The backend has a standalone Docker image. The build context is the repository root because the pnpm workspace and `schemas/` live there:
 
