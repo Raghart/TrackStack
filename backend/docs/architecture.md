@@ -1,6 +1,6 @@
 # Backend Architecture
 
-The TrackStack backend is a NestJS 11 service (Express 5) that exposes a GraphQL API with Apollo Server in code-first mode: the schema is generated in memory from decorated resolvers and DTOs, so it stays in sync with the TypeScript types instead of being maintained in a separate `.graphql` file. Resolvers stay thin, services own the business logic, and PostgreSQL does the heavy work — vector ranking, pagination, and trigram search — rather than loading the catalog into the application. AI responses travel over WebSocket subscriptions so text reaches the client incrementally.
+The TrackStack backend is a NestJS 11 service (Express 5) that exposes a GraphQL API with Apollo Server in code-first mode: the schema is generated in memory from decorated resolvers and DTOs, so it stays in sync with the TypeScript types instead of being maintained in a separate `.graphql` file. Resolvers stay thin, services own the business logic, and PostgreSQL does the heavy work — vector ranking, pagination, and trigram search — rather than loading the catalog into the application.
 
 ## How it works
 
@@ -20,11 +20,11 @@ Recommendations combine two complementary layers: a deterministic one, where the
 2. `getSongRecommendations(genres, userVector, limit)` calls the PostgreSQL function to obtain the songs, which ranks songs by cosine distance.
 3. In parallel, `aiResponse(genres, userVector)` opens a Gemini stream and yields each chunk as a GraphQL subscription event, so the message appears progressively in the UI.
 
-## Search
+## Search system
 
-Search is PostgreSQL-only, with no external search engine. The database adds `pg_trgm`, `unaccent`, GIN trigram indexes, and the `search_songs`, `search_artists`, and `search_albums` functions with exact → prefix → contains → fuzzy ranking and `similarity()` as a tie-breaker.
+Search runs entirely in PostgreSQL, with no external search engine. Results are ranked exact → prefix → contains → fuzzy, with `similarity()` as a tie-breaker.
 
-`SearchService` (`src/search`) calls those functions through Sequelize (`sequelize.query` with bound `query` and `limit` replacements), validates every row with the Zod schemas from `@trackstack/schemas`, and tags each result with its `type` (`song`, `artist`, or `album`).
+`SearchService` (`src/search`) calls those functions through `sequelize.query` with bound `query` and `limit` replacements, validates the rows (see [Shared validation](#shared-validation)), and tags each result with its `type` (`song`, `artist`, or `album`).
 
 ## Design decisions
 
