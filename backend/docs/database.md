@@ -38,7 +38,16 @@ uses the 0.3 similarity threshold and could return fewer rows than requested).
 
 `prisma.config.ts` loads `backend/.env` because Prisma 7 no longer reads it automatically. For Aiven you may need to append `?sslmode=require` to the URL.
 
-The API reads TLS settings for Sequelize from `DB_SSL` and `DB_SSL_CA` (see `backend/README.md`). The Docker demo database does not accept SSL, so leave `DB_SSL=false` there; for Aiven use `DB_SSL=true` and point `DB_SSL_CA` to the downloaded certificate (the repo keeps it at `backend/certs/ca.pem`).
+### TLS / SSL
+
+The managed PostgreSQL instance (Aiven) only accepts encrypted connections and presents a certificate signed by its own CA, so the backend must verify that certificate instead of trusting the system store. The connection settings are built in `src/utils/databaseSsl.ts` and plugged into Sequelize in `src/app.module.ts` through `dialectOptions.ssl`.
+
+| Variable | Effect |
+| --- | --- |
+| `DB_SSL` | Turns TLS on. Accepted truthy values: `true`, `1`, `yes`, `on` (case-insensitive). Anything else, or unset, leaves TLS off. |
+| `DB_SSL_CA` | Path to the CA certificate (PEM) used to verify the server. Relative paths are resolved from the backend directory, the compiled `dist/` tree, and the repository root, so the same value works in dev and in the built image. |
+
+The Docker demo uses `DB_SSL=false` (see `docker-compose.yml` and `.env.example`). The committed `certs/ca.pem` is the project CA certificate only: it contains no private key and cannot be used to authenticate, which is why it is safe to keep in the repository. If the provider rotates or reissues the CA, download the new file and replace it.
 
 ### Demo data
 
