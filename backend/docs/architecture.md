@@ -1,6 +1,6 @@
 # TrackStack's Architecture
 
-Introduction...
+The TrackStack backend is a NestJS 11 service (Express 5) that exposes a GraphQL API with Apollo Server in code-first mode, so the schema is generated in memory from decorated resolvers and DTOs instead of a versioned `.graphql` file. It was designed to be fast, to have a clear structure and to deliver efficently the recieved data through the Graphql Apollo Server, improving drastically the user experience.
 
 ## How it works
 
@@ -13,6 +13,8 @@ frontend ──HTTP──▶ /graphql ──▶ resolver ──▶ service ─�
 Each domain (`songs`, `albums`, `artists`, `genres`, `song_artists`, `song_genres`, `song_details`, `search`) follows the same shape: a thin resolver receives the GraphQL arguments, the service owns the business logic and data access, and the DTOs declare the public GraphQL contract. Inputs are validated with zod schemas in the `schemas` worskpace, to ensure every object manages the expected data structure while the database queries are wrapped in `safeQuery` to safely throw errors if a network error presents while trying to retrieve the information.
 
 ## Recommendation flow
+
+Recommendations combine two complementary layers: a deterministic one, where the database ranks the catalog by cosine distance against the user's preference vector, and a generative one, where Gemini explains and enriches the selection over a streaming subscription. Both are fed by the same 8-value vector, so the songs the user sees and the text the AI produces describe the same musical profile.
 
 1. The frontend turns the user's sliders and switches into an 8-value vector: `danceability`, `energy`, `mode`, `speechiness`, `acousticness`, `instrumentalness`, `valence`, and `tempo`.
 2. `getSongRecommendations(genres, userVector, limit)` calls the PostgreSQL function to obtain the songs, which ranks songs by cosine distance.
