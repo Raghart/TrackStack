@@ -1,4 +1,8 @@
-# How it works
+# TrackStack's Architecture
+
+Introduction...
+
+## How it works
 
 ```text
 frontend ──HTTP──▶ /graphql ──▶ resolver ──▶ service ──▶ Sequelize ──▶ PostgreSQL
@@ -6,19 +10,19 @@ frontend ──HTTP──▶ /graphql ──▶ resolver ──▶ service ─�
     └──WebSocket──▶ subscription ──┴──▶ Google GenAI (streaming)
 ```
 
-Each domain (`songs`, `albums`, `artists`, `genres`, `song_artists`, `song_genres`, `song_details`, `search`) follows the same shape: a thin resolver receives the GraphQL arguments, the service owns the business logic and data access, and the DTOs declare the public GraphQL contract. Inputs are validated with guards and parsers from `src/types/`, database access is wrapped in `safeQuery`, and invalid pagination raises `InvalidPaginationException`.
+Each domain (`songs`, `albums`, `artists`, `genres`, `song_artists`, `song_genres`, `song_details`, `search`) follows the same shape: a thin resolver receives the GraphQL arguments, the service owns the business logic and data access, and the DTOs declare the public GraphQL contract. Inputs are validated with zod schemas in the `schemas` worskpace, to ensure every object manages the expected data structure while the database queries are wrapped in `safeQuery` to safely throw errors if a network error presents while trying to retrieve the information.
 
-### Recommendation flow
+## Recommendation flow
 
 1. The frontend turns the user's sliders and switches into an 8-value vector: `danceability`, `energy`, `mode`, `speechiness`, `acousticness`, `instrumentalness`, `valence`, and `tempo`.
-2. `getSongRecommendations(genres, userVector, limit)` calls the PostgreSQL function `search_songs_cosine_similarity(genres, userVector::vector, limit)`, which ranks songs by cosine distance.
+2. `getSongRecommendations(genres, userVector, limit)` calls the PostgreSQL function to obtain the songs, which ranks songs by cosine distance.
 3. In parallel, `aiResponse(genres, userVector)` opens a Gemini stream and yields each chunk as a GraphQL subscription event, so the message appears progressively in the UI.
 
-### Search
+## Search
 
 Search is PostgreSQL-only, with no external search engine. The database adds `pg_trgm`, `unaccent`, GIN trigram indexes, and the `search_songs`, `search_artists`, and `search_albums` functions with exact → prefix → contains → fuzzy ranking and `similarity()` as a tie-breaker.
 
-`SearchService` (`src/search`) calls those functions through Sequelize (`sequelize.query` with bound `query` and `limit` replacements), validates every row with the Zod schemas from `@trackstack/schemas`, and tags each result with its `type` (`song`, `artist`, or `album`). The resolvers expose `artistSearch`, `albumsSearch`, and `songsSearch` individually, plus `multipleSearch`, which returns the first result of each list as `exact*` and the rest as `*Results`.
+`SearchService` (`src/search`) calls those functions through Sequelize (`sequelize.query` with bound `query` and `limit` replacements), validates every row with the Zod schemas from `@trackstack/schemas`, and tags each result with its `type` (`song`, `artist`, or `album`).
 
 ## Shared validation
 
