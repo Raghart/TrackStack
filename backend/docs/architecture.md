@@ -1,6 +1,6 @@
-# TrackStack's Architecture
+# Backend Architecture
 
-The TrackStack backend is a NestJS 11 service (Express 5) that exposes a GraphQL API with Apollo Server in code-first mode, so the schema is generated in memory from decorated resolvers and DTOs instead of a versioned `.graphql` file. It was designed to be fast, to have a clear structure and to deliver efficently the recieved data through the Graphql Apollo Server, improving drastically the user experience.
+The TrackStack backend is a NestJS 11 service (Express 5) that exposes a GraphQL API with Apollo Server in code-first mode: the schema is generated in memory from decorated resolvers and DTOs, so it stays in sync with the TypeScript types instead of being maintained in a separate `.graphql` file. Resolvers stay thin, services own the business logic, and PostgreSQL does the heavy work — vector ranking, pagination, and trigram search — rather than loading the catalog into the application. AI responses travel over WebSocket subscriptions so text reaches the client incrementally.
 
 ## How it works
 
@@ -10,7 +10,7 @@ frontend ──HTTP──▶ /graphql ──▶ resolver ──▶ service ─�
     └──WebSocket──▶ subscription ──┴──▶ Google GenAI (streaming)
 ```
 
-Each domain (`songs`, `albums`, `artists`, `genres`, `song_artists`, `song_genres`, `song_details`, `search`) follows the same shape: a thin resolver receives the GraphQL arguments, the service owns the business logic and data access, and the DTOs declare the public GraphQL contract. Inputs are validated with zod schemas in the `schemas` worskpace, to ensure every object manages the expected data structure while the database queries are wrapped in `safeQuery` to safely throw errors if a network error presents while trying to retrieve the information.
+Each domain (`songs`, `albums`, `artists`, `genres`, `song_artists`, `song_genres`, `song_details`, `search`) follows the same shape: a thin resolver receives the GraphQL arguments, the service owns the business logic and data access, and the DTOs declare the public GraphQL contract. Inputs and database rows are validated with the Zod schemas from the `schemas` workspace, so every object has the expected shape. Database queries are wrapped in `safeQuery`, which turns driver and connection failures into a consistent error (see [Design decisions](#safequery-wraps-every-database-call)).
 
 ## Recommendation flow
 
@@ -25,6 +25,26 @@ Recommendations combine two complementary layers: a deterministic one, where the
 Search is PostgreSQL-only, with no external search engine. The database adds `pg_trgm`, `unaccent`, GIN trigram indexes, and the `search_songs`, `search_artists`, and `search_albums` functions with exact → prefix → contains → fuzzy ranking and `similarity()` as a tie-breaker.
 
 `SearchService` (`src/search`) calls those functions through Sequelize (`sequelize.query` with bound `query` and `limit` replacements), validates every row with the Zod schemas from `@trackstack/schemas`, and tags each result with its `type` (`song`, `artist`, or `album`).
+
+## Design decisions
+
+### Search and similarity live in PostgreSQL
+
+`pg_trgm`, `unaccent`, GIN trigram indexes, and `pgvector` already cover the catalog's scale (roughly 50 000 songs). Keeping search and vector ranking in the same database removes a second system to deploy, an index to keep in sync with writes, and a network hop between the data and the ranking. The filtering by genre and the cosine ordering happen in a single SQL statement, close to the rows.
+
+The trade-off is that this decisition ties the project to PostgreSQL features and is not the path to follow if the catalog or query volume grows far beyond what a single database handles comfortably. At that point an external search engine would earn its operational cost.
+
+### Prisma migrates, Sequelize queries
+
+Prisma owns the schema and the migration history in `database/`; Sequelize, configured through `@nestjs/sequelize`, is what the services actually use at runtime. This keeps a reviewable migration trail (including the SQL functions) without rewriting the data access layer and its models. The Prisma client is not imported by the application.
+
+The cost is a schema declared twice — `schema.prisma` and the Sequelize models in `models/` — which must be kept aligned by hand. A structural change therefore needs both edits plus the migration.
+
+### `safeQuery` wraps every database call
+
+`safeQuery` (`src/utils/safeQuery.ts`) wraps a query in `try/catch` and rethrows any driver or connection failure as a Nest `InternalServerErrorException`. This separates infrastructure failures from domain errors (`BadRequestException`, `NotFoundException`, invalid pagination), gives the client a consistent GraphQL error instead of leaking driver internals, and keeps the original message available for debugging, but the original stack trace is not. It only wraps the database boundary, so validation and parsing errors keep their own status.
+
+The trade-off is discipline: every new query must go through the wrapper to get the behaviour, and the original stack is dropped in favour of the exception message. It is intentionally a thin helper, not a retry or transaction manager.
 
 ## Shared validation
 
