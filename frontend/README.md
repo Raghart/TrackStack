@@ -11,6 +11,8 @@ React single-page app for [TrackStack](../README.md). It provides the recommenda
 
 ## Project structure
 
+Pages are grouped by feature under `src/components/<Feature>/`; each feature owns its GraphQL document in `src/queries/`, its hooks in `src/hooks/`, and its slice in `src/reducers/` when it needs global state. Components stay focused on rendering, hooks orchestrate Apollo and Redux, and every payload that crosses the API is validated before it reaches the UI.
+
 ```text
 frontend/
 ├── src/

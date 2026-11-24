@@ -1,10 +1,10 @@
 # Frontend — Architecture
 
-The TrackStack frontend is a React 19 single-page application built with Vite and TypeScript. A single Apollo Client talks to the NestJS backend: 
+The TrackStack frontend is a React 19 single-page application built with Vite and TypeScript. A single Apollo Client talks to the NestJS backend: queries go over HTTP, subscriptions over WebSocket, same /graphql endpoint.
 
 ```text
-                    ┌──▶ HTTP ──────────▶ queries / mutations ──┐
-Apollo Client ──────┤                                           ├──▶ /graphql
+                    ┌──▶ HTTP ──────────▶ queries ──────────────┐
+Apollo Client ──────┤                                            ├──▶ /graphql
 (split link)        └──▶ WebSocket ─────▶ subscriptions ────────┘
                          (graphql-ws)
 ```
@@ -14,16 +14,6 @@ Chakra UI renders the interface, Redux Toolkit holds the state that belongs to t
 The sections below describe the route map, the recommendation vector, and the data and error-handling layers.
 
 ## Routes
-
-Pages are grouped by feature under `src/components/<Feature>/`; each feature owns its GraphQL document in `src/queries/`, its hooks in `src/hooks/`, and its slice in `src/reducers/` when it needs global state. Components stay focused on rendering, hooks orchestrate Apollo and Redux, and every payload that crosses the API is validated before it reaches the UI.
-
-```text
-route ──▶ page component ──▶ hook (src/hooks) ──▶ Apollo Client ──▶ /graphql
-              │                    │                    │
-              │                    ├──▶ Redux slice     └──▶ WebSocket (subscriptions)
-              │                    └──▶ Zod schemas (@trackstack/schemas)
-              └──▶ UI (Chakra)
-```
 
 | Route | Page |
 | --- | --- |
@@ -46,7 +36,7 @@ route ──▶ page component ──▶ hook (src/hooks) ──▶ Apollo Clien
 
 The two libraries split the work by the lifetime of the data. Apollo keeps the normalized cache of entities and paginated lists, so a song fetched on one page is reused elsewhere and the infinite-scroll lists merge new pages into the existing one. Redux keeps the state that outlives a query and is not a copy of a server object: the active track and playback flag (`songReducer`), the recommendation sliders and selected genres (`recommendReducer`), and the search query plus its status (`searchReducer`).
 
-The trade-off is two stores to reason about and a list that bypasses the Apollo cache; the gain is that navigation and playback survive query teardown, and no global state library has to reimplement the normalized cache. The cost is discipline: data that changes on the server but lives in Redux must be refreshed explicitly.
+The trade-off is two stores to reason about; the gain is that navigation and playback survive query teardown, and no global state library has to reimplement the normalized cache. The flip side is discipline: data that changes on the server but lives in Redux must be refreshed explicitly.
 
 ### Feature folders with hooks as the data boundary
 
@@ -59,6 +49,14 @@ The trade-off is indirection: a feature change often touches a component, its ho
 Every GraphQL response is parsed with the Zod schemas from `@trackstack/schemas` through `parseDataOrUndefined`/`parseArrayOrEmpty` (`src/Utils/safeParse.ts`) before it is stored in Redux or rendered. The same schemas the backend uses to validate its rows also enforce URL formats and Spotify ids on the client, so a malformed or unexpected payload becomes a controlled `undefined`/`[]` plus an explicit UI state, not a crash inside a component.
 
 The trade-off is runtime overhead and boilerplate on every fetch, and an extra place to keep in sync with the contract. Sharing the schemas in a workspace package keeps that from turning into duplicate definitions, but adding a field still means touching the schema. The alternative — trusting TypeScript types that are erased at runtime — would leave the client exposed to the very payloads the backend is trying to guard against.
+
+```text
+route ──▶ page component ──▶ hook (src/hooks) ──▶ Apollo Client ──▶ /graphql
+              │                    │                    │
+              │                    ├──▶ Redux slice     └──▶ WebSocket (subscriptions)
+              │                    └──▶ Zod schemas (@trackstack/schemas)
+              └──▶ UI (Chakra)
+```
 
 ### Stream the AI answer over a WebSocket subscription
 
@@ -92,5 +90,9 @@ The resulting 8-value array is sent to `getSongRecommendations` and also passed 
 - Page-specific data fetching lives in custom hooks under `src/hooks/`.
 
 ## Error handling
+
+`Utils/getGraphLink.ts` builds the `graphql-ws` client with its defaults (no explicit retry options), so a dropped connection is retried automatically a few times before the failure reaches Apollo. Queries are unaffected: they travel over HTTP through the same `split` link. Non-subscription errors are only logged by the `errorLink` in `getGraphLink.ts`; their UI state is handled per hook.
+
+If the `aiResponse` subscription still fails, `useAIStream` stores the error in its `error` state and shows one Chakra toast ("We couldn't get Lara's recommendations…"). `AIResponse` then replaces the loading spinner with a short fallback message instead of waiting forever. The toast is deduplicated with a ref, so repeated errors from the same failed subscription do not stack; the flag resets when a valid chunk arrives or when the genres/user vector change (which also resets the state and resubscribes), so a new failure notifies again.
 
 `components/Error/ErrorBoundary.tsx` wraps `<App />` in `main.tsx` as a last-resort guard, so an unhandled render error shows a fallback instead of a blank page. A second boundary inside `MainLayout` surrounds only the routed content (and the search results): if a page fails, the sidebar, search bar, and player stay usable, and the boundary resets automatically when the route changes. Page-specific "not found" and empty states are still handled by `components/Error/NotFound.tsx`.
