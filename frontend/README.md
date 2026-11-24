@@ -74,6 +74,27 @@ pnpm --filter ./frontend run preview
 
 The production build is written to `../backend/public` and served by NestJS next to the GraphQL API.
 
+## Tests
+
+Unit tests use **Vitest** with **Testing Library** and **jsdom**. They cover the GraphQL data hooks, the Apollo pagination policies, the player/audio state and the user-facing error notifications (including Toaster messages and their deduplication). No backend or `frontend/.env` is needed for testing: GraphQL, Apollo and the environment are mocked.
+
+See [docs/testing.md](./docs/testing.md) for the coverage map, fixtures and conventions.
+
+```bash
+pnpm run test:frontend                         # from the repository root
+pnpm --filter ./frontend run test              # one run
+pnpm --filter ./frontend run test:cov          # coverage -> frontend/coverage/
+```
+
+```bash
+pnpm run test:e2e                              # from the repository root
+pnpm --filter ./e2e run test                   # one run
+pnpm run test:e2e:report                       # open the HTML report
+pnpm --filter ./e2e exec playwright install    # install browsers once
+```
+
+The E2E suite expects the built app at `http://localhost:3000` (override with `E2ETEST_URL`) and needs a running backend and database.
+
 ## Docker
 
 The frontend has a standalone image that serves the Vite build with **Nginx** (SPA fallback included). The build context is the repository root because the pnpm workspace and `schemas/` live there:
@@ -99,27 +120,6 @@ Inside the image the bundle is written to `frontend/dist` (not `../backend/publi
 ## Architecture
 
 See [docs/architecture.md](./docs/architecture.md) for routing, how the recommendation vector is built, and the GraphQL/Redux data layer.
-
-## Tests
-
-Unit tests use **Vitest** with **Testing Library** and **jsdom**. They cover the GraphQL data hooks, the Apollo pagination policies, the player/audio state and the user-facing error notifications (including Toaster messages and their deduplication). No backend or `frontend/.env` is needed for testing: GraphQL, Apollo and the environment are mocked.
-
-See [docs/testing.md](./docs/testing.md) for the coverage map, fixtures and conventions.
-
-```bash
-pnpm run test:frontend                         # from the repository root
-pnpm --filter ./frontend run test              # one run
-pnpm --filter ./frontend run test:cov          # coverage -> frontend/coverage/
-```
-
-```bash
-pnpm run test:e2e                              # from the repository root
-pnpm --filter ./e2e run test                   # one run
-pnpm run test:e2e:report                       # open the HTML report
-pnpm --filter ./e2e exec playwright install    # install browsers once
-```
-
-The E2E suite expects the built app at `http://localhost:3000` (override with `E2ETEST_URL`) and needs a running backend and database.
 
 ## Features
 
