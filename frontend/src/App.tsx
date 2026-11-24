@@ -5,7 +5,7 @@ import MainLayout from "./components/MainLayout/MainLayout";
 import DetailsLayout from "./components/DetailsPath/Layout/DetailsLayout";
 import GenreSelection from "./components/GenrePath/GenreSelection";
 import ArtistSelection from "./components/ArtistPath/ArtistSelection";
-import LaraRecommendations from "./components/LaraRecommendationsPath/LaraRecommendations";
+import LaraRecommendations from "./components/Recommendations/LaraRecommendations";
 import GenreDetails from "./components/GenreDetails/GenreDetails";
 import AlbumSelection from "./components/AlbumPath/AlbumSelection";
 

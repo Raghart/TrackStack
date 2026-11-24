@@ -17,7 +17,7 @@ frontend/
 │   ├── components/
 │   │   ├── Landpage/                 # landing page, search bar, search results
 │   │   ├── SongPath/                 # song details
-│   │   ├── LaraRecommendationsPath/  # recommendation results and AI message
+│   │   ├── Recommendations/          # recommendation results and AI message
 │   │   ├── GenrePath/GenreDetails/   # genre catalogue and genre songs
 │   │   ├── ArtistPath/               # artist catalogue
 │   │   ├── AlbumPath/DetailsPath/    # album catalogue and detail layout
