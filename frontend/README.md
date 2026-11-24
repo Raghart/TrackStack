@@ -2,12 +2,12 @@
 
 React single-page app for [TrackStack](../README.md). It provides the recommendation flow, the music player, and the browsing experience for songs, artists, albums, and genres.
 
-- **React 19** + **TypeScript**.
-- **Vite 6** for the dev server and production build.
-- **Chakra UI 3** for the component system and responsive layout.
-- **Apollo Client 3** for GraphQL queries and WebSocket subscriptions.
-- **Redux Toolkit 2** for the player, search, and recommendation state.
-- **React Router 7** for client-side routing.
+- **React** + **TypeScript**.
+- **Vite** for the dev server and production build.
+- **Chakra UI** for the component system and responsive layout.
+- **Apollo Client** for GraphQL queries and WebSocket subscriptions.
+- **Redux Toolkit** for the player, search, and recommendation state.
+- **React Router** for client-side routing.
 
 ## Project structure
 
@@ -66,17 +66,19 @@ pnpm run build:frontend     # tsc -b + vite build -> backend/public
 Or inside the package:
 
 ```bash
-pnpm --filter ./frontend run dev
-pnpm --filter ./frontend run build
-pnpm --filter ./frontend run lint
-pnpm --filter ./frontend run preview
+pnpm --filter ./frontend run dev          # Vite dev server
+pnpm --filter ./frontend run build        # tsc -b + vite build -> ../backend/public
+pnpm --filter ./frontend run lint         # ESLint over the package
+pnpm --filter ./frontend run preview      # serve the production build locally
 ```
 
 The production build is written to `../backend/public` and served by NestJS next to the GraphQL API.
 
 ## Tests
 
-Unit tests use **Vitest** with **Testing Library** and **jsdom**. They cover the GraphQL data hooks, the Apollo pagination policies, the player/audio state and the user-facing error notifications (including Toaster messages and their deduplication). No backend or `frontend/.env` is needed for testing: GraphQL, Apollo and the environment are mocked.
+Unit tests use **Vitest** with **Testing Library** and **jsdom**. They cover the GraphQL data hooks, the Apollo pagination policies, the player/audio state and the user-facing error notifications (including Toaster messages and their deduplication). 
+
+No backend or `frontend/.env` is needed for testing: GraphQL, Apollo and the environment are mocked.
 
 See [docs/testing.md](./docs/testing.md) for the coverage map, fixtures and conventions.
 
@@ -85,15 +87,6 @@ pnpm run test:frontend                         # from the repository root
 pnpm --filter ./frontend run test              # one run
 pnpm --filter ./frontend run test:cov          # coverage -> frontend/coverage/
 ```
-
-```bash
-pnpm run test:e2e                              # from the repository root
-pnpm --filter ./e2e run test                   # one run
-pnpm run test:e2e:report                       # open the HTML report
-pnpm --filter ./e2e exec playwright install    # install browsers once
-```
-
-The E2E suite expects the built app at `http://localhost:3000` (override with `E2ETEST_URL`) and needs a running backend and database.
 
 ## Docker
 
@@ -104,7 +97,7 @@ docker build -f frontend/Dockerfile -t trackstack-frontend .
 docker run --rm -p 8080:80 trackstack-frontend
 ```
 
-The app is available at `http://localhost:8080`. By default the image expects the backend at `http://localhost:3000`, matching `frontend/.env`; the backend must allow `http://localhost:8080` through CORS (`FRONTEND_URL`).
+The app is available at `http://localhost:8080`. By default the image expects the backend at `http://localhost:3000`, matching `frontend/.env`; the backend must allow `http://localhost:8080` through CORS (`FRONTEND_URL`). By using docker compose up -d in the project root, these are set for you.
 
 Vite bakes `VITE_GRAPHQL_URI` and `VITE_SUBSCRIPTION_URI` at build time, so override them as build args when the API lives somewhere else:
 
