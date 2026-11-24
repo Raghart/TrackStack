@@ -42,9 +42,9 @@ The cost is a schema declared twice — `schema.prisma` and the Sequelize models
 
 ### `safeQuery` wraps every database call
 
-`safeQuery` (`src/utils/safeQuery.ts`) wraps a query in `try/catch` and rethrows any driver or connection failure as a Nest `InternalServerErrorException`. This separates infrastructure failures from domain errors (`BadRequestException`, `NotFoundException`, invalid pagination), gives the client a consistent GraphQL error instead of leaking driver internals, and keeps the original message available for debugging, but the original stack trace is not. It only wraps the database boundary, so validation and parsing errors keep their own status.
+`safeQuery` (`src/utils/safeQuery.ts`) wraps a query in `try/catch` and rethrows any driver or connection failure as a Nest `InternalServerErrorException`. This separates infrastructure failures from domain errors (`BadRequestException`, `NotFoundException`, invalid pagination), gives the client a consistent GraphQL error instead of leaking driver internals, and keeps the original message available for debugging. It only wraps the database boundary, so validation and parsing errors keep their own status.
 
-The trade-off is discipline: every new query must go through the wrapper to get the behaviour, and the original stack is dropped in favour of the exception message. It is intentionally a thin helper, not a retry or transaction manager.
+The trade-off is discipline: every new query must go through the wrapper to get this behaviour. The original message is preserved, but the original stack trace is not. It is intentionally a thin helper, not a retry or transaction manager.
 
 ## Shared validation
 
