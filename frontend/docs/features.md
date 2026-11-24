@@ -16,7 +16,7 @@ This page walks through what a user can do in TrackStack, feature by feature. Tr
     <img src="../../assets/RecommendationResults.png" alt="Recommendation results" />
 </p>
 
-The resulting page shows the matching songs plus Lara's answer, which streams in as it is generated. The vector weights and the subscription behind that streaming are described in [Architecture — How the recommendation vector is built](./architecture.md#how-the-recommendation-vector-is-built) and [Architecture — Stream the AI answer over a WebSocket subscription](./architecture.md#stream-the-ai-answer-over-a-websocket-subscription).
+The resulting page shows the matching songs plus AI's answer, which streams in as it is generated. The vector weights and the subscription behind that streaming are described in [Architecture — How the recommendation vector is built](./architecture.md#how-the-recommendation-vector-is-built) and [Architecture — Stream the AI answer over a WebSocket subscription](./architecture.md#stream-the-ai-answer-over-a-websocket-subscription).
 
 If no song matches the chosen filters, a toast suggests adjusting the options and the app stays on the current page. A failed request shows a "Something went wrong" toast instead of navigating away. If the AI subscription drops, the songs remain visible and the answer area shows "We couldn't load Lara's recommendations right now. Please try again later." alongside a single toast, so the page never waits forever.
 
@@ -28,8 +28,8 @@ The search bar in the top navbar sends the query to `multipleSearch` and shows e
     <img src="../../assets/songSearch.png" alt="Search results" />
 </p>
 
-- If nothing matches, the results area shows "No Data found...". 
-- If the request fails or returns an unexpected payload, it shows "Search unavailable" or "Search results unavailable" instead, and one toast explains the problem without stacking on retries. 
+- If nothing matches, the results area shows "No Data found...".
+- If the request fails or returns an unexpected payload, it shows "Search unavailable" or "Search results unavailable" instead, and one toast explains the problem without stacking on retries.
 
 See [Architecture — Data layer](./architecture.md#data-layer) for the search statuses and [Architecture — Error handling](./architecture.md#error-handling) for the toast policy.
 
@@ -57,8 +57,6 @@ An unknown or malformed song id shows a "not found" warning instead of an empty 
 
 The left sidebar links to the artist, genre, and album catalogues. Each catalogue supports infinite scrolling, and every card opens the corresponding detail page.
 
-If an artist, album, or genre detail page receives an unknown value or returns no songs, it shows a "not found" message rather than an empty layout. Infinite scrolling relies on the Apollo `merge` policies described in [Architecture — Data layer](./architecture.md#data-layer).
-
 <p align="center">
     <img src="../../assets/artists.png" alt="Artists catalogue" />
 </p>
@@ -78,3 +76,5 @@ If an artist, album, or genre detail page receives an unknown value or returns n
 <p align="center">
     <img src="../../assets/albumSongs.png" alt="Songs in an album" />
 </p>
+
+If an artist, album, or genre detail page receives an unknown value or returns no songs, it shows a "not found" message rather than an empty layout. Infinite scrolling relies on the Apollo `merge` policies described in [Architecture — Data layer](./architecture.md#data-layer).
