@@ -1,8 +1,29 @@
 # Frontend — Architecture
 
-Introduction...
+The TrackStack frontend is a React 19 single-page application built with Vite and TypeScript. A single Apollo Client talks to the NestJS backend: 
+
+```text
+                    ┌──▶ HTTP ──────────▶ queries / mutations ──┐
+Apollo Client ──────┤                                           ├──▶ /graphql
+(split link)        └──▶ WebSocket ─────▶ subscriptions ────────┘
+                         (graphql-ws)
+```
+
+Chakra UI renders the interface, Redux Toolkit holds the state that belongs to the user (active track, recommendation inputs, search status), and React Router maps each URL to a feature component. In production the backend serves the compiled build from `backend/public`, so the SPA and the API share an origin.
+
+The sections below describe the route map, the recommendation vector, and the data and error-handling layers.
 
 ## Routes
+
+Pages are grouped by feature under `src/components/<Feature>/`; each feature owns its GraphQL document in `src/queries/`, its hooks in `src/hooks/`, and its slice in `src/reducers/` when it needs global state. Components stay focused on rendering, hooks orchestrate Apollo and Redux, and every payload that crosses the API is validated before it reaches the UI.
+
+```text
+route ──▶ page component ──▶ hook (src/hooks) ──▶ Apollo Client ──▶ /graphql
+              │                    │                    │
+              │                    ├──▶ Redux slice     └──▶ WebSocket (subscriptions)
+              │                    └──▶ Zod schemas (@trackstack/schemas)
+              └──▶ UI (Chakra)
+```
 
 | Route | Page |
 | --- | --- |
@@ -18,6 +39,32 @@ Introduction...
 | `*` | Redirect to `/` |
 
 `MainLayout` keeps the sidebar, search bar, and music player mounted across routes. When the search query is non-empty, it renders the search results instead of the routed page.
+
+## Design decisions
+
+### Apollo owns server state, Redux owns client state
+
+The two libraries split the work by the lifetime of the data. Apollo keeps the normalized cache of entities and paginated lists, so a song fetched on one page is reused elsewhere and the infinite-scroll lists merge new pages into the existing one. Redux keeps the state that outlives a query and is not a copy of a server object: the active track and playback flag (`songReducer`), the recommendation sliders and selected genres (`recommendReducer`), and the search query plus its status (`searchReducer`).
+
+The trade-off is two stores to reason about and a list that bypasses the Apollo cache; the gain is that navigation and playback survive query teardown, and no global state library has to reimplement the normalized cache. The cost is discipline: data that changes on the server but lives in Redux must be refreshed explicitly.
+
+### Feature folders with hooks as the data boundary
+
+Components are grouped by feature/route, not by file type, and data fetching is pushed into hooks. A page component reads a hook, renders its `loading`/`error`/empty state, and stays easy to test as plain UI. Hooks are the only place that calls `useQuery`/`useLazyQuery`/`useSubscription`, validates the result, and decides what goes to Redux or local state.
+
+The trade-off is indirection: a feature change often touches a component, its hook, and its query document, and some hooks are page-specific rather than reusable. In exchange, the Apollo logic is testable in isolation and components do not depend on GraphQL shapes. There is no server-state framework (React Query, router loaders) or `createAsyncThunk`: this is a deliberate, small-surface choice that suits the catalog's straightforward fetch-on-mount and infinite-scroll patterns.
+
+### Validate every payload at the client boundary
+
+Every GraphQL response is parsed with the Zod schemas from `@trackstack/schemas` through `parseDataOrUndefined`/`parseArrayOrEmpty` (`src/Utils/safeParse.ts`) before it is stored in Redux or rendered. The same schemas the backend uses to validate its rows also enforce URL formats and Spotify ids on the client, so a malformed or unexpected payload becomes a controlled `undefined`/`[]` plus an explicit UI state, not a crash inside a component.
+
+The trade-off is runtime overhead and boilerplate on every fetch, and an extra place to keep in sync with the contract. Sharing the schemas in a workspace package keeps that from turning into duplicate definitions, but adding a field still means touching the schema. The alternative — trusting TypeScript types that are erased at runtime — would leave the client exposed to the very payloads the backend is trying to guard against.
+
+### Stream the AI answer over a WebSocket subscription
+
+The recommendation page does not poll for the AI text. `useAIStream` opens an `aiResponse` subscription, appends each validated chunk to local state, and resubscribes when the genres or the user vector change. The text appears progressively and the connection is closed when the component unmounts.
+
+The trade-off is operational: subscriptions need a second URL (`VITE_SUBSCRIPTION_URI`), a `graphql-ws` client, and explicit error handling, because a dropped socket would otherwise leave the page waiting forever (see the `error` state returned by the hook). Queries, by contrast, need only HTTP. Keeping both behind one Apollo Client and a `split` link hides most of that complexity, at the cost of a single client that reads environment variables at import time and must be mocked in tests.
 
 ## How the recommendation vector is built
 
