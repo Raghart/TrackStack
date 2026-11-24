@@ -6,6 +6,8 @@ Sequelize maps the tables through the models in `models/` with `synchronize` dis
 
 ## Migrations
 
+The migrations are the only way the schema changes: each folder in `database/prisma/migrations/` is a versioned step containing a `migration.sql`, and Prisma applies them in folder-name (timestamp) order while recording what has run in the `_prisma_migrations` table. The first migrations reproduce the old Goose history 1:1, and the later ones add the vectors (`pgvector`), the search extensions and SQL functions (`pg_trgm`, `unaccent`, `search_songs*`) and data fixes. Never edit or delete a migration that is already applied: add a new one that corrects it.
+
 ```text
 database/
 ├── prisma.config.ts                  # Prisma CLI config (loads backend/.env)
