@@ -1,6 +1,6 @@
-## Features
+# Frontend — Features
 
-### Get personalized recommendations
+## Get personalized recommendations
 
 1. Open the recommendation modal with the **beam note** button in the top-right corner.
 2. Pick one or more genres and adjust the sliders and switches (energy, danceability, mood, sentiment, tempo, and more).
@@ -14,7 +14,7 @@
     <img src="../assets/RecommendationResults.png" alt="Recommendation results" />
 </p>
 
-### Search songs, artists, and albums
+## Search songs, artists, and albums
 
 The search bar in the top navbar sends the query to `multipleSearch` and shows exact matches plus the remaining fuzzy results, all served by the backend's PostgreSQL search.
 
@@ -22,7 +22,7 @@ The search bar in the top navbar sends the query to `multipleSearch` and shows e
     <img src="../assets/songSearch.png" alt="Search results" />
 </p>
 
-### Listen to 30-second previews
+## Listen to 30-second previews
 
 Hover over a song cover and press play. The player at the bottom shows the current track and elapsed time, and includes random, previous, next, and volume controls.
 
@@ -30,7 +30,7 @@ Hover over a song cover and press play. The player at the bottom shows the curre
     <img src="../assets/playSong.png" alt="Song preview player" />
 </p>
 
-### Explore track details
+## Explore track details
 
 Clicking a song title opens its detail page with artists, genres, duration, release year, album, and a link to Spotify.
 
@@ -38,7 +38,7 @@ Clicking a song title opens its detail page with artists, genres, duration, rele
     <img src="../assets/songDetails.png" alt="Song details" />
 </p>
 
-### Browse artists, genres, and albums
+## Browse artists, genres, and albums
 
 The left sidebar links to the artist, genre, and album catalogues. Each catalogue supports infinite scrolling, and every card opens the corresponding detail page.
 
