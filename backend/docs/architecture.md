@@ -28,11 +28,11 @@ Search runs entirely in PostgreSQL, with no external search engine. Results are 
 
 ## Design decisions
 
-### Search and similarity live in PostgreSQL
+### Search & similarity systems in PostgreSQL
 
-`pg_trgm`, `unaccent`, GIN trigram indexes, and `pgvector` already cover the catalog's scale (roughly 50 000 songs). Keeping search and vector ranking in the same database removes a second system to deploy, an index to keep in sync with writes, and a network hop between the data and the ranking. The filtering by genre and the cosine ordering happen in a single SQL statement, close to the rows.
+`pg_trgm`, `unaccent`, GIN trigram indexes, and `pgvector` cover the needs of a catalog of roughly 50,000 songs. Keeping search and vector ranking in the same database removes a second system to deploy, an index to keep in sync with writes, and a network hop between the data and the ranking. The filtering by genre and the cosine ordering happen in a single SQL statement, close to the rows.
 
-The trade-off is that this decisition ties the project to PostgreSQL features and is not the path to follow if the catalog or query volume grows far beyond what a single database handles comfortably. At that point an external search engine would earn its operational cost.
+The trade-off is that this ties the project to PostgreSQL features. If the catalog or query volume grows far beyond what a single database handles comfortably, an external search engine would earn its operational cost.
 
 ### Prisma migrates, Sequelize queries
 
