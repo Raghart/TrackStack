@@ -1,4 +1,4 @@
-# Database
+# Backend — Database
 
 Sequelize maps the tables through the models in `models/` with `synchronize` disabled, so the schema is owned by Prisma: `database/prisma/schema.prisma` describes the current schema and `database/prisma/migrations/` holds its history. The API also depends on SQL functions created by those migrations:
 

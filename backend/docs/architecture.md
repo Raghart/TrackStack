@@ -1,4 +1,4 @@
-# Backend Architecture
+# Backend — Architecture
 
 The TrackStack backend is a NestJS 11 service (Express 5) that exposes a GraphQL API with Apollo Server in code-first mode: the schema is generated in memory from decorated resolvers and DTOs, so it stays in sync with the TypeScript types instead of being maintained in a separate `.graphql` file. Resolvers stay thin, services own the business logic, and PostgreSQL does the heavy work — vector ranking, pagination, and trigram search — rather than loading the catalog into the application.
 
