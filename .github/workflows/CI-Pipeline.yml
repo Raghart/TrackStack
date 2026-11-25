@@ -123,7 +123,6 @@ jobs:
         working-directory: ./backend
         env:
           DB_URL: ${{ secrets.DB_URL }}
-          DB_PORT: ${{ secrets.DB_PORT }}
           DB_SSL: "true"
           DB_SSL_CA: certs/ca.pem
 
