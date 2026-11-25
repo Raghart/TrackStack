@@ -82,8 +82,6 @@ Unit tests use **Vitest** with **Testing Library** and **jsdom**. They cover the
 
 No backend or `frontend/.env` is needed for testing: GraphQL, Apollo and the environment are mocked.
 
-See [docs/testing.md](./docs/testing.md) for the coverage map, fixtures and conventions.
-
 ```bash
 pnpm run test:frontend                         # from the repository root
 pnpm --filter ./frontend run test              # one run
