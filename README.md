@@ -67,7 +67,7 @@ The AI messages use the demo fallback unless you provide a Google GenAI key: `AP
 
 ### Run locally
 
-Requirements: Node.js 20+, **pnpm** (the version is pinned in `package.json`), PostgreSQL with `pgvector`, and a Google GenAI API key for the AI messages.
+Requirements: Node.js 22.19+, **pnpm** (the version is pinned in `package.json`), PostgreSQL with `pgvector`, and a Google GenAI API key for the AI messages.
 
 ```bash
 git clone https://github.com/Raghart/TrackStack.git
