@@ -110,6 +110,9 @@ jobs:
       - name: Build Frontend
         run: pnpm run build
         working-directory: ./frontend
+        env:
+          VITE_GRAPHQL_URI: ${{ secrets.VITE_GRAPHQL_URI }}
+          VITE_SUBSCRIPTION_URI: ${{ secrets.VITE_SUBSCRIPTION_URI }}
 
       - name: Build Backend
         run: pnpm run build
@@ -123,8 +126,8 @@ jobs:
         working-directory: ./backend
         env:
           DB_URL: ${{ secrets.DB_URL }}
-          DB_SSL: "true"
-          DB_SSL_CA: certs/ca.pem
+          DB_SSL: ${{ secrets.DB_SSL }}
+          DB_SSL_CA: ${{ secrets.DB_SSL_CA }}
 
       - name: Running Playwright tests
         run: pnpm run test:e2e
