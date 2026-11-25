@@ -3,6 +3,7 @@
 /node_modules
 /build
 public/assets/
+public/index.html
 
 # generated prisma client
 /database/generated/
