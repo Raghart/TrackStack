@@ -5,13 +5,15 @@ import { IncomingMessage, ServerResponse } from 'node:http';
 
 @Injectable()
 export class GqlThrottlerGuard extends ThrottlerGuard {
-  getRequestResponse(context: ExecutionContext) : GqlContext {
-    const { req, res } = GqlExecutionContext.create(context).getContext<GqlContext>();
-    return { req, res };
+  getRequestResponse(context: ExecutionContext) {
+    const ctx = GqlExecutionContext.create(context).getContext<GqlContext>();
+    return { req: ctx.req, res: ctx?.res ?? noopRes };
   };
 };
 
+const noopRes = { header: () => undefined } as unknown as ServerResponse;
+
 interface GqlContext {
   req: IncomingMessage;
-  res: ServerResponse;
+  res?: ServerResponse;
 };
