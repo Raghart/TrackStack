@@ -29,7 +29,6 @@ import { InvalidPaginationException } from '@/utils/PaginationError';
 import parseGenres from '@/utils/parseGenres';
 import { stringSchema } from '@trackstack/schemas/zod.parsers';
 import { AITextChunk } from './types/aiAttributes';
-if (existsSync('.env')) process.loadEnvFile();
 
 @Injectable()
 export class SongsService {

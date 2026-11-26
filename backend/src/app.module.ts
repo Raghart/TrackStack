@@ -53,7 +53,7 @@ if (existsSync('.env')) process.loadEnvFile();
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      playground: true,
+      playground: process.env?.NODE_ENV !== "production" ? true : false,
       context: (ctx: {
         req?: IncomingMessage;
         res?: unknown;

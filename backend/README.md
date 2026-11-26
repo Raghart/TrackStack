@@ -43,6 +43,7 @@ Set up a `.env` file in `backend/` using these variable names:
 | `AI_MODEL` | No | Gemini model name used for streamed messages (Used together with API_KEY) |
 | `PORT` | No | HTTP port (defaults to `3000`) |
 | `FRONTEND_URL` | No | Allowed CORS origin for the frontend |
+| `NODE_ENV` | No | Runtime mode. Set to `production` to disable the GraphQL playground and the startup GraphQL URL log; any other value, or unset, keeps the local development behavior. |
 
 Check out an example on how to setup the [.env](.env.example) file.
 

@@ -17,6 +17,8 @@ export async function bootstrap() {
   const port = Number(process.env.PORT ?? 3000);
   await app.listen(port);
   console.log(`Page on: http://localhost:${port}`);
-  console.log(`GraphQL on: http://localhost:${port}/graphql`);
+  if (process.env?.NODE_ENV !== "production") {
+    console.log(`GraphQL on: http://localhost:${port}/graphql`);
+  };
 }
 void bootstrap();

@@ -52,7 +52,7 @@ Response parsing uses the Zod schemas in `@trackstack/schemas`: the services val
 
 ## GraphQL API
 
-The schema is generated at runtime. With the backend running, open `http://localhost:3000/graphql` for the Apollo playground.
+The schema is generated at runtime. When `NODE_ENV` is not `production`, open `http://localhost:3000/graphql` for the Apollo playground.
 
 ### Queries
 
