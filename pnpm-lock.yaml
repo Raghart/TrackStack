@@ -299,6 +299,9 @@ importers:
       '@nestjs/serve-static':
         specifier: ^5.0.4
         version: 5.0.4(@nestjs/common@11.2.8(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@11.2.8)(express@5.2.1(supports-color@8.1.1))
+      '@nestjs/throttler':
+        specifier: ^6.8.0
+        version: 6.8.0(@nestjs/common@11.2.8(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@11.2.8)(reflect-metadata@0.2.2)
       '@prisma/client':
         specifier: ^7.10.1
         version: 7.10.1(prisma@7.10.1(@types/node@22.19.15)(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(magicast@0.5.5)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3))(typescript@5.9.3)
@@ -317,6 +320,9 @@ importers:
       graphql:
         specifier: ^16.11.0
         version: 16.13.2
+      helmet:
+        specifier: ^8.3.0
+        version: 8.3.0
       pg:
         specifier: ^8.16.0
         version: 8.20.0
@@ -1825,6 +1831,14 @@ packages:
         optional: true
       '@nestjs/platform-express':
         optional: true
+
+  '@nestjs/throttler@6.8.0':
+    resolution: {integrity: sha512-kApHI/Ycxu3cxz7mcEhth7eeR9+L2GGb2CKpaBU+uAWz6DF4XRK68VWXFDKDA1aVwCdOf7HjYiafvQVG+eD2Gw==}
+    engines: {node: ^20.19.0 || ^22.12.0 || >=24.0.0}
+    peerDependencies:
+      '@nestjs/common': ^7.0.0 || ^8.0.0 || ^9.0.0 || ^10.0.0 || ^11.0.0 || ^12.0.0
+      '@nestjs/core': ^11.1.18
+      reflect-metadata: ^0.1.13 || ^0.2.0
 
   '@noble/hashes@1.8.0':
     resolution: {integrity: sha512-jCs9ldd7NwzpgXDIf6P3+NrHh9/sD6CQdxHyjQI+h/6rDNo88ypBxxz45UDuZHz9r3tNz7N/VInSVoVdtXEI4A==}
@@ -4281,6 +4295,10 @@ packages:
 
   hast-util-whitespace@3.0.0:
     resolution: {integrity: sha512-88JUN06ipLwsnv+dVn+OIYOvAuvBMy/Qoi6O7mQHxdPXpjy+Cd6xRkWwux7DKO+4sYILtLBRIKgsdpS2gQc7qw==}
+
+  helmet@8.3.0:
+    resolution: {integrity: sha512-Qgpiaws3Sm30Av8Eah6sjMCZZwjlBu+E68rhpCWBshY1lb09HtLwj5GviX0OyQIn+ulUS0iX0AxN5n3tLZzz1w==}
+    engines: {node: '>=18.0.0'}
 
   hoist-non-react-statics@3.3.2:
     resolution: {integrity: sha512-/gGivxi8JPKWNm/W0jSmzcMPpfpPLc3dY/6GxhX2hQ9iGj3aDfklV4ET7NjKpSinLpJ5vafa9iiGIEZg10SfBw==}
@@ -7619,6 +7637,12 @@ snapshots:
     optionalDependencies:
       '@nestjs/platform-express': 11.1.17(@nestjs/common@11.2.8(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@11.2.8)(supports-color@8.1.1)
 
+  '@nestjs/throttler@6.8.0(@nestjs/common@11.2.8(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/core@11.2.8)(reflect-metadata@0.2.2)':
+    dependencies:
+      '@nestjs/common': 11.2.8(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1)
+      '@nestjs/core': 11.2.8(@nestjs/common@11.2.8(reflect-metadata@0.2.2)(rxjs@7.8.2)(supports-color@8.1.1))(@nestjs/platform-express@11.1.17)(reflect-metadata@0.2.2)(rxjs@7.8.2)
+      reflect-metadata: 0.2.2
+
   '@noble/hashes@1.8.0': {}
 
   '@nodelib/fs.scandir@2.1.5':
@@ -10609,6 +10633,8 @@ snapshots:
   hast-util-whitespace@3.0.0:
     dependencies:
       '@types/hast': 3.0.4
+
+  helmet@8.3.0: {}
 
   hoist-non-react-statics@3.3.2:
     dependencies:

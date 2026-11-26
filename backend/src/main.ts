@@ -1,11 +1,13 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { NestExpressApplication } from '@nestjs/platform-express';
+import helmet from 'helmet';
 import { existsSync } from 'node:fs';
 if (existsSync('.env')) process.loadEnvFile();
 
 export async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
+  app.use(helmet({ contentSecurityPolicy: false }));
 
   app.enableCors({
     origin: process.env.FRONTEND_URL,

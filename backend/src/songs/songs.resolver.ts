@@ -6,10 +6,13 @@ import {
   Resolver,
   Subscription,
 } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import { Throttle } from '@nestjs/throttler';
 import { SongsService } from './songs.service';
 import { USER_VECTOR } from '../../test/constants/constants';
 import { FullSongResponseDto } from './dto/FullSongResponse.dto';
 import { SongResponseDto } from './dto/SongResponse.dto';
+import { GqlThrottlerGuard } from '@/utils/gqlThrottlerGuard';
 
 @Resolver()
 export class SongsResolver {
@@ -34,6 +37,8 @@ export class SongsResolver {
     return this.songsService.getSongData(songID);
   }
 
+  @UseGuards(GqlThrottlerGuard)
+  @Throttle({ ai: { limit: 5, ttl: 60_000 } })
   @Subscription(() => String)
   async *aiResponse(
     @Args('genres', { type: () => [String], defaultValue: ['Rock'] })
