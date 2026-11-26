@@ -14,6 +14,7 @@ import {
 } from '@nestjs/common';
 import { USER_VECTOR } from '../../test/constants/constants';
 import { GoogleGenAI } from '@google/genai';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { expectSongProps } from '@/utils/expectSongs';
 import { ConnectionResError, TimeoutResError } from '@/utils/mockErrors';
 import { vi } from 'vitest';
@@ -24,6 +25,14 @@ describe('SongsResolver receives the expected songs array from the service', () 
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ThrottlerModule.forRoot([
+        {
+          name: 'ai',
+          ttl: 60_000,
+          limit: 5,
+          blockDuration: 60_000,
+        },
+      ])],
       providers: [
         SongsResolver,
         {
@@ -141,6 +150,14 @@ describe('SongsResolver is able to communicate the error from the service to hel
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ThrottlerModule.forRoot([
+        {
+          name: 'ai',
+          ttl: 60_000,
+          limit: 5,
+          blockDuration: 60_000,
+        },
+      ])],
       providers: [
         SongsResolver,
         {
