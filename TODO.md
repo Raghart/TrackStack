@@ -6,4 +6,4 @@ Los 4 arreglos con mejor retorno (de mayor a menor impacto)
 
 3. ~~Endurece el borde. No hay throttling ni helmet (verifiqué con grep). Un endpoint de IA público y sin rate limit es una factura de Google GenAI esperando a pasar. Añadir @nestjs/throttler es media hora y es un buen punto de entrevista.~~
 
-4. Limpia la historia y el arranque. Commits con prefijo r se leen mal; reescribe o al menos usa mensajes imperativos de aquí en adelante. Y saca process.loadEnvFile() de songs.service.ts (efecto lateral al importar un servicio) a main.ts/ConfigModule.
+4. ~~Limpia la historia y el arranque. Commits con prefijo r se leen mal; reescribe o al menos usa mensajes imperativos de aquí en adelante. Y saca process.loadEnvFile() de songs.service.ts (efecto lateral al importar un servicio) a main.ts/ConfigModule~~.
