@@ -55,4 +55,6 @@ database/init/
 └── 02_seed.sql        # 100 songs with their artists, albums, genres and song_details
 ```
 
-The schema mirrors the production database (including the `numeric(10,5)` columns and the `vector(8)` column), not just the Prisma migration files. The Prisma history is marked as applied so `db:deploy` does not try to recreate existing tables. The seed is a fixed snapshot generated from production: do not edit it by hand, and keep it in sync if the schema changes. It is intended only for the demo, not for local development against real data.
+The schema mirrors the production database (including the `numeric(10,5)` columns and the `vector(8)` column), not just the Prisma migration files. The Prisma history is marked as applied so `db:deploy` does not try to recreate existing tables. 
+
+The seed is a fixed snapshot generated from production: do not edit it by hand, and keep it in sync if the schema changes. `test/integration/database.integration.spec.ts` loads this snapshot through Docker in an isolated PostgreSQL instance to confirm that the extensions, tables and PostgreSQL functions (`search_songs`, `search_artists`, `search_albums`, `search_songs_cosine_similarity`) work as expected against real demo data. If the schema or the seed changes without updating these files, the integration tests will fail or stop reflecting the real behaviour.
