@@ -5,15 +5,20 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import { parseArtistSongs, parseFloatNum, parseString } from 'src/types/parses';
-import { SongResponse } from 'src/types/songAttributes';
-import { ArtistResponse, ArtistWithSongs } from 'src/types/artistAttributes';
-import safeQuery from 'src/utils/safeQuery';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+import {
+  ArtistResponse,
+  artistResponseSchema,
+  ArtistWithSongsData,
+  artistWithSongsSchema,
+  SongResponse,
+  songResponseSchema,
+} from '@trackstack/schemas';
+import safeQuery from '@/utils/safeQuery';
+import { InvalidPaginationException } from '@/utils/PaginationError';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { SongsModel } from '../../models/songs/song.model';
-import { isNumber } from 'src/types/verify';
+import { floatNumberSchema } from '@trackstack/schemas/zod.parsers';
 
 @Injectable()
 export class ArtistsService {
@@ -25,8 +30,8 @@ export class ArtistsService {
     seed: string,
     page = 1,
     limit = 20,
-  ): Promise<ArtistWithSongs[]> {
-    if (!isNumber(seed))
+  ): Promise<ArtistWithSongsData[]> {
+    if (!floatNumberSchema.safeParse(seed).success)
       throw new BadRequestException(
         'The seed must be a valid string of numbers.',
       );
@@ -44,21 +49,23 @@ export class ArtistsService {
         include: [
           {
             model: SongsModel,
-            attributes: ['name'],
+            attributes: ['id', 'name', 'url_preview'],
             include: [{ model: AlbumsModel, attributes: ['url_image'] }],
           },
         ],
       }),
     );
 
-    return rawData.map((entry) => parseArtistSongs(entry.get({ plain: true })));
+    return rawData.map((entry) =>
+      artistWithSongsSchema.parse(entry.get({ plain: true })),
+    );
   }
 
-  parseArtists(artistData: ArtistWithSongs[]): ArtistResponse[] {
-    return artistData.map((artist) => ({
+  parseArtists(artistData: ArtistWithSongsData[]): ArtistResponse[] {
+    return artistData.map((artist) => artistResponseSchema.parse({
       id: artist.id,
       name: artist.name,
-      album_cover: parseString(artist.songs[0].album.url_image),
+      album_cover: artist.songs[0].album?.url_image,
     }));
   }
 
@@ -71,7 +78,7 @@ export class ArtistsService {
     return this.parseArtists(artistResults);
   }
 
-  async fetchArtistSongs(artist: string): Promise<ArtistWithSongs> {
+  async fetchArtistSongs(artist: string): Promise<ArtistWithSongsData> {
     const rawData = await safeQuery(() =>
       this.artistModel.findOne({
         where: { name: { [Op.iLike]: `${artist}` } },
@@ -90,16 +97,18 @@ export class ArtistsService {
       throw new NotFoundException(
         `The artist: '${artist}' doesn't exist in the DB!`,
       );
-    return parseArtistSongs(rawData.get({ plain: true }));
+    return artistWithSongsSchema.parse(rawData.get({ plain: true }));
   }
 
-  parseArtistSongs(artist: ArtistWithSongs): SongResponse[] {
-    return artist.songs.map((song) => ({
-      id: parseFloatNum(song.id),
-      name: parseString(song.name),
+  parseArtistSongs(
+    artist: ArtistWithSongsData,
+  ): SongResponse[] {
+    return artist.songs.map((song) => songResponseSchema.parse({
+      id: song.id,
+      name: song.name,
       artists: [artist.name],
-      url_preview: parseString(song.url_preview),
-      album_cover: parseString(song.album.url_image),
+      url_preview: song.url_preview,
+      album_cover: song.album?.url_image,
     }));
   }
 

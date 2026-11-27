@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArtistsService } from './artists.service';
 import { getModelToken } from '@nestjs/sequelize';
@@ -12,17 +13,17 @@ import {
   artistTestResponses,
   artistTestSongs,
 } from '../../test/data/artistsModule/artistData';
-import { expectSongProps } from 'src/utils/expectSongs';
+import { expectSongProps } from '@/utils/expectSongs';
 import {
   SequelizeConnectionError,
   SequelizeTimeoutError,
-} from 'src/utils/mockErrors';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+} from '@/utils/mockErrors';
+import { InvalidPaginationException } from '@/utils/PaginationError';
 import { ArtistsModel } from '../../models/artists/artists.model';
 
 describe("ArtistsService retrieves and parses the artist's data from the database", () => {
   let service: ArtistsService;
-  let artistModel: { findAll: jest.Mock; findOne: jest.Mock };
+  let artistModel: { findAll: Mock; findOne: Mock };
   const artistTestData = artistData.map((entry) => ({ get: () => entry }));
   const artistSongsDB = { get: () => artistSongsData };
 
@@ -33,8 +34,8 @@ describe("ArtistsService retrieves and parses the artist's data from the databas
         {
           provide: getModelToken(ArtistsModel),
           useValue: {
-            findAll: jest.fn(),
-            findOne: jest.fn(),
+            findAll: vi.fn(),
+            findOne: vi.fn(),
           },
         },
       ],

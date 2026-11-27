@@ -1,7 +1,7 @@
 import { setDanceability, setTempo, setEnergy, setSentiment } from "@/reducers/recommendReducer";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { SongResponse } from "@trackstack/schemas";
 import { JSX } from "react";
-import { SongResponse } from "./songTypes";
 
 export interface SwitchOptionsType<T extends SwitchLabelType> {
     title: SwitchTitleOptions;

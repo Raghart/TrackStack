@@ -7,40 +7,40 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { QueryTypes, Sequelize } from 'sequelize';
-import {
-  parseSongRecommendations,
-  parseFullSongResponse,
-  parseSongResponse,
-  parseString,
-  parseStringArray,
-} from 'src/types/parses';
-import {
-  FullSongResponse,
-  FullSongResponseAttributes,
-  SongResponse,
-  SongResponseAttributes,
-} from 'src/types/songAttributes';
-import safeQuery from 'src/utils/safeQuery';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
-import parseGenres from 'src/utils/parseGenres';
-import { GenerateContentResponse, GoogleGenAI } from '@google/genai';
-import { existsSync } from 'node:fs';
-if (existsSync(".env")) process.loadEnvFile();
+import { GoogleGenAI } from '@google/genai';
+import {
+  FullRawSong,
+  fullRawSongSchema,
+  FullSongResponse,
+  fullSongResponseSchema,
+  SongRawData,
+  songRawRecommendationSchema,
+  songRawSchema,
+  SongResponse,
+  songResponseSchema,
+} from '@trackstack/schemas';
+import safeQuery from '@/utils/safeQuery';
+import { InvalidPaginationException } from '@/utils/PaginationError';
+import parseGenres from '@/utils/parseGenres';
+import { stringSchema } from '@trackstack/schemas/zod.parsers';
+import { AITextChunk } from './types/aiAttributes';
 
 @Injectable()
 export class SongsService {
-  constructor(@InjectModel(SongsModel) private songModel: typeof SongsModel,
-  @Inject('AI') private readonly genai: GoogleGenAI) {}
+  constructor(
+    @InjectModel(SongsModel) private songModel: typeof SongsModel,
+    @Inject('AI') private readonly genai: GoogleGenAI,
+  ) {}
 
   async getDBLength(): Promise<number> {
     return await safeQuery(() => this.songModel.count());
   }
 
-  async fetchLandpageSongs(limit = 20): Promise<SongResponseAttributes[]> {
+  async fetchLandpageSongs(limit = 20): Promise<SongRawData[]> {
     if (limit < 1) throw new InvalidPaginationException('limit', limit);
 
     const rawData = await safeQuery(() =>
@@ -59,7 +59,7 @@ export class SongsService {
       }),
     );
     return rawData.map((entry) =>
-      parseSongResponse(entry.get({ plain: true })),
+      songRawSchema.parse(entry.get({ plain: true })),
     );
   }
 
@@ -68,17 +68,17 @@ export class SongsService {
     return this.parseSongList(songData);
   }
 
-  parseSongList(songData: SongResponseAttributes[]): SongResponse[] {
-    return songData.map((song) => ({
+  parseSongList(songData: SongRawData[]): SongResponse[] {
+    return songData.map((song) => songResponseSchema.parse({
       id: song.id,
       name: song.name,
-      artists: parseStringArray(song.artists.map((a) => a.name)),
+      artists: song.artists.map((a) => a.name),
       url_preview: song.url_preview,
-      album_cover: parseString(song.album.url_image),
+      album_cover: song.album.url_image,
     }));
   }
 
-  async fetchFullSongData(songID: number): Promise<FullSongResponseAttributes> {
+  async fetchFullSongData(songID: number): Promise<FullRawSong> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -115,22 +115,22 @@ export class SongsService {
         `The song with the ID: '${songID}' doesn't exist in the database!`,
       );
 
-    return parseFullSongResponse(rawData.get({ plain: true }));
+    return fullRawSongSchema.parse(rawData.get({ plain: true }));
   }
 
-  parseFullSong(songData: FullSongResponseAttributes): FullSongResponse {
-    return {
+  parseFullSong(songData: FullRawSong): FullSongResponse {
+    return fullSongResponseSchema.parse({
       id: songData.id,
       name: songData.name,
-      artists: parseStringArray(songData.artists.map((artist) => artist.name)),
-      genres: parseStringArray(songData.genres.map((g) => g.genre)),
-      album: parseString(songData.album.name),
-      album_cover: parseString(songData.album.url_image),
+      artists: songData.artists.map((artist) => artist.name),
+      genres: songData.genres.map((g) => g.genre),
+      album: songData.album.name,
+      album_cover: songData.album.url_image,
       duration: songData.duration,
       year: songData.year,
       spotify_id: songData.spotify_id,
       url_preview: songData.url_preview,
-    };
+    });
   }
 
   async getSongData(songID: number) {
@@ -138,51 +138,75 @@ export class SongsService {
     return this.parseFullSong(songData);
   }
 
-  buildUVString(userVector: number[]) : string[] {
+  buildUVString(userVector: number[]): string[] {
     const userDataTitle = new Map<number, string>([
-      [0, "Danceability"],
-      [1, "Energy"],
-      [2, "Mode"],
-      [3, "Speechiness"],
-      [4, "Acousticness"],
-      [5, "Instrumentalness"],
-      [6, "Valence"],
-      [7, "Tempo"],
+      [0, 'Danceability'],
+      [1, 'Energy'],
+      [2, 'Mode'],
+      [3, 'Speechiness'],
+      [4, 'Acousticness'],
+      [5, 'Instrumentalness'],
+      [6, 'Valence'],
+      [7, 'Tempo'],
     ]);
 
-    return userVector.map((value, idx) => `${userDataTitle.get(idx)}: ${value}`);
+    return userVector.map(
+      (value, idx) => `${userDataTitle.get(idx)}: ${value}`,
+    );
   }
 
-  async getAIStream(genres: string[], userVector: number[]) : Promise<AsyncGenerator<GenerateContentResponse>> {
+  // async generator required by the AI stream contract; no await needed
+  // eslint-disable-next-line @typescript-eslint/require-await
+  private async *getFallbackAIStream(): AsyncGenerator<AITextChunk> {
+    yield {
+      text: '**AI recommendations are unavailable in this demo**, but your personalized selection is ready below. Press play and enjoy!',
+    };
+  }
+
+  async getAIStream(
+    genres: string[],
+    userVector: number[],
+  ): Promise<AsyncIterable<AITextChunk>> {
+    const aiModel = process.env.AI_MODEL;
+
+    if (!aiModel || !process.env.API_KEY) {
+      console.warn(
+        'AI_MODEL or API_KEY is not configured; using the demo fallback message',
+      );
+      return this.getFallbackAIStream();
+    }
+
     const formattedUV = this.buildUVString(userVector);
 
     try {
       return await this.genai.models.generateContentStream({
-        model: parseString(process.env.AI_MODEL),
+        model: stringSchema.parse(aiModel),
         contents: [
-          "Generate a message for an user who wants to listen to songs with the following metadata:",
-          `Genres: ${genres.join(",")}`,
-          `UserVector: ${formattedUV.join(", ")}`
-        ].join("\n"),
+          'Generate a message for an user who wants to listen to songs with the following metadata:',
+          `Genres: ${genres.join(',')}`,
+          `UserVector: ${formattedUV.join(', ')}`,
+        ].join('\n'),
         config: {
           systemInstruction: [
-            "You are a professional AI music expert",
+            'You are a professional AI music expert',
             "I'm passing you the genres and song characteristics a user wants to listen",
-            "Be enthusiastic, professional and brief.",
-            "Your answers must be no more than 3 lines",
+            'Be enthusiastic, professional and brief.',
+            'Your answers must be no more than 3 lines',
             "Don't use emojis and focus on the provided data",
-            "Always answer using the Markdown format. Use bold to enhance important words",
-            "Replace technical music terms with more friendly user terms",
-            "Add just 1 technical music term to let the user know you selected these tracks because of this value",
-            "Never include headers, lists, links or image",
-            "The userVector data will be in a 0 to 1 scale",
-            "With 0 being the lowest to 1 being the highest",
-          ].join("\n"),
-        }
+            'Always answer using the Markdown format. Use bold to enhance important words',
+            'Replace technical music terms with more friendly user terms',
+            'Add just 1 technical music term to let the user know you selected these tracks because of this value',
+            'Never include headers, lists, links or image',
+            'The userVector data will be in a 0 to 1 scale',
+            'With 0 being the lowest to 1 being the highest',
+          ].join('\n'),
+        },
       });
     } catch (error) {
       console.error(`error while trying to get the answer: ${error}`);
-      throw new ServiceUnavailableException("Unable to get an answer from the model");
+      throw new ServiceUnavailableException(
+        'Unable to get an answer from the model',
+      );
     }
   }
 
@@ -206,9 +230,9 @@ export class SongsService {
       },
     );
 
-    const parsedData = parseSongRecommendations(rawSongData);
+    const parsedData = songRawRecommendationSchema.array().parse(rawSongData);
 
-    return parsedData.map((songData) => ({
+    return parsedData.map((songData) => songResponseSchema.parse({
       id: songData.id,
       name: songData.name,
       artists: songData.artists.split(','),
@@ -217,7 +241,7 @@ export class SongsService {
     }));
   }
 
-  async fetchRandomSong(): Promise<SongResponseAttributes> {
+  async fetchRandomSong(): Promise<SongRawData> {
     const result = await safeQuery(() =>
       this.songModel.findOne({
         order: Sequelize.literal('RANDOM()'),
@@ -231,7 +255,7 @@ export class SongsService {
         ],
       }),
     );
-    return parseSongResponse(result?.get({ plain: true }));
+    return songRawSchema.parse(result?.get({ plain: true }));
   }
 
   async getRandomSong() {
@@ -239,17 +263,17 @@ export class SongsService {
     return this.parseSongData(randomSong);
   }
 
-  parseSongData(songData: SongResponseAttributes): SongResponse {
-    return {
+  parseSongData(songData: SongRawData): SongResponse {
+    return songResponseSchema.parse({
       id: songData.id,
       name: songData.name,
-      artists: parseStringArray(songData.artists.map((artist) => artist.name)),
-      album_cover: parseString(songData.album.url_image),
+      artists: songData.artists.map((artist) => stringSchema.parse(artist.name)),
+      album_cover: stringSchema.parse(songData.album.url_image),
       url_preview: songData.url_preview,
-    };
+    });
   }
 
-  async fetchNextSong(songID: number): Promise<SongResponseAttributes> {
+  async fetchNextSong(songID: number): Promise<SongRawData> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -287,7 +311,7 @@ export class SongsService {
         "It couldn't retrieve the song from the database",
       );
 
-    return parseSongResponse(rawData.get({ plain: true }));
+    return songRawSchema.parse(rawData.get({ plain: true }));
   }
 
   async getNextSong(songId: number): Promise<SongResponse> {
@@ -295,7 +319,7 @@ export class SongsService {
     return this.parseSongData(songData);
   }
 
-  async fetchPreviousSong(songID: number): Promise<SongResponseAttributes> {
+  async fetchPreviousSong(songID: number): Promise<SongRawData> {
     if (songID < 1)
       throw new BadRequestException(
         `The ID: '${songID}' is not valid, It must be >= 1!`,
@@ -333,7 +357,7 @@ export class SongsService {
         "It couldn't retrieve the song from the database",
       );
 
-    return parseSongResponse(rawData.get({ plain: true }));
+    return songRawSchema.parse(rawData.get({ plain: true }));
   }
 
   async getPreviousSong(songID: number) {

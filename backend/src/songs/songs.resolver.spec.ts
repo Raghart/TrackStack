@@ -8,11 +8,16 @@ import {
   songRecommendResponses,
   songTestResponses,
 } from '../../test/data/songsModule/resSongData';
-import { InternalServerErrorException } from '@nestjs/common';
-import { ConnectionResError, TimeoutResError } from 'src/utils/mockErrors';
+import {
+  InternalServerErrorException,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import { USER_VECTOR } from '../../test/constants/constants';
-import { expectSongProps } from 'src/utils/expectSongs';
 import { GoogleGenAI } from '@google/genai';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { expectSongProps } from '@/utils/expectSongs';
+import { ConnectionResError, TimeoutResError } from '@/utils/mockErrors';
+import { vi } from 'vitest';
 
 describe('SongsResolver receives the expected songs array from the service', () => {
   let service: SongsService;
@@ -20,26 +25,42 @@ describe('SongsResolver receives the expected songs array from the service', () 
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ThrottlerModule.forRoot([
+        {
+          name: 'ai',
+          ttl: 60_000,
+          limit: 5,
+          blockDuration: 60_000,
+        },
+      ])],
       providers: [
         SongsResolver,
         {
           provide: 'AI',
           useValue: new GoogleGenAI({
-            apiKey: "testing",
+            apiKey: 'testing',
           }),
         },
         {
           provide: SongsService,
           useValue: {
-            getLandpageSongs: jest.fn().mockResolvedValue(songTestResponses),
-            getDBLength: jest.fn().mockResolvedValue(songTestResponses.length),
-            getSongData: jest.fn().mockResolvedValue(songFullTestResponse),
-            getSongRecommendations: jest
+            getLandpageSongs: vi.fn().mockResolvedValue(songTestResponses),
+            getDBLength: vi.fn().mockResolvedValue(songTestResponses.length),
+            getSongData: vi.fn().mockResolvedValue(songFullTestResponse),
+            getSongRecommendations: vi
               .fn()
               .mockReturnValue(songRecommendResponses),
-            getRandomSong: jest.fn().mockResolvedValue(singleSongData),
-            getNextSong: jest.fn().mockResolvedValue(singleSongData),
-            getPreviousSong: jest.fn().mockResolvedValue(singleSongData),
+            getRandomSong: vi.fn().mockResolvedValue(singleSongData),
+            getNextSong: vi.fn().mockResolvedValue(singleSongData),
+            getPreviousSong: vi.fn().mockResolvedValue(singleSongData),
+            getAIStream: vi.fn().mockResolvedValue(
+              (async function* () {
+                await Promise.resolve();
+                yield { text: 'First **chunk**' };
+                yield { text: undefined };
+                yield { text: 'Last chunk' };
+              })(),
+            ),
           },
         },
       ],
@@ -106,6 +127,21 @@ describe('SongsResolver receives the expected songs array from the service', () 
     expect(service.getPreviousSong).toHaveBeenCalledWith(999);
     expectSongProps([result]);
   });
+
+  it('aiResponse yields the text of every chunk returned by the AI stream', async () => {
+    const responses: { aiResponse: string | undefined }[] = [];
+
+    for await (const response of resolver.aiResponse(['Rock'], USER_VECTOR)) {
+      responses.push(response);
+    }
+
+    expect(service.getAIStream).toHaveBeenCalledWith(['Rock'], USER_VECTOR);
+    expect(responses).toEqual([
+      { aiResponse: 'First **chunk**' },
+      { aiResponse: undefined },
+      { aiResponse: 'Last chunk' },
+    ]);
+  });
 });
 
 describe('SongsResolver is able to communicate the error from the service to help development', () => {
@@ -114,12 +150,20 @@ describe('SongsResolver is able to communicate the error from the service to hel
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ThrottlerModule.forRoot([
+        {
+          name: 'ai',
+          ttl: 60_000,
+          limit: 5,
+          blockDuration: 60_000,
+        },
+      ])],
       providers: [
         SongsResolver,
         {
           provide: 'AI',
           useValue: new GoogleGenAI({
-            apiKey: "testing",
+            apiKey: 'testing',
           }),
         },
         {
@@ -132,6 +176,13 @@ describe('SongsResolver is able to communicate the error from the service to hel
             getIARecommendations: ConnectionResError(),
             getNextSong: ConnectionResError(),
             getPreviousSong: ConnectionResError(),
+            getAIStream: vi
+              .fn()
+              .mockRejectedValue(
+                new ServiceUnavailableException(
+                  'Unable to get an answer from the model',
+                ),
+              ),
           },
         },
       ],
@@ -199,5 +250,15 @@ describe('SongsResolver is able to communicate the error from the service to hel
       'Database Error: SequelizeTimeoutError: Connection refused',
     );
     expect(service.getPreviousSong).toHaveBeenCalledWith(3);
+  });
+
+  it("aiResponse throws an error when the service couldn't get an answer from the model", async () => {
+    await expect(
+      resolver.aiResponse(['Rock'], USER_VECTOR).next(),
+    ).rejects.toThrow(ServiceUnavailableException);
+    await expect(
+      resolver.aiResponse(['Rock'], USER_VECTOR).next(),
+    ).rejects.toThrow('Unable to get an answer from the model');
+    expect(service.getAIStream).toHaveBeenCalledWith(['Rock'], USER_VECTOR);
   });
 });

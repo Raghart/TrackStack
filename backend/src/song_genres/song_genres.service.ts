@@ -5,22 +5,15 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import {
-  parseFloatNum,
-  parseSongGenres,
-  parseString,
-  parseStringArray,
-} from 'src/types/parses';
-import { SongResponse } from 'src/types/songAttributes';
-import safeQuery from 'src/utils/safeQuery';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+import safeQuery from '@/utils/safeQuery';
+import { InvalidPaginationException } from '@/utils/PaginationError';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongGenresModel } from '../../models/song_genres/SongGenres.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
-import { SongGenresRPWithSongs } from 'src/types/songGenresAttributes';
-import { isNumber } from 'src/types/verify';
+import { songGenresData, songGenresSchema, SongResponse, songResponseSchema } from '@trackstack/schemas';
+import { floatNumberSchema } from '@trackstack/schemas/zod.parsers';
 
 @Injectable()
 export class SongGenresService {
@@ -34,8 +27,8 @@ export class SongGenresService {
     genre: string,
     page: number = 1,
     limit: number = 20,
-  ): Promise<SongGenresRPWithSongs[]> {
-    if (!isNumber(seed))
+  ): Promise<songGenresData[]> {
+    if (!floatNumberSchema.safeParse(seed).success)
       throw new BadRequestException(
         'The seed must be a valid string of numbers.',
       );
@@ -67,18 +60,16 @@ export class SongGenresService {
         `The genre: '${genre}' doesn't exist in the DB!`,
       );
 
-    return rawData.map((entry) => parseSongGenres(entry.get({ plain: true })));
+    return rawData.map((entry) => songGenresSchema.parse(entry.get({ plain: true })));
   }
 
-  parseGenreSongs(data: SongGenresRPWithSongs[]): SongResponse[] {
-    return data.map((entry) => ({
-      id: parseFloatNum(entry.song.id),
-      name: parseString(entry.song.name),
-      artists: parseStringArray(
-        entry.song.artists.map((artist) => artist.name),
-      ),
-      url_preview: parseString(entry.song.url_preview),
-      album_cover: parseString(entry.song.album.url_image),
+  parseGenreSongs(data: songGenresData[]): SongResponse[] {
+    return data.map((entry) => songResponseSchema.parse({
+      id: entry.song.id,
+      name: entry.song.name,
+      artists: entry.song.artists?.map((artist) => artist.name),
+      url_preview: entry.song.url_preview,
+      album_cover: entry.song.album?.url_image,
     }));
   }
 

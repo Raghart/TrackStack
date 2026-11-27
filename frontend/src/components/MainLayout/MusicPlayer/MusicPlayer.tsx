@@ -1,4 +1,4 @@
-import { useAppDispatch } from "@/components/Utils/redux-hooks";
+import { useAppDispatch } from "@/Utils/redux-hooks";
 import { togglePlayAudio } from "@/reducers/songReducer";
 import { Flex } from "@chakra-ui/react";
 import { useRef } from "react";
@@ -6,7 +6,7 @@ import MusicSlider from "./SongSlider/MusicSlider";
 import ShuffleButton from "./Buttons/ShuffleButton";
 import PlayControls from "./Buttons/PlayControls";
 import ActiveSongInfo from "./SongInfo/ActiveSongInfo";
-import useSongState from "@/components/Utils/hooks/useSongState";
+import useSongState from "@/hooks/useSongState";
 import { VOLUME_SLID_SIZES } from "@/components/constants/MusicPlayerC";
 import VolumeSlider from "./VolumeSlider/VolumeSlider";
 

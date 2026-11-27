@@ -1,11 +1,11 @@
 import { Box, Flex, Icon, Combobox, HStack, Span } from "@chakra-ui/react";
 import { useState } from "react";
-import { useAppDispatch } from "@/components/Utils/redux-hooks";
+import { useAppDispatch } from "@/Utils/redux-hooks";
 import GenreMoreTag from "./GenreMoreTag";
 import GenreTags from "./GenreTags";
-import useGenreCollection from "@/components/Utils/hooks/useGenreCollection";
-import handleDelLastGenre from "@/components/Utils/handleDelLastGenre";
-import handleValueChange from "@/components/Utils/handleValueChanges";
+import useGenreCollection from "@/hooks/useGenreCollection";
+import handleDelLastGenre from "@/Utils/handleDelLastGenre";
+import handleValueChange from "@/Utils/handleValueChanges";
 import { BLUE_SHADOW_MODAL, LARA_OPT_SIZES } from "@/components/constants/TopBarC";
 import GenreSelHeader from "./GenreSelHeader";
 import { GenreListFormat } from "@/types/genreTypes";

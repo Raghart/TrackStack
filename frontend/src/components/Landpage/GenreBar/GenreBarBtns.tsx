@@ -21,7 +21,7 @@ const GenreBarBtns = ({ genres, handleScroll, scrollRef } : { genres: string[], 
                     _hover={{ bg: "green.700", transform: "scale(1.1)" }} fontWeight="600" borderColor="green.800" 
                     fontFamily="'Barlow', sans-serif" outline="none" aria-label={`Watch songs with the ${genre} genre`} 
                     asChild>
-                        <Link href={`/genres/${genre}`} textDecor="none">{genre}</Link>
+                        <Link href={`/genres/${encodeURIComponent(genre)}`} textDecor="none">{genre}</Link>
                     </Button>
                 )}
             </For>

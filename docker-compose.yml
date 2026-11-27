@@ -1,0 +1,62 @@
+name: trackstack
+
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-trackstack}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-trackstack}
+      POSTGRES_DB: ${POSTGRES_DB:-trackstack}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      # 00_extensions.sql, 01_schema.sql and 02_seed.sql run in name order.
+      - ./backend/database/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "${DB_HOST_PORT:-5432}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'pg_isready -h 127.0.0.1 -p 5432 -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"',
+        ]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    environment:
+      DB_URL: postgres://${POSTGRES_USER:-trackstack}:${POSTGRES_PASSWORD:-trackstack}@db:5432/${POSTGRES_DB:-trackstack}
+      DB_SSL: "false"
+      DB_PORT: "5432"
+      PORT: "3000"
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
+      API_KEY: ${API_KEY:-}
+      AI_MODEL: ${AI_MODEL:-}
+    ports:
+      - "${BACKEND_PORT:-3000}:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      args:
+        VITE_GRAPHQL_URI: ${VITE_GRAPHQL_URI:-http://localhost:3000/graphql}
+        VITE_SUBSCRIPTION_URI: ${VITE_SUBSCRIPTION_URI:-ws://localhost:3000/graphql}
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  db-data:

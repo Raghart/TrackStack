@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { GenresService } from './genres.service';
 import { getModelToken } from '@nestjs/sequelize';
 import { InternalServerErrorException } from '@nestjs/common';
-import { SequelizeConnectionError } from 'src/utils/mockErrors';
+import { SequelizeConnectionError } from '@/utils/mockErrors';
 import { genreData, genreResData } from '../../test/data/genres/genresData';
 import { GenresModel } from '../../models/genres/genres.model';
 
@@ -16,7 +16,7 @@ describe('GenresService retrieves and parses all the avaibles genres from the da
         {
           provide: getModelToken(GenresModel),
           useValue: {
-            findAll: jest.fn().mockResolvedValue(genreData),
+            findAll: vi.fn().mockResolvedValue(genreData),
           },
         },
       ],

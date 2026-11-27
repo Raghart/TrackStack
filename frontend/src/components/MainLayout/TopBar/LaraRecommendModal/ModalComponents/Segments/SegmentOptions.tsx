@@ -1,5 +1,5 @@
 import { SegmentGroup, Heading, Flex } from "@chakra-ui/react";
-import { useAppDispatch } from "@/components/Utils/redux-hooks";
+import { useAppDispatch } from "@/Utils/redux-hooks";
 import { setSpeechLevel } from "@/reducers/recommendReducer";
 import SegmentBtns from "./SegmentBtns";
 import { BLUE_SHADOW_MODAL, LARA_OPT_SIZES } from "@/components/constants/TopBarC";

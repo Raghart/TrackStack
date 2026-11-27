@@ -1,8 +1,7 @@
-import { SongResponse } from 'src/types/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
-import { SongGenresRPWithSongs } from 'src/types/songGenresAttributes';
+import { songGenresData, SongResponse } from '@trackstack/schemas';
 
-export const songGenresData = [
+export const songGenresTestData = [
   {
     id: 1,
     song_id: 1,
@@ -11,7 +10,7 @@ export const songGenresData = [
     song: {
       id: 1,
       name: "I'm A Mover",
-      spotify_id: 'testingID',
+      spotify_id: '0keNu0t0tqsWtExGM3nT1D',
       url_preview: TESTING_URL,
       duration: 2.94,
       year: 2010,
@@ -28,7 +27,7 @@ export const songGenresData = [
     song: {
       id: 2,
       name: 'Smoking Umbrellas',
-      spotify_id: 'testingID',
+      spotify_id: '0keNu0t0tqsWtExGM3nT1D',
       url_preview: TESTING_URL,
       duration: 3.98,
       year: 1996,
@@ -45,7 +44,7 @@ export const songGenresData = [
     song: {
       id: 3,
       name: 'Bones',
-      spotify_id: 'testingID',
+      spotify_id: '0keNu0t0tqsWtExGM3nT1D',
       url_preview: TESTING_URL,
       duration: 3.78,
       year: 2010,
@@ -54,7 +53,7 @@ export const songGenresData = [
       album: { url_image: TESTING_IMG },
     },
   },
-] as unknown as SongGenresRPWithSongs[];
+] as unknown as songGenresData[];
 
 export const songGenresResponses: SongResponse[] = [
   {

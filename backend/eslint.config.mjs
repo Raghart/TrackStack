@@ -15,7 +15,9 @@ export default tseslint.config(
       },
       sourceType: 'commonjs',
       parserOptions: {
-        projectService: true,
+        projectService: {
+          allowDefaultProject: ['*.config.ts'],
+        },
         tsconfigRootDir: import.meta.dirname,
       },
     },
@@ -28,5 +30,5 @@ export default tseslint.config(
       ...pluginSecurity.configs.recommended.rules,
     },
   },
-  { ignores: ['eslint.config.mjs', "node_modules", "dist", "bonsai", "coverage", "public"], },
+  { ignores: ['eslint.config.mjs', "node_modules", "dist", "coverage", "public"], },
 );

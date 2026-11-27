@@ -1,98 +1,152 @@
+# TrackStack — Backend
+
+NestJS + GraphQL API for [TrackStack](../README.md). It serves the song catalogue, the recommendation engine, the AI streaming endpoint, and the production frontend build. See [docs/architecture.md](./docs/architecture.md) for the full schema reference and system design.
+
+- **Framework:** NestJS 11 on Express 5.
+- **API:** GraphQL code-first with Apollo Server 5 (`@nestjs/graphql`, schema generated in memory).
+- **Realtime:** GraphQL subscriptions over WebSocket with `graphql-ws`.
+- **Data:** Sequelize 6 over PostgreSQL, with `pgvector` for song embeddings.
+- **Migrations:** Prisma 7 (`database/`).
+- **AI:** Google GenAI (Gemini) for streamed recommendation messages.
+- **Tests:** Vitest + `unplugin-swc`.
+
+## Project structure
+
+```text
+backend/
+├── src/
+│   ├── <domain>/             # module + resolver + service + specs
+│   │   └── dto/              # @ObjectType / @Field GraphQL types
+│   ├── search/               # multipleSearch resolver/service and SQL search helpers
+│   ├── types/                # attribute types, guards, parsers, shared types
+│   ├── utils/                # safeQuery, pagination, ranking helpers
+│   ├── app.module.ts         # Sequelize, GraphQL, ServeStatic wiring
+│   └── main.ts               # bootstrap, CORS, port
+├── models/<domain>/          # Sequelize models
+├── test/                     # fixtures and shared constants for unit tests
+├── database/                 # Prisma schema/migrations and init/ demo seed
+├── public/                   # generated frontend build served by Nest
+├── dist/                     # compiled output
+└── coverage/                 # generated test coverage
+```
+
+## Environment variables
+
+Set up a `.env` file in `backend/` using these variable names:
+
+| Variable | Required | Purpose |
+| --- | --- | --- |
+| `DB_URL` | Yes | PostgreSQL connection string |
+| `DB_SSL` | No | Enables TLS for PostgreSQL (`true`/`false`, defaults to `false`). Keep it `false` for the Docker demo database. |
+| `DB_SSL_CA` | No | Path to the CA certificate used when `DB_SSL=true` (for example `certs/ca.pem` for Aiven). Relative paths are resolved from the backend directory. |
+| `API_KEY` | No | Google GenAI API key (AI messages fall back to a demo notice when missing) |
+| `AI_MODEL` | No | Gemini model name used for streamed messages (Used together with API_KEY) |
+| `PORT` | No | HTTP port (defaults to `3000`) |
+| `FRONTEND_URL` | No | Allowed CORS origin for the frontend |
+| `NODE_ENV` | No | Runtime mode. Set to `production` to disable the GraphQL playground and the startup GraphQL URL log; any other value, or unset, keeps the local development behavior. |
+
+Check out an example on how to setup the [.env](.env.example) file.
+
+## Commands
+
+From the repository root:
+
+```bash
+pnpm run dev:backend                 # NestJS in watch mode
+pnpm run build:backend               # nest build -> backend/dist
+pnpm run start:prod                  # run the compiled backend
+pnpm run test:backend                # Vitest unit tests
+pnpm run test:integration            # DB integration tests against Docker test database (slow)
+```
+
+Or target the package directly. The scripts are grouped by purpose:
+
+```bash
+# Development
+pnpm --filter ./backend run dev          # Nest in watch mode (same as dev:backend)
+pnpm --filter ./backend run build        # nest build -> backend/dist
+pnpm --filter ./backend run start:prod   # run the compiled build (needs DB_URL)
+pnpm --filter ./backend run lint         # ESLint over src, test, apps and libs
+pnpm --filter ./backend run format       # Prettier over src/ and test/
+
+# Tests
+pnpm --filter ./backend run test         # Vitest unit suite (no database needed)
+pnpm --filter ./backend run test:watch   # Vitest in watch mode
+pnpm --filter ./backend run test:cov     # suite + coverage -> backend/coverage/
+pnpm --filter ./backend run test:integration  # DB integration tests (Docker test DB, slow)
+
+# Database (Prisma, reads backend/.env)
+pnpm --filter ./backend run db:validate  # validate schema.prisma without connecting
+pnpm --filter ./backend run db:status    # list applied and pending migrations
+pnpm --filter ./backend run db:migrate   # local only: create and apply migrations (prisma migrate dev)
+pnpm --filter ./backend run db:generate  # regenerate the Prisma client after editing schema.prisma
+pnpm --filter ./backend run db:deploy    # apply committed migrations to an existing DB (CI/production)
+```
+
+## Quick start
+
+### Local setup
+
+Prerequisites: Node.js, pnpm, and PostgreSQL 17 with the `pgvector` extension available (the `pgvector/pgvector:pg17` image works). The migrations create the `vector`, `pg_trgm` and `unaccent` extensions, so the role in `DB_URL` needs permission to install them.
+
+```bash
+pnpm install
+cp backend/.env.example backend/.env     # set DB_URL and keep DB_SSL=false
+createdb trackstack                      # or: psql -c 'CREATE DATABASE trackstack;'
+```
+
+Then apply the schema and start the API:
+
+```bash
+pnpm --filter ./backend run db:migrate   # applies database/prisma/migrations in order
+pnpm run dev:backend                     # GraphQL at http://localhost:3000/graphql
+```
+
+To load the demo catalogue (100 songs) into that database after migrating:
+
+```bash
+psql "postgres://user:password@localhost:5432/trackstack" -f backend/database/init/02_seed.sql
+```
+
+Only the seed file should be applied: `00_extensions.sql` and `01_schema.sql` are the Docker snapshot, and the migrations already create the schema and the Prisma history.
+
+### Docker
+
+The backend has a standalone Docker image. The build context is the repository root because the pnpm workspace and `schemas/` live there:
+
+```bash
+docker build -f backend/Dockerfile -t trackstack-backend .
+docker run --rm -p 3000:3000 \
+  -e DB_URL=postgres://user:password@host:5432/trackstack \
+  -e DB_SSL=false \
+  trackstack-backend
+```
+
+The image runs as the non-root `node` user, listens on port 3000 and reads the same environment variables as `start:prod`. It only contains the backend (the GraphQL endpoint is served at `/graphql`); a database with the schema applied is still required (the demo snapshot in `database/init/` needs the `pgvector` extension).
+
+## Database & Migrations
+
+Prisma-managed PostgreSQL schema with pgvector support. Search is implemented entirely in PostgreSQL through the `search_songs`, `search_artists`, and `search_albums` functions (trigram + unaccent, exact → prefix → contains → fuzzy ranking); `SearchService` calls them with Sequelize and validates the rows with the shared Zod schemas. See [docs/database.md](./docs/database.md) for migration structure and schema change guidelines.
+
+## Tests
+
+Unit tests live next to the code (`src/<domain>/*.spec.ts`) and do not need PostgreSQL: models are mocked and the AI provider is replaced with a stub. Fixtures live in `test/data/` and shared assertions in `src/utils/expect*.ts`.
+
+Database integration tests live in `test/integration/*.integration.spec.ts` and run against the isolated Docker test database defined in `../../docker-compose.test.yml` (pgvector + init scripts, tmpfs, separate test credentials/port). They are intentionally separate from the fast Vitest suite and do not use development or production `DB_URL`.
+
+```bash
+pnpm --filter ./backend run test -- src/songs/songs.service.spec.ts   # one spec
+pnpm --filter ./backend run test:cov                                  # full suite + coverage
+```
+
 <p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+    <img src="../assets/coverage.png" alt="Backend test coverage" />
 </p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+## Production
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+`pnpm run build:frontend` writes the SPA into `backend/public`, and the backend serves it with `ServeStaticModule`. Deploying therefore means building both packages and running the compiled backend with the environment variables above. GitHub Actions runs lint, the security ESLint pass, and the unit tests on every pull request; the CD workflow triggers a Render deployment on `main`.
 
-## Description
+---
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
-
-## Project setup
-
-```bash
-$ npm install
-```
-
-## Compile and run the project
-
-```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
-```
-
-## Run tests
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
-
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
-```
-
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
-
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+[← Back to the project README](../README.md) · [Frontend README →](../frontend/README.md)

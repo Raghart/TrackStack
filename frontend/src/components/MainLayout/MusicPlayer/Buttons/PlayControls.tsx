@@ -2,9 +2,9 @@ import { ButtonGroup } from "@chakra-ui/react";
 import BtnPrevSong from "./BtnPrevSong";
 import BtnNextSong from "./BtnNextSong";
 import BtnPlaySong from "./BtnPlaySong";
-import { SongResponse } from "@/types/songTypes";
-import useLoadNextSong from "@/components/Utils/hooks/useLoadNextSong";
-import useLoadPriorSong from "@/components/Utils/hooks/useLoadPriorSong";
+import useLoadNextSong from "@/hooks/useLoadNextSong";
+import useLoadPriorSong from "@/hooks/useLoadPriorSong";
+import { SongResponse } from "@trackstack/schemas";
 
 const PlayControls = ({ activeSong, isPlaying }: { activeSong: SongResponse | null, isPlaying: boolean }) => {
     const loadNextSong = useLoadNextSong(activeSong);

@@ -1,54 +1,123 @@
-# React + TypeScript + Vite
+# TrackStack — Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React single-page app for [TrackStack](../README.md). It provides the recommendation flow, the music player, and the browsing experience for songs, artists, albums, and genres.
 
-Currently, two official plugins are available:
+- **React** + **TypeScript**.
+- **Vite** for the dev server and production build.
+- **Chakra UI** for the component system and responsive layout.
+- **Apollo Client** for GraphQL queries and WebSocket subscriptions.
+- **Redux Toolkit** for the player, search, and recommendation state.
+- **React Router** for client-side routing.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Project structure
 
-## Expanding the ESLint configuration
+Pages are grouped by feature under `src/components/<Feature>/`; each feature owns its GraphQL document in `src/queries/`, its hooks in `src/hooks/`, and its slice in `src/reducers/` when it needs global state. Components stay focused on rendering, hooks orchestrate Apollo and Redux, and every payload that crosses the API is validated before it reaches the UI.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+```text
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── Landpage/                 # landing page, search bar, search results
+│   │   ├── SongPath/                 # song details
+│   │   ├── Recommendations/          # recommendation results and AI message
+│   │   ├── GenrePath/GenreDetails/   # genre catalogue and genre songs
+│   │   ├── ArtistPath/               # artist catalogue
+│   │   ├── AlbumPath/DetailsPath/    # album catalogue and detail layout
+│   │   ├── SongCard/                 # song cards and play overlay
+│   │   ├── MainLayout/               # sidebar, top bar, player shell
+│   │   ├── Error/                    # global error boundary and not-found message
+│   │   ├── Pagination/               # pagination controls and helpers
+│   │   ├── constants/                # labels, modal config, recommendation weights
+│   │   └── ui/                       # Chakra wrappers (color mode, toaster, tooltip)
+│   ├── hooks/                        # reusable and page data hooks
+│   ├── Utils/                        # formatting, parsing, vector and shared helpers
+│   ├── queries/                      # GraphQL documents (gql)
+│   ├── reducers/                     # Redux slices: songs, songData, search
+│   ├── types/                        # client types
+│   ├── test/                         # Vitest setup (jsdom + jest-dom)
+│   ├── dynamicCSS/                   # dynamic styles
+│   ├── apolloClient.ts               # HTTP/WebSocket split link and cache policies
+│   ├── store.ts                      # Redux store
+│   ├── theme.ts                      # Chakra theme
+│   └── App.tsx                       # route definitions
+├── public/
+├── vitest.config.ts                  # Vitest + Testing Library (jsdom)
+└── vite.config.ts                    # build output -> ../backend/public
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Environment variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Create `frontend/.env` with the backend GraphQL endpoints:
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+```bash
+VITE_GRAPHQL_URI=http://localhost:3000/graphql
+VITE_SUBSCRIPTION_URI=ws://localhost:3000/graphql
 ```
+
+For a deployed environment, point both variables at the public backend URL (use `wss://` for the subscription). The backend must allow the frontend origin through `FRONTEND_URL` (CORS).
+
+## Commands
+
+From the repository root:
+
+```bash
+pnpm run dev:frontend       # Vite dev server
+pnpm run build:frontend     # tsc -b + vite build -> backend/public
+```
+
+Or inside the package:
+
+```bash
+pnpm --filter ./frontend run dev          # Vite dev server
+pnpm --filter ./frontend run build        # tsc -b + vite build -> ../backend/public
+pnpm --filter ./frontend run lint         # ESLint over the package
+pnpm --filter ./frontend run preview      # serve the production build locally
+```
+
+The production build is written to `../backend/public` and served by NestJS next to the GraphQL API.
+
+## Tests
+
+Unit tests use **Vitest** with **Testing Library** and **jsdom**. They cover the GraphQL data hooks, the Apollo pagination policies, the player/audio state and the user-facing error notifications (including Toaster messages and their deduplication). 
+
+No backend or `frontend/.env` is needed for testing: GraphQL, Apollo and the environment are mocked.
+
+```bash
+pnpm run test:frontend                         # from the repository root
+pnpm --filter ./frontend run test              # one run
+pnpm --filter ./frontend run test:cov          # coverage -> frontend/coverage/
+```
+
+## Docker
+
+The frontend has a standalone image that serves the Vite build with **Nginx** (SPA fallback included). The build context is the repository root because the pnpm workspace and `schemas/` live there:
+
+```bash
+docker build -f frontend/Dockerfile -t trackstack-frontend .
+docker run --rm -p 8080:80 trackstack-frontend
+```
+
+The app is available at `http://localhost:8080`. By default the image expects the backend at `http://localhost:3000`, matching `frontend/.env`; the backend must allow `http://localhost:8080` through CORS (`FRONTEND_URL`). By using docker compose up -d in the project root, these are set for you.
+
+Vite bakes `VITE_GRAPHQL_URI` and `VITE_SUBSCRIPTION_URI` at build time, so override them as build args when the API lives somewhere else:
+
+```bash
+docker build -f frontend/Dockerfile \
+  --build-arg VITE_GRAPHQL_URI=https://api.example.com/graphql \
+  --build-arg VITE_SUBSCRIPTION_URI=wss://api.example.com/graphql \
+  -t trackstack-frontend .
+```
+
+Inside the image the bundle is written to `frontend/dist` (not `../backend/public`) and copied to Nginx's web root. Nginx configuration: [`nginx.conf`](./nginx.conf).
+
+## Architecture
+
+See [docs/architecture.md](./docs/architecture.md) for routing, how the recommendation vector is built, and the GraphQL/Redux data layer.
+
+## Features
+
+From AI-powered recommendations to browsing by artist, genre, or album — see [docs/features.md](./docs/features.md) for the full walkthrough with screenshots.
+
+---
+
+[← Back to the project README](../README.md) · [Backend README →](../backend/README.md)

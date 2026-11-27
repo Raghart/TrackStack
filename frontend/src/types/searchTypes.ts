@@ -1,21 +1,21 @@
-import { AlbumResponse } from "./albumTypes";
-import { ArtistResponse } from "./artistTypes";
-import { SongResponse } from "./songTypes";
+import { multipleSearchResults } from "@trackstack/schemas";
+
+export type SearchStatus =
+    | "idle"
+    | "loading"
+    | "success"
+    | "empty"
+    | "network-error"
+    | "invalid-payload";
+
+export type SearchFailureStatus = Extract<SearchStatus, "network-error" | "invalid-payload">;
 
 export interface SearchInitialState {
-    results: MultipleSearchResult | null;
+    results: multipleSearchResults | null;
     query: string;
     isLoading: boolean;
+    status: SearchStatus;
     isMobileSearch: boolean;
-};
-
-export interface MultipleSearchResult {
-    exactArtist: ArtistResponse;
-    exactAlbum: AlbumResponse;
-    exactSong: SongResponse;
-    artistResults: ArtistResponse[];
-    albumResults: AlbumResponse[];
-    songResults: SongResponse[];
 };
 
 export interface searchResultsType {

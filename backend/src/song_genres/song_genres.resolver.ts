@@ -1,6 +1,6 @@
 import { Args, Resolver, Query, Int } from '@nestjs/graphql';
 import { SongGenresService } from './song_genres.service';
-import { SongResponseDto } from 'src/songs/dto/SongResponse.dto';
+import { SongResponseDto } from '@/songs/dto/SongResponse.dto';
 
 @Resolver()
 export class SongGenresResolver {

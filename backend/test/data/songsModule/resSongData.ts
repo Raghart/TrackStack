@@ -1,5 +1,5 @@
-import { FullSongResponse, SongResponse } from 'src/types/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
+import { FullSongResponse, SongResponse } from '@trackstack/schemas';
 
 export const songTestResponses: SongResponse[] = [
   {

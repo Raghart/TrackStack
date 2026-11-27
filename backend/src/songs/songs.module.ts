@@ -23,13 +23,16 @@ import { GoogleGenAI } from '@google/genai';
       SongGenresModel,
     ]),
   ],
-  providers: [SongsResolver, SongsService,
-  {
-    provide: 'AI',
-    useValue: new GoogleGenAI({
-      apiKey: process.env.API_KEY,
-    }),
-  }],
+  providers: [
+    SongsResolver,
+    SongsService,
+    {
+      provide: 'AI',
+      useValue: new GoogleGenAI({
+        apiKey: process.env.API_KEY,
+      }),
+    },
+  ],
   exports: [SongsService],
 })
 export class SongsModule {}

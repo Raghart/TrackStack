@@ -1,7 +1,7 @@
 import { Link } from "@chakra-ui/react";
 import { Tooltip } from "@/components/ui/tooltip";
 import { ACTSONG_FONTSIZES } from "@/components/constants/MusicPlayerC";
-import { SongResponse } from "@/types/songTypes";
+import { SongResponse } from "@trackstack/schemas";
 
 const ActSongTitle = ({ id, name }: SongResponse) => {
     return(

@@ -1,229 +1,570 @@
-/* eslint-disable @typescript-eslint/unbound-method */
+import { vi, type Mock } from 'vitest';
 import { Test, TestingModule } from '@nestjs/testing';
+import { getModelToken } from '@nestjs/sequelize';
+import { InternalServerErrorException } from '@nestjs/common';
+import { QueryTypes } from 'sequelize';
+import { ZodError } from 'zod';
 import { SearchService } from './search.service';
 import {
+  mockMultipleSeach,
   searchAlbums,
   searchArtists,
   searchSongs,
 } from '../../test/data/searchModule/searchData';
-import { ServiceUnavailableException } from '@nestjs/common';
-import { expectSearchProps } from 'src/utils/expectSearch';
-import { Client, SearchResponse } from 'elasticsearch';
-import {
-  albumSearchResults,
-  albumsHitStructure,
-  artistHitStructure,
-  artistSearchResults,
-  songSearchResults,
-  songsHitStructure,
-} from 'src/types/searchTypes';
+import { SequelizeTimeoutError } from '@/utils/mockErrors';
+import { ArtistsModel } from '../../models/artists/artists.model';
+import { AlbumsModel } from '../../models/albums/albums.model';
+import { SongsModel } from '../../models/songs/song.model';
+import { albumRows, artistRows, songRows } from './utils/testsQueries';
+import { SEARCH_ALBUMS_SQL, SEARCH_ARTISTS_SQL, SEARCH_SONGS_SQL } from './utils/contants';
 
-describe('SearchService retrieves and sort the data incoming from the elasticSearch server', () => {
+const createModelMock = () => ({ sequelize: { query: vi.fn() } });
+
+describe('SearchService.searchArtists retrieves artists from PostgreSQL', () => {
   let service: SearchService;
-  let esService: jest.Mocked<Client>;
-
-  const artistHitData = {
-    hits: { hits: searchArtists.map((doc) => ({ _source: doc })) },
-  } as unknown as SearchResponse<artistHitStructure>;
-  const albumHitData = {
-    hits: { hits: searchAlbums.map((doc) => ({ _source: doc })) },
-  } as unknown as SearchResponse<albumsHitStructure>;
-  const songsHitData = {
-    hits: { hits: searchSongs.map((doc) => ({ _source: doc })) },
-  } as unknown as SearchResponse<songsHitStructure>;
+  let artistModel: { sequelize: { query: Mock } };
+  let albumModel: { sequelize: { query: Mock } };
+  let songModel: { sequelize: { query: Mock } };
 
   beforeEach(async () => {
+    artistModel = createModelMock();
+    albumModel = createModelMock();
+    songModel = createModelMock();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SearchService,
-        {
-          provide: 'BonsaiClient',
-          useValue: {
-            ping: jest
-              .fn()
-              .mockImplementation((_params, callback: (err: null) => void) =>
-                callback(null),
-              ),
-            search: jest.fn(),
-          },
-        },
+        { provide: getModelToken(ArtistsModel), useValue: artistModel },
+        { provide: getModelToken(AlbumsModel), useValue: albumModel },
+        { provide: getModelToken(SongsModel), useValue: songModel },
       ],
     }).compile();
 
     service = module.get<SearchService>(SearchService);
-    esService = module.get('BonsaiClient');
   });
 
-  it('ping resolves true when is called to confirm a communication with the database', async () => {
-    const result = await service.ping();
-    expect(esService.ping).toHaveBeenCalled();
-    expect(result).toBe(true);
-  });
-
-  it('searchArtists returns an artists array with expected properties', async () => {
-    esService.search.mockResolvedValue(artistHitData);
+  it('returns the artists parsed with the expected properties', async () => {
+    artistModel.sequelize.query.mockResolvedValue(artistRows);
 
     const result = await service.searchArtists('Nirvana');
-    expect(result).toHaveLength(4);
+
+    expect(result).toHaveLength(searchArtists.length);
     expect(result).toStrictEqual(searchArtists);
   });
 
-  it('searchAlbums returns an albums array with expected properties', async () => {
-    esService.search.mockResolvedValue(albumHitData);
+  it('tags every database row with type "artist"', async () => {
+    artistModel.sequelize.query.mockResolvedValue([
+      { ...artistRows[0], type: 'song' },
+    ]);
 
-    const result = await service.searchAlbums('Pablo Honey');
-    expect(result).toHaveLength(3);
-    expect(result).toStrictEqual(searchAlbums);
+    const result = await service.searchArtists('Nirvana');
+
+    expect(result[0].type).toBe('artist');
   });
 
-  it('seachSongs returns a songs array with expected properties', async () => {
-    esService.search.mockResolvedValue(songsHitData);
+  it('returns an empty array when the database finds no artists', async () => {
+    artistModel.sequelize.query.mockResolvedValue([]);
 
-    const result = await service.seachSongs('Creep');
-    expect(result).toHaveLength(3);
-    expect(result).toStrictEqual(searchSongs);
+    const result = await service.searchArtists('does-not-exist');
+
+    expect(result).toStrictEqual([]);
   });
 
-  it('sortResults sorts the list to put in first place the most similar to the query', () => {
-    const sortedResults = service.sortResults<artistSearchResults>(
-      'Mägo de Oz',
-      searchArtists,
+  it('queries PostgreSQL with the fixed SQL function and bound replacements', async () => {
+    artistModel.sequelize.query.mockResolvedValue(artistRows);
+
+    await service.searchArtists('Nirvana');
+
+    expect(artistModel.sequelize.query).toHaveBeenCalledWith(
+      SEARCH_ARTISTS_SQL,
+      {
+        type: QueryTypes.SELECT,
+        replacements: { query: 'Nirvana', limit: 11 },
+      },
     );
-    expect(sortedResults.length).toBeGreaterThan(0);
-    expect(sortedResults[0]).toStrictEqual({
-      id: 4,
-      name: 'Mägo de Oz',
-      album_cover: 'url3',
-      type: 'artist',
-    });
   });
 
-  it('sortResults puts in first place the item which name is equal to the query', () => {
-    expect(
-      service.sortResults<artistSearchResults>('nirvana', searchArtists)[0]
-        .name,
-    ).toBe('Nirvana');
-    expect(
-      service.sortResults<albumSearchResults>('pablo honey', searchAlbums)[0]
-        .name,
-    ).toBe('Pablo Honey');
-    expect(
-      service.sortResults<songSearchResults>('creep', searchSongs)[0].name,
-    ).toBe('Creep');
+  it('passes SQL metacharacters as a bound replacement instead of interpolating them', async () => {
+    const maliciousQuery = "Nirvana'); DROP TABLE artists; --";
+    artistModel.sequelize.query.mockResolvedValue(artistRows);
+
+    await service.searchArtists(maliciousQuery);
+
+    expect(artistModel.sequelize.query).toHaveBeenCalledWith(
+      SEARCH_ARTISTS_SQL,
+      {
+        type: QueryTypes.SELECT,
+        replacements: { query: maliciousQuery, limit: 11 },
+      },
+    );
   });
 
-  it('sortResults sorts correctly even if the first item even has an unique accentuation', () => {
-    expect(
-      service.sortResults<artistSearchResults>('mago de oz', searchArtists)[0]
-        .name,
-    ).toBe('Mägo de Oz');
+  it.each(['', '   ', "O'Brien", 'Mägo de Oz'])(
+    'forwards the query %j unchanged to the database',
+    async (query) => {
+      artistModel.sequelize.query.mockResolvedValue([]);
+
+      await service.searchArtists(query);
+
+      expect(artistModel.sequelize.query).toHaveBeenCalledWith(
+        SEARCH_ARTISTS_SQL,
+        {
+          type: QueryTypes.SELECT,
+          replacements: { query, limit: 11 },
+        },
+      );
+    },
+  );
+
+  it('does not query the albums or songs models', async () => {
+    artistModel.sequelize.query.mockResolvedValue(artistRows);
+
+    await service.searchArtists('Nirvana');
+
+    expect(albumModel.sequelize.query).not.toHaveBeenCalled();
+    expect(songModel.sequelize.query).not.toHaveBeenCalled();
   });
 
-  it("sortResults sorts correctly even if the query doesn't have the exact name", () => {
-    expect(
-      service.sortResults<artistSearchResults>('nirv', searchArtists)[0].name,
-    ).toBe('Nirvana');
-    expect(
-      service.sortResults<albumSearchResults>('nevermind', searchAlbums)[0]
-        .name,
-    ).toBe('Nevermind (Remastered)');
-    expect(
-      service.sortResults<songSearchResults>('wonder', searchSongs)[0].name,
-    ).toBe('Wonderwall');
+  it("throws InternalServerErrorException when it couldn't connect with the database", async () => {
+    artistModel.sequelize.query.mockImplementation(SequelizeTimeoutError());
+
+    await expect(service.searchArtists('Nirvana')).rejects.toThrow(
+      InternalServerErrorException,
+    );
+    await expect(service.searchArtists('Nirvana')).rejects.toThrow(
+      'Database Error: SequelizeTimeoutError: Query timed out',
+    );
   });
 
-  it("sortResults leaves the rest of the items as they are if the doesn't match the query", () => {
-    expect(
-      service.sortResults<artistSearchResults>('nirvana', searchArtists)[1]
-        .name,
-    ).not.toBe('Nirvana');
-    expect(
-      service.sortResults<albumSearchResults>('nevermind', searchAlbums)[1]
-        .name,
-    ).not.toBe('Nevermind (Remastered)');
-    expect(
-      service.sortResults<songSearchResults>('come', searchSongs)[1].name,
-    ).not.toBe('Come as You Are');
+  it('wraps non-Error failures with a generic database error message', async () => {
+    artistModel.sequelize.query.mockRejectedValue('connection lost');
+
+    await expect(service.searchArtists('Nirvana')).rejects.toThrow(
+      InternalServerErrorException,
+    );
+    await expect(service.searchArtists('Nirvana')).rejects.toThrow(
+      'Database Error: Unknown database error',
+    );
   });
 
-  it('multipleSearch returns an object containing results from artists, albums and songs', async () => {
-    esService.search
-      .mockResolvedValueOnce(artistHitData)
-      .mockResolvedValueOnce(albumHitData)
-      .mockResolvedValueOnce(songsHitData);
+  it('rejects rows with an empty artist name', async () => {
+    artistModel.sequelize.query.mockResolvedValue([
+      { id: 1, name: '   ', album_cover: 'https://example.com/cover.jpg' },
+    ]);
 
-    const multipleResults = await service.multipleSearch('Nirvana');
-    expectSearchProps(multipleResults);
+    await expect(service.searchArtists('Nirvana')).rejects.toThrow(ZodError);
+  });
+
+  it('rejects rows missing required artist properties', async () => {
+    artistModel.sequelize.query.mockResolvedValue([
+      { id: 1, name: 'Nirvana' },
+    ]);
+
+    await expect(service.searchArtists('Nirvana')).rejects.toThrow(ZodError);
   });
 });
 
-describe("SearchService throws errors when the methods couldn't connect with the database", () => {
+describe('SearchService.searchAlbums retrieves albums from PostgreSQL', () => {
   let service: SearchService;
-  let esService: Client;
+  let artistModel: { sequelize: { query: Mock } };
+  let albumModel: { sequelize: { query: Mock } };
+  let songModel: { sequelize: { query: Mock } };
 
   beforeEach(async () => {
+    artistModel = createModelMock();
+    albumModel = createModelMock();
+    songModel = createModelMock();
+
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SearchService,
-        {
-          provide: 'BonsaiClient',
-          useValue: {
-            ping: jest
-              .fn()
-              .mockImplementation((_params, callback: (err: Error) => void) =>
-                callback(new Error('Ping failed')),
-              ),
-          },
-        },
+        { provide: getModelToken(ArtistsModel), useValue: artistModel },
+        { provide: getModelToken(AlbumsModel), useValue: albumModel },
+        { provide: getModelToken(SongsModel), useValue: songModel },
       ],
     }).compile();
 
-    esService = module.get<Client>('BonsaiClient');
     service = module.get<SearchService>(SearchService);
   });
 
-  it("Ping throws an error when it couldn't recieve a ping from the ES server", async () => {
-    await expect(service.ping()).rejects.toThrow(ServiceUnavailableException);
-    await expect(service.ping()).rejects.toThrow(
-      /ElasticSearch is not responding: .*Ping failed/,
-    );
-    expect(esService.ping).toHaveBeenCalled();
+  it('returns the albums parsed with the expected properties', async () => {
+    albumModel.sequelize.query.mockResolvedValue(albumRows);
+
+    const result = await service.searchAlbums('Pablo Honey');
+
+    expect(result).toHaveLength(searchAlbums.length);
+    expect(result).toStrictEqual(searchAlbums);
   });
 
-  it("multipleSearch throws a connection error if some method couldn't received a response from ES", async () => {
-    esService.search = jest
-      .fn()
-      .mockRejectedValue(new Error('No living connections'));
-    await expect(service.multipleSearch('Pepe')).rejects.toThrow(
-      ServiceUnavailableException,
-    );
-    await expect(service.multipleSearch('Pepe')).rejects.toThrow(
-      /ElasticSearch is not responding: .*living connections/,
-    );
-    expect(esService.search).toHaveBeenCalled();
+  it('tags every database row with type "album"', async () => {
+    albumModel.sequelize.query.mockResolvedValue([
+      { ...albumRows[0], type: 'song' },
+    ]);
+
+    const result = await service.searchAlbums('Pablo Honey');
+
+    expect(result[0].type).toBe('album');
   });
 
-  it('multipleSearch throws unknown database Error when a unidentified error ocurred while searching', async () => {
-    esService.search = jest.fn().mockRejectedValue(undefined);
-    await expect(service.multipleSearch('Pepe')).rejects.toThrow(
-      ServiceUnavailableException,
-    );
-    await expect(service.multipleSearch('Pepe')).rejects.toThrow(
-      /ElasticSearch is not responding: Unknown database error/,
-    );
-    expect(esService.search).toHaveBeenCalled();
+  it('returns an empty array when the database finds no albums', async () => {
+    albumModel.sequelize.query.mockResolvedValue([]);
+
+    const result = await service.searchAlbums('does-not-exist');
+
+    expect(result).toStrictEqual([]);
   });
 
-  it("multipleSearch throws timeout error when it couldn't resolve the promise in time", async () => {
-    esService.search = jest
-      .fn()
-      .mockRejectedValue(new Error('timeout_exception: search timed out'));
-    await expect(service.multipleSearch('Pepe')).rejects.toThrow(
-      ServiceUnavailableException,
+  it('queries PostgreSQL with the fixed SQL function and bound replacements', async () => {
+    albumModel.sequelize.query.mockResolvedValue(albumRows);
+
+    await service.searchAlbums('Pablo Honey');
+
+    expect(albumModel.sequelize.query).toHaveBeenCalledWith(
+      SEARCH_ALBUMS_SQL,
+      {
+        type: QueryTypes.SELECT,
+        replacements: { query: 'Pablo Honey', limit: 11 },
+      },
     );
-    await expect(service.multipleSearch('Pepe')).rejects.toThrow(
-      /ElasticSearch is not responding: .*timeout_exception: search timed out/,
+  });
+
+  it('passes SQL metacharacters as a bound replacement instead of interpolating them', async () => {
+    const maliciousQuery = "Pablo Honey'); DROP TABLE albums; --";
+    albumModel.sequelize.query.mockResolvedValue(albumRows);
+
+    await service.searchAlbums(maliciousQuery);
+
+    expect(albumModel.sequelize.query).toHaveBeenCalledWith(
+      SEARCH_ALBUMS_SQL,
+      {
+        type: QueryTypes.SELECT,
+        replacements: { query: maliciousQuery, limit: 11 },
+      },
     );
-    expect(esService.search).toHaveBeenCalled();
+  });
+
+  it.each(['', '   ', "O'Brien", 'Mägo de Oz'])(
+    'forwards the query %j unchanged to the database',
+    async (query) => {
+      albumModel.sequelize.query.mockResolvedValue([]);
+
+      await service.searchAlbums(query);
+
+      expect(albumModel.sequelize.query).toHaveBeenCalledWith(
+        SEARCH_ALBUMS_SQL,
+        {
+          type: QueryTypes.SELECT,
+          replacements: { query, limit: 11 },
+        },
+      );
+    },
+  );
+
+  it('does not query the artists or songs models', async () => {
+    albumModel.sequelize.query.mockResolvedValue(albumRows);
+
+    await service.searchAlbums('Pablo Honey');
+
+    expect(artistModel.sequelize.query).not.toHaveBeenCalled();
+    expect(songModel.sequelize.query).not.toHaveBeenCalled();
+  });
+
+  it("throws InternalServerErrorException when it couldn't connect with the database", async () => {
+    albumModel.sequelize.query.mockImplementation(SequelizeTimeoutError());
+
+    await expect(service.searchAlbums('Pablo Honey')).rejects.toThrow(
+      InternalServerErrorException,
+    );
+    await expect(service.searchAlbums('Pablo Honey')).rejects.toThrow(
+      'Database Error: SequelizeTimeoutError: Query timed out',
+    );
+  });
+
+  it('wraps non-Error failures with a generic database error message', async () => {
+    albumModel.sequelize.query.mockRejectedValue('connection lost');
+
+    await expect(service.searchAlbums('Pablo Honey')).rejects.toThrow(
+      InternalServerErrorException,
+    );
+    await expect(service.searchAlbums('Pablo Honey')).rejects.toThrow(
+      'Database Error: Unknown database error',
+    );
+  });
+
+  it('rejects rows with an empty album name', async () => {
+    albumModel.sequelize.query.mockResolvedValue([
+      { ...albumRows[0], name: '   ' },
+    ]);
+
+    await expect(service.searchAlbums('Pablo Honey')).rejects.toThrow(ZodError);
+  });
+
+  it('rejects rows with an empty artist name', async () => {
+    albumModel.sequelize.query.mockResolvedValue([
+      { ...albumRows[0], artists: ['   '] },
+    ]);
+
+    await expect(service.searchAlbums('Pablo Honey')).rejects.toThrow(ZodError);
+  });
+
+  it('rejects rows missing required album properties', async () => {
+    albumModel.sequelize.query.mockResolvedValue([
+      { id: 1, name: 'Pablo Honey' },
+    ]);
+
+    await expect(service.searchAlbums('Pablo Honey')).rejects.toThrow(ZodError);
+  });
+});
+
+describe('SearchService.seachSongs retrieves songs from PostgreSQL', () => {
+  let service: SearchService;
+  let artistModel: { sequelize: { query: Mock } };
+  let albumModel: { sequelize: { query: Mock } };
+  let songModel: { sequelize: { query: Mock } };
+
+  beforeEach(async () => {
+    artistModel = createModelMock();
+    albumModel = createModelMock();
+    songModel = createModelMock();
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        SearchService,
+        { provide: getModelToken(ArtistsModel), useValue: artistModel },
+        { provide: getModelToken(AlbumsModel), useValue: albumModel },
+        { provide: getModelToken(SongsModel), useValue: songModel },
+      ],
+    }).compile();
+
+    service = module.get<SearchService>(SearchService);
+  });
+
+  it('returns the songs parsed with the expected properties', async () => {
+    songModel.sequelize.query.mockResolvedValue(songRows);
+
+    const result = await service.seachSongs('Creep');
+
+    expect(result).toHaveLength(searchSongs.length);
+    expect(result).toStrictEqual(searchSongs);
+  });
+
+  it('tags every database row with type "song"', async () => {
+    songModel.sequelize.query.mockResolvedValue([
+      { ...songRows[0], type: 'album' },
+    ]);
+
+    const result = await service.seachSongs('Creep');
+
+    expect(result[0].type).toBe('song');
+  });
+
+  it('returns an empty array when the database finds no songs', async () => {
+    songModel.sequelize.query.mockResolvedValue([]);
+
+    const result = await service.seachSongs('does-not-exist');
+
+    expect(result).toStrictEqual([]);
+  });
+
+  it('queries PostgreSQL with the fixed SQL function and bound replacements', async () => {
+    songModel.sequelize.query.mockResolvedValue(songRows);
+
+    await service.seachSongs('Creep');
+
+    expect(songModel.sequelize.query).toHaveBeenCalledWith(
+      SEARCH_SONGS_SQL,
+      {
+        type: QueryTypes.SELECT,
+        replacements: { query: 'Creep', limit: 11 },
+      },
+    );
+  });
+
+  it('passes SQL metacharacters as a bound replacement instead of interpolating them', async () => {
+    const maliciousQuery = "Creep'); DROP TABLE songs; --";
+    songModel.sequelize.query.mockResolvedValue(songRows);
+
+    await service.seachSongs(maliciousQuery);
+
+    expect(songModel.sequelize.query).toHaveBeenCalledWith(
+      SEARCH_SONGS_SQL,
+      {
+        type: QueryTypes.SELECT,
+        replacements: { query: maliciousQuery, limit: 11 },
+      },
+    );
+  });
+
+  it.each(['', '   ', "O'Brien", 'Mägo de Oz'])(
+    'forwards the query %j unchanged to the database',
+    async (query) => {
+      songModel.sequelize.query.mockResolvedValue([]);
+
+      await service.seachSongs(query);
+
+      expect(songModel.sequelize.query).toHaveBeenCalledWith(
+        SEARCH_SONGS_SQL,
+        {
+          type: QueryTypes.SELECT,
+          replacements: { query, limit: 11 },
+        },
+      );
+    },
+  );
+
+  it('does not query the artists or albums models', async () => {
+    songModel.sequelize.query.mockResolvedValue(songRows);
+
+    await service.seachSongs('Creep');
+
+    expect(artistModel.sequelize.query).not.toHaveBeenCalled();
+    expect(albumModel.sequelize.query).not.toHaveBeenCalled();
+  });
+
+  it("throws InternalServerErrorException when it couldn't connect with the database", async () => {
+    songModel.sequelize.query.mockImplementation(SequelizeTimeoutError());
+
+    await expect(service.seachSongs('Creep')).rejects.toThrow(
+      InternalServerErrorException,
+    );
+    await expect(service.seachSongs('Creep')).rejects.toThrow(
+      'Database Error: SequelizeTimeoutError: Query timed out',
+    );
+  });
+
+  it('wraps non-Error failures with a generic database error message', async () => {
+    songModel.sequelize.query.mockRejectedValue('connection lost');
+
+    await expect(service.seachSongs('Creep')).rejects.toThrow(
+      InternalServerErrorException,
+    );
+    await expect(service.seachSongs('Creep')).rejects.toThrow(
+      'Database Error: Unknown database error',
+    );
+  });
+
+  it('rejects rows with an empty song name', async () => {
+    songModel.sequelize.query.mockResolvedValue([
+      { ...songRows[0], name: '   ' },
+    ]);
+
+    await expect(service.seachSongs('Creep')).rejects.toThrow(ZodError);
+  });
+
+  it('rejects rows with an empty album name', async () => {
+    songModel.sequelize.query.mockResolvedValue([
+      { ...songRows[0], album: '   ' },
+    ]);
+
+    await expect(service.seachSongs('Creep')).rejects.toThrow(ZodError);
+  });
+
+  it('rejects rows with an empty preview URL', async () => {
+    songModel.sequelize.query.mockResolvedValue([
+      { ...songRows[0], url_preview: '   ' },
+    ]);
+
+    await expect(service.seachSongs('Creep')).rejects.toThrow(ZodError);
+  });
+
+  it('rejects rows missing required song properties', async () => {
+    songModel.sequelize.query.mockResolvedValue([
+      { id: 1, name: 'Creep' },
+    ]);
+
+    await expect(service.seachSongs('Creep')).rejects.toThrow(ZodError);
+  });
+});
+
+describe('SearchService.multipleSearch combines the three searches', () => {
+  let service: SearchService;
+  let artistModel: { sequelize: { query: Mock } };
+  let albumModel: { sequelize: { query: Mock } };
+  let songModel: { sequelize: { query: Mock } };
+
+  beforeEach(async () => {
+    artistModel = createModelMock();
+    albumModel = createModelMock();
+    songModel = createModelMock();
+
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [
+        SearchService,
+        { provide: getModelToken(ArtistsModel), useValue: artistModel },
+        { provide: getModelToken(AlbumsModel), useValue: albumModel },
+        { provide: getModelToken(SongsModel), useValue: songModel },
+      ],
+    }).compile();
+
+    service = module.get<SearchService>(SearchService);
+  });
+
+  it('returns the exact matches and the remaining results for each type', async () => {
+    artistModel.sequelize.query.mockResolvedValue(artistRows);
+    albumModel.sequelize.query.mockResolvedValue(albumRows);
+    songModel.sequelize.query.mockResolvedValue(songRows);
+
+    const result = await service.multipleSearch('Nirvana');
+
+    expect(result).toStrictEqual(mockMultipleSeach);
+    expect(result.artistResults).toStrictEqual(searchArtists);
+    expect(result.albumResults).toStrictEqual(searchAlbums);
+    expect(result.songResults).toStrictEqual(searchSongs);
+  });
+
+  it('searches artists, albums and songs with the same query and limit', async () => {
+    artistModel.sequelize.query.mockResolvedValue(artistRows);
+    albumModel.sequelize.query.mockResolvedValue(albumRows);
+    songModel.sequelize.query.mockResolvedValue(songRows);
+
+    await service.multipleSearch('Nirvana');
+
+    expect(artistModel.sequelize.query).toHaveBeenCalledWith(
+      SEARCH_ARTISTS_SQL,
+      {
+        type: QueryTypes.SELECT,
+        replacements: { query: 'Nirvana', limit: 11 },
+      },
+    );
+    expect(albumModel.sequelize.query).toHaveBeenCalledWith(SEARCH_ALBUMS_SQL, {
+      type: QueryTypes.SELECT,
+      replacements: { query: 'Nirvana', limit: 11 },
+    });
+    expect(songModel.sequelize.query).toHaveBeenCalledWith(SEARCH_SONGS_SQL, {
+      type: QueryTypes.SELECT,
+      replacements: { query: 'Nirvana', limit: 11 },
+    });
+  });
+
+  it('queries each model exactly once per search', async () => {
+    artistModel.sequelize.query.mockResolvedValue(artistRows);
+    albumModel.sequelize.query.mockResolvedValue(albumRows);
+    songModel.sequelize.query.mockResolvedValue(songRows);
+
+    await service.multipleSearch('Nirvana');
+
+    expect(artistModel.sequelize.query).toHaveBeenCalledTimes(1);
+    expect(albumModel.sequelize.query).toHaveBeenCalledTimes(1);
+    expect(songModel.sequelize.query).toHaveBeenCalledTimes(1);
+  });
+
+  it('propagates database errors instead of returning partial results', async () => {
+    artistModel.sequelize.query.mockResolvedValue(artistRows);
+    albumModel.sequelize.query.mockImplementation(SequelizeTimeoutError());
+
+    await expect(service.multipleSearch('Nirvana')).rejects.toThrow(
+      InternalServerErrorException,
+    );
+    await expect(service.multipleSearch('Nirvana')).rejects.toThrow(
+      'Database Error: SequelizeTimeoutError: Query timed out',
+    );
+  });
+
+  it('rejects when any of the underlying searches returns invalid rows', async () => {
+    artistModel.sequelize.query.mockResolvedValue(artistRows);
+    albumModel.sequelize.query.mockResolvedValue([{ id: 1, name: '   ' }]);
+    songModel.sequelize.query.mockResolvedValue(songRows);
+
+    await expect(service.multipleSearch('Nirvana')).rejects.toThrow(ZodError);
   });
 });

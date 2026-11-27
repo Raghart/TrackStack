@@ -1,16 +1,16 @@
 import { Box, Flex } from "@chakra-ui/react";
 import React from "react";
 import GenreBarHeader from "./GenreBarHeader";
-import useGenreBtns from "@/components/Utils/hooks/useGenreBtns";
+import useGenreBtns from "@/hooks/useGenreBtns";
 import GenrePagination from "./GenrePagination";
 import GenreBarBtns from "./GenreBarBtns";
 import { Bounce } from "react-awesome-reveal";
 
 const GenreBar = () => {
-    const { genres, atStart, atEnd, scrollRef, handleScroll } = useGenreBtns();
+    const { genres, hasData, atStart, atEnd, scrollRef, handleScroll } = useGenreBtns();
     return(
         <Flex w="full" h="full" borderRadius="2xl" direction="column" mt={2}>
-            {genres.length > 0 ? (
+            {hasData ? (
                 <>
                     <Flex justify="space-between">
                         <Bounce triggerOnce direction="right">

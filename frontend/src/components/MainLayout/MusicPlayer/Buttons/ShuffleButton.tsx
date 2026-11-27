@@ -1,7 +1,7 @@
 import { Icon, IconButton } from "@chakra-ui/react";
 import { TbArrowsShuffle } from "react-icons/tb";
 import { Tooltip } from "@/components/ui/tooltip"
-import useStraySong from "@/components/Utils/hooks/useStraySong";
+import useStraySong from "@/hooks/useStraySong";
 
 const ShuffleButton = () => {
     const getStraySong = useStraySong();

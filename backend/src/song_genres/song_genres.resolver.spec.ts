@@ -8,7 +8,8 @@ import {
 } from '@nestjs/common';
 import { songGenresResponses } from '../../test/data/songGenresModule/songGenresData';
 import { NOGENRE_ERROR } from '../../test/constants/constants';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+import { InvalidPaginationException } from '@/utils/PaginationError';
+import { vi, type Mock } from 'vitest';
 
 describe('SongGenresResolver recieves and deliver the songs from a genre from the service', () => {
   let resolver: SongGenresResolver;
@@ -21,7 +22,7 @@ describe('SongGenresResolver recieves and deliver the songs from a genre from th
         {
           provide: SongGenresService,
           useValue: {
-            getAllGenreSongs: jest.fn().mockResolvedValue(songGenresResponses),
+            getAllGenreSongs: vi.fn().mockResolvedValue(songGenresResponses),
           },
         },
       ],
@@ -50,7 +51,7 @@ describe('SongGenresResolver throws errors from the service to inform the proble
         {
           provide: SongGenresService,
           useValue: {
-            getAllGenreSongs: jest.fn(),
+            getAllGenreSongs: vi.fn(),
           },
         },
       ],
@@ -61,7 +62,7 @@ describe('SongGenresResolver throws errors from the service to inform the proble
   });
 
   it("getAllGenreSongs throws NotFoundException when genre doesn't exist", async () => {
-    (service.getAllGenreSongs as jest.Mock).mockRejectedValue(
+    (service.getAllGenreSongs as Mock).mockRejectedValue(
       new NotFoundException(NOGENRE_ERROR),
     );
 
@@ -77,7 +78,7 @@ describe('SongGenresResolver throws errors from the service to inform the proble
 
   it('getAllGenreSongs throws InvalidPaginationException when limit < 1', async () => {
     const INVALID_LIMIT = -50;
-    (service.getAllGenreSongs as jest.Mock).mockRejectedValue(
+    (service.getAllGenreSongs as Mock).mockRejectedValue(
       new InvalidPaginationException('limit', INVALID_LIMIT),
     );
 
@@ -99,7 +100,7 @@ describe('SongGenresResolver throws errors from the service to inform the proble
 
   it('getAllGenreSongs throws InvalidPaginationException when page < 1', async () => {
     const INVALID_PAGE = -50;
-    (service.getAllGenreSongs as jest.Mock).mockRejectedValue(
+    (service.getAllGenreSongs as Mock).mockRejectedValue(
       new InvalidPaginationException('page', INVALID_PAGE),
     );
 
@@ -120,7 +121,7 @@ describe('SongGenresResolver throws errors from the service to inform the proble
   });
 
   it('getAllGenreSongs throws InternalServerErrorException the request timeout', async () => {
-    (service.getAllGenreSongs as jest.Mock).mockRejectedValue(
+    (service.getAllGenreSongs as Mock).mockRejectedValue(
       new InternalServerErrorException(
         new Error('Database Error: SequelizeTimeoutError: Query timed out'),
       ),

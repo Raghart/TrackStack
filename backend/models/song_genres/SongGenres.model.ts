@@ -2,7 +2,7 @@ import { GenresModel } from "../genres/genres.model";
 import { SongsModel } from "../songs/song.model";
 import { AllowNull, AutoIncrement, BelongsTo, Column, DataType, ForeignKey, Model, PrimaryKey, Table } 
     from "sequelize-typescript";
-import { SongGenresAttributes, SongGenresCreationAttributes } from "src/types/songGenresAttributes";
+import { SongGenresAttributes, SongGenresCreationAttributes } from "@/attributes/songGenresAttributes";
 
 @Table({
     tableName: "song_genres",

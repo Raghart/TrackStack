@@ -3,10 +3,10 @@ import SongNameBox from "./SongNameBox";
 import YearBox from "./YearBox";
 import DurationBox from "./DurationBox";
 import SpotifyUrl from "./SpotifyUrl";
-import ArtistLinks from "../../Utils/ArtistLinks";
+import ArtistLinks from "@/Utils/ArtistLinks";
 import { Slide, Zoom, Bounce, Fade } from "react-awesome-reveal";
 import { SONGBOX_SHADOW, SONGBOX_SIZES } from "../../constants/SongDetailsC";
-import { FullSongResponse } from "@/types/songTypes";
+import { FullSongResponse } from "@trackstack/schemas";
 
 const SongInfoLayout = ({ name, artists, year, duration, spotify_id }: FullSongResponse ) => {
     const responsiveSize = useBreakpointValue({ base: "15px", sm: "24px", md: "25px", lg: "3xl" });
@@ -18,8 +18,8 @@ const SongInfoLayout = ({ name, artists, year, duration, spotify_id }: FullSongR
             <Box textAlign="center">
                 <Zoom triggerOnce direction="down" delay={100}>
                     <SongNameBox name={name} />
-                    <ArtistLinks artists={artists} color="yellow.500" hoverColor="yellow.400" size={responsiveSize} 
-                        font="'Barlow', sans-serif" fontWeight="700" lineClamp={2} />
+                    <ArtistLinks artists={artists} color="yellow.500" hoverColor="yellow.400" 
+                        size={responsiveSize} font="'Barlow', sans-serif" fontWeight="700" lineClamp={2} />
                 </Zoom>
             </Box>
 

@@ -1,3 +1,4 @@
+import { vi, type Mock } from 'vitest';
 /* eslint-disable @typescript-eslint/unbound-method */
 import { Test, TestingModule } from '@nestjs/testing';
 import { ArtistsResolver } from './artists.resolver';
@@ -7,7 +8,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { NOTFOUND_ERROR } from '../../test/constants/constants';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+import { InvalidPaginationException } from '@/utils/PaginationError';
 import {
   artistTestResponses,
   artistTestSongs,
@@ -24,8 +25,8 @@ describe('ArtistsResolver retrieves the expected artists and artist songs from t
         {
           provide: ArtistsService,
           useValue: {
-            getAllArtists: jest.fn().mockResolvedValue(artistTestResponses),
-            getAllArtistSongs: jest.fn().mockResolvedValue(artistTestSongs),
+            getAllArtists: vi.fn().mockResolvedValue(artistTestResponses),
+            getAllArtistSongs: vi.fn().mockResolvedValue(artistTestSongs),
           },
         },
       ],
@@ -61,8 +62,8 @@ describe('ArtistsResolver handles error from the service to communicate them to 
         {
           provide: ArtistsService,
           useValue: {
-            getAllArtists: jest.fn(),
-            getAllArtistSongs: jest.fn(),
+            getAllArtists: vi.fn(),
+            getAllArtistSongs: vi.fn(),
           },
         },
       ],
@@ -74,7 +75,7 @@ describe('ArtistsResolver handles error from the service to communicate them to 
 
   it('getAllArtists throws InvalidPaginationException when page < 1', async () => {
     const INVALID_PAGE = -500;
-    (service.getAllArtists as jest.Mock).mockRejectedValue(
+    (service.getAllArtists as Mock).mockRejectedValue(
       new InvalidPaginationException('page', INVALID_PAGE),
     );
 
@@ -94,7 +95,7 @@ describe('ArtistsResolver handles error from the service to communicate them to 
   });
 
   it("getAllArtists throws InternalServerErrorException when the request couldn't connect with the DB", async () => {
-    (service.getAllArtists as jest.Mock).mockRejectedValue(
+    (service.getAllArtists as Mock).mockRejectedValue(
       new InternalServerErrorException(
         new Error('Database Error: SequelizeTimeoutError: Connection refused'),
       ),
@@ -110,7 +111,7 @@ describe('ArtistsResolver handles error from the service to communicate them to 
 
   it('getAllArtists throws InvalidPaginationException when page < 1', async () => {
     const INVALID_LIMIT = -500;
-    (service.getAllArtists as jest.Mock).mockRejectedValue(
+    (service.getAllArtists as Mock).mockRejectedValue(
       new InvalidPaginationException('limit', INVALID_LIMIT),
     );
     await expect(
@@ -129,7 +130,7 @@ describe('ArtistsResolver handles error from the service to communicate them to 
   });
 
   it("getAllArtistSongs throws NotFoundException when the artist isn't found in the database", async () => {
-    (service.getAllArtistSongs as jest.Mock).mockRejectedValue(
+    (service.getAllArtistSongs as Mock).mockRejectedValue(
       new NotFoundException(NOTFOUND_ERROR),
     );
     await expect(resolver.getAllArtistSongs('Benito')).rejects.toThrow(
@@ -142,7 +143,7 @@ describe('ArtistsResolver handles error from the service to communicate them to 
   });
 
   it("getAllArtistSongs throws an error when the request couldn't connect with the database", async () => {
-    (service.getAllArtistSongs as jest.Mock).mockRejectedValue(
+    (service.getAllArtistSongs as Mock).mockRejectedValue(
       new InternalServerErrorException(
         new Error('Database Error: SequelizeTimeoutError: Query timed out'),
       ),

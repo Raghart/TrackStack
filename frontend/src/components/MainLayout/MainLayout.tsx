@@ -1,24 +1,33 @@
 import { Box } from "@chakra-ui/react";
 import HomeBar from "./HomeBar/HomeBar";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import MusicPlayer from "./MusicPlayer/MusicPlayer";
 import TopBar from "./TopBar/TopBar";
-import { useAppSelector } from "../Utils/redux-hooks";
-import useGetSongCover from "../Utils/hooks/useGetSongCover";
 import { MAIN_LAYOUT_HEIGHT, MAIN_LAYOUT_ML, MAIN_LAYOUT_MR } from "../constants/MainLayoutC";
-import TrackSearch from "../Landpage/TrackSearch/TrackSearch";
+import TrackSearch from "../TrackSearch/TrackSearch";
+import ErrorBoundary from "../Error/ErrorBoundary";
+import { ErrorFallback } from "../Error/ErrorFallback";
+import useGetSongCover from "@/hooks/useGetSongCover";
+import { useAppSelector } from "@/Utils/redux-hooks";
 
 const MainLayout = () => {
     const song = useGetSongCover();
+    const location = useLocation();
     const isTyping = useAppSelector(state => state.search.query.length > 0);
     return(
-        <Box position="relative" minH="100vh" pt={4} pl={3} overflowX="hidden" w="full" bgRepeat="no-repeat"
-            bgImage={song?.album_cover ? `url(${song.album_cover})` : undefined} bgSize="cover" bgPos="center">
+        <Box position="relative" minH="100vh" pt={4} pl={3} overflowX="hidden" w="full" 
+            bgRepeat="no-repeat" bgImage={song?.album_cover ? `url(${song.album_cover})` : undefined} 
+            bgSize="cover" bgPos="center">
             <HomeBar />
             <TopBar />
 
             <Box ml={MAIN_LAYOUT_ML} minH={MAIN_LAYOUT_HEIGHT} mr={MAIN_LAYOUT_MR}>
-                {isTyping ? <TrackSearch /> : <Outlet />}
+                <ErrorBoundary
+                    resetKeys={[location.pathname, location.search]}
+                    fallback={(reset) => <ErrorFallback reset={reset} minH={MAIN_LAYOUT_HEIGHT} />}
+                >
+                    {isTyping ? <TrackSearch /> : <Outlet />}
+                </ErrorBoundary>
             </Box>
 
             <MusicPlayer />

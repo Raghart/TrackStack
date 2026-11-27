@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
-import { FullSongResponse, SongResponse } from 'src/types/songAttributes';
 import { TESTING_URL, TESTING_IMG } from '../../test/constants/constants';
+import { FullSongResponse, SongResponse } from '@trackstack/schemas';
 
 export const expectFullSongProps = (song: FullSongResponse) => {
   expect(song).toMatchObject({

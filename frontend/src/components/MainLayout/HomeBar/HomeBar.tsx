@@ -1,6 +1,6 @@
 import { Box, Flex, For, Text } from "@chakra-ui/react";
 import { NavItem } from "@/types/utilTypes";
-import useNavButtons from "../../Utils/hooks/useNavButtons";
+import useNavButtons from "@/hooks/useNavButtons";
 import HeadingTitle from "./HeadingTitle";
 import NavButtonCard from "./NavButtonCard";
 import { HOMEBAR_SIZES } from "@/components/constants/HomeBarC";

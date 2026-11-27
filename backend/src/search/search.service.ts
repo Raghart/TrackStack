@@ -1,156 +1,73 @@
-import { SearchResponse } from '@elastic/elasticsearch/api/types';
-import {
-  Inject,
-  Injectable,
-  ServiceUnavailableException,
-} from '@nestjs/common';
-import {
-  parseAlbumSearchData,
-  parseArtistSearchData,
-  parseSongSearchData,
-} from 'src/types/parses';
-import {
-  albumSearchResults,
-  artistSearchResults,
-  multipleSearchResults,
-  searchResultType,
-  songSearchResults,
-} from 'src/types/searchTypes';
-import { Client } from 'elasticsearch';
-import { normalizeText } from 'src/search/utils/normalizeText';
-import { safeSearch } from 'src/utils/safeSearch';
+import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/sequelize';
+import { QueryTypes } from 'sequelize';
+import { AlbumSearchResultData, albumSearchResultSchema, 
+  ArtistSearchResultData, artistSearchResultSchema, multipleSearchResults, multipleSearchResultsSchema, SongSearchResultData, songSearchResultSchema } from '@trackstack/schemas';
+import safeQuery from '@/utils/safeQuery';
+import { ArtistsModel } from '../../models/artists/artists.model';
+import { AlbumsModel } from '../../models/albums/albums.model';
+import { SongsModel } from '../../models/songs/song.model';
+import { SEARCH_ALBUMS_SQL, SEARCH_ARTISTS_SQL, SEARCH_SONGS_SQL } from './utils/contants';
 
 @Injectable()
 export class SearchService {
-  constructor(@Inject('BonsaiClient') private readonly esClient: Client) {}
+  constructor(
+    @InjectModel(ArtistsModel) private artistModel: typeof ArtistsModel,
+    @InjectModel(AlbumsModel) private albumModel: typeof AlbumsModel,
+    @InjectModel(SongsModel) private songModel: typeof SongsModel,
+  ) {}
 
-  async ping(): Promise<boolean> {
-    return new Promise((resolve, reject) => {
-      this.esClient.ping({}, (err) => {
-        if (err) {
-          const message = (err as Error).message;
-          reject(
-            new ServiceUnavailableException(
-              'ElasticSearch is not responding: ' + message,
-            ),
-          );
-        } else {
-          resolve(true);
-        }
-      });
-    });
-  }
-
-  async searchArtists(query: string): Promise<artistSearchResults[]> {
-    const results = await safeSearch(() =>
-      this.esClient.search<SearchResponse<artistSearchResults>>({
-        index: 'artists',
-        size: 11,
-        body: {
-          query: {
-            multi_match: {
-              query,
-              type: 'best_fields',
-              fuzziness: 'AUTO',
-              fields: ['name^3', 'name.edge^2', 'name.ngram'],
-            },
-          },
-        },
+  async searchArtists(query: string): Promise<ArtistSearchResultData[]> {
+    const results = await safeQuery(() =>
+      this.artistModel.sequelize!.query<
+        Pick<ArtistSearchResultData, 'id' | 'name' | 'album_cover'>
+      >(SEARCH_ARTISTS_SQL, {
+        type: QueryTypes.SELECT,
+        replacements: { query, limit: 11 },
       }),
     );
 
-    return results.hits.hits.map((artist) =>
-      parseArtistSearchData(artist._source),
+    return results.map((artist) =>
+      artistSearchResultSchema.parse({ ...artist, type: 'artist' }),
     );
   }
 
-  async searchAlbums(query: string): Promise<albumSearchResults[]> {
-    const results = await safeSearch(() =>
-      this.esClient.search<SearchResponse<albumSearchResults>>({
-        index: 'albums',
-        size: 11,
-        body: {
-          query: {
-            multi_match: {
-              query,
-              type: 'best_fields',
-              fuzziness: 'AUTO',
-              fields: ['name^3', 'name.edge^2', 'name.ngram'],
-            },
-          },
-        },
-      }),
+  async searchAlbums(query: string): Promise<AlbumSearchResultData[]> {
+    const results = await safeQuery(() => 
+      this.albumModel.sequelize!.query<
+      Pick<AlbumSearchResultData, "id" |"name" | "album_cover" | "artists" | "type">
+    >(SEARCH_ALBUMS_SQL, {
+      type: QueryTypes.SELECT,
+      replacements: { query, limit: 11 },
+    })
     );
-    return results.hits.hits.map((album) =>
-      parseAlbumSearchData(album._source),
-    );
+
+    return results.map((album) => albumSearchResultSchema.parse({...album, type: "album"}))
   }
 
-  async seachSongs(query: string): Promise<songSearchResults[]> {
-    const results = await safeSearch(() =>
-      this.esClient.search<SearchResponse<songSearchResults>>({
-        index: 'songs',
-        body: {
-          query: {
-            multi_match: {
-              query,
-              type: 'best_fields',
-              fuzziness: 'AUTO',
-              fields: ['name^3', 'name.edge^2', 'name.ngram'],
-            },
-          },
-        },
-      }),
+  async seachSongs(query: string): Promise<SongSearchResultData[]> {
+    const results = await safeQuery(() => 
+      this.songModel.sequelize!.query<
+      Pick<SongSearchResultData, "id" | "name" | "album" | "url_preview" | 
+        "album_cover" | "artists" | "type">
+    >(SEARCH_SONGS_SQL, {
+      type: QueryTypes.SELECT,
+      replacements: { query, limit: 11 },
+    })
     );
-    return results.hits.hits.map((song) => parseSongSearchData(song._source));
-  }
-
-  sortResults<searchType extends searchResultType>(
-    query: string,
-    results: searchType[],
-  ): searchType[] {
-    const norQuery = normalizeText(query);
-    return [...results].sort((a, b) => {
-      const aName = normalizeText(a.name);
-      const bName = normalizeText(b.name);
-
-      const aMatch = aName === norQuery;
-      const bMatch = bName === norQuery;
-      const aIncludes = aName.includes(norQuery);
-      const bIncludes = bName.includes(norQuery);
-
-      if (aMatch && !bMatch) return -1;
-      if (!aMatch && bMatch) return 1;
-      if (aIncludes && !bIncludes) return -1;
-      if (!aIncludes && bIncludes) return 1;
-      return 0;
-    });
+    
+    return results.map((song) => songSearchResultSchema.parse({ ...song, type: "song" }));
   }
 
   async multipleSearch(query: string): Promise<multipleSearchResults> {
-    const artistSearchResults = await this.searchArtists(query);
-    const [exactArtist, ...artistResults] =
-      this.sortResults<artistSearchResults>(query, artistSearchResults);
+    const artistResults = await this.searchArtists(query);
+    const albumResults = await this.searchAlbums(query);
+    const songResults = await this.seachSongs(query);
 
-    const albumSearchResults = await this.searchAlbums(query);
-    const [exactAlbum, ...albumResults] = this.sortResults<albumSearchResults>(
-      query,
-      albumSearchResults,
-    );
-
-    const songSearchResults = await this.seachSongs(query);
-    const [exactSong, ...songResults] = this.sortResults<songSearchResults>(
-      query,
-      songSearchResults,
-    );
-
-    return {
-      exactArtist,
-      exactAlbum,
-      exactSong,
+    return multipleSearchResultsSchema.parse({
       artistResults,
       albumResults,
       songResults,
-    };
+    });
   }
 }

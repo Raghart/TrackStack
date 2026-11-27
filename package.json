@@ -6,14 +6,23 @@
   "main": "index.js",
   "workspaces": [
     "backend",
-    "frontend"
+    "frontend",
+    "schemas",
+    "e2e"
   ],
+  "packageManager": "pnpm@12.21.0",
   "scripts": {
-    "dev:backend": "npm run dev --workspace=backend",
-    "dev:frontend": "npm run dev --workspace=frontend",
-    "build:frontend": "npm run build --workspace=frontend",
-    "build:backend": "npm run build --workspace=backend",
-    "start:prod": "npm run start:prod --workspace=backend"
+    "dev:backend": "pnpm --filter ./backend run dev",
+    "dev:frontend": "pnpm --filter ./frontend run dev",
+    "build:frontend": "pnpm --filter ./frontend run build",
+    "build:backend": "pnpm --filter ./backend run build",
+    "start:prod": "pnpm --filter ./backend run start:prod",
+    "test:backend": "pnpm --filter ./backend run test",
+    "test:schemas": "pnpm --filter ./schemas run test",
+    "test:frontend": "pnpm --filter ./frontend run test",
+    "test:e2e": "pnpm --filter ./e2e run test",
+    "test:e2e:report": "pnpm --filter ./e2e run test:report",
+    "test:integration": "docker compose -f docker-compose.test.yml up -d --wait && pnpm --filter ./backend run test:integration; EXIT=$?; docker compose -f docker-compose.test.yml down -v --remove-orphans; exit $EXIT"
   },
   "keywords": [],
   "license": "MIT License",

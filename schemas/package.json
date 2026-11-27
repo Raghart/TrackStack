@@ -1,0 +1,24 @@
+{
+  "name": "@trackstack/schemas",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Schemas Zod compartidos entre backend y frontend",
+  "main": "zod.schemas.ts",
+  "types": "zod.schemas.ts",
+  "exports": {
+    ".": "./zod.schemas.ts",
+    "./zod.schemas": "./zod.schemas.ts",
+    "./zod.dbSchemas": "./zod.dbSchemas.ts",
+    "./zod.parsers": "./zod.parsers.ts",
+    "./*": "./*.ts"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "vitest": "^5.0.5"
+  }
+}

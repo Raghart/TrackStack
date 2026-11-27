@@ -14,9 +14,14 @@ import { SongGenresModule } from './song_genres/song_genres.module';
 import { SearchModule } from './search/search.module';
 import { ConfigModule } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { join } from 'path';
 import { existsSync } from 'node:fs';
-if (existsSync(".env")) process.loadEnvFile();
+import type { IncomingMessage } from 'node:http';
+import { databaseSslOptions } from './utils/databaseSsl';
+import { GqlThrottlerGuard } from '@/utils/gqlThrottlerGuard';
+
+if (existsSync('.env')) process.loadEnvFile();
 
 @Module({
   imports: [
@@ -26,29 +31,42 @@ if (existsSync(".env")) process.loadEnvFile();
     SequelizeModule.forRoot({
       dialect: 'postgres',
       uri: process.env.DB_URL,
-      port: Number(process.env.DB_PORT),
-      dialectOptions: {
-        ssl: {
-          require: true,
-          rejectUnauthorized: false,
-        },
-      },
+      dialectOptions: databaseSslOptions
+        ? { ssl: databaseSslOptions }
+        : {},
       autoLoadModels: true,
-      synchronize: true,
+      synchronize: false,
       logging: false,
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'public'),
+      exclude: ['/graphql'],
     }),
+    ThrottlerModule.forRoot([
+      {
+        name: 'ai',
+        ttl: 60_000,
+        limit: 5,
+        blockDuration: 60_000,
+      },
+    ]),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      playground: true,
+      playground: process.env?.NODE_ENV !== "production" ? true : false,
+      context: (ctx: {
+        req?: IncomingMessage;
+        res?: unknown;
+        extra?: { request: IncomingMessage };
+      }) => ({
+        req: ctx.req ?? ctx.extra?.request,
+        res: ctx.res,
+      }),
       subscriptions: {
-        "graphql-ws": {
-          path: "/graphql"
-        }
-      }
+        'graphql-ws': {
+          path: '/graphql',
+        },
+      },
     }),
     SongsModule,
     AlbumsModule,
@@ -60,6 +78,6 @@ if (existsSync(".env")) process.loadEnvFile();
     SearchModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, GqlThrottlerGuard],
 })
 export class AppModule {}

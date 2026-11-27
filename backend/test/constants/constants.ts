@@ -3,9 +3,6 @@ export const TESTING_URL =
 export const TESTING_IMG =
   'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480';
 export const NOTFOUND_ERROR = "The artist: 'Benito' doesn't exist in the DB!";
-export const pingError = 'ElasticSearch is not responding: Ping failed';
-export const searchError =
-  "ElasticSearch is not responding: Timeout Error: It's taking too long";
 export const NOGENRE_ERROR = "The genre: 'noGenre' doesn't exist in the DB!";
 export const WRONG_OBJ = { id: 123, name: 'papelon', url_image: '', songs: [] };
 
@@ -18,13 +15,4 @@ export const USER_VECTOR: [
   number,
   number,
   number,
-] = [
-  0.5,
-  0.5,
-  1,
-  0.165,
-  0.15,
-  0.05,
-  0.5,
-  120
-];
+] = [0.5, 0.5, 1, 0.165, 0.15, 0.05, 0.5, 120];

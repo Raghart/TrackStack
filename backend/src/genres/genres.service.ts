@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { GenresModel } from '../../models/genres/genres.model';
-import { parseStringArray } from 'src/types/parses';
-import safeQuery from 'src/utils/safeQuery';
+import safeQuery from '@/utils/safeQuery';
+import { stringSchema } from '@trackstack/schemas/zod.parsers';
 
 @Injectable()
 export class GenresService {
@@ -17,7 +17,7 @@ export class GenresService {
   }
 
   parseGenres(genres: { genre: string }[]): string[] {
-    return parseStringArray(genres.map((g) => g.genre));
+    return genres.map((g) => stringSchema.parse(g.genre));
   }
 
   async getAllGenres(): Promise<string[]> {

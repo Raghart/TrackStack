@@ -1,4 +1,4 @@
-import { useAppDispatch } from "@/components/Utils/redux-hooks";
+import { useAppDispatch } from "@/Utils/redux-hooks";
 import { togglePlayAudio } from "@/reducers/songReducer";
 import { Icon, IconButton } from "@chakra-ui/react";
 import { LuPause, LuPlay } from "react-icons/lu";

@@ -4,7 +4,8 @@
     "target": "ESNext",
     "module": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["ES2020", "DOM", "DOM.Iterable"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "types": ["vitest/globals"],
     "skipLibCheck": true,
     "paths": {
       "@/*" : ["./src/*"]

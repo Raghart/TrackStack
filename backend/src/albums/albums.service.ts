@@ -5,15 +5,20 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Op, Sequelize } from 'sequelize';
-import { parseAlbumSong, parseStringArray } from 'src/types/parses';
-import { SongResponse } from 'src/types/songAttributes';
-import safeQuery from 'src/utils/safeQuery';
+import safeQuery from '@/utils/safeQuery';
 import { AlbumsModel } from '../../models/albums/albums.model';
 import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
-import { AlbumResponse, AlbumWithSongs } from 'src/types/albumAttributes';
-import { isNumber } from 'src/types/verify';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
+import { InvalidPaginationException } from '@/utils/PaginationError';
+import {
+  AlbumResponse,
+  albumResponseSchema,
+  AlbumWithSongsData,
+  albumWithSongsSchema,
+  SongResponse,
+  songResponseSchema,
+} from '@trackstack/schemas';
+import { floatNumberSchema } from '@trackstack/schemas/zod.parsers';
 
 @Injectable()
 export class AlbumsService {
@@ -25,8 +30,8 @@ export class AlbumsService {
     seed: string,
     page: number,
     limit: number,
-  ): Promise<AlbumWithSongs[]> {
-    if (!isNumber(seed))
+  ): Promise<AlbumWithSongsData[]> {
+    if (!floatNumberSchema.safeParse(seed).success)
       throw new BadRequestException(
         'The seed must be a valid string of numbers.',
       );
@@ -49,15 +54,19 @@ export class AlbumsService {
         ],
       }),
     );
-    return rawData.map((entry) => parseAlbumSong(entry.get({ plain: true })));
+    return rawData.map((entry) =>
+      albumWithSongsSchema.parse(entry.get({ plain: true })),
+    );
   }
 
-  parseAlbums(albumData: AlbumWithSongs[]): AlbumResponse[] {
-    return albumData.map((data) => ({
+  parseAlbums(
+    albumData: AlbumWithSongsData[],
+  ): AlbumResponse[] {
+    return albumData.map((data) => albumResponseSchema.parse({
       id: data.id,
       name: data.name,
       album_cover: data.url_image,
-      artists: data.songs[0].artists.map((artist) => artist.name),
+      artists: data.songs[0].artists?.map((artist) => artist.name),
     }));
   }
 
@@ -70,7 +79,7 @@ export class AlbumsService {
     return this.parseAlbums(albumResults);
   }
 
-  async fetchAlbumSongs(album: string): Promise<AlbumWithSongs> {
+  async fetchAlbumSongs(album: string): Promise<AlbumWithSongsData> {
     const rawData = await safeQuery(() =>
       this.albumModel.findOne({
         where: { name: { [Op.iLike]: `${album}` } },
@@ -92,14 +101,16 @@ export class AlbumsService {
 
     if (!rawData)
       throw new NotFoundException(`Album: ${album} couldn't be found!`);
-    return parseAlbumSong(rawData.get({ plain: true }));
+    return albumWithSongsSchema.parse(rawData.get({ plain: true }));
   }
 
-  parseAlbumSongs(albumSongs: AlbumWithSongs): SongResponse[] {
-    return albumSongs.songs.map((song) => ({
+  parseAlbumSongs(
+    albumSongs: AlbumWithSongsData,
+  ): SongResponse[] {
+    return albumSongs.songs.map((song) => songResponseSchema.parse({
       id: song.id,
       name: song.name,
-      artists: parseStringArray(song.artists.map((artist) => artist.name)),
+      artists: song.artists?.map((artist) => artist.name),
       url_preview: song.url_preview,
       album_cover: albumSongs.url_image,
     }));

@@ -10,7 +10,6 @@
     "esModuleInterop": true,
     "sourceMap": true,
     "outDir": "./dist",
-    "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
@@ -19,9 +18,16 @@
     "strictBindCallApply": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "src/*": ["src/*"]
+      "@/*": ["./src/*"]
     }
   },
-  "include": ["src", "modelsapts/migration/migrations.ts", "scripts/dto", "scripts/dto/artistsResults.dto.ts",
-    "models"]
+  "include": [
+  "src", 
+  "modelsapts/migration/migrations.ts", 
+  "scripts/dto", 
+  "database",
+  "test",
+  "scripts/dto/artistsResults.dto.ts",
+    "models"
+  ]
 }

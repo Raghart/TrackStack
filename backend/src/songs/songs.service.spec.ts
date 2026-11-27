@@ -13,12 +13,6 @@ import {
   songFullRawResponse,
   songRecRawResponse,
 } from '../../test/data/songsModule/serSongData';
-import { expectFullSongProps, expectSongProps } from 'src/utils/expectSongs';
-import {
-  SequelizeConnectionError,
-  SequelizeTimeoutError,
-} from 'src/utils/mockErrors';
-import { InvalidPaginationException } from 'src/utils/PaginationError';
 import { SongsModel } from '../../models/songs/song.model';
 import {
   singleSongData,
@@ -29,16 +23,20 @@ import {
 import { USER_VECTOR } from '../../test/constants/constants';
 import { PubSub } from 'graphql-subscriptions';
 import { GoogleGenAI } from '@google/genai';
+import { expectFullSongProps, expectSongProps } from '@/utils/expectSongs';
+import { InvalidPaginationException } from '@/utils/PaginationError';
+import { SequelizeConnectionError, SequelizeTimeoutError } from '@/utils/mockErrors';
+import { vi, type Mock } from 'vitest';
 
 describe('SongsService retrieves, evaluates and parses songs data from the database', () => {
   let service: SongsService;
   let songModel: {
-    count: jest.Mock;
-    findAll: jest.Mock;
-    findByPk: jest.Mock;
-    findOne: jest.Mock;
+    count: Mock;
+    findAll: Mock;
+    findByPk: Mock;
+    findOne: Mock;
     sequelize: {
-      query: jest.Mock;
+      query: Mock;
     };
   };
 
@@ -49,18 +47,18 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
         {
           provide: 'AI',
           useValue: new GoogleGenAI({
-            apiKey: "testing",
+            apiKey: 'testing',
           }),
         },
         {
           provide: getModelToken(SongsModel),
           useValue: {
-            count: jest.fn(),
-            findAll: jest.fn(),
-            findByPk: jest.fn(),
-            findOne: jest.fn(),
+            count: vi.fn(),
+            findAll: vi.fn(),
+            findByPk: vi.fn(),
+            findOne: vi.fn(),
             sequelize: {
-              query: jest.fn(),
+              query: vi.fn(),
             },
           },
         },
@@ -124,11 +122,11 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
       expect(results.length).toBe(songTestData.length);
       expectSongProps(results);
     });
-
+    
     it('parseFullSong returns a full song response with the expected properties', () => {
       const song = service.parseFullSong(songFullRawResponse);
       expectFullSongProps(song);
-    });
+    });   
   });
 
   describe('getRandomSong returns a random song from the database', () => {
@@ -250,6 +248,15 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
       expect(fullSong).toStrictEqual(songFullRawResponse);
     });
 
+    it('fetchFullSongData parses a numeric-string duration returned by PostgreSQL', async () => {
+      songModel.findByPk.mockResolvedValue({
+        get: () => ({ ...songFullRawResponse, duration: '2.50000' }),
+      });
+
+      const fullSong = await service.fetchFullSongData(2);
+      expect(fullSong.duration).toBe(2.5);
+    });
+
     it('getSongData returns a full response song by id ready to deliver', async () => {
       const fullSong = await service.getSongData(2);
       expectFullSongProps(fullSong);
@@ -294,17 +301,59 @@ describe('SongsService retrieves, evaluates and parses songs data from the datab
       expect(songRecommendations).toStrictEqual(songRecommendResponses);
     });
 
-    it("buildUVString return the expected string array", () => {
+    it('buildUVString return the expected string array', () => {
       const vectorString = service.buildUVString(USER_VECTOR);
       expect(vectorString).toHaveLength(8);
-      expect(vectorString.some(data => data.includes("Danceability:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Energy:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Mode:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Speechiness:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Acousticness:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Instrumentalness:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Valence:"))).toBeTruthy();
-      expect(vectorString.some(data => data.includes("Tempo:"))).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Danceability:')),
+      ).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Energy:')),
+      ).toBeTruthy();
+      expect(vectorString.some((data) => data.includes('Mode:'))).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Speechiness:')),
+      ).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Acousticness:')),
+      ).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Instrumentalness:')),
+      ).toBeTruthy();
+      expect(
+        vectorString.some((data) => data.includes('Valence:')),
+      ).toBeTruthy();
+      expect(vectorString.some((data) => data.includes('Tempo:'))).toBeTruthy();
+    });
+  });
+
+  describe('getAIStream falls back to a friendly message when the AI is not configured', () => {
+    afterEach(() => {
+      vi.unstubAllEnvs();
+    });
+
+    it('getAIStream yields the fallback message when AI_MODEL is missing', async () => {
+      vi.stubEnv('AI_MODEL', '');
+      vi.stubEnv('API_KEY', 'testing');
+
+      const stream = await service.getAIStream(['Rock'], USER_VECTOR);
+      const chunks: (string | undefined)[] = [];
+      for await (const chunk of stream) chunks.push(chunk.text);
+
+      expect(chunks).toHaveLength(1);
+      expect(chunks[0]).toContain('AI recommendations are unavailable');
+    });
+
+    it('getAIStream yields the fallback message when API_KEY is missing', async () => {
+      vi.stubEnv('AI_MODEL', 'gemini-test');
+      vi.stubEnv('API_KEY', '');
+
+      const stream = await service.getAIStream(['Rock'], USER_VECTOR);
+      const chunks: (string | undefined)[] = [];
+      for await (const chunk of stream) chunks.push(chunk.text);
+
+      expect(chunks).toHaveLength(1);
+      expect(chunks[0]).toContain('AI recommendations are unavailable');
     });
   });
 });
@@ -322,9 +371,13 @@ describe("SongsService throws an error if it couldn't retrieve the data from the
         },
         {
           provide: 'AI',
-          useValue: new GoogleGenAI({
-            apiKey: "testing",
-          }),
+          useValue: {
+            models: {
+              generateContentStream: vi
+                .fn()
+                .mockRejectedValue(new Error('Model unavailable')),
+            },
+          },
         },
         {
           provide: getModelToken(SongsModel),
@@ -339,6 +392,10 @@ describe("SongsService throws an error if it couldn't retrieve the data from the
     }).compile();
 
     service = module.get<SongsService>(SongsService);
+  });
+
+  afterEach(() => {
+    vi.unstubAllEnvs();
   });
 
   it("getDBLength throws an error if it couldn't retrieve the length from the database", async () => {
@@ -395,12 +452,15 @@ describe("SongsService throws an error if it couldn't retrieve the data from the
     );
   });
 
-  it("getAIStream throws an error if it was not possible to return an answer", async () => {
-    await expect(service.getAIStream(["Rock"], USER_VECTOR)).rejects.toThrow(
-      ServiceUnavailableException
+  it('getAIStream throws an error if it was not possible to return an answer', async () => {
+    vi.stubEnv('AI_MODEL', 'gemini-test');
+    vi.stubEnv('API_KEY', 'testing');
+
+    await expect(service.getAIStream(['Rock'], USER_VECTOR)).rejects.toThrow(
+      ServiceUnavailableException,
     );
-    await expect(service.getAIStream(["Rock"], USER_VECTOR)).rejects.toThrow(
-      "Unable to get an answer from the model"
+    await expect(service.getAIStream(['Rock'], USER_VECTOR)).rejects.toThrow(
+      'Unable to get an answer from the model',
     );
   });
 });

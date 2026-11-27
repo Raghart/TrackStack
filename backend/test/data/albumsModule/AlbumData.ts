@@ -1,5 +1,4 @@
-import { AlbumResponse, AlbumWithSongs } from 'src/types/albumAttributes';
-import { SongResponse } from 'src/types/songAttributes';
+import { AlbumResponse, AlbumWithSongsData, SongResponse } from '@trackstack/schemas';
 
 export const albumSongs = {
   id: 549818,
@@ -14,7 +13,7 @@ export const albumSongs = {
         'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
     },
   ],
-} as unknown as AlbumWithSongs;
+} as unknown as AlbumWithSongsData;
 
 export const albumResponse: AlbumResponse[] = [
   {

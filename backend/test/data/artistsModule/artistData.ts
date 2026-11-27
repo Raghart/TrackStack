@@ -1,5 +1,4 @@
-import { ArtistResponse, ArtistWithSongs } from 'src/types/artistAttributes';
-import { SongResponse } from 'src/types/songAttributes';
+import { ArtistResponse, ArtistWithSongsData, SongResponse } from '@trackstack/schemas';
 
 export const artistData = [
   {
@@ -7,7 +6,10 @@ export const artistData = [
     name: 'Nirvana',
     songs: [
       {
+        id: 598102,
         name: 'Come as You Are',
+        url_preview:
+          'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
         album: {
           url_image:
             'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
@@ -20,7 +22,10 @@ export const artistData = [
     name: 'Oasis',
     songs: [
       {
+        id: 584103,
         name: 'Wonderwall',
+        url_preview:
+          'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
         album: {
           url_image:
             'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
@@ -33,7 +38,10 @@ export const artistData = [
     name: 'Franz Ferdinand',
     songs: [
       {
+        id: 584321,
         name: 'Take Me Out',
+        url_preview:
+          'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
         album: {
           url_image:
             'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
@@ -46,7 +54,10 @@ export const artistData = [
     name: 'The Killers',
     songs: [
       {
+        id: 598123,
         name: 'Mr. Brightside',
+        url_preview:
+          'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
         album: {
           url_image:
             'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
@@ -59,7 +70,10 @@ export const artistData = [
     name: 'Radiohead',
     songs: [
       {
+        id: 597132,
         name: 'Creep',
+        url_preview:
+          'https://p.scdn.co/mp3-preview/a1c11bb1cb231031eb20e5951a8bfb30503224e9?cid=774b29d4f13844c495f206cafdad9c86',
         album: {
           url_image:
             'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
@@ -67,7 +81,7 @@ export const artistData = [
       },
     ],
   },
-] as unknown as ArtistWithSongs[];
+] as unknown as ArtistWithSongsData[];
 
 export const artistTestResponses: ArtistResponse[] = [
   {
@@ -157,7 +171,7 @@ export const artistSongsData = {
       },
     },
   ],
-} as unknown as ArtistWithSongs;
+} as unknown as ArtistWithSongsData;
 
 export const artistTestSongs: SongResponse[] = [
   {

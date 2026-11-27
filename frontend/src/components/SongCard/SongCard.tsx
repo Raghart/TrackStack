@@ -1,10 +1,10 @@
 import { Box, Image, Flex, useBreakpointValue } from "@chakra-ui/react";
 import { useState } from "react";
-import LoadingBeat from "../Utils/LoadingBeat";
+import LoadingBeat from "@/Utils/LoadingBeat";
 import BtnPlayLayer from "./BtnPlayLayer";
 import SongCardInfo from "./SongCardInfo";
 import { SONGCARD_SIZES } from "../constants/SongCardC";
-import { SongResponse } from "@/types/songTypes";
+import { SongResponse } from "@trackstack/schemas";
 
 const SongCard = ({ id, name, artists, album_cover, url_preview, isSongPlaying } : SongResponse & 
     { isSongPlaying: boolean }) => {

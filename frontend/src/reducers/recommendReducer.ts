@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RecommendData } from "@/types/RecDataTypes";
-import { SongResponse } from "@/types/songTypes";
+import { SongResponse } from "@trackstack/schemas";
 
-const initialState: RecommendData = {
+export const recommendInitialState: RecommendData = {
     genres: [],
     energy: 0.5,
     speechLevel: 0.165,
@@ -17,7 +17,7 @@ const initialState: RecommendData = {
 
 const recommendSlice = createSlice({
     name: "recommend",
-    initialState,
+    initialState: recommendInitialState,
     reducers: {
         setRecommendedGenres(state, action: PayloadAction<string[]>) {
             state.genres = action.payload

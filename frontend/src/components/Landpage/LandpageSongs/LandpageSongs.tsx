@@ -5,11 +5,11 @@ import "swiper/css/effect-coverflow";
 import { EffectCoverflow } from 'swiper/modules';
 import React from "react";
 import LandpageSongCard from "@/components/Landpage/LandpageSongs/SongCard/LandpageSongCard";
-import useLandpageSongs from "@/components/Utils/hooks/useLandpageSongs";
-import { useAppSelector } from "@/components/Utils/redux-hooks";
+import useLandpageSongs from "@/hooks/useLandpageSongs";
+import { useAppSelector } from "@/Utils/redux-hooks";
 
 const LandpageSongs = () => {
-   const { landpageSongs, loading } = useLandpageSongs();
+   const { landpageSongs, loading, hasData } = useLandpageSongs();
    const { isPlaying, activeSong } = useAppSelector(state => state.songs.songState);
     const responsiveSize = useBreakpointValue({ base: 2, sm: 3, md: 4, lg: 5 });
 
@@ -19,8 +19,9 @@ const LandpageSongs = () => {
             <Swiper effect="coverflow" grabCursor={true} centeredSlides={true} slidesPerView={responsiveSize} 
                 coverflowEffect={{ rotate: 20, stretch: 0, depth: 200, modifier: 1, slideShadows: true }} 
                 className="mySwiper" modules={[EffectCoverflow]} style={{ height: "100%" }} initialSlide={10} 
-                loop={landpageSongs.length >= 10} speed={600} data-testid="Landpage-Cont">
-                    {loading ? Array.from({ length: 15 }).map((_, idx) => (
+                loop={hasData ? landpageSongs.length >= 10 : false} 
+                speed={600} data-testid="Landpage-Cont">
+                    {(loading || !hasData) ? Array.from({ length: 15 }).map((_, idx) => (
                         <SwiperSlide key={`skeleton-${idx}`}>
                             <Skeleton h="full" w="full" borderRadius="xl" />
                         </SwiperSlide>

@@ -1,8 +1,8 @@
 import { Image, LinkBox, Skeleton } from "@chakra-ui/react";
 import { useState } from "react";
 import ArtistCardLayer from "./ArtistCardLayer";
-import { ArtistResponse } from "@/types/artistTypes";
 import { PATH_CARD_SIZES } from "../constants/PathC";
+import { ArtistResponse } from "@trackstack/schemas";
 
 const ArtistCard = ({ name, album_cover }:  ArtistResponse ) => {
     const [loading, setLoading] = useState(true);

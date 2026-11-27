@@ -1,9 +1,5 @@
-import {
-  FullSongResponseAttributes,
-  SongRecResponse,
-  SongResponseAttributes,
-} from 'src/types/songAttributes';
 import { TESTING_IMG, TESTING_URL } from '../../constants/constants';
+import { FullRawSong, SongRawData, SongRawRecommendation, SongResponse } from '@trackstack/schemas';
 
 export const songTestData = [
   {
@@ -61,7 +57,7 @@ export const songTestData = [
         'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
     },
   },
-] as unknown as SongResponseAttributes[];
+] as unknown as SongRawData[];
 
 export const singleSongTestData = {
   id: 2,
@@ -73,7 +69,7 @@ export const singleSongTestData = {
     url_image:
       'https://i.scdn.co/image/ab67616d0000b27385e5dcc05cc216a10f141480',
   },
-} as unknown as SongResponseAttributes;
+} as unknown as SongResponse;
 
 export const songFullRawResponse = {
   id: 1,
@@ -96,7 +92,7 @@ export const songFullRawResponse = {
     { genre: 'Grunge' },
     { genre: '90s' },
   ],
-} as unknown as FullSongResponseAttributes;
+} as unknown as FullRawSong;
 
 export const songRecRawResponse = [
   {
@@ -139,4 +135,4 @@ export const songRecRawResponse = [
     artists: 'Quicksand',
     cos_sim: 0.9994,
   },
-] as unknown as SongRecResponse[];
+] as unknown as SongRawRecommendation[];
