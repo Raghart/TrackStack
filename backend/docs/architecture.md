@@ -40,6 +40,14 @@ Prisma owns the schema and the migration history in `database/`; Sequelize, conf
 
 The cost is a schema declared twice — `schema.prisma` and the Sequelize models in `models/` — which must be kept aligned by hand. A structural change therefore needs both edits plus the migration.
 
+### The Docker demo is seeded with SQL, not Prisma
+
+Prisma migrations are the source of truth for the schema; `database/init/*.sql` exists only to bootstrap the local Docker demo. The SQL files also have to carry what Prisma cannot express directly: the `vector(8)` literals, the `immutable_unaccent` wrapper, and the `search_*` functions. Keeping the snapshot declarative and self-contained makes the demo deterministic and lets the integration tests load the exact same files against an isolated instance (see [Demo data](database.md#demo-data)).
+
+Unifying the seed into Prisma would mean orchestrating `prisma db seed` after the database is healthy but before the backend starts, which adds an application-runtime dependency to the bootstrap and a second way to recreate the demo. 
+
+The cost is duplication: `01_schema.sql` mirrors `schema.prisma` and must be updated by hand when the schema changes, as noted in [Changing the schema](database.md#changing-the-schema). That drift is contained because the files are demo-only, the production path is still the Prisma migration history (which `01_schema.sql` marks as already applied), and the integration suite fails when schema and seed disagree.
+
 ### `safeQuery` wraps every database call
 
 `safeQuery` (`src/utils/safeQuery.ts`) wraps a query in `try/catch` and rethrows any driver or connection failure as a Nest `InternalServerErrorException`. This separates infrastructure failures from domain errors (`BadRequestException`, `NotFoundException`, invalid pagination), gives the client a consistent GraphQL error instead of leaking driver internals, and keeps the original message available for debugging. It only wraps the database boundary, so validation and parsing errors keep their own status.
