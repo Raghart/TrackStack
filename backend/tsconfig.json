@@ -21,10 +21,12 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src", 
+  "include": [
+  "src", 
   "modelsapts/migration/migrations.ts", 
   "scripts/dto", 
   "database",
+  "test",
   "scripts/dto/artistsResults.dto.ts",
     "models"
   ]

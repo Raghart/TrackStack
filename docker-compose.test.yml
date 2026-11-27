@@ -1,0 +1,25 @@
+name: trackstack-test
+
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: ${TEST_POSTGRES_USER:-trackstack_test}
+      POSTGRES_PASSWORD: ${TEST_POSTGRES_PASSWORD:-trackstack_test}
+      POSTGRES_DB: ${TEST_POSTGRES_DB:-trackstack_test}
+    volumes:
+      - ./backend/database/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - "${TEST_DB_PORT:-5434}:5432"
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          'pg_isready -h 127.0.0.1 -p 5432 -U "$${POSTGRES_USER}" -d "$${POSTGRES_DB}"',
+        ]
+      interval: 2s
+      timeout: 5s
+      retries: 30
+      start_period: 5s
+    tmpfs:
+      - /var/lib/postgresql/data

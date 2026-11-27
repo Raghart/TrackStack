@@ -21,7 +21,8 @@
     "test:schemas": "pnpm --filter ./schemas run test",
     "test:frontend": "pnpm --filter ./frontend run test",
     "test:e2e": "pnpm --filter ./e2e run test",
-    "test:e2e:report": "pnpm --filter ./e2e run test:report"
+    "test:e2e:report": "pnpm --filter ./e2e run test:report",
+    "test:integration": "docker compose -f docker-compose.test.yml up -d --wait && pnpm --filter ./backend run test:integration; EXIT=$?; docker compose -f docker-compose.test.yml down -v --remove-orphans; exit $EXIT"
   },
   "keywords": [],
   "license": "MIT License",

@@ -12,7 +12,6 @@ import { SongsModel } from '../../models/songs/song.model';
 import { ArtistsModel } from '../../models/artists/artists.model';
 import { GenresModel } from '../../models/genres/genres.model';
 import { GoogleGenAI } from '@google/genai';
-import { existsSync } from 'node:fs';
 import {
   FullRawSong,
   fullRawSongSchema,

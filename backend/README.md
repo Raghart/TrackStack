@@ -56,6 +56,7 @@ pnpm run dev:backend                 # NestJS in watch mode
 pnpm run build:backend               # nest build -> backend/dist
 pnpm run start:prod                  # run the compiled backend
 pnpm run test:backend                # Vitest unit tests
+pnpm run test:integration            # DB integration tests against Docker test database (slow)
 ```
 
 Or target the package directly. The scripts are grouped by purpose:
@@ -72,6 +73,7 @@ pnpm --filter ./backend run format       # Prettier over src/ and test/
 pnpm --filter ./backend run test         # Vitest unit suite (no database needed)
 pnpm --filter ./backend run test:watch   # Vitest in watch mode
 pnpm --filter ./backend run test:cov     # suite + coverage -> backend/coverage/
+pnpm --filter ./backend run test:integration  # DB integration tests (Docker test DB, slow)
 
 # Database (Prisma, reads backend/.env)
 pnpm --filter ./backend run db:validate  # validate schema.prisma without connecting
@@ -129,6 +131,8 @@ Prisma-managed PostgreSQL schema with pgvector support. Search is implemented en
 ## Tests
 
 Unit tests live next to the code (`src/<domain>/*.spec.ts`) and do not need PostgreSQL: models are mocked and the AI provider is replaced with a stub. Fixtures live in `test/data/` and shared assertions in `src/utils/expect*.ts`.
+
+Database integration tests live in `test/integration/*.integration.spec.ts` and run against the isolated Docker test database defined in `../../docker-compose.test.yml` (pgvector + init scripts, tmpfs, separate test credentials/port). They are intentionally separate from the fast Vitest suite and do not use development or production `DB_URL`.
 
 ```bash
 pnpm --filter ./backend run test -- src/songs/songs.service.spec.ts   # one spec

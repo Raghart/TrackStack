@@ -99,6 +99,7 @@ Este archivo refleja cómo está montado `backend/`. Si cambia el código y el a
 - Coloca el spec junto al archivo afectado (`src/<dominio>/<archivo>.spec.ts`). Usa los fixtures en vez de inventar datos inline.
 - **Ejecuta solo los specs afectados por tu cambio** (`pnpm run test -- src/<dominio>/<archivo>.spec.ts`). La suite completa es lenta y costosa: no la corras por defecto. Resérvala para cuando el usuario la pida explícitamente o cuando el cambio toque algo global (configuración de Vitest/tsconfig, `app.module.ts`, o tipos/helpers compartidos de `src/types` y `src/utils`).
 - Si el cambio afecta a varios dominios, ejecuta el spec de cada archivo tocado; si creas un spec nuevo, ejecuta ese archivo concreto.
+- Los tests de integración de BD viven en `backend/test/integration/*.integration.spec.ts` y se ejecutan con `pnpm run test:integration` (o `pnpm --filter ./backend run test:integration`). Usan `docker-compose.test.yml` para levantar una BD PostgreSQL aislada (tmpfs, puerto 5434, credenciales de test) con el seed de `backend/database/init/`; no usan `DB_URL` de desarrollo/producción y tienen guards que rechazan hosts o nombres de BD no locales/de test. Son lentos y están separados de la suite rápida de Vitest.
 - Los E2E reales están en `../e2e` (Playwright) y requieren servicios; no hay runner de E2E dentro de `backend/`.
 
 ### Cuándo agregar un test de regresión
@@ -138,6 +139,7 @@ pnpm run test                        # Vitest (unit specs de src/)
 pnpm run test -- src/songs/songs.service.spec.ts   # un spec concreto
 pnpm run test:watch                  # Vitest en watch
 pnpm run test:cov                    # cobertura -> backend/coverage/
+pnpm run test:integration            # tests de integración contra la BD Docker de test (lento, requiere Docker)
 pnpm run build                       # compila con Nest
 docker build -f backend/Dockerfile -t trackstack-backend .   # imagen Docker (contexto: raíz del repo)
 pnpm run format                      # Prettier sobre src/ y test/
